@@ -11,6 +11,7 @@ using Owin;
 using ERP.API.Providers;
 using ERP.API.Models;
 using ERP.Data.DbContext;
+using System.Web.Http;
 
 namespace ERP.API
 {
@@ -33,19 +34,22 @@ namespace ERP.API
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
             app.UseCors(Microsoft.Owin.Cors.CorsOptions.AllowAll);
             // Configure the application for OAuth based flow
-            PublicClientId = "self";
-            OAuthOptions = new OAuthAuthorizationServerOptions
+            OAuthAuthorizationServerOptions options = new OAuthAuthorizationServerOptions
             {
-                TokenEndpointPath = new PathString("/Token"),
-                Provider = new ApplicationOAuthProvider(PublicClientId),
-                AuthorizeEndpointPath = new PathString("/api/Account/ExternalLogin"),
-                AccessTokenExpireTimeSpan = TimeSpan.FromDays(14),
-                // In production mode set AllowInsecureHttp = false
-                AllowInsecureHttp = true
+                AllowInsecureHttp = true,
+                //The Path For generating the Toekn
+                TokenEndpointPath = new PathString("/token"),
+                //Setting the Token Expired Time (24 hours)
+                AccessTokenExpireTimeSpan = TimeSpan.FromDays(1),
+                //MyAuthorizationServerProvider class will validate the user credentials
+                Provider = new ApplicationOAuthProvider()
             };
+            //Token Generations
+            app.UseOAuthAuthorizationServer(options);
+            app.UseOAuthBearerAuthentication(new OAuthBearerAuthenticationOptions());
 
-            // Enable the application to use bearer tokens to authenticate users
-            app.UseOAuthBearerTokens(OAuthOptions);
+            HttpConfiguration config = new HttpConfiguration();
+            WebApiConfig.Register(config);
 
             // Uncomment the following lines to enable logging in with third party login providers
             //app.UseMicrosoftAccountAuthentication(

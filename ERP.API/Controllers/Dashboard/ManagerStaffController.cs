@@ -5,17 +5,13 @@ using ERP.Common.Models;
 using ERP.Data.Dto;
 using ERP.Data.ModelsERP;
 using ERP.Extension.Extensions;
-using ERP.Service.Services;
 using ERP.Service.Services.IServices;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Hosting;
 using System.Web.Http;
 
 namespace ERP.API.Controllers.Dashboard
@@ -34,6 +30,7 @@ namespace ERP.API.Controllers.Dashboard
         }
 
         #region methods
+        [Authorize(Roles = "SuperAdmin, Admin")]
         [HttpGet]
         [Route("api/staffs/all")]
         public IHttpActionResult Getstaffs()
