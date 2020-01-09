@@ -120,7 +120,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dto\ResponseDataDTO.cs" />
-    <Compile Include="Identity\IdentityModels.cs" />
+    <Compile Include="Identity\AppIdentityClaims.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="DbContext\ERPDbContext.cs" />
     <Compile Include="ModelsERP\staff.cs" />

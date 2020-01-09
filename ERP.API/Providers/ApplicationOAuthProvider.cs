@@ -10,11 +10,12 @@ using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
 using ERP.API.Models;
-using ERP.Controller.Models;
 using ERP.Data.DbContext;
 using System.Text;
 using ERP.Service.Services.IServices;
 using ERP.Common.Constants;
+using ERP.Data.Identity;
+using System.Web;
 
 namespace ERP.API.Providers
 {
@@ -42,7 +43,7 @@ namespace ERP.API.Providers
             var identity = new ClaimsIdentity(context.Options.AuthenticationType);
             identity.AddClaim(new Claim(ClaimTypes.Role, role));
             identity.AddClaim(new Claim(ClaimTypes.Name, user.sta_fullname));
-            identity.AddClaim(new Claim("Email", user.sta_email));
+            identity.AddClaim(new Claim(ClaimTypes.Email, user.sta_email));
             context.Validated(identity);
         }
     }

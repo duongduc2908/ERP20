@@ -3,26 +3,30 @@ using ERP.API.Models;
 using ERP.Common.Constants;
 using ERP.Common.Models;
 using ERP.Data.Dto;
+using ERP.Data.Identity;
 using ERP.Data.ModelsERP;
 using ERP.Extension.Extensions;
 using ERP.Service.Services.IServices;
+using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 
 namespace ERP.API.Controllers.Dashboard
 {
+    [Authorize(Roles = "SuperAdmin, Admin")]
     public class ManagerstaffsController : ApiController
     {
         private readonly IStaffService _staffservice;
 
         private readonly IMapper _mapper;
-
-        public ManagerstaffsController() { }
         public ManagerstaffsController(IStaffService staffservice, IMapper mapper)
         {
             this._staffservice = staffservice;
@@ -30,7 +34,6 @@ namespace ERP.API.Controllers.Dashboard
         }
 
         #region methods
-        [Authorize(Roles = "SuperAdmin, Admin")]
         [HttpGet]
         [Route("api/staffs/all")]
         public IHttpActionResult Getstaffs()
@@ -38,6 +41,7 @@ namespace ERP.API.Controllers.Dashboard
             ResponseDataDTO<IEnumerable<staff>> response = new ResponseDataDTO<IEnumerable<staff>>();
             try
             {
+                AppIdentityClaims current = new AppIdentityClaims((ClaimsIdentity)User.Identity);
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
                 response.Data = _staffservice.GetAll();
