@@ -83,9 +83,12 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants\CheckEmail.cs" />
+    <Compile Include="Constants\HashMd5.cs" />
     <Compile Include="Constants\HttpCode.cs" />
     <Compile Include="Constants\MessageResponse.cs" />
     <Compile Include="Constants\Roles.cs" />
+    <Compile Include="Constants\staffCommon.cs" />
     <Compile Include="GenericRepository\GenericRepository.cs" />
     <Compile Include="GenericRepository\IGenericRepository.cs" />
     <Compile Include="GenericService\GenericService.cs" />

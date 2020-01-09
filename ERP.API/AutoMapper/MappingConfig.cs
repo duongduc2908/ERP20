@@ -20,7 +20,7 @@ namespace ERP.API.AutoMapper
         private void CreateMappingFromViewModelsToEntities()
         {
             CreateMap<StaffCreateViewModel, staff>();
-            CreateMap<StaffCreateViewModel, staff>();
+            CreateMap<StaffUpdateViewModel, staff>();
 
         }
 
