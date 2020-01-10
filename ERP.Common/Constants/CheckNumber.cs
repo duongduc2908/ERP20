@@ -6,7 +6,7 @@ using System.Web;
 
 namespace ERP.Common.Constants
 {
-    public class staffCommon
+    public class CheckNumber
     {
         public static bool IsPhoneNumber(string number)
         {

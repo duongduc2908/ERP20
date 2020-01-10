@@ -222,10 +222,13 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="AutoMapper\MappingConfig.cs" />
+    <Compile Include="Controllers\Dashboard\ManagerCustomerController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerStaffController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\CustomerCreateViewModel.cs" />
+    <Compile Include="Models\CustomerUpdateViewModel.cs" />
     <Compile Include="Models\StaffCreateViewModel.cs" />
     <Compile Include="Models\StaffUpdateViewModel.cs" />
     <Compile Include="Modules\ApplicaitonModule.cs" />
@@ -298,6 +301,8 @@
     <Folder Include="Controllers\Authentication\" />
     <Folder Include="Controllers\Home\" />
     <Folder Include="Views\Base\" />
+    <Folder Include="Views\Default\" />
+    <Folder Include="Views\ManagerCustomer\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

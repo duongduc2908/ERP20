@@ -84,6 +84,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\CustomerRespository.cs" />
+    <Compile Include="Repositories\IRepositories\ICustomerRepository.cs" />
     <Compile Include="Repositories\IRepositories\IStaffRepository.cs" />
     <Compile Include="Repositories\StaffRepository.cs" />
   </ItemGroup>

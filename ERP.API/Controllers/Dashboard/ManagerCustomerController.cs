@@ -5,45 +5,45 @@ using ERP.Common.Models;
 using ERP.Data.Dto;
 using ERP.Data.ModelsERP;
 using ERP.Extension.Extensions;
-using ERP.Service.Services;
 using ERP.Service.Services.IServices;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Hosting;
 using System.Web.Http;
 
 namespace ERP.API.Controllers.Dashboard
 {
-    public class ManagerstaffsController : ApiController
+    public class ManagerCustomerController : ApiController
     {
-        private readonly IStaffService _staffservice;
+        private readonly ICustomerService _customerservice;
 
         private readonly IMapper _mapper;
 
-        public ManagerstaffsController() { }
-        public ManagerstaffsController(IStaffService staffservice, IMapper mapper)
+        public ManagerCustomerController() { 
+
+        }
+        public ManagerCustomerController(ICustomerService customerservice, IMapper mapper)
         {
-            this._staffservice = staffservice;
+            this._customerservice = customerservice;
             this._mapper = mapper;
         }
 
         #region methods
         [HttpGet]
-        [Route("api/staffs/all")]
-        public IHttpActionResult Getstaffs()
+        [Route("api/customer/all")]
+        public IHttpActionResult Getcustomers()
         {
-            ResponseDataDTO<IEnumerable<staff>> response = new ResponseDataDTO<IEnumerable<staff>>();
+            ResponseDataDTO<IEnumerable<customer>> response = new ResponseDataDTO<IEnumerable<customer>>();
             try
             {
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _staffservice.GetAll();
+                response.Data = _customerservice.GetAll();
             }
             catch (Exception ex)
             {
@@ -56,16 +56,16 @@ namespace ERP.API.Controllers.Dashboard
 
             return Ok(response);
         }
-
-        [Route("api/staffs/page")]
-        public IHttpActionResult GetstaffsPaging(int pageSize, int pageNumber)
+        [HttpGet]
+        [Route("api/customers/page")]
+        public IHttpActionResult GetcustomersPaging(int pageSize, int pageNumber)
         {
-            ResponseDataDTO<PagedResults<staff>> response = new ResponseDataDTO<PagedResults<staff>>();
+            ResponseDataDTO<PagedResults<customer>> response = new ResponseDataDTO<PagedResults<customer>>();
             try
             {
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _staffservice.CreatePagedResults(pageNumber, pageSize);
+                response.Data = _customerservice.CreatePagedResults(pageNumber, pageSize);
             }
             catch (Exception ex)
             {
@@ -80,11 +80,11 @@ namespace ERP.API.Controllers.Dashboard
         }
 
         [HttpPost]
-        [Route("api/staffs/create")]
+        [Route("api/customers/create")]
 
-        public async Task<IHttpActionResult> Createstaff()
+        public async Task<IHttpActionResult> Createcustomer()
         {
-            ResponseDataDTO<staff> response = new ResponseDataDTO<staff>();
+            ResponseDataDTO<customer> response = new ResponseDataDTO<customer>();
             try
             {
                 var path = Path.GetTempPath();
@@ -104,59 +104,53 @@ namespace ERP.API.Controllers.Dashboard
                     fileName = (FileExtension.SaveFileOnDisk(fileData));
                 }
                 // get data from formdata
-                StaffCreateViewModel StaffCreateViewModel = new StaffCreateViewModel
+                CustomerCreateViewModel customerCreateViewModel = new CustomerCreateViewModel
                 {
-                    sta_fullname = Convert.ToString(streamProvider.FormData["sta_fullname"]),
-                    sta_code = Convert.ToString(streamProvider.FormData["sta_code"]),
-                    sta_username = Convert.ToString(streamProvider.FormData["sta_username"]),
-                    sta_password = Convert.ToString(streamProvider.FormData["sta_password"]),
-                    sta_email = Convert.ToString(streamProvider.FormData["sta_email"]),
-                    sta_position = Convert.ToString(streamProvider.FormData["sta_position"]),
-                    sta_aboutme = Convert.ToString(streamProvider.FormData["sta_aboutme"]),
-                    sta_mobile = Convert.ToString(streamProvider.FormData["sta_mobile"]),
-                    sta_identity_card = Convert.ToString(streamProvider.FormData["sta_identity_card"]),
-                    sta_address = Convert.ToString(streamProvider.FormData["sta_address"]),
+                    cu_code = Convert.ToString(streamProvider.FormData["cu_code"]),
+                    cu_mobile = Convert.ToString(streamProvider.FormData["cu_mobile"]),
+                    cu_email = Convert.ToString(streamProvider.FormData["cu_email"]),
+                    cu_fullname = Convert.ToString(streamProvider.FormData["cu_fullname"]),
+                    cu_address = Convert.ToString(streamProvider.FormData["cu_address"]),
+                    cu_note = Convert.ToString(streamProvider.FormData["cu_note"]),
 
-                    department_id = Convert.ToInt32(streamProvider.FormData["department_id"]),
-                    group_role_id = Convert.ToInt32(streamProvider.FormData["group_role_id"]),
+
                     social_id = Convert.ToInt32(streamProvider.FormData["social_id"]),
+                    customer_group_id = Convert.ToInt32(streamProvider.FormData["customer_group_id"]),
+                    customer_address_id = Convert.ToInt32(streamProvider.FormData["customer_address_id"]),
                     source_id = Convert.ToInt32(streamProvider.FormData["source_id"]),
 
-                    sta_birthday = Convert.ToDateTime(streamProvider.FormData["sta_birthday"]),
-                    sta_identity_card_date = Convert.ToDateTime(streamProvider.FormData["sta_identity_card_date"]),
-                    sta_created_date = Convert.ToDateTime(streamProvider.FormData["sta_created_date"]),
+                    cu_create_date = Convert.ToDateTime(streamProvider.FormData["cu_create_date"]),
 
-                    sta_status = Convert.ToBoolean(streamProvider.FormData["sta_status"]),
-                    sta_sex = Convert.ToByte(streamProvider.FormData["sta_sex"]),
+                    cu_type = Convert.ToByte(streamProvider.FormData["cu_type"]),
 
 
                 };
                 //md5
 
-                if (CheckEmail.IsValidEmail(StaffCreateViewModel.sta_email) == false && StaffCreateViewModel.sta_email == "")
+                if (CheckEmail.IsValidEmail(customerCreateViewModel.cu_email) == false && customerCreateViewModel.cu_email == "")
                 {
                     response.Message = "Định dạng email không hợp lệ !";
                     response.Data = null;
                     return Ok(response);
                 }
                 //check_phone_number
-                if (CheckNumber.IsPhoneNumber(StaffCreateViewModel.sta_mobile) == false && StaffCreateViewModel.sta_mobile == "")
+                if (CheckNumber.IsPhoneNumber(customerCreateViewModel.cu_mobile) == false && customerCreateViewModel.cu_mobile == "")
                 {
                     response.Message = "Số điện thoại không hợp lệ";
                     response.Data = null;
                     return Ok(response);
                 }
                 // mapping view model to entity
-                var createdstaff = _mapper.Map<staff>(StaffCreateViewModel);
-                createdstaff.sta_thumbnai = fileName;
-                createdstaff.sta_password = HashMd5.convertMD5(StaffCreateViewModel.sta_password);
+                var createdcustomer = _mapper.Map<customer>(customerCreateViewModel);
+                createdcustomer.cu_thumbnail = fileName;
 
-                // save new staff
-                _staffservice.Create(createdstaff);
+                // save new customer
+                _customerservice.Create(createdcustomer);
+
                 // return response
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = createdstaff;
+                response.Data = createdcustomer;
                 return Ok(response);
             }
             catch (Exception ex)
@@ -175,11 +169,11 @@ namespace ERP.API.Controllers.Dashboard
 
 
         [HttpPut]
-        [Route("api/staffs/update")]
+        [Route("api/customers/update")]
 
-        public async Task<IHttpActionResult> Updatestaff(int? sta_id)
+        public async Task<IHttpActionResult> Updatecustomer(int? cu_id)
         {
-            ResponseDataDTO<staff> response = new ResponseDataDTO<staff>();
+            ResponseDataDTO<customer> response = new ResponseDataDTO<customer>();
             try
             {
                 var path = Path.GetTempPath();
@@ -203,73 +197,67 @@ namespace ERP.API.Controllers.Dashboard
                 }
 
                 // get data from formdata
-                StaffUpdateViewModel staffUpdateViewModel = new StaffUpdateViewModel
+                CustomerUpdateViewModel customerUpdateViewModel = new CustomerUpdateViewModel
                 {
 
-                    sta_id = Convert.ToInt32(streamProvider.FormData["sta_id"]),
-                    sta_fullname = Convert.ToString(streamProvider.FormData["sta_fullname"]),
-                    sta_code = Convert.ToString(streamProvider.FormData["sta_code"]),
-                    sta_username = Convert.ToString(streamProvider.FormData["sta_username"]),
-                    sta_password = Convert.ToString(streamProvider.FormData["sta_password"]),
-                    sta_email = Convert.ToString(streamProvider.FormData["sta_email"]),
-                    sta_position = Convert.ToString(streamProvider.FormData["sta_position"]),
-                    sta_aboutme = Convert.ToString(streamProvider.FormData["sta_aboutme"]),
-                    sta_mobile = Convert.ToString(streamProvider.FormData["sta_mobile"]),
-                    sta_identity_card = Convert.ToString(streamProvider.FormData["sta_identity_card"]),
-                    sta_address = Convert.ToString(streamProvider.FormData["sta_address"]),
+                    cu_code = Convert.ToString(streamProvider.FormData["cu_code"]),
+                    cu_mobile = Convert.ToString(streamProvider.FormData["cu_mobile"]),
+                    cu_email = Convert.ToString(streamProvider.FormData["cu_email"]),
+                    cu_fullname = Convert.ToString(streamProvider.FormData["cu_fullname"]),
+                    cu_address = Convert.ToString(streamProvider.FormData["cu_address"]),
+                    cu_note = Convert.ToString(streamProvider.FormData["cu_note"]),
 
-                    department_id = Convert.ToInt32(streamProvider.FormData["department_id"]),
-                    group_role_id = Convert.ToInt32(streamProvider.FormData["group_role_id"]),
+
                     social_id = Convert.ToInt32(streamProvider.FormData["social_id"]),
+                    customer_group_id = Convert.ToInt32(streamProvider.FormData["customer_group_id"]),
+                    customer_address_id = Convert.ToInt32(streamProvider.FormData["customer_address_id"]),
                     source_id = Convert.ToInt32(streamProvider.FormData["source_id"]),
 
-                    sta_birthday = Convert.ToDateTime(streamProvider.FormData["sta_birthday"]),
-                    sta_identity_card_date = Convert.ToDateTime(streamProvider.FormData["sta_identity_card_date"]),
-                    sta_created_date = Convert.ToDateTime(streamProvider.FormData["sta_created_date"]),
+                    cu_create_date = Convert.ToDateTime(streamProvider.FormData["cu_create_date"]),
 
-                    sta_status = Convert.ToBoolean(streamProvider.FormData["sta_status"]),
-                    sta_sex = Convert.ToByte(streamProvider.FormData["sta_sex"]),
+                    cu_type = Convert.ToByte(streamProvider.FormData["cu_type"]),
 
                 };
 
 
-                var existstaff = _staffservice.Find(sta_id);
+                var existcustomer = _customerservice.Find(cu_id);
 
                 if (fileName != "")
                 {
-                    staffUpdateViewModel.sta_thumbnai = fileName;
+                    customerUpdateViewModel.cu_thumbnail = fileName;
                 }
                 else
                 {
 
-                    staffUpdateViewModel.sta_thumbnai = existstaff.sta_thumbnai;
+                    customerUpdateViewModel.cu_thumbnail = existcustomer.cu_thumbnail;
                 }
                 //md5
 
-                if (CheckEmail.IsValidEmail(staffUpdateViewModel.sta_email) == false && staffUpdateViewModel.sta_email == "")
+                if (CheckEmail.IsValidEmail(customerUpdateViewModel.cu_email) == false && customerUpdateViewModel.cu_email == "")
                 {
                     response.Message = "Định dạng email không hợp lệ !";
                     response.Data = null;
                     return Ok(response);
                 }
                 //check_phone_number
-                if (CheckNumber.IsPhoneNumber(staffUpdateViewModel.sta_mobile) == false && staffUpdateViewModel.sta_mobile == "")
+                if (CheckNumber.IsPhoneNumber(customerUpdateViewModel.cu_mobile) == false && customerUpdateViewModel.cu_mobile == "")
                 {
                     response.Message = "Số điện thoại không hợp lệ";
                     response.Data = null;
                     return Ok(response);
                 }
                 // mapping view model to entity
-                var updatedstaff = _mapper.Map<staff>(staffUpdateViewModel);
+                var updatedcustomer = _mapper.Map<customer>(customerUpdateViewModel);
 
 
 
-                // update staff
-                _staffservice.Update(updatedstaff, sta_id);
+                // update customer
+                _customerservice.Update(updatedcustomer, cu_id);
+
                 // return response
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = updatedstaff;
+                response.Data = updatedcustomer;
                 return Ok(response);
             }
             catch (Exception ex)
@@ -284,21 +272,21 @@ namespace ERP.API.Controllers.Dashboard
         }
 
         [HttpDelete]
-        [Route("api/staffs/delete/{staffId}")]
-        public IHttpActionResult Deletestaff(int staffId)
+        [Route("api/customers/delete/{customerId}")]
+        public IHttpActionResult Deletecustomer(int customerId)
         {
-            ResponseDataDTO<staff> response = new ResponseDataDTO<staff>();
+            ResponseDataDTO<customer> response = new ResponseDataDTO<customer>();
             try
             {
-                var staffDeleted = _staffservice.Find(staffId);
-                if (staffDeleted != null)
+                var customerDeleted = _customerservice.Find(customerId);
+                if (customerDeleted != null)
                 {
-                    _staffservice.Delete(staffDeleted);
+                    _customerservice.Delete(customerDeleted);
 
                     // return response
                     response.Code = HttpCode.OK;
                     response.Message = MessageResponse.SUCCESS;
-                    response.Data = staffDeleted;
+                    response.Data = null;
                     return Ok(response);
                 }
                 else
@@ -331,7 +319,7 @@ namespace ERP.API.Controllers.Dashboard
         {
             if (disposing)
             {
-                _staffservice.Dispose();
+                _customerservice.Dispose();
             }
             base.Dispose(disposing);
         }
