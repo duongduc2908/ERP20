@@ -123,7 +123,22 @@
     <Compile Include="Identity\AppIdentityClaims.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="DbContext\ERPDbContext.cs" />
+    <Compile Include="ModelsERP\company.cs" />
+    <Compile Include="ModelsERP\customer.cs" />
+    <Compile Include="ModelsERP\department.cs" />
+    <Compile Include="ModelsERP\function.cs" />
+    <Compile Include="ModelsERP\function_setting.cs" />
+    <Compile Include="ModelsERP\group_role.cs" />
+    <Compile Include="ModelsERP\notification.cs" />
+    <Compile Include="ModelsERP\order_product.cs" />
+    <Compile Include="ModelsERP\order_service.cs" />
+    <Compile Include="ModelsERP\package.cs" />
+    <Compile Include="ModelsERP\position.cs" />
+    <Compile Include="ModelsERP\product.cs" />
+    <Compile Include="ModelsERP\project.cs" />
+    <Compile Include="ModelsERP\service.cs" />
     <Compile Include="ModelsERP\staff.cs" />
+    <Compile Include="ModelsERP\task.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
