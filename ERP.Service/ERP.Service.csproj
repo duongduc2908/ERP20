@@ -71,9 +71,35 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\CompanyService.cs" />
     <Compile Include="Services\CustomerService.cs" />
+    <Compile Include="Services\DepartmentService.cs" />
+    <Compile Include="Services\FunctionService.cs" />
+    <Compile Include="Services\GroupRoleService.cs" />
+    <Compile Include="Services\IServices\ICompanyService.cs" />
     <Compile Include="Services\IServices\ICustomerService.cs" />
+    <Compile Include="Services\IServices\IDepartmentService.cs" />
+    <Compile Include="Services\IServices\IFunctionService.cs" />
+    <Compile Include="Services\IServices\IFunctionSettingService.cs" />
+    <Compile Include="Services\IServices\IGroupRoleService.cs" />
+    <Compile Include="Services\IServices\INotificationService.cs" />
+    <Compile Include="Services\IServices\IOrderProductService.cs" />
+    <Compile Include="Services\IServices\IOrderServiceService.cs" />
+    <Compile Include="Services\IServices\IPackageService.cs" />
+    <Compile Include="Services\IServices\IPositionService.cs" />
+    <Compile Include="Services\IServices\IProductService.cs" />
+    <Compile Include="Services\IServices\IProjectService.cs" />
+    <Compile Include="Services\IServices\IServiceService.cs" />
     <Compile Include="Services\IServices\IStaffService.cs" />
+    <Compile Include="Services\IServices\ITaskService.cs" />
+    <Compile Include="Services\NotificationService.cs" />
+    <Compile Include="Services\OrderProducService.cs" />
+    <Compile Include="Services\OrderServiceService.cs" />
+    <Compile Include="Services\PackageService.cs" />
+    <Compile Include="Services\PositionService.cs" />
+    <Compile Include="Services\ProductService.cs" />
+    <Compile Include="Services\ProjectService.cs" />
+    <Compile Include="Services\ServiceService.cs" />
     <Compile Include="Services\StaffService.cs" />
   </ItemGroup>
   <ItemGroup>

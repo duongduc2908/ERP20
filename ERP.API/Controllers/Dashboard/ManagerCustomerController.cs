@@ -14,7 +14,9 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Hosting;
 using System.Web.Http;
+
 
 namespace ERP.API.Controllers.Dashboard
 {
@@ -24,7 +26,8 @@ namespace ERP.API.Controllers.Dashboard
 
         private readonly IMapper _mapper;
 
-        public ManagerCustomerController() { 
+        public ManagerCustomerController()
+        {
 
         }
         public ManagerCustomerController(ICustomerService customerservice, IMapper mapper)
@@ -169,7 +172,7 @@ namespace ERP.API.Controllers.Dashboard
 
 
         [HttpPut]
-        [Route("api/customers/update")]
+        [Route("api/customers/update/")]
 
         public async Task<IHttpActionResult> Updatecustomer(int? cu_id)
         {
@@ -199,7 +202,7 @@ namespace ERP.API.Controllers.Dashboard
                 // get data from formdata
                 CustomerUpdateViewModel customerUpdateViewModel = new CustomerUpdateViewModel
                 {
-
+                    cu_id = Convert.ToInt32(streamProvider.FormData["cu_id"]),
                     cu_code = Convert.ToString(streamProvider.FormData["cu_code"]),
                     cu_mobile = Convert.ToString(streamProvider.FormData["cu_mobile"]),
                     cu_email = Convert.ToString(streamProvider.FormData["cu_email"]),

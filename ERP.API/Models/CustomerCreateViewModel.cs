@@ -12,9 +12,7 @@ namespace ERP.API.Models
         {
 
         }
-        [Key]
-        public int cu_id { get; set; }
-
+        
         [StringLength(12)]
         public string cu_code { get; set; }
 

@@ -10,9 +10,9 @@ using System.Web;
 
 namespace ERP.Repository.Repositories
 {
-    public class CustomerRespository : GenericRepository<customer>, ICustomerRepository
+    public class CustomerRepository : GenericRepository<customer>, ICustomerRepository
     {
-        public CustomerRespository(ERPDbContext dbContext) : base(dbContext)
+        public CustomerRepository(ERPDbContext dbContext) : base(dbContext)
         {
         }
         public PagedResults<customer> CreatePagedResults(int pageNumber, int pageSize)
