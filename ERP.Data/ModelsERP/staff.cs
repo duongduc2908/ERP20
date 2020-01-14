@@ -33,9 +33,6 @@ namespace ERP.Data.ModelsERP
         [StringLength(50)]
         public string sta_email { get; set; }
 
-        [StringLength(50)]
-        public string sta_position { get; set; }
-
         public bool? sta_status { get; set; }
 
         public string sta_aboutme { get; set; }
@@ -59,6 +56,11 @@ namespace ERP.Data.ModelsERP
 
         public int? social_id { get; set; }
 
-        public int? source_id { get; set; }
+        [StringLength(120)]
+        public string sta_hometown { get; set; }
+
+        public int? position_id { get; set; }
+
+        public int? sta_leader_id { get; set; }
     }
 }
