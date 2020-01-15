@@ -111,23 +111,27 @@ namespace ERP.API.Controllers.Dashboard
                     sta_username = Convert.ToString(streamProvider.FormData["sta_username"]),
                     sta_password = Convert.ToString(streamProvider.FormData["sta_password"]),
                     sta_email = Convert.ToString(streamProvider.FormData["sta_email"]),
-                    sta_position = Convert.ToString(streamProvider.FormData["sta_position"]),
+                    
                     sta_aboutme = Convert.ToString(streamProvider.FormData["sta_aboutme"]),
                     sta_mobile = Convert.ToString(streamProvider.FormData["sta_mobile"]),
                     sta_identity_card = Convert.ToString(streamProvider.FormData["sta_identity_card"]),
                     sta_address = Convert.ToString(streamProvider.FormData["sta_address"]),
+                    sta_hometown = Convert.ToString(streamProvider.FormData["sta_hometown"]),
 
                     department_id = Convert.ToInt32(streamProvider.FormData["department_id"]),
                     group_role_id = Convert.ToInt32(streamProvider.FormData["group_role_id"]),
                     social_id = Convert.ToInt32(streamProvider.FormData["social_id"]),
-                    source_id = Convert.ToInt32(streamProvider.FormData["source_id"]),
+                    position_id = Convert.ToInt32(streamProvider.FormData["position_id"]),
+                    sta_leader_id = Convert.ToInt32(streamProvider.FormData["sta_leader_id"]),
+
 
                     sta_birthday = Convert.ToDateTime(streamProvider.FormData["sta_birthday"]),
                     sta_identity_card_date = Convert.ToDateTime(streamProvider.FormData["sta_identity_card_date"]),
                     sta_created_date = Convert.ToDateTime(streamProvider.FormData["sta_created_date"]),
 
-                    sta_status = Convert.ToBoolean(streamProvider.FormData["sta_status"]),
+                    sta_status = Convert.ToByte(streamProvider.FormData["sta_status"]),
                     sta_sex = Convert.ToByte(streamProvider.FormData["sta_sex"]),
+                    
 
 
                 };
@@ -205,29 +209,32 @@ namespace ERP.API.Controllers.Dashboard
                 // get data from formdata
                 StaffUpdateViewModel staffUpdateViewModel = new StaffUpdateViewModel
                 {
-
                     sta_id = Convert.ToInt32(streamProvider.FormData["sta_id"]),
+
                     sta_fullname = Convert.ToString(streamProvider.FormData["sta_fullname"]),
                     sta_code = Convert.ToString(streamProvider.FormData["sta_code"]),
                     sta_username = Convert.ToString(streamProvider.FormData["sta_username"]),
                     sta_password = Convert.ToString(streamProvider.FormData["sta_password"]),
                     sta_email = Convert.ToString(streamProvider.FormData["sta_email"]),
-                    sta_position = Convert.ToString(streamProvider.FormData["sta_position"]),
+
                     sta_aboutme = Convert.ToString(streamProvider.FormData["sta_aboutme"]),
                     sta_mobile = Convert.ToString(streamProvider.FormData["sta_mobile"]),
                     sta_identity_card = Convert.ToString(streamProvider.FormData["sta_identity_card"]),
                     sta_address = Convert.ToString(streamProvider.FormData["sta_address"]),
+                    sta_hometown = Convert.ToString(streamProvider.FormData["sta_hometown"]),
 
                     department_id = Convert.ToInt32(streamProvider.FormData["department_id"]),
                     group_role_id = Convert.ToInt32(streamProvider.FormData["group_role_id"]),
                     social_id = Convert.ToInt32(streamProvider.FormData["social_id"]),
-                    source_id = Convert.ToInt32(streamProvider.FormData["source_id"]),
+                    position_id = Convert.ToInt32(streamProvider.FormData["position_id"]),
+                    sta_leader_id = Convert.ToInt32(streamProvider.FormData["sta_leader_id"]),
+
 
                     sta_birthday = Convert.ToDateTime(streamProvider.FormData["sta_birthday"]),
                     sta_identity_card_date = Convert.ToDateTime(streamProvider.FormData["sta_identity_card_date"]),
                     sta_created_date = Convert.ToDateTime(streamProvider.FormData["sta_created_date"]),
 
-                    sta_status = Convert.ToBoolean(streamProvider.FormData["sta_status"]),
+                    sta_status = Convert.ToByte(streamProvider.FormData["sta_status"]),
                     sta_sex = Convert.ToByte(streamProvider.FormData["sta_sex"]),
 
                 };
@@ -298,7 +305,7 @@ namespace ERP.API.Controllers.Dashboard
                     // return response
                     response.Code = HttpCode.OK;
                     response.Message = MessageResponse.SUCCESS;
-                    response.Data = staffDeleted;
+                    response.Data = null;
                     return Ok(response);
                 }
                 else

@@ -106,7 +106,7 @@ namespace ERP.API.Controllers.Dashboard
                 // get data from formdata
                 ServiceCreateViewModel serviceCreateViewModel = new ServiceCreateViewModel
                 {
-                    se_type = Convert.ToString(streamProvider.FormData["se_type"]),
+                    se_code = Convert.ToString(streamProvider.FormData["se_code"]),
                     se_name = Convert.ToString(streamProvider.FormData["se_name"]),
                     se_description = Convert.ToString(streamProvider.FormData["se_description"]),
                     
@@ -114,8 +114,10 @@ namespace ERP.API.Controllers.Dashboard
 
 
                     service_category_id = Convert.ToInt32(streamProvider.FormData["service_category_id"]),
+                    se_price = Convert.ToInt32(streamProvider.FormData["se_price"]),
+                    se_saleoff = Convert.ToInt32(streamProvider.FormData["se_saleoff"]),
 
-                    se_price = Convert.ToDouble(streamProvider.FormData["se_price"]),
+                    se_type = Convert.ToByte(streamProvider.FormData["se_type"]),
                    
                     
 
@@ -182,16 +184,18 @@ namespace ERP.API.Controllers.Dashboard
                 ServiceUpdateViewModel serviceUpdateViewModel = new ServiceUpdateViewModel
                 {
                     se_id = Convert.ToInt32(streamProvider.FormData["se_id"]),
-                    se_type = Convert.ToString(streamProvider.FormData["se_type"]),
+                    se_code = Convert.ToString(streamProvider.FormData["se_code"]),
                     se_name = Convert.ToString(streamProvider.FormData["se_name"]),
                     se_description = Convert.ToString(streamProvider.FormData["se_description"]),
-                    
+
 
 
 
                     service_category_id = Convert.ToInt32(streamProvider.FormData["service_category_id"]),
+                    se_price = Convert.ToInt32(streamProvider.FormData["se_price"]),
+                    se_saleoff = Convert.ToInt32(streamProvider.FormData["se_saleoff"]),
 
-                    se_price = Convert.ToDouble(streamProvider.FormData["se_price"]),
+                    se_type = Convert.ToByte(streamProvider.FormData["se_type"]),
 
                 };
 

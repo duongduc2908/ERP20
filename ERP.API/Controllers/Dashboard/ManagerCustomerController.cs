@@ -117,14 +117,13 @@ namespace ERP.API.Controllers.Dashboard
                     cu_note = Convert.ToString(streamProvider.FormData["cu_note"]),
 
 
-                    social_id = Convert.ToInt32(streamProvider.FormData["social_id"]),
+                    cu_geocoding = Convert.ToInt32(streamProvider.FormData["cu_geocoding"]),
                     customer_group_id = Convert.ToInt32(streamProvider.FormData["customer_group_id"]),
-                    customer_address_id = Convert.ToInt32(streamProvider.FormData["customer_address_id"]),
-                    source_id = Convert.ToInt32(streamProvider.FormData["source_id"]),
-
+                    
                     cu_create_date = Convert.ToDateTime(streamProvider.FormData["cu_create_date"]),
 
                     cu_type = Convert.ToByte(streamProvider.FormData["cu_type"]),
+                    cu_status = Convert.ToByte(streamProvider.FormData["cu_status"]),
 
 
                 };
@@ -211,14 +210,13 @@ namespace ERP.API.Controllers.Dashboard
                     cu_note = Convert.ToString(streamProvider.FormData["cu_note"]),
 
 
-                    social_id = Convert.ToInt32(streamProvider.FormData["social_id"]),
+                    cu_geocoding = Convert.ToInt32(streamProvider.FormData["cu_geocoding"]),
                     customer_group_id = Convert.ToInt32(streamProvider.FormData["customer_group_id"]),
-                    customer_address_id = Convert.ToInt32(streamProvider.FormData["customer_address_id"]),
-                    source_id = Convert.ToInt32(streamProvider.FormData["source_id"]),
 
                     cu_create_date = Convert.ToDateTime(streamProvider.FormData["cu_create_date"]),
 
                     cu_type = Convert.ToByte(streamProvider.FormData["cu_type"]),
+                    cu_status = Convert.ToByte(streamProvider.FormData["cu_status"]),
 
                 };
 

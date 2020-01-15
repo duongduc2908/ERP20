@@ -97,25 +97,27 @@ namespace ERP.API.Controllers.Dashboard
                 ProductCreateViewModel productCreateViewModel = new ProductCreateViewModel
                 {
                     pu_code = Convert.ToString(streamProvider.FormData["pu_code"]),
-                    pu_buy_price = Convert.ToString(streamProvider.FormData["pu_buy_price"]),
-                    pu_sale_price = Convert.ToString(streamProvider.FormData["pu_sale_price"]),
+                    pu_name = Convert.ToString(streamProvider.FormData["pu_name"]),
+                    pu_short_description = Convert.ToString(streamProvider.FormData["pu_short_description"]),
                     pu_description = Convert.ToString(streamProvider.FormData["pu_description"]),
 
 
                     pu_quantity = Convert.ToInt32(streamProvider.FormData["pu_quantity"]),
-                    pu_saleoff = Convert.ToInt32(streamProvider.FormData["pu_saleoff"]),
-                    pu_short_description = Convert.ToInt32(streamProvider.FormData["pu_short_description"]),
+                    pu_buy_price = Convert.ToInt32(streamProvider.FormData["pu_buy_price"]),
+                    pu_sale_price = Convert.ToInt32(streamProvider.FormData["pu_sale_price"]),
+                    pu_saleoff= Convert.ToInt32(streamProvider.FormData["pu_saleoff"]),
                     product_category_id = Convert.ToInt32(streamProvider.FormData["product_category_id"]),
-                    provider_id = Convert.ToInt32(streamProvider.FormData["provider_id"]),
+                    provider_id= Convert.ToInt32(streamProvider.FormData["provider_id"]),
+                    pu_tax = Convert.ToInt32(streamProvider.FormData["pu_tax"]),
+                    pu_weight = Convert.ToInt32(streamProvider.FormData["pu_weight"]),
 
                     pu_create_date = Convert.ToDateTime(streamProvider.FormData["pu_create_date"]),
                     pu_update_date = Convert.ToDateTime(streamProvider.FormData["pu_update_date"]),
+                    pu_expired_date = Convert.ToDateTime(streamProvider.FormData["pu_expired_date"]),
 
-
-                    pu_rate = Convert.ToByte(streamProvider.FormData["pu_rate"]),
+                                        
                     pu_unit = Convert.ToByte(streamProvider.FormData["pu_unit"]),
-                    pu_status = Convert.ToByte(streamProvider.FormData["pu_status"]),
-                    pu_size = Convert.ToByte(streamProvider.FormData["pu_size"]),
+                    
 
 
                 };
@@ -170,28 +172,28 @@ namespace ERP.API.Controllers.Dashboard
                 // get data from formdata
                 ProductUpdateViewModel productUpdateViewModel = new ProductUpdateViewModel
                 {
-
                     pu_id = Convert.ToInt32(streamProvider.FormData["pu_id"]),
                     pu_code = Convert.ToString(streamProvider.FormData["pu_code"]),
-                    pu_buy_price = Convert.ToString(streamProvider.FormData["pu_buy_price"]),
-                    pu_sale_price = Convert.ToString(streamProvider.FormData["pu_sale_price"]),
+                    pu_name = Convert.ToString(streamProvider.FormData["pu_name"]),
+                    pu_short_description = Convert.ToString(streamProvider.FormData["pu_short_description"]),
                     pu_description = Convert.ToString(streamProvider.FormData["pu_description"]),
 
 
                     pu_quantity = Convert.ToInt32(streamProvider.FormData["pu_quantity"]),
+                    pu_buy_price = Convert.ToInt32(streamProvider.FormData["pu_buy_price"]),
+                    pu_sale_price = Convert.ToInt32(streamProvider.FormData["pu_sale_price"]),
                     pu_saleoff = Convert.ToInt32(streamProvider.FormData["pu_saleoff"]),
-                    pu_short_description = Convert.ToInt32(streamProvider.FormData["pu_short_description"]),
                     product_category_id = Convert.ToInt32(streamProvider.FormData["product_category_id"]),
                     provider_id = Convert.ToInt32(streamProvider.FormData["provider_id"]),
+                    pu_tax = Convert.ToInt32(streamProvider.FormData["pu_tax"]),
+                    pu_weight = Convert.ToInt32(streamProvider.FormData["pu_weight"]),
 
                     pu_create_date = Convert.ToDateTime(streamProvider.FormData["pu_create_date"]),
                     pu_update_date = Convert.ToDateTime(streamProvider.FormData["pu_update_date"]),
+                    pu_expired_date = Convert.ToDateTime(streamProvider.FormData["pu_expired_date"]),
 
 
-                    pu_rate = Convert.ToByte(streamProvider.FormData["pu_rate"]),
                     pu_unit = Convert.ToByte(streamProvider.FormData["pu_unit"]),
-                    pu_status = Convert.ToByte(streamProvider.FormData["pu_status"]),
-                    pu_size = Convert.ToByte(streamProvider.FormData["pu_size"]),
 
                 };
 

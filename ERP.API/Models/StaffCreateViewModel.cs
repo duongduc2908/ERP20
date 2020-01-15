@@ -12,44 +12,42 @@ namespace ERP.API.Models
         {
         }
 
-
-        [StringLength(12)]
+        [StringLength(50)]
         public string sta_code { get; set; }
 
-        [StringLength(50)]
+        [StringLength(120)]
         public string sta_thumbnai { get; set; }
 
-        [StringLength(50)]
+        [StringLength(45)]
         public string sta_fullname { get; set; }
 
-        [StringLength(50)]
+        [StringLength(45)]
         public string sta_username { get; set; }
 
+        [StringLength(120)]
         public string sta_password { get; set; }
 
         public byte? sta_sex { get; set; }
 
         public DateTime? sta_birthday { get; set; }
 
-        [StringLength(50)]
+        [StringLength(30)]
         public string sta_email { get; set; }
 
-        [StringLength(50)]
-        public string sta_position { get; set; }
+        public byte? sta_status { get; set; }
 
-        public bool? sta_status { get; set; }
-
+        [StringLength(500)]
         public string sta_aboutme { get; set; }
 
-        [StringLength(20)]
+        [StringLength(11)]
         public string sta_mobile { get; set; }
 
-        [StringLength(250)]
+        [StringLength(20)]
         public string sta_identity_card { get; set; }
 
         public DateTime? sta_identity_card_date { get; set; }
 
-        [StringLength(250)]
+        [StringLength(120)]
         public string sta_address { get; set; }
 
         public DateTime? sta_created_date { get; set; }
@@ -60,6 +58,11 @@ namespace ERP.API.Models
 
         public int? social_id { get; set; }
 
-        public int? source_id { get; set; }
+        [StringLength(120)]
+        public string sta_hometown { get; set; }
+
+        public int? position_id { get; set; }
+
+        public int? sta_leader_id { get; set; }
     }
 }

@@ -12,37 +12,38 @@ namespace ERP.API.Models
         {
 
         }
+
         
-        [StringLength(12)]
+
+        [StringLength(45)]
         public string cu_code { get; set; }
 
-        [StringLength(20)]
+        [StringLength(10)]
         public string cu_mobile { get; set; }
 
-        [StringLength(50)]
+        [StringLength(45)]
         public string cu_thumbnail { get; set; }
 
-        [StringLength(50)]
+        [StringLength(40)]
         public string cu_email { get; set; }
 
-        [StringLength(50)]
+        [StringLength(45)]
         public string cu_fullname { get; set; }
 
         public byte? cu_type { get; set; }
 
-        [StringLength(250)]
+        [StringLength(120)]
         public string cu_address { get; set; }
 
         public DateTime? cu_create_date { get; set; }
 
+        [StringLength(250)]
         public string cu_note { get; set; }
 
-        public int? social_id { get; set; }
+        public int? cu_geocoding { get; set; }
 
         public int? customer_group_id { get; set; }
 
-        public int? customer_address_id { get; set; }
-
-        public int? source_id { get; set; }
+        public byte? cu_status { get; set; }
     }
 }
