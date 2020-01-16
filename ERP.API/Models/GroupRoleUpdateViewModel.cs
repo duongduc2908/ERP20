@@ -1,13 +1,15 @@
-namespace ERP.Data.ModelsERP
-{
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Web;
 
-    public partial class group_role
+namespace ERP.API.Models
+{
+    public class GroupRoleUpdateViewModel
     {
+        public GroupRoleUpdateViewModel() { }
         [Key]
         public int gr_id { get; set; }
 

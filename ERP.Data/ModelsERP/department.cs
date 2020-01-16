@@ -12,15 +12,16 @@ namespace ERP.Data.ModelsERP
         [Key]
         public int de_id { get; set; }
 
-        [StringLength(250)]
+        [StringLength(50)]
         public string de_name { get; set; }
 
-        [StringLength(250)]
+        [StringLength(45)]
         public string de_thumbnail { get; set; }
 
+        [StringLength(500)]
         public string de_description { get; set; }
 
-        [StringLength(250)]
+        [StringLength(150)]
         public string de_manager { get; set; }
 
         public int? company_id { get; set; }
