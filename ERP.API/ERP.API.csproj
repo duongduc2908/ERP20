@@ -226,6 +226,7 @@
     <Compile Include="Controllers\Dashboard\ManagerCustomerController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerDepartmentController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerGroupRoleController.cs" />
+    <Compile Include="Controllers\Dashboard\ManagerNotificationController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerPositionController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerProductController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerServiceController.cs" />
@@ -241,6 +242,8 @@
     <Compile Include="Models\DepartmentUpdateViewModel.cs" />
     <Compile Include="Models\GroupRoleCreateViewModel.cs" />
     <Compile Include="Models\GroupRoleUpdateViewModel.cs" />
+    <Compile Include="Models\NotificationCreateViewModel.cs" />
+    <Compile Include="Models\NotificationUpdateViewModel.cs" />
     <Compile Include="Models\PositionCreateViewModel.cs" />
     <Compile Include="Models\PositionUpdateViewModel.cs" />
     <Compile Include="Models\ProductCreateViewModel.cs" />
@@ -328,6 +331,7 @@
     <Folder Include="Views\ManagerDepartment\" />
     <Folder Include="Views\ManagerGroupRoleController\" />
     <Folder Include="Views\ManagerGroupRole\" />
+    <Folder Include="Views\ManagerNotification\" />
     <Folder Include="Views\ManagerPosition\" />
     <Folder Include="Views\ManagerProduct\" />
     <Folder Include="Views\ManagerService\" />

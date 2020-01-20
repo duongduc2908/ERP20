@@ -21,18 +21,28 @@ namespace ERP.API.AutoMapper
         {
             CreateMap<StaffCreateViewModel, staff>();
             CreateMap<StaffUpdateViewModel, staff>(); 
+
             CreateMap<CustomerCreateViewModel, customer>();
             CreateMap<CustomerUpdateViewModel, customer>();
+
             CreateMap<ProductCreateViewModel, product>();
             CreateMap<ProductUpdateViewModel, product>();
+
             CreateMap<ServiceCreateViewModel, service>();
             CreateMap<ServiceUpdateViewModel, service>();
+
             CreateMap<GroupRoleCreateViewModel, group_role>();
             CreateMap<GroupRoleUpdateViewModel, group_role>();
+
             CreateMap<DepartmentCreateViewModel, department>();
             CreateMap<DepartmentUpdateViewModel, department>();
+
             CreateMap<PositionCreateViewModel, position>();
             CreateMap<PositionUpdateViewModel, position>();
+
+            CreateMap<NotificationUpdateViewModel, notification>();
+            CreateMap<NotificationCreateViewModel, notification>();
+
 
         }
 
