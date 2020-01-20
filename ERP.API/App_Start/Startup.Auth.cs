@@ -42,7 +42,8 @@ namespace ERP.API
                 //Setting the Token Expired Time (24 hours)
                 AccessTokenExpireTimeSpan = TimeSpan.FromDays(1),
                 //MyAuthorizationServerProvider class will validate the user credentials
-                Provider = new ApplicationOAuthProvider()
+                Provider = new ApplicationOAuthProvider(),
+                RefreshTokenProvider = new RefreshTokenProvider()
             };
             //Token Generations
             app.UseOAuthAuthorizationServer(options);

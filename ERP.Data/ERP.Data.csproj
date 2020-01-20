@@ -123,6 +123,7 @@
     <Compile Include="Identity\AppIdentityClaims.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="DbContext\ERPDbContext.cs" />
+    <Compile Include="ModelsERP\ClientMaster.cs" />
     <Compile Include="ModelsERP\company.cs" />
     <Compile Include="ModelsERP\customer.cs" />
     <Compile Include="ModelsERP\department.cs" />
@@ -136,6 +137,7 @@
     <Compile Include="ModelsERP\position.cs" />
     <Compile Include="ModelsERP\product.cs" />
     <Compile Include="ModelsERP\project.cs" />
+    <Compile Include="ModelsERP\RefreshToken.cs" />
     <Compile Include="ModelsERP\service.cs" />
     <Compile Include="ModelsERP\staff.cs" />
     <Compile Include="ModelsERP\task.cs" />

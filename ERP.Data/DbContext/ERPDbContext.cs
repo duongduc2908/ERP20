@@ -25,6 +25,7 @@ namespace ERP.Data.DbContext
         {
             return new ERPDbContext();
         }
+        public virtual DbSet<ClientMaster> ClientMasters { get; set; }
         public virtual DbSet<company> companies { get; set; }
         public virtual DbSet<customer> customers { get; set; }
         public virtual DbSet<department> departments { get; set; }
@@ -38,6 +39,7 @@ namespace ERP.Data.DbContext
         public virtual DbSet<position> positions { get; set; }
         public virtual DbSet<product> products { get; set; }
         public virtual DbSet<project> projects { get; set; }
+        public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
         public virtual DbSet<service> services { get; set; }
         public virtual DbSet<staff> staffs { get; set; }
         public virtual DbSet<task> tasks { get; set; }
