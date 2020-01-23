@@ -17,9 +17,11 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Hosting;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace ERP.API.Controllers.Dashboard
 {
+    [EnableCors("*", "*", "*")]
     public class ManagerstaffsController : ApiController
     {
         private readonly IStaffService _staffservice;

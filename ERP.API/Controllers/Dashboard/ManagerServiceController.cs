@@ -12,11 +12,12 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace ERP.API.Controllers.Dashboard
 {
+    [EnableCors("*", "*", "*")]
     public class ManagerServiceController : ApiController
     {
         private readonly IServiceService _serviceservice;
