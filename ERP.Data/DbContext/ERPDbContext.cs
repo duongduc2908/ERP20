@@ -43,5 +43,6 @@ namespace ERP.Data.DbContext
         public virtual DbSet<service> services { get; set; }
         public virtual DbSet<staff> staffs { get; set; }
         public virtual DbSet<task> tasks { get; set; }
+        public virtual DbSet<service_time> service_time { get; set; }
     }
 }

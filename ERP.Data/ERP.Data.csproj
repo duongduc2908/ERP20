@@ -139,6 +139,7 @@
     <Compile Include="ModelsERP\project.cs" />
     <Compile Include="ModelsERP\RefreshToken.cs" />
     <Compile Include="ModelsERP\service.cs" />
+    <Compile Include="ModelsERP\service_time.cs" />
     <Compile Include="ModelsERP\staff.cs" />
     <Compile Include="ModelsERP\task.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

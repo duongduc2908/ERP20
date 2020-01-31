@@ -12,6 +12,7 @@ using ERP.API.Providers;
 using ERP.API.Models;
 using ERP.Data.DbContext;
 using System.Web.Http;
+using Microsoft.Owin.Cors;
 
 namespace ERP.API
 {
@@ -32,7 +33,7 @@ namespace ERP.API
             // and to use a cookie to temporarily store information about a user logging in with a third party login provider
             app.UseCookieAuthentication(new CookieAuthenticationOptions());
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
-            app.UseCors(Microsoft.Owin.Cors.CorsOptions.AllowAll);
+            app.UseCors(CorsOptions.AllowAll);
             // Configure the application for OAuth based flow
             OAuthAuthorizationServerOptions options = new OAuthAuthorizationServerOptions
             {
