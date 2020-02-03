@@ -127,6 +127,11 @@
     <Compile Include="ModelsERP\company.cs" />
     <Compile Include="ModelsERP\customer.cs" />
     <Compile Include="ModelsERP\department.cs" />
+    <Compile Include="ModelsERP\email.cs" />
+    <Compile Include="ModelsERP\email_strategy.cs" />
+    <Compile Include="ModelsERP\email_template.cs" />
+    <Compile Include="ModelsERP\field.cs" />
+    <Compile Include="ModelsERP\field_template.cs" />
     <Compile Include="ModelsERP\function.cs" />
     <Compile Include="ModelsERP\function_setting.cs" />
     <Compile Include="ModelsERP\group_role.cs" />
@@ -140,6 +145,9 @@
     <Compile Include="ModelsERP\RefreshToken.cs" />
     <Compile Include="ModelsERP\service.cs" />
     <Compile Include="ModelsERP\service_time.cs" />
+    <Compile Include="ModelsERP\sm.cs" />
+    <Compile Include="ModelsERP\sms_strategy.cs" />
+    <Compile Include="ModelsERP\sms_template.cs" />
     <Compile Include="ModelsERP\staff.cs" />
     <Compile Include="ModelsERP\task.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
