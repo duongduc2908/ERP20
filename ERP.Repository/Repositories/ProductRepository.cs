@@ -21,7 +21,7 @@ namespace ERP.Repository.Repositories
 
             var list = _dbContext.products.OrderBy(t => t.pu_id).Skip(skipAmount).Take(pageSize);
 
-            var totalNumberOfRecords = list.Count();
+            var totalNumberOfRecords = _dbContext.products.Count();
 
             var results = list.ToList();
 

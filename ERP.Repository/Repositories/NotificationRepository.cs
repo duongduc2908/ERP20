@@ -21,7 +21,7 @@ namespace ERP.Repository.Repositories
 
             var list = _dbContext.notifications.OrderBy(t => t.ntf_id).Skip(skipAmount).Take(pageSize);
 
-            var totalNumberOfRecords = list.Count();
+            var totalNumberOfRecords = _dbContext.notifications.Count();
 
             var results = list.ToList();
 

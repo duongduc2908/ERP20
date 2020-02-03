@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Web;
 using ERP.Common.Models;
+using ERP.Data.DbContext;
 
 namespace ERP.Common.GenericService
 {
@@ -15,6 +16,7 @@ namespace ERP.Common.GenericService
         private const string ParamNull = "Entity input cant null";
 
         private readonly GenericRepository.IGenericRepository<TEntity> _repository;
+        private ERPDbContext dbContext;
 
         #endregion properties
 
@@ -23,6 +25,11 @@ namespace ERP.Common.GenericService
         public GenericService(GenericRepository.IGenericRepository<TEntity> repository)
         {
             _repository = repository;
+        }
+
+        public GenericService(ERPDbContext dbContext)
+        {
+            this.dbContext = dbContext;
         }
 
         #endregion constructor
