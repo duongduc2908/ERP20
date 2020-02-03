@@ -49,7 +49,7 @@ namespace ERP.Data.DbContext
         public virtual DbSet<email_template> email_template { get; set; }
         public virtual DbSet<field> fields { get; set; }
         public virtual DbSet<field_template> field_template { get; set; }
-        public virtual DbSet<sm> sms { get; set; }
+        public virtual DbSet<sms> sms { get; set; }
         public virtual DbSet<sms_strategy> sms_strategy { get; set; }
         public virtual DbSet<sms_template> sms_template { get; set; }
     }

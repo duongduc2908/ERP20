@@ -74,11 +74,21 @@
     <Compile Include="Services\CompanyService.cs" />
     <Compile Include="Services\CustomerService.cs" />
     <Compile Include="Services\DepartmentService.cs" />
+    <Compile Include="Services\EmailService.cs" />
+    <Compile Include="Services\EmailStrategyService.cs" />
+    <Compile Include="Services\EmailTemplateService.cs" />
+    <Compile Include="Services\FieldService.cs" />
+    <Compile Include="Services\FieldTemplateService.cs" />
     <Compile Include="Services\FunctionService.cs" />
     <Compile Include="Services\GroupRoleService.cs" />
     <Compile Include="Services\IServices\ICompanyService.cs" />
     <Compile Include="Services\IServices\ICustomerService.cs" />
     <Compile Include="Services\IServices\IDepartmentService.cs" />
+    <Compile Include="Services\IServices\IEmailService.cs" />
+    <Compile Include="Services\IServices\IEmailStrategyService.cs" />
+    <Compile Include="Services\IServices\IEmailTemplateService.cs" />
+    <Compile Include="Services\IServices\IFieldService.cs" />
+    <Compile Include="Services\IServices\IFieldTemplateService.cs" />
     <Compile Include="Services\IServices\IFunctionService.cs" />
     <Compile Include="Services\IServices\IFunctionSettingService.cs" />
     <Compile Include="Services\IServices\IGroupRoleService.cs" />
@@ -90,6 +100,9 @@
     <Compile Include="Services\IServices\IProductService.cs" />
     <Compile Include="Services\IServices\IProjectService.cs" />
     <Compile Include="Services\IServices\IServiceService.cs" />
+    <Compile Include="Services\IServices\ISmsService.cs" />
+    <Compile Include="Services\IServices\ISmsStrategyService.cs" />
+    <Compile Include="Services\IServices\ISmsTemplateService.cs" />
     <Compile Include="Services\IServices\IStaffService.cs" />
     <Compile Include="Services\IServices\ITaskService.cs" />
     <Compile Include="Services\NotificationService.cs" />
@@ -100,6 +113,9 @@
     <Compile Include="Services\ProductService.cs" />
     <Compile Include="Services\ProjectService.cs" />
     <Compile Include="Services\ServiceService.cs" />
+    <Compile Include="Services\SmsService.cs" />
+    <Compile Include="Services\SmsStrategyService.cs" />
+    <Compile Include="Services\SmsTemplateService.cs" />
     <Compile Include="Services\StaffService.cs" />
   </ItemGroup>
   <ItemGroup>

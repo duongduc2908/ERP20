@@ -6,7 +6,7 @@ namespace ERP.Data.ModelsERP
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    public partial class sm
+    public partial class sms
     {
         [Key]
         public int sms_id { get; set; }

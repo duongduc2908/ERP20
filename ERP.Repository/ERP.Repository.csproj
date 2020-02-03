@@ -89,12 +89,22 @@
     <Compile Include="Repositories\CompanyRepository.cs" />
     <Compile Include="Repositories\CustomerRepository.cs" />
     <Compile Include="Repositories\DepartmentRepository.cs" />
+    <Compile Include="Repositories\EmailRepository.cs" />
+    <Compile Include="Repositories\EmailStrategyRepository.cs" />
+    <Compile Include="Repositories\EmailTemplateRepository.cs" />
+    <Compile Include="Repositories\FieldRepository.cs" />
+    <Compile Include="Repositories\FieldTemplateRepository.cs" />
     <Compile Include="Repositories\FunctionRepository.cs" />
     <Compile Include="Repositories\FunctionSettingRepository.cs" />
     <Compile Include="Repositories\GroupRoleRepository.cs" />
     <Compile Include="Repositories\IRepositories\ICompanyRepository.cs" />
     <Compile Include="Repositories\IRepositories\ICustomerRepository.cs" />
     <Compile Include="Repositories\IRepositories\IDepartmentRepository.cs" />
+    <Compile Include="Repositories\IRepositories\IEmailRepository.cs" />
+    <Compile Include="Repositories\IRepositories\IEmailStrategyRepository.cs" />
+    <Compile Include="Repositories\IRepositories\IEmailTemplateRepository.cs" />
+    <Compile Include="Repositories\IRepositories\IFieldRepository.cs" />
+    <Compile Include="Repositories\IRepositories\IFieldTemplateRepository.cs" />
     <Compile Include="Repositories\IRepositories\IFunctionRepository.cs" />
     <Compile Include="Repositories\IRepositories\IFunctionSettingRepository.cs" />
     <Compile Include="Repositories\IRepositories\IGroupRoleRepository.cs" />
@@ -106,6 +116,9 @@
     <Compile Include="Repositories\IRepositories\IProductRepository.cs" />
     <Compile Include="Repositories\IRepositories\IProjectRepository.cs" />
     <Compile Include="Repositories\IRepositories\IServiceRepository.cs" />
+    <Compile Include="Repositories\IRepositories\ISmsRepository.cs" />
+    <Compile Include="Repositories\IRepositories\ISmsStrategyRepository.cs" />
+    <Compile Include="Repositories\IRepositories\ISmsTemplateRepository.cs" />
     <Compile Include="Repositories\IRepositories\IStaffRepository.cs" />
     <Compile Include="Repositories\IRepositories\ITaskRepository.cs" />
     <Compile Include="Repositories\NotificationRepository.cs" />
@@ -116,6 +129,9 @@
     <Compile Include="Repositories\ProductRepository.cs" />
     <Compile Include="Repositories\ProjectRepository.cs" />
     <Compile Include="Repositories\ServiceRepository.cs" />
+    <Compile Include="Repositories\SmsRepository.cs" />
+    <Compile Include="Repositories\SmsStrategyRepository.cs" />
+    <Compile Include="Repositories\SmsTemplateRepository.cs" />
     <Compile Include="Repositories\StaffRepository.cs" />
     <Compile Include="Repositories\TaskRepository.cs" />
   </ItemGroup>
