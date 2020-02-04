@@ -225,11 +225,17 @@
     <Compile Include="Controllers\Dashboard\ManagerCompanyController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerCustomerController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerDepartmentController.cs" />
+    <Compile Include="Controllers\Dashboard\ManagerEmailController.cs" />
+    <Compile Include="Controllers\Dashboard\ManagerEmailStrategyController.cs" />
+    <Compile Include="Controllers\Dashboard\ManagerEmailTemplateController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerGroupRoleController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerNotificationController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerPositionController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerProductController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerServiceController.cs" />
+    <Compile Include="Controllers\Dashboard\ManagerSmsController.cs" />
+    <Compile Include="Controllers\Dashboard\ManagerSmsStrategyController.cs" />
+    <Compile Include="Controllers\Dashboard\ManagerSmsTemplateController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerStaffController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -240,6 +246,12 @@
     <Compile Include="Models\CustomerUpdateViewModel.cs" />
     <Compile Include="Models\DepartmentCreateViewModel.cs" />
     <Compile Include="Models\DepartmentUpdateViewModel.cs" />
+    <Compile Include="Models\EmailCreateViewModel.cs" />
+    <Compile Include="Models\EmailStrategyCreateViewModel.cs" />
+    <Compile Include="Models\EmailStrategyUpdateViewModel.cs" />
+    <Compile Include="Models\EmailTemplateCreateViewModel.cs" />
+    <Compile Include="Models\EmailTemplateUpdateViewModel.cs" />
+    <Compile Include="Models\EmailUpdateViewModel.cs" />
     <Compile Include="Models\GroupRoleCreateViewModel.cs" />
     <Compile Include="Models\GroupRoleUpdateViewModel.cs" />
     <Compile Include="Models\NotificationCreateViewModel.cs" />
@@ -250,6 +262,12 @@
     <Compile Include="Models\ProductUpdateViewModel.cs" />
     <Compile Include="Models\ServiceCreateViewModel.cs" />
     <Compile Include="Models\ServiceUpdateViewModel.cs" />
+    <Compile Include="Models\SmsCreateViewModel.cs" />
+    <Compile Include="Models\SmsStrategyCreateViewModel.cs" />
+    <Compile Include="Models\SmsStrategyUpdateViewModel.cs" />
+    <Compile Include="Models\SmsTemplateCreateViewModel.cs" />
+    <Compile Include="Models\SmsTemplateUpdateViewModel.cs" />
+    <Compile Include="Models\SmsUpdateViewModel.cs" />
     <Compile Include="Models\StaffCreateViewModel.cs" />
     <Compile Include="Models\StaffUpdateViewModel.cs" />
     <Compile Include="Models\Token.cs" />
@@ -329,12 +347,18 @@
     <Folder Include="Views\ManagerCompany\" />
     <Folder Include="Views\ManagerCustomer\" />
     <Folder Include="Views\ManagerDepartment\" />
+    <Folder Include="Views\ManagerEmailStrategy\" />
+    <Folder Include="Views\ManagerEmailTemplate\" />
+    <Folder Include="Views\ManagerEmail\" />
     <Folder Include="Views\ManagerGroupRoleController\" />
     <Folder Include="Views\ManagerGroupRole\" />
     <Folder Include="Views\ManagerNotification\" />
     <Folder Include="Views\ManagerPosition\" />
     <Folder Include="Views\ManagerProduct\" />
     <Folder Include="Views\ManagerService\" />
+    <Folder Include="Views\ManagerSmsStrategy\" />
+    <Folder Include="Views\ManagerSmsTemplate\" />
+    <Folder Include="Views\ManagerSms\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

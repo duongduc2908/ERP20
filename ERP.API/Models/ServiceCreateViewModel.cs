@@ -12,8 +12,6 @@ namespace ERP.API.Models
         public ServiceCreateViewModel() { }
 
 
-        
-
         [StringLength(10)]
         public string se_code { get; set; }
 

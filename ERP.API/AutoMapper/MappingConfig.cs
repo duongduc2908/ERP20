@@ -43,7 +43,23 @@ namespace ERP.API.AutoMapper
             CreateMap<NotificationUpdateViewModel, notification>();
             CreateMap<NotificationCreateViewModel, notification>();
 
+            CreateMap<SmsCreateViewModel, sms>();
+            CreateMap<SmsUpdateViewModel, sms>();
 
+            CreateMap<SmsTemplateCreateViewModel, sms_template>();
+            CreateMap<SmsTemplateUpdateViewModel, sms_template>();
+
+            CreateMap<SmsStrategyCreateViewModel, sms_strategy>();
+            CreateMap<SmsStrategyUpdateViewModel, sms_strategy>();
+
+            CreateMap<EmailCreateViewModel, email>();
+            CreateMap<EmailUpdateViewModel, email>();
+
+            CreateMap<EmailTemplateCreateViewModel, email_template>();
+            CreateMap<EmailTemplateUpdateViewModel, email_template>();
+
+            CreateMap<EmailStrategyCreateViewModel, email_strategy>();
+            CreateMap<EmailStrategyUpdateViewModel, email_strategy>();
         }
 
         private void CreateMappingFromEntitiesToViewModels()
