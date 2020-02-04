@@ -54,7 +54,7 @@ namespace ERP.API.Providers
         public async Task ReceiveAsync(AuthenticationTokenReceiveContext context)
         {
             var allowedOrigin = context.OwinContext.Get<string>("ta:clientAllowedOrigin");
-            context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { allowedOrigin });
+            //context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { allowedOrigin });
             string hashedTokenId = HashMd5.GetHash(context.Token);
             using (AuthenticationRepository _repo = new AuthenticationRepository())
             {

@@ -41,8 +41,7 @@ namespace ERP.API.Providers
             {
                 allowedOrigin = "*";
             }
-            //context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { "*","*","*" });
-            var user = _dbContext.staffs.FirstOrDefault(t => t.sta_username.Contains(Username) && t.sta_password.Contains(Password));
+            var user = _dbContext.staffs.FirstOrDefault(t => t.sta_username.Contains(context.UserName) && t.sta_password.Contains(HashMd5.convertMD5(context.Password)));
             if (user == null)
             {
                 context.SetError("invalid_grant", "Provided username and password is incorrect");

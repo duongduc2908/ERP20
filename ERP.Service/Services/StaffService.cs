@@ -1,6 +1,7 @@
 ﻿using ERP.Common.GenericRepository;
 using ERP.Common.GenericService;
 using ERP.Common.Models;
+using ERP.Data;
 using ERP.Data.ModelsERP;
 using ERP.Repository.Repositories;
 using ERP.Repository.Repositories.IRepositories;
@@ -23,6 +24,10 @@ namespace ERP.Service.Services
         public PagedResults<staff> CreatePagedResults(int pageNumber, int pageSize)
         {
             return this._repository.CreatePagedResults(pageNumber, pageSize);
+        }
+        public void ChangePassword(ChangePasswordBindingModel model, int id)
+        {
+            this._repository.ChangePassword(model, id);
         }
     }
 }

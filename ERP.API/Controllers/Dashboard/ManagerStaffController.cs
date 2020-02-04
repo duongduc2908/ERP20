@@ -5,7 +5,6 @@ using ERP.Common.Models;
 using ERP.Data.Dto;
 using ERP.Data.ModelsERP;
 using ERP.Extension.Extensions;
-using ERP.Service.Services;
 using ERP.Service.Services.IServices;
 using System;
 using System.Collections.Generic;
@@ -22,6 +21,7 @@ using System.Web.Http.Cors;
 namespace ERP.API.Controllers.Dashboard
 {
     [EnableCors("*", "*", "*")]
+   // [Authorize(Roles = "Admin")]
     public class ManagerstaffsController : ApiController
     {
         private readonly IStaffService _staffservice;
@@ -83,7 +83,6 @@ namespace ERP.API.Controllers.Dashboard
 
         [HttpPost]
         [Route("api/staffs/create")]
-
         public async Task<IHttpActionResult> Createstaff()
         {
             ResponseDataDTO<staff> response = new ResponseDataDTO<staff>();
@@ -177,12 +176,8 @@ namespace ERP.API.Controllers.Dashboard
 
         }
 
-
-
-
         [HttpPut]
         [Route("api/staffs/update")]
-
         public async Task<IHttpActionResult> Updatestaff(int? sta_id)
         {
             ResponseDataDTO<staff> response = new ResponseDataDTO<staff>();
@@ -327,6 +322,38 @@ namespace ERP.API.Controllers.Dashboard
                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
                 response.Message = MessageResponse.FAIL;
                 response.Data = null;
+                Console.WriteLine(ex.ToString());
+
+                return Ok(response);
+            }
+        }
+
+        [HttpPut]
+        [Route("api/staffs/ChangePassword")]
+        public async Task<IHttpActionResult> ChangePassword(ERP.Data.ChangePasswordBindingModel model, int id)
+        {
+            ResponseDataDTO<bool> response = new ResponseDataDTO<bool>();
+            try
+            {
+                if( model.NewPassword != model.ConfirmPassword)
+                {
+                    response.Code = HttpCode.OK;
+                    response.Message = "ConfirmPassword not true";
+                    response.Data = false;
+                    return Ok(response);
+                }
+                _staffservice.ChangePassword(model, id);
+                // return response
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = true;
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = MessageResponse.FAIL;
+                response.Data = false;
                 Console.WriteLine(ex.ToString());
 
                 return Ok(response);

@@ -1,5 +1,6 @@
 ﻿using ERP.Common.GenericRepository;
 using ERP.Common.Models;
+using ERP.Data;
 using ERP.Data.ModelsERP;
 using System;
 using System.Collections.Generic;
@@ -12,5 +13,6 @@ namespace ERP.Repository.Repositories.IRepositories
     public interface IStaffRepository : IGenericRepository<staff>
     {
         PagedResults<staff> CreatePagedResults(int pageNumber, int pageSize);
+        void ChangePassword(ChangePasswordBindingModel model, int id);
     }
 }
