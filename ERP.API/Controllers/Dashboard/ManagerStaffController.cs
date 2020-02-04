@@ -4,6 +4,7 @@ using ERP.Common.Constants;
 using ERP.Common.Models;
 using ERP.Data.Dto;
 using ERP.Data.ModelsERP;
+using ERP.Data.ModelsERP.ModelView;
 using ERP.Extension.Extensions;
 using ERP.Service.Services.IServices;
 using System;
@@ -21,7 +22,6 @@ using System.Web.Http.Cors;
 namespace ERP.API.Controllers.Dashboard
 {
     [EnableCors("*", "*", "*")]
-   // [Authorize(Roles = "Admin")]
     public class ManagerstaffsController : ApiController
     {
         private readonly IStaffService _staffservice;
@@ -62,12 +62,12 @@ namespace ERP.API.Controllers.Dashboard
         [Route("api/staffs/page")]
         public IHttpActionResult GetstaffsPaging(int pageSize, int pageNumber)
         {
-            ResponseDataDTO<PagedResults<staff>> response = new ResponseDataDTO<PagedResults<staff>>();
+            ResponseDataDTO<PagedResults<staffviewmodel>> response = new ResponseDataDTO<PagedResults<staffviewmodel>>();
             try
             {
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _staffservice.CreatePagedResults(pageNumber, pageSize);
+                response.Data = _staffservice.GetAllPage(pageNumber, pageSize);
             }
             catch (Exception ex)
             {
@@ -112,7 +112,7 @@ namespace ERP.API.Controllers.Dashboard
                     sta_username = Convert.ToString(streamProvider.FormData["sta_username"]),
                     sta_password = Convert.ToString(streamProvider.FormData["sta_password"]),
                     sta_email = Convert.ToString(streamProvider.FormData["sta_email"]),
-                    
+
                     sta_aboutme = Convert.ToString(streamProvider.FormData["sta_aboutme"]),
                     sta_mobile = Convert.ToString(streamProvider.FormData["sta_mobile"]),
                     sta_identity_card = Convert.ToString(streamProvider.FormData["sta_identity_card"]),
@@ -132,7 +132,7 @@ namespace ERP.API.Controllers.Dashboard
 
                     sta_status = Convert.ToByte(streamProvider.FormData["sta_status"]),
                     sta_sex = Convert.ToByte(streamProvider.FormData["sta_sex"]),
-                    
+
 
 
                 };

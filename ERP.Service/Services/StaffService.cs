@@ -3,6 +3,7 @@ using ERP.Common.GenericService;
 using ERP.Common.Models;
 using ERP.Data;
 using ERP.Data.ModelsERP;
+using ERP.Data.ModelsERP.ModelView;
 using ERP.Repository.Repositories;
 using ERP.Repository.Repositories.IRepositories;
 using ERP.Service.Services.IServices;
@@ -28,6 +29,10 @@ namespace ERP.Service.Services
         public void ChangePassword(ChangePasswordBindingModel model, int id)
         {
             this._repository.ChangePassword(model, id);
+        }
+        public PagedResults<staffviewmodel> GetAllPage(int pageNumber, int pageSize)
+        {
+            return this._repository.GetAllPage(pageNumber, pageSize);
         }
     }
 }

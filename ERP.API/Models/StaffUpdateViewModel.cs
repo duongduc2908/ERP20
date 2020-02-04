@@ -8,9 +8,7 @@ namespace ERP.API.Models
 {
     public class StaffUpdateViewModel
     {
-        public StaffUpdateViewModel()
-        {
-        }
+        public StaffUpdateViewModel() { }
         [Key]
         public int sta_id { get; set; }
 
@@ -66,6 +64,5 @@ namespace ERP.API.Models
         public int? position_id { get; set; }
 
         public int? sta_leader_id { get; set; }
-
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ERP.API.Models;
 using ERP.Data.ModelsERP;
+using ERP.Data.ModelsERP.ModelView;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,9 @@ namespace ERP.API.AutoMapper
         private void CreateMappingFromViewModelsToEntities()
         {
             CreateMap<StaffCreateViewModel, staff>();
-            CreateMap<StaffUpdateViewModel, staff>(); 
+            CreateMap<StaffUpdateViewModel, staff>();
+            CreateMap< staff, staffviewmodel>();
+            
 
             CreateMap<CustomerCreateViewModel, customer>();
             CreateMap<CustomerUpdateViewModel, customer>();

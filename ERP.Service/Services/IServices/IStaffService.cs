@@ -2,6 +2,7 @@
 using ERP.Common.Models;
 using ERP.Data;
 using ERP.Data.ModelsERP;
+using ERP.Data.ModelsERP.ModelView;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +15,6 @@ namespace ERP.Service.Services.IServices
     {
         PagedResults<staff> CreatePagedResults(int pageNumber, int pageSize);
         void ChangePassword(ChangePasswordBindingModel model, int id);
+        PagedResults<staffviewmodel> GetAllPage(int pageNumber, int pageSize);
     }
 }
