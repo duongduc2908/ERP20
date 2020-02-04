@@ -41,7 +41,7 @@ namespace ERP.API.Providers
             {
                 allowedOrigin = "*";
             }
-            context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { allowedOrigin });
+            //context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { "*","*","*" });
             var user = _dbContext.staffs.FirstOrDefault(t => t.sta_username.Contains(Username) && t.sta_password.Contains(Password));
             if (user == null)
             {
