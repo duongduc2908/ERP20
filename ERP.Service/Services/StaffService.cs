@@ -34,5 +34,9 @@ namespace ERP.Service.Services
         {
             return this._repository.GetAllPage(pageNumber, pageSize);
         }
+        public PagedResults<staffviewmodel> GetInforById(int id)
+        {
+            return this._repository.GetInforById(id);
+        }
     }
 }

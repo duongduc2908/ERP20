@@ -80,7 +80,27 @@ namespace ERP.API.Controllers.Dashboard
 
             return Ok(response);
         }
+        [Route("api/staffs/infor")]
+        public IHttpActionResult GetInforById(int id)
+        {
+            ResponseDataDTO<PagedResults<staffviewmodel>> response = new ResponseDataDTO<PagedResults<staffviewmodel>>();
+            try
+            {
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = _staffservice.GetInforById(id);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = MessageResponse.FAIL;
+                response.Data = null;
 
+                Console.WriteLine(ex.ToString());
+            }
+
+            return Ok(response);
+        }
         [HttpPost]
         [Route("api/staffs/create")]
         public async Task<IHttpActionResult> Createstaff()

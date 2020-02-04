@@ -93,5 +93,30 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = totalNumberOfRecords
             };
         }
+        public PagedResults<staffviewmodel> GetInforById(int id)
+        {
+            List<staffviewmodel> res = new List<staffviewmodel>();
+
+            
+
+            var staff = _dbContext.staffs.Find(id);
+
+            var totalNumberOfRecords = _dbContext.staffs.Count();
+
+            var staffview = _mapper.Map<staffviewmodel>(staff);
+            var deparment = _dbContext.departments.FirstOrDefault(x => x.de_id == staff.department_id);
+            staffview.department_name = deparment.de_name;
+            res.Add(staffview);
+            
+
+            return new PagedResults<staffviewmodel>
+            {
+                Results = res,
+                PageNumber = 0,
+                PageSize = 0,
+                TotalNumberOfPages = 0,
+                TotalNumberOfRecords = totalNumberOfRecords
+            };
+        }
     }
 }
