@@ -174,7 +174,7 @@ namespace ERP.API.Controllers.Dashboard
                 // mapping view model to entity
                 var createdstaff = _mapper.Map<staff>(StaffCreateViewModel);
                 createdstaff.sta_thumbnai = fileName;
-                createdstaff.sta_password = HashMd5.convertMD5(StaffCreateViewModel.sta_password);
+                createdstaff.sta_password = StaffCreateViewModel.sta_password;
 
                 // save new staff
                 _staffservice.Create(createdstaff);
