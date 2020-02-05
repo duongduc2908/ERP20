@@ -36,12 +36,7 @@ namespace ERP.API.Providers
         public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
         {
             ClientMaster client = context.OwinContext.Get<ClientMaster>("ta:client");
-            var allowedOrigin = context.OwinContext.Get<string>("ta:clientAllowedOrigin");
-            if (allowedOrigin == null)
-            {
-                allowedOrigin = "*";
-            }
-            var user = _dbContext.staffs.FirstOrDefault(t => t.sta_username.Contains(context.UserName) && t.sta_password.Contains(HashMd5.convertMD5(context.Password)));
+            var user = _dbContext.staffs.FirstOrDefault(t => t.sta_username.Contains(context.UserName) && t.sta_password.Contains(context.Password));
             if (user == null)
             {
                 context.SetError("invalid_grant", "Provided username and password is incorrect");

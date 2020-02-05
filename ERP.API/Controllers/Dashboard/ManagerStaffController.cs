@@ -7,6 +7,9 @@ using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
 using ERP.Extension.Extensions;
 using ERP.Service.Services.IServices;
+using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.Cookies;
+using Microsoft.Owin.Security.OAuth;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -18,10 +21,12 @@ using System.Web;
 using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Http.Cors;
+using System.Web.Security;
 
 namespace ERP.API.Controllers.Dashboard
 {
     [EnableCors("*", "*", "*")]
+    [Authorize]
     public class ManagerstaffsController : ApiController
     {
         private readonly IStaffService _staffservice;
@@ -350,7 +355,7 @@ namespace ERP.API.Controllers.Dashboard
 
         [HttpPut]
         [Route("api/staffs/ChangePassword")]
-        public async Task<IHttpActionResult> ChangePassword(ERP.Data.ChangePasswordBindingModel model, int id)
+        public async Task<IHttpActionResult> ChangePasswordTest(ERP.Data.ChangePasswordBindingModel model, int id)
         {
             ResponseDataDTO<bool> response = new ResponseDataDTO<bool>();
             try
@@ -364,6 +369,29 @@ namespace ERP.API.Controllers.Dashboard
                 }
                 _staffservice.ChangePassword(model, id);
                 // return response
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = true;
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = MessageResponse.FAIL;
+                response.Data = false;
+                Console.WriteLine(ex.ToString());
+
+                return Ok(response);
+            }
+        }
+
+        [Route("api/staffs/Logout")]
+        public IHttpActionResult Logout()
+        {
+            ResponseDataDTO<bool> response = new ResponseDataDTO<bool>();
+            try
+            {
+                FormsAuthentication.SignOut();
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
                 response.Data = true;
