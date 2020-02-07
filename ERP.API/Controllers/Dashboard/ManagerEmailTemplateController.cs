@@ -50,7 +50,7 @@ namespace ERP.API.Controllers.Dashboard
             catch (Exception ex)
             {
                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = MessageResponse.FAIL;
+                response.Message = ex.Message;
                 response.Data = null;
 
                 Console.WriteLine(ex.ToString());
@@ -72,7 +72,7 @@ namespace ERP.API.Controllers.Dashboard
             catch (Exception ex)
             {
                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = MessageResponse.FAIL;
+                response.Message = ex.Message;
                 response.Data = null;
 
                 Console.WriteLine(ex.ToString());
@@ -129,7 +129,7 @@ namespace ERP.API.Controllers.Dashboard
             catch (Exception ex)
             {
                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = MessageResponse.FAIL;
+                response.Message = ex.Message;
                 response.Data = null;
                 Console.WriteLine(ex.ToString());
 
@@ -194,7 +194,7 @@ namespace ERP.API.Controllers.Dashboard
             catch (Exception ex)
             {
                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = MessageResponse.FAIL;
+                response.Message = ex.Message;
                 response.Data = null;
                 Console.WriteLine(ex.ToString());
 
@@ -203,7 +203,7 @@ namespace ERP.API.Controllers.Dashboard
         }
 
         [HttpDelete]
-        [Route("api/email-templates/delete/{email_templateId}")]
+        [Route("api/email-templates/delete")]
         public IHttpActionResult Deleteemail_template(int email_templateId)
         {
             ResponseDataDTO<email_template> response = new ResponseDataDTO<email_template>();
@@ -235,7 +235,7 @@ namespace ERP.API.Controllers.Dashboard
             catch (Exception ex)
             {
                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = MessageResponse.FAIL;
+                response.Message = ex.Message;
                 response.Data = null;
                 Console.WriteLine(ex.ToString());
 

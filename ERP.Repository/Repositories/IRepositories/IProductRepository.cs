@@ -12,5 +12,6 @@ namespace ERP.Repository.Repositories.IRepositories
     public interface IProductRepository : IGenericRepository<product>
     {
         PagedResults<product> CreatePagedResults(int pageNumber, int pageSize);
+        PagedResults<product> GetProducts(string search_name);
     }
 }

@@ -37,6 +37,24 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfPages = totalPageCount,
                 TotalNumberOfRecords = totalNumberOfRecords
             };
+
         }
+        public PagedResults<customer> GetInfor(string search_name)
+        {
+
+            var list = _dbContext.customers.Where(c => c.cu_fullname.Contains(search_name) || c.cu_mobile.Contains(search_name)).ToList();
+            var totalNumberOfRecords = list.Count();
+            var results = list.ToList();
+
+            return new PagedResults<customer>
+            {
+                Results = results,
+                PageNumber = 0,
+                PageSize = 0,
+                TotalNumberOfPages = 0,
+                TotalNumberOfRecords = totalNumberOfRecords
+            };
+        }
+       
     }
 }

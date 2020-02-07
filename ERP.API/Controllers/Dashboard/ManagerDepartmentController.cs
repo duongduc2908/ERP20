@@ -50,7 +50,7 @@ namespace ERP.API.Controllers.Dashboard
             catch (Exception ex)
             {
                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = MessageResponse.FAIL;
+                response.Message = ex.Message;;
                 response.Data = null;
 
                 Console.WriteLine(ex.ToString());
@@ -72,7 +72,7 @@ namespace ERP.API.Controllers.Dashboard
             catch (Exception ex)
             {
                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = MessageResponse.FAIL;
+                response.Message = ex.Message;;
                 response.Data = null;
 
                 Console.WriteLine(ex.ToString());
@@ -133,7 +133,7 @@ namespace ERP.API.Controllers.Dashboard
             catch (Exception ex)
             {
                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = MessageResponse.FAIL;
+                response.Message = ex.Message;;
                 response.Data = null;
                 Console.WriteLine(ex.ToString());
 
@@ -212,7 +212,7 @@ namespace ERP.API.Controllers.Dashboard
             catch (Exception ex)
             {
                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = MessageResponse.FAIL;
+                response.Message = ex.Message;;
                 response.Data = null;
                 Console.WriteLine(ex.ToString());
 
@@ -221,7 +221,7 @@ namespace ERP.API.Controllers.Dashboard
         }
 
         [HttpDelete]
-        [Route("api/departments/delete/{departmentId}")]
+        [Route("api/departments/delete")]
         public IHttpActionResult Deletedepartment(int departmentId)
         {
             ResponseDataDTO<department> response = new ResponseDataDTO<department>();
@@ -253,7 +253,7 @@ namespace ERP.API.Controllers.Dashboard
             catch (Exception ex)
             {
                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = MessageResponse.FAIL;
+                response.Message = ex.Message;;
                 response.Data = null;
                 Console.WriteLine(ex.ToString());
 

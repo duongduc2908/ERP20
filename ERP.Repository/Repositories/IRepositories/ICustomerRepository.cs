@@ -12,5 +12,7 @@ namespace ERP.Repository.Repositories.IRepositories
     public interface ICustomerRepository : IGenericRepository<customer>
     {
         PagedResults<customer> CreatePagedResults(int pageNumber, int pageSize);
+        PagedResults<customer> GetInfor(string search_name);
+       
     }
 }

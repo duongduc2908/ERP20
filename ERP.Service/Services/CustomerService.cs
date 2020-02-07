@@ -22,5 +22,10 @@ namespace ERP.Service.Services
         {
             return this._repository.CreatePagedResults(pageNumber, pageSize);
         }
+        public PagedResults<customer> GetInfor(string search_name)
+        {
+            return this._repository.GetInfor(search_name);
+        }
+        
     }
 }

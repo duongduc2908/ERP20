@@ -46,7 +46,7 @@ namespace ERP.API.Controllers.Dashboard
             catch (Exception ex)
             {
                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = MessageResponse.FAIL;
+                response.Message = ex.Message;
                 response.Data = null;
 
                 Console.WriteLine(ex.ToString());
@@ -68,7 +68,28 @@ namespace ERP.API.Controllers.Dashboard
             catch (Exception ex)
             {
                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = MessageResponse.FAIL;
+                response.Message = ex.Message;
+                response.Data = null;
+
+                Console.WriteLine(ex.ToString());
+            }
+
+            return Ok(response);
+        }
+        [Route("api/products/search")]
+        public IHttpActionResult GetProducts(string search_name)
+        {
+            ResponseDataDTO<PagedResults<product>> response = new ResponseDataDTO<PagedResults<product>>();
+            try
+            {
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = _productservice.GetProducts(search_name);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
                 response.Data = null;
 
                 Console.WriteLine(ex.ToString());
@@ -140,7 +161,7 @@ namespace ERP.API.Controllers.Dashboard
             catch (Exception ex)
             {
                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = MessageResponse.FAIL;
+                response.Message = ex.Message;
                 response.Data = null;
                 Console.WriteLine(ex.ToString());
 
@@ -218,7 +239,7 @@ namespace ERP.API.Controllers.Dashboard
             catch (Exception ex)
             {
                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = MessageResponse.FAIL;
+                response.Message = ex.Message;
                 response.Data = null;
                 Console.WriteLine(ex.ToString());
 
@@ -259,7 +280,7 @@ namespace ERP.API.Controllers.Dashboard
             catch (Exception ex)
             {
                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = MessageResponse.FAIL;
+                response.Message = ex.Message;
                 response.Data = null;
                 Console.WriteLine(ex.ToString());
 

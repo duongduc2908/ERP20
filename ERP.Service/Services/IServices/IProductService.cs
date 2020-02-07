@@ -12,5 +12,6 @@ namespace ERP.Service.Services.IServices
     public interface IProductService : IGenericService<product>
     {
         PagedResults<product> CreatePagedResults(int pageNumber, int pageSize);
+        PagedResults<product> GetProducts(string search_name);
     }
 }

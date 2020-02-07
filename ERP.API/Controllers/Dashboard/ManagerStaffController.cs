@@ -55,7 +55,7 @@ namespace ERP.API.Controllers.Dashboard
             catch (Exception ex)
             {
                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = MessageResponse.FAIL;
+                response.Message = ex.Message;
                 response.Data = null;
 
                 Console.WriteLine(ex.ToString());
@@ -77,7 +77,7 @@ namespace ERP.API.Controllers.Dashboard
             catch (Exception ex)
             {
                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = MessageResponse.FAIL;
+                response.Message = ex.Message;
                 response.Data = null;
 
                 Console.WriteLine(ex.ToString());
@@ -98,7 +98,7 @@ namespace ERP.API.Controllers.Dashboard
             catch (Exception ex)
             {
                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = MessageResponse.FAIL;
+                response.Message = ex.Message;
                 response.Data = null;
 
                 Console.WriteLine(ex.ToString());
@@ -129,6 +129,63 @@ namespace ERP.API.Controllers.Dashboard
                 {
                     fileName = (FileExtension.SaveFileOnDisk(fileData));
                 }
+                if (streamProvider.FormData["sta_fullname"] == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Họ và tên không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+                if (streamProvider.FormData["sta_username"] == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Tên đăng nhập không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+                if (streamProvider.FormData["sta_password"] == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Mật khẩu không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+                
+                if (streamProvider.FormData["sta_mobile"] == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Số điện thoại không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+               
+                if (streamProvider.FormData["sta_status"] == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Trạng thái không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+
+                if (streamProvider.FormData["department_id"] == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Phòng ban không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+               
+                
+                if (streamProvider.FormData["position_id"] == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Chức vụ không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+
+                
+
                 // get data from formdata
                 StaffCreateViewModel StaffCreateViewModel = new StaffCreateViewModel
                 {
@@ -150,32 +207,50 @@ namespace ERP.API.Controllers.Dashboard
                     position_id = Convert.ToInt32(streamProvider.FormData["position_id"]),
                     sta_leader_id = Convert.ToInt32(streamProvider.FormData["sta_leader_id"]),
 
-
                     sta_birthday = Convert.ToDateTime(streamProvider.FormData["sta_birthday"]),
                     sta_identity_card_date = Convert.ToDateTime(streamProvider.FormData["sta_identity_card_date"]),
                     sta_created_date = Convert.ToDateTime(streamProvider.FormData["sta_created_date"]),
 
                     sta_status = Convert.ToByte(streamProvider.FormData["sta_status"]),
                     sta_sex = Convert.ToByte(streamProvider.FormData["sta_sex"]),
-
-
-
                 };
-                //md5
+               
 
-                if (CheckEmail.IsValidEmail(StaffCreateViewModel.sta_email) == false && StaffCreateViewModel.sta_email == "")
+                //md5
+                if (StaffCreateViewModel.sta_email != null)
                 {
-                    response.Message = "Định dạng email không hợp lệ !";
-                    response.Data = null;
-                    return Ok(response);
+                    if (CheckEmail.IsValidEmail(StaffCreateViewModel.sta_email) == false)
+                    {
+                        response.Message = "Định dạng email không hợp lệ !";
+                        response.Data = null;
+                        return Ok(response);
+                    }
                 }
+
                 //check_phone_number
-                if (CheckNumber.IsPhoneNumber(StaffCreateViewModel.sta_mobile) == false && StaffCreateViewModel.sta_mobile == "")
+                
+               if (CheckNumber.IsPhoneNumber(StaffCreateViewModel.sta_mobile) == false)
+               {
+                   response.Message = "Số điện thoại không hợp lệ";
+                   response.Data = null;
+                   return Ok(response);
+               }
+                if (streamProvider.FormData["sta_birthday"] == null)
                 {
-                    response.Message = "Số điện thoại không hợp lệ";
-                    response.Data = null;
-                    return Ok(response);
+                    StaffCreateViewModel.sta_birthday = Default.date;
                 }
+
+                if (streamProvider.FormData["sta_identity_card_date"] == null)
+                {
+                    StaffCreateViewModel.sta_identity_card_date = Default.date;
+                }
+
+
+                if (streamProvider.FormData["sta_created_date"] == null)
+                {
+                    StaffCreateViewModel.sta_created_date = Default.date;
+                }
+
                 // mapping view model to entity
                 var createdstaff = _mapper.Map<staff>(StaffCreateViewModel);
                 createdstaff.sta_thumbnai = fileName;
@@ -192,10 +267,9 @@ namespace ERP.API.Controllers.Dashboard
             catch (Exception ex)
             {
                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = MessageResponse.FAIL;
+                response.Message = ex.Message;
                 response.Data = null;
-                Console.WriteLine(ex.ToString());
-
+              
                 return Ok(response);
             }
 
@@ -227,8 +301,63 @@ namespace ERP.API.Controllers.Dashboard
                         fileName = FileExtension.SaveFileOnDisk(fileData);
                     }
                 }
+                if (streamProvider.FormData["sta_fullname"] == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Họ và tên không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+                if (streamProvider.FormData["sta_username"] == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Tên đăng nhập không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+                if (streamProvider.FormData["sta_password"] == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Mật khẩu không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
 
+                if (streamProvider.FormData["sta_mobile"] == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Số điện thoại không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+
+                if (streamProvider.FormData["sta_status"] == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Trạng thái không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+
+                if (streamProvider.FormData["department_id"] == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Phòng ban không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+
+
+                if (streamProvider.FormData["position_id"] == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Chức vụ không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+                
                 // get data from formdata
+
                 StaffUpdateViewModel staffUpdateViewModel = new StaffUpdateViewModel
                 {
                     sta_id = Convert.ToInt32(streamProvider.FormData["sta_id"]),
@@ -274,19 +403,37 @@ namespace ERP.API.Controllers.Dashboard
                     staffUpdateViewModel.sta_thumbnai = existstaff.sta_thumbnai;
                 }
                 //md5
-
-                if (CheckEmail.IsValidEmail(staffUpdateViewModel.sta_email) == false && staffUpdateViewModel.sta_email == "")
+                if (staffUpdateViewModel.sta_email != null)
                 {
-                    response.Message = "Định dạng email không hợp lệ !";
-                    response.Data = null;
-                    return Ok(response);
+                    if (CheckEmail.IsValidEmail(staffUpdateViewModel.sta_email) == false)
+                    {
+                        response.Message = "Định dạng email không hợp lệ !";
+                        response.Data = null;
+                        return Ok(response);
+                    }
                 }
+
                 //check_phone_number
-                if (CheckNumber.IsPhoneNumber(staffUpdateViewModel.sta_mobile) == false && staffUpdateViewModel.sta_mobile == "")
+                if (CheckNumber.IsPhoneNumber(staffUpdateViewModel.sta_mobile) == false)
                 {
                     response.Message = "Số điện thoại không hợp lệ";
                     response.Data = null;
                     return Ok(response);
+                }
+                if (streamProvider.FormData["sta_birthday"] == null)
+                {
+                    staffUpdateViewModel.sta_birthday = Default.date;
+                }
+
+                if (streamProvider.FormData["sta_identity_card_date"] == null)
+                {
+                    staffUpdateViewModel.sta_identity_card_date = Default.date;
+                }
+
+
+                if (streamProvider.FormData["sta_created_date"] == null)
+                {
+                    staffUpdateViewModel.sta_created_date = Default.date;
                 }
                 // mapping view model to entity
                 var updatedstaff = _mapper.Map<staff>(staffUpdateViewModel);
@@ -304,7 +451,7 @@ namespace ERP.API.Controllers.Dashboard
             catch (Exception ex)
             {
                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = MessageResponse.FAIL;
+                response.Message = ex.Message;
                 response.Data = null;
                 Console.WriteLine(ex.ToString());
 
@@ -313,7 +460,7 @@ namespace ERP.API.Controllers.Dashboard
         }
 
         [HttpDelete]
-        [Route("api/staffs/delete/{staffId}")]
+        [Route("api/staffs/delete")]
         public IHttpActionResult Deletestaff(int staffId)
         {
             ResponseDataDTO<staff> response = new ResponseDataDTO<staff>();
@@ -345,7 +492,7 @@ namespace ERP.API.Controllers.Dashboard
             catch (Exception ex)
             {
                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = MessageResponse.FAIL;
+                response.Message = ex.Message;
                 response.Data = null;
                 Console.WriteLine(ex.ToString());
 
@@ -377,7 +524,7 @@ namespace ERP.API.Controllers.Dashboard
             catch (Exception ex)
             {
                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = MessageResponse.FAIL;
+                response.Message = ex.Message;
                 response.Data = false;
                 Console.WriteLine(ex.ToString());
 
@@ -400,7 +547,7 @@ namespace ERP.API.Controllers.Dashboard
             catch (Exception ex)
             {
                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = MessageResponse.FAIL;
+                response.Message = ex.Message;
                 response.Data = false;
                 Console.WriteLine(ex.ToString());
 

@@ -84,6 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants\CheckEmail.cs" />
+    <Compile Include="Constants\Default.cs" />
     <Compile Include="Constants\HashMd5.cs" />
     <Compile Include="Constants\HttpCode.cs" />
     <Compile Include="Constants\MessageResponse.cs" />
