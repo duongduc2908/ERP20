@@ -120,5 +120,32 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = totalNumberOfRecords
             };
         }
+        public PagedResults<string> GetInforManager()
+        {
+            List<string> res = new List<string>();
+
+            
+
+            var staff = _dbContext.staffs.Where(s => s.sta_leader_flag == 1).ToList();
+
+            var totalNumberOfRecords = staff.Count();
+
+            
+            foreach(staff i in staff)
+            {
+                res.Add(i.sta_fullname);
+            }
+            
+            
+
+            return new PagedResults<string>
+            {
+                Results = res,
+                PageNumber = 0,
+                PageSize = 0,
+                TotalNumberOfPages = 0,
+                TotalNumberOfRecords = totalNumberOfRecords
+            };
+        }
     }
 }

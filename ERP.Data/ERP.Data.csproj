@@ -136,6 +136,7 @@
     <Compile Include="ModelsERP\function.cs" />
     <Compile Include="ModelsERP\function_setting.cs" />
     <Compile Include="ModelsERP\group_role.cs" />
+    <Compile Include="ModelsERP\ModelView\StaffManager.cs" />
     <Compile Include="ModelsERP\ModelView\staffviewmodel.cs" />
     <Compile Include="ModelsERP\notification.cs" />
     <Compile Include="ModelsERP\order_product.cs" />

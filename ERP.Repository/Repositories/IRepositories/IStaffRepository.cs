@@ -17,5 +17,6 @@ namespace ERP.Repository.Repositories.IRepositories
         void ChangePassword(ChangePasswordBindingModel model, int id);
         PagedResults<staffviewmodel> GetAllPage(int pageNumber, int pageSize);
         PagedResults<staffviewmodel> GetInforById(int id);
+        PagedResults<string> GetInforManager();
     }
 }
