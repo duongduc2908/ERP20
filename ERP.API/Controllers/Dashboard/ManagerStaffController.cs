@@ -199,7 +199,7 @@ namespace ERP.API.Controllers.Dashboard
                     group_role_id = Convert.ToInt32(streamProvider.FormData["group_role_id"]),
                     social_id = Convert.ToInt32(streamProvider.FormData["social_id"]),
                     position_id = Convert.ToInt32(streamProvider.FormData["position_id"]),
-                    sta_leader_id = Convert.ToInt32(streamProvider.FormData["sta_leader_id"]),
+                    sta_leader_flag = Convert.ToByte(streamProvider.FormData["sta_leader_flag"]),
 
                     sta_birthday = Convert.ToDateTime(streamProvider.FormData["sta_birthday"]),
                     sta_identity_card_date = Convert.ToDateTime(streamProvider.FormData["sta_identity_card_date"]),
@@ -370,7 +370,7 @@ namespace ERP.API.Controllers.Dashboard
                     group_role_id = Convert.ToInt32(streamProvider.FormData["group_role_id"]),
                     social_id = Convert.ToInt32(streamProvider.FormData["social_id"]),
                     position_id = Convert.ToInt32(streamProvider.FormData["position_id"]),
-                    sta_leader_id = Convert.ToInt32(streamProvider.FormData["sta_leader_id"]),
+                    sta_leader_flag = Convert.ToByte(streamProvider.FormData["sta_leader_flag"]),
 
 
                     sta_birthday = Convert.ToDateTime(streamProvider.FormData["sta_birthday"]),

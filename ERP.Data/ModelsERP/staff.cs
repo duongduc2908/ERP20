@@ -63,6 +63,6 @@ namespace ERP.Data.ModelsERP
 
         public int? position_id { get; set; }
 
-        public int? sta_leader_id { get; set; }
+        public byte? sta_leader_flag { get; set; }
     }
 }

@@ -106,6 +106,20 @@ namespace ERP.API.Controllers.Dashboard
                 {
                     fileName = (FileExtension.SaveFileOnDisk(fileData));
                 }
+                if (streamProvider.FormData["de_name"] == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Tên phòng ban không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+                if (streamProvider.FormData["de_manager"] == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Trưởng phòng không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
                 // get data from formdata
                 DepartmentCreateViewModel departmentCreateViewModel = new DepartmentCreateViewModel
                 {
@@ -115,9 +129,13 @@ namespace ERP.API.Controllers.Dashboard
 
                     company_id = Convert.ToByte(streamProvider.FormData["company_id"]),
 
-
-
                 };
+                
+
+                if (streamProvider.FormData["company_id"] == null)
+                {
+                    departmentCreateViewModel.company_id = null;
+                }
 
                 // mapping view model to entity
                 var createddepartment = _mapper.Map<department>(departmentCreateViewModel);
@@ -174,6 +192,20 @@ namespace ERP.API.Controllers.Dashboard
                         fileName = FileExtension.SaveFileOnDisk(fileData);
                     }
                 }
+                if (streamProvider.FormData["de_name"] == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Tên phòng ban không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+                if (streamProvider.FormData["de_manager"] == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Trưởng phòng không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
                 // get data from formdata
                 DepartmentUpdateViewModel departmentUpdateViewModel = new DepartmentUpdateViewModel
                 {
@@ -195,6 +227,10 @@ namespace ERP.API.Controllers.Dashboard
                 {
 
                     departmentUpdateViewModel.de_thumbnail = existstaff.de_thumbnail;
+                }
+                if (streamProvider.FormData["company_id"] == null)
+                {
+                    departmentUpdateViewModel.company_id = null;
                 }
 
                 // mapping view model to entity

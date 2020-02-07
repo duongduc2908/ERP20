@@ -96,7 +96,14 @@ namespace ERP.API.Controllers.Dashboard
                 MultipartFormDataStreamProvider streamProvider = new MultipartFormDataStreamProvider(path);
 
                 await Request.Content.ReadAsMultipartAsync(streamProvider);
-
+                
+                if (streamProvider.FormData["pos_name"] == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Chức vụ không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
                 // get data from formdata
                 PositionCreateViewModel positionCreateViewModel = new PositionCreateViewModel
                 {
@@ -108,6 +115,7 @@ namespace ERP.API.Controllers.Dashboard
                     pos_description = Convert.ToString(streamProvider.FormData["pos_description"]),
 
                 };
+                
 
                 // mapping view model to entity
                 var createdposition = _mapper.Map<position>(positionCreateViewModel);
@@ -155,7 +163,13 @@ namespace ERP.API.Controllers.Dashboard
 
                 await Request.Content.ReadAsMultipartAsync(streamProvider);
 
-
+                if (streamProvider.FormData["pos_name"] == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Chức vụ không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
                 // get data from formdata
                 PositionUpdateViewModel positionUpdateViewModel = new PositionUpdateViewModel
                 {
