@@ -22,6 +22,7 @@ using System.Web.Http.Cors;
 namespace ERP.API.Controllers.Dashboard
 {
     [EnableCors("*", "*", "*")]
+    [Authorize]
     public class ManagerEmailStrategyController : ApiController
     {
         private readonly IEmailStrategyService _email_strategyservice;

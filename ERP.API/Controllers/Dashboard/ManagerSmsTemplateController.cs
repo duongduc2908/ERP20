@@ -18,6 +18,7 @@ using System.Web.Http.Cors;
 namespace ERP.API.Controllers.Dashboard
 {
     [EnableCors("*", "*", "*")]
+    [Authorize]
     public class ManagerSmsTemplateController : ApiController
     {
         private readonly ISmsTemplateService _smstemplateservice;
