@@ -21,5 +21,13 @@ namespace ERP.Data.ModelsERP
         public byte? cuo_status { get; set; }
 
         public int? customer_id { get; set; }
+
+        public int? cuo_discount { get; set; }
+
+        public byte? cuo_payment_type { get; set; }
+
+        public byte? cuo_payment_status { get; set; }
+
+        public int? cuo_ship_tax { get; set; }
     }
 }
