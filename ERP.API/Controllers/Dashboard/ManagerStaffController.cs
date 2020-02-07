@@ -100,6 +100,26 @@ namespace ERP.API.Controllers.Dashboard
 
             return Ok(response);
         }
+        [Route("api/staffs/manager")]
+        public IHttpActionResult GetInforManager()
+        {
+            ResponseDataDTO<PagedResults<string>> response = new ResponseDataDTO<PagedResults<string>>();
+            try
+            {
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = _staffservice.GetInforManager();
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+
+            }
+
+            return Ok(response);
+        }
         [HttpPost]
         [Route("api/staffs/create")]
         public async Task<IHttpActionResult> Createstaff()

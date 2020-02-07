@@ -100,8 +100,10 @@ namespace ERP.API.Controllers.Dashboard
                 MultipartFormDataStreamProvider streamProvider = new MultipartFormDataStreamProvider(path);
 
                 await Request.Content.ReadAsMultipartAsync(streamProvider);
+                var x = streamProvider.FormData["de_thumbnail"];
                 // save file
                 string fileName = "";
+                
                 foreach (MultipartFileData fileData in streamProvider.FileData)
                 {
                     fileName = (FileExtension.SaveFileOnDisk(fileData));

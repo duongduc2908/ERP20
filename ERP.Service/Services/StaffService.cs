@@ -38,5 +38,9 @@ namespace ERP.Service.Services
         {
             return this._repository.GetInforById(id);
         }
+        public PagedResults<string> GetInforManager()
+        {
+            return this._repository.GetInforManager();
+        }
     }
 }
