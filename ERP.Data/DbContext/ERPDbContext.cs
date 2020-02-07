@@ -52,5 +52,6 @@ namespace ERP.Data.DbContext
         public virtual DbSet<sms> sms { get; set; }
         public virtual DbSet<sms_strategy> sms_strategy { get; set; }
         public virtual DbSet<sms_template> sms_template { get; set; }
+        public virtual DbSet<customer_order> customer_order { get; set; }
     }
 }
