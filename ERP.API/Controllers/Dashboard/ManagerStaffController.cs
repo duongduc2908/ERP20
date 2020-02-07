@@ -178,8 +178,8 @@ namespace ERP.API.Controllers.Dashboard
                     return Ok(response);
                 }
 
-                
 
+                
                 // get data from formdata
                 StaffCreateViewModel StaffCreateViewModel = new StaffCreateViewModel
                 {
@@ -203,13 +203,11 @@ namespace ERP.API.Controllers.Dashboard
 
                     sta_birthday = Convert.ToDateTime(streamProvider.FormData["sta_birthday"]),
                     sta_identity_card_date = Convert.ToDateTime(streamProvider.FormData["sta_identity_card_date"]),
-                    sta_created_date = Convert.ToDateTime(streamProvider.FormData["sta_created_date"]),
+
 
                     sta_status = Convert.ToByte(streamProvider.FormData["sta_status"]),
                     sta_sex = Convert.ToByte(streamProvider.FormData["sta_sex"]),
                 };
-               
-
                 //md5
                 if (StaffCreateViewModel.sta_email != null)
                 {
@@ -231,18 +229,18 @@ namespace ERP.API.Controllers.Dashboard
                }
                 if (streamProvider.FormData["sta_birthday"] == null)
                 {
-                    StaffCreateViewModel.sta_birthday = Default.date;
+                    StaffCreateViewModel.sta_birthday = null;
                 }
 
                 if (streamProvider.FormData["sta_identity_card_date"] == null)
                 {
-                    StaffCreateViewModel.sta_identity_card_date = Default.date;
+                    StaffCreateViewModel.sta_identity_card_date = null;
                 }
 
 
                 if (streamProvider.FormData["sta_created_date"] == null)
                 {
-                    StaffCreateViewModel.sta_created_date = Default.date;
+                    StaffCreateViewModel.sta_created_date = DateTime.Now;
                 }
 
                 // mapping view model to entity
@@ -416,18 +414,18 @@ namespace ERP.API.Controllers.Dashboard
                 }
                 if (streamProvider.FormData["sta_birthday"] == null)
                 {
-                    staffUpdateViewModel.sta_birthday = Default.date;
+                    staffUpdateViewModel.sta_birthday = null;
                 }
 
                 if (streamProvider.FormData["sta_identity_card_date"] == null)
                 {
-                    staffUpdateViewModel.sta_identity_card_date = Default.date;
+                    staffUpdateViewModel.sta_identity_card_date = null;
                 }
 
 
                 if (streamProvider.FormData["sta_created_date"] == null)
                 {
-                    staffUpdateViewModel.sta_created_date = Default.date;
+                    staffUpdateViewModel.sta_created_date = DateTime.Now;
                 }
                 // mapping view model to entity
                 var updatedstaff = _mapper.Map<staff>(staffUpdateViewModel);
