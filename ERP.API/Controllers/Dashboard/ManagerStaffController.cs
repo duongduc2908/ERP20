@@ -92,7 +92,7 @@ namespace ERP.API.Controllers.Dashboard
             catch (Exception ex)
             {
                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = ex.Message;
+                response.Message = "Không tìm thấy nhân sự";
                 response.Data = null;
 
                 Console.WriteLine(ex.ToString());
