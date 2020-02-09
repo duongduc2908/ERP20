@@ -1,13 +1,14 @@
-namespace ERP.Data.ModelsERP
-{
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Web;
 
-    public partial class customer_order
+namespace ERP.API.Models
+{
+    public class CustomerOrderUpdateViewModel
     {
+        public CustomerOrderUpdateViewModel() { }
         [Key]
         public int cuo_id { get; set; }
 

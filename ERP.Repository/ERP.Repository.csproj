@@ -90,7 +90,7 @@
     <Compile Include="Repositories\AuthenticationRepository.cs" />
     <Compile Include="Repositories\ClientMasterRepository.cs" />
     <Compile Include="Repositories\CompanyRepository.cs" />
-    <Compile Include="Repositories\CustomerOrderRespository.cs" />
+    <Compile Include="Repositories\CustomerOrderRepository.cs" />
     <Compile Include="Repositories\CustomerRepository.cs" />
     <Compile Include="Repositories\DepartmentRepository.cs" />
     <Compile Include="Repositories\EmailRepository.cs" />

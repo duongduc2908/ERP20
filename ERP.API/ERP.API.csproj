@@ -222,6 +222,8 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="AutoMapper\MappingConfig.cs" />
+    <Compile Include="Controllers\Dashboard\ManagerCustomerOrderController.cs" />
+    <Compile Include="Controllers\Dashboard\ManagerOrderProductController.cs" />
     <Compile Include="Models\ChangePasswordBindingModel.cs" />
     <Compile Include="Controllers\Dashboard\ManagerCompanyController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerCustomerController.cs" />
@@ -244,6 +246,8 @@
     <Compile Include="Models\CompanyCreateViewModel.cs" />
     <Compile Include="Models\CompanyUpdateViewModel.cs" />
     <Compile Include="Models\CustomerCreateViewModel.cs" />
+    <Compile Include="Models\CustomerOrderCreateViewModel.cs" />
+    <Compile Include="Models\CustomerOrderUpdateViewModel.cs" />
     <Compile Include="Models\CustomerUpdateViewModel.cs" />
     <Compile Include="Models\DepartmentCreateViewModel.cs" />
     <Compile Include="Models\DepartmentUpdateViewModel.cs" />
@@ -257,6 +261,8 @@
     <Compile Include="Models\GroupRoleUpdateViewModel.cs" />
     <Compile Include="Models\NotificationCreateViewModel.cs" />
     <Compile Include="Models\NotificationUpdateViewModel.cs" />
+    <Compile Include="Models\OrderProductCreateViewModel.cs" />
+    <Compile Include="Models\OrderProductUpdateViewModel.cs" />
     <Compile Include="Models\PositionCreateViewModel.cs" />
     <Compile Include="Models\PositionUpdateViewModel.cs" />
     <Compile Include="Models\ProductCreateViewModel.cs" />
@@ -346,6 +352,7 @@
     <Folder Include="Views\Base\" />
     <Folder Include="Views\Default\" />
     <Folder Include="Views\ManagerCompany\" />
+    <Folder Include="Views\ManagerCustomerOrder\" />
     <Folder Include="Views\ManagerCustomer\" />
     <Folder Include="Views\ManagerDepartment\" />
     <Folder Include="Views\ManagerEmailStrategy\" />
@@ -354,6 +361,7 @@
     <Folder Include="Views\ManagerGroupRoleController\" />
     <Folder Include="Views\ManagerGroupRole\" />
     <Folder Include="Views\ManagerNotification\" />
+    <Folder Include="Views\ManagerOrderProduct\" />
     <Folder Include="Views\ManagerPosition\" />
     <Folder Include="Views\ManagerProduct\" />
     <Folder Include="Views\ManagerService\" />

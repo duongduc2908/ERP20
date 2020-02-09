@@ -28,8 +28,17 @@ namespace ERP.API.AutoMapper
             CreateMap<CustomerCreateViewModel, customer>();
             CreateMap<CustomerUpdateViewModel, customer>();
 
+            CreateMap<CustomerOrderCreateViewModel, customer_order>();
+            CreateMap<CustomerOrderUpdateViewModel, customer_order>();
+
+            CreateMap<customer_order, customerorderviewmodel>();
+           
+
             CreateMap<ProductCreateViewModel, product>();
             CreateMap<ProductUpdateViewModel, product>();
+
+            CreateMap<OrderProductCreateViewModel, order_product>();
+            CreateMap<OrderProductUpdateViewModel, order_product>();
 
             CreateMap<ServiceCreateViewModel, service>();
             CreateMap<ServiceUpdateViewModel, service>();
