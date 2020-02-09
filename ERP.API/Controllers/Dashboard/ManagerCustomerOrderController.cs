@@ -86,7 +86,7 @@ namespace ERP.API.Controllers.Dashboard
         [HttpPost]
         [Route("api/customer-orders/create")]
 
-        public async Task<IHttpActionResult> Createcustomer_order()
+        public async Task<IHttpActionResult> Createcustomer_order([FromBody] order_product order_product)
         {
             ResponseDataDTO<customer_order> response = new ResponseDataDTO<customer_order>();
             try

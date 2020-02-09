@@ -11,9 +11,6 @@ namespace ERP.Data.ModelsERP
         [Key]
         public int op_id { get; set; }
 
-        [StringLength(50)]
-        public string op_code { get; set; }
-
         public int? op_quantity { get; set; }
 
         public byte? op_status { get; set; }
@@ -22,10 +19,10 @@ namespace ERP.Data.ModelsERP
 
         public DateTime? op_datetime { get; set; }
 
-        public int? staff_id { get; set; }
+        
 
         public int? product_id { get; set; }
 
-        public int? customer_id { get; set; }
+        public int? customer_order_id { get; set; }
     }
 }

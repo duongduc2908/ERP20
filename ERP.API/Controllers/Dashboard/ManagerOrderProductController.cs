@@ -4,6 +4,7 @@ using ERP.Common.Constants;
 using ERP.Common.Models;
 using ERP.Data.Dto;
 using ERP.Data.ModelsERP;
+using ERP.Data.ModelsERP.ModelView;
 using ERP.Extension.Extensions;
 using ERP.Service.Services.IServices;
 using System;
@@ -32,20 +33,20 @@ namespace ERP.API.Controllers.Dashboard
 
         #region methods
         [HttpGet]
-        [Route("api/order_products/all")]
-        public IHttpActionResult Getorder_products()
+        [Route("api/order-products/infor")]
+        public IHttpActionResult GetInforById(int customer_order_id)
         {
-            ResponseDataDTO<IEnumerable<order_product>> response = new ResponseDataDTO<IEnumerable<order_product>>();
+            ResponseDataDTO<PagedResults<orderproductviewmodel>> response = new ResponseDataDTO<PagedResults<orderproductviewmodel>>();
             try
             {
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _order_productservice.GetAll();
+                response.Data = _order_productservice.GetAllOrderProduct(customer_order_id);
             }
             catch (Exception ex)
             {
                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = ex.Message;
+                response.Message = "Lỗi tham số truyền";
                 response.Data = null;
 
                 Console.WriteLine(ex.ToString());
@@ -53,6 +54,7 @@ namespace ERP.API.Controllers.Dashboard
 
             return Ok(response);
         }
+
         [HttpGet]
         [Route("api/order_products/page")]
         public IHttpActionResult Getorder_productsPaging(int pageSize, int pageNumber)
@@ -76,175 +78,175 @@ namespace ERP.API.Controllers.Dashboard
             return Ok(response);
         }
 
-        [HttpPost]
-        [Route("api/order_products/create")]
+        //[HttpPost]
+        //[Route("api/order_products/create")]
 
-        public async Task<IHttpActionResult> Createorder_product()
-        {
-            ResponseDataDTO<order_product> response = new ResponseDataDTO<order_product>();
-            try
-            {
-                var path = Path.GetTempPath();
+        //public async Task<IHttpActionResult> Createorder_product()
+        //{
+        //    ResponseDataDTO<order_product> response = new ResponseDataDTO<order_product>();
+        //    try
+        //    {
+        //        var path = Path.GetTempPath();
 
-                if (!Request.Content.IsMimeMultipartContent("form-data"))
-                {
-                    throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.UnsupportedMediaType));
-                }
+        //        if (!Request.Content.IsMimeMultipartContent("form-data"))
+        //        {
+        //            throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.UnsupportedMediaType));
+        //        }
 
-                MultipartFormDataStreamProvider streamProvider = new MultipartFormDataStreamProvider(path);
+        //        MultipartFormDataStreamProvider streamProvider = new MultipartFormDataStreamProvider(path);
 
-                await Request.Content.ReadAsMultipartAsync(streamProvider);
+        //        await Request.Content.ReadAsMultipartAsync(streamProvider);
 
-                // get data from formdata
-                OrderProductCreateViewModel order_productCreateViewModel = new OrderProductCreateViewModel
-                {
-                    op_code = Convert.ToString(streamProvider.FormData["op_code"]),
-                    op_note = Convert.ToString(streamProvider.FormData["op_note"]),
+        //        // get data from formdata
+        //        OrderProductCreateViewModel order_productCreateViewModel = new OrderProductCreateViewModel
+        //        {
+        //            //op_code = Convert.ToString(streamProvider.FormData["op_code"]),
+        //            op_note = Convert.ToString(streamProvider.FormData["op_note"]),
                    
 
 
-                    op_quantity = Convert.ToInt32(streamProvider.FormData["op_quantity"]),
-                    staff_id = Convert.ToInt32(streamProvider.FormData["staff_id"]),
-                    product_id = Convert.ToInt32(streamProvider.FormData["product_id"]),
-                    customer_id = Convert.ToInt32(streamProvider.FormData["customer_id"]),
+        //            op_quantity = Convert.ToInt32(streamProvider.FormData["op_quantity"]),
+        //            //staff_id = Convert.ToInt32(streamProvider.FormData["staff_id"]),
+        //            product_id = Convert.ToInt32(streamProvider.FormData["product_id"]),
+        //            //customer_id = Convert.ToInt32(streamProvider.FormData["customer_id"]),
 
-                    op_datetime = Convert.ToDateTime(streamProvider.FormData["op_datetime"]),
+        //            op_datetime = Convert.ToDateTime(streamProvider.FormData["op_datetime"]),
 
-                    op_status = Convert.ToByte(streamProvider.FormData["op_status"]),
+        //            op_status = Convert.ToByte(streamProvider.FormData["op_status"]),
 
-                };
+        //        };
 
-                // mapping view model to entity
-                var createdorder_product = _mapper.Map<order_product>(order_productCreateViewModel);
-
-
-                // save new order_product
-                _order_productservice.Create(createdorder_product);
-                // return response
-                response.Code = HttpCode.OK;
-                response.Message = MessageResponse.SUCCESS;
-                response.Data = createdorder_product;
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = ex.Message;
-                response.Data = null;
-                Console.WriteLine(ex.ToString());
-
-                return Ok(response);
-            }
-
-        }
+        //        // mapping view model to entity
+        //        var createdorder_product = _mapper.Map<order_product>(order_productCreateViewModel);
 
 
-        [HttpPut]
-        [Route("api/order_products/update")]
+        //        // save new order_product
+        //        _order_productservice.Create(createdorder_product);
+        //        // return response
+        //        response.Code = HttpCode.OK;
+        //        response.Message = MessageResponse.SUCCESS;
+        //        response.Data = createdorder_product;
+        //        return Ok(response);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+        //        response.Message = ex.Message;
+        //        response.Data = null;
+        //        Console.WriteLine(ex.ToString());
 
-        public async Task<IHttpActionResult> Updateorder_product(int? op_id)
-        {
-            ResponseDataDTO<order_product> response = new ResponseDataDTO<order_product>();
-            try
-            {
-                var path = Path.GetTempPath();
+        //        return Ok(response);
+        //    }
 
-                if (!Request.Content.IsMimeMultipartContent("form-data"))
-                {
-                    throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.UnsupportedMediaType));
-                }
-
-                MultipartFormDataStreamProvider streamProvider = new MultipartFormDataStreamProvider(path);
-
-                await Request.Content.ReadAsMultipartAsync(streamProvider);
-
-
-                // get data from formdata
-                OrderProductUpdateViewModel order_productUpdateViewModel = new OrderProductUpdateViewModel
-                {
-
-                    op_code = Convert.ToString(streamProvider.FormData["op_code"]),
-                    op_note = Convert.ToString(streamProvider.FormData["op_note"]),
+        //}
 
 
+        //[HttpPut]
+        //[Route("api/order_products/update")]
 
-                    op_quantity = Convert.ToInt32(streamProvider.FormData["op_quantity"]),
-                    op_id = Convert.ToInt32(streamProvider.FormData["op_id"]),
-                    staff_id = Convert.ToInt32(streamProvider.FormData["staff_id"]),
-                    product_id = Convert.ToInt32(streamProvider.FormData["product_id"]),
-                    customer_id = Convert.ToInt32(streamProvider.FormData["customer_id"]),
+        //public async Task<IHttpActionResult> Updateorder_product(int? op_id)
+        //{
+        //    ResponseDataDTO<order_product> response = new ResponseDataDTO<order_product>();
+        //    try
+        //    {
+        //        var path = Path.GetTempPath();
 
-                    op_datetime = Convert.ToDateTime(streamProvider.FormData["op_datetime"]),
+        //        if (!Request.Content.IsMimeMultipartContent("form-data"))
+        //        {
+        //            throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.UnsupportedMediaType));
+        //        }
 
-                    op_status = Convert.ToByte(streamProvider.FormData["op_status"]),
-                };
+        //        MultipartFormDataStreamProvider streamProvider = new MultipartFormDataStreamProvider(path);
+
+        //        await Request.Content.ReadAsMultipartAsync(streamProvider);
+
+
+        //        // get data from formdata
+        //        OrderProductUpdateViewModel order_productUpdateViewModel = new OrderProductUpdateViewModel
+        //        {
+
+        //            //op_code = Convert.ToString(streamProvider.FormData["op_code"]),
+        //            op_note = Convert.ToString(streamProvider.FormData["op_note"]),
 
 
 
-                // mapping view model to entity
-                var updatedorder_product = _mapper.Map<order_product>(order_productUpdateViewModel);
+        //            op_quantity = Convert.ToInt32(streamProvider.FormData["op_quantity"]),
+        //            op_id = Convert.ToInt32(streamProvider.FormData["op_id"]),
+        //            //staff_id = Convert.ToInt32(streamProvider.FormData["staff_id"]),
+        //            product_id = Convert.ToInt32(streamProvider.FormData["product_id"]),
+        //            //customer_id = Convert.ToInt32(streamProvider.FormData["customer_id"]),
+
+        //            op_datetime = Convert.ToDateTime(streamProvider.FormData["op_datetime"]),
+
+        //            op_status = Convert.ToByte(streamProvider.FormData["op_status"]),
+        //        };
 
 
 
-                // update order_product
-                _order_productservice.Update(updatedorder_product, op_id);
-                // return response
-                response.Code = HttpCode.OK;
-                response.Message = MessageResponse.SUCCESS;
-                response.Data = updatedorder_product;
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = ex.Message;
-                response.Data = null;
-                Console.WriteLine(ex.ToString());
-
-                return Ok(response);
-            }
-        }
-
-        [HttpDelete]
-        [Route("api/order_products/delete")]
-        public IHttpActionResult Deleteorder_product(int order_productId)
-        {
-            ResponseDataDTO<order_product> response = new ResponseDataDTO<order_product>();
-            try
-            {
-                var order_productDeleted = _order_productservice.Find(order_productId);
-                if (order_productDeleted != null)
-                {
-                    _order_productservice.Delete(order_productDeleted);
-
-                    // return response
-                    response.Code = HttpCode.OK;
-                    response.Message = MessageResponse.SUCCESS;
-                    response.Data = null;
-                    return Ok(response);
-                }
-                else
-                {
-                    // return response
-                    response.Code = HttpCode.NOT_FOUND;
-                    response.Message = MessageResponse.FAIL;
-                    response.Data = null;
-
-                    return Ok(response);
-                }
+        //        // mapping view model to entity
+        //        var updatedorder_product = _mapper.Map<order_product>(order_productUpdateViewModel);
 
 
-            }
-            catch (Exception ex)
-            {
-                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = ex.Message;
-                response.Data = null;
-                Console.WriteLine(ex.ToString());
 
-                return Ok(response);
-            }
-        }
+        //        // update order_product
+        //        _order_productservice.Update(updatedorder_product, op_id);
+        //        // return response
+        //        response.Code = HttpCode.OK;
+        //        response.Message = MessageResponse.SUCCESS;
+        //        response.Data = updatedorder_product;
+        //        return Ok(response);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+        //        response.Message = ex.Message;
+        //        response.Data = null;
+        //        Console.WriteLine(ex.ToString());
+
+        //        return Ok(response);
+        //    }
+        //}
+
+        //[HttpDelete]
+        //[Route("api/order_products/delete")]
+        //public IHttpActionResult Deleteorder_product(int order_productId)
+        //{
+        //    ResponseDataDTO<order_product> response = new ResponseDataDTO<order_product>();
+        //    try
+        //    {
+        //        var order_productDeleted = _order_productservice.Find(order_productId);
+        //        if (order_productDeleted != null)
+        //        {
+        //            _order_productservice.Delete(order_productDeleted);
+
+        //            // return response
+        //            response.Code = HttpCode.OK;
+        //            response.Message = MessageResponse.SUCCESS;
+        //            response.Data = null;
+        //            return Ok(response);
+        //        }
+        //        else
+        //        {
+        //            // return response
+        //            response.Code = HttpCode.NOT_FOUND;
+        //            response.Message = MessageResponse.FAIL;
+        //            response.Data = null;
+
+        //            return Ok(response);
+        //        }
+
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+        //        response.Message = ex.Message;
+        //        response.Data = null;
+        //        Console.WriteLine(ex.ToString());
+
+        //        return Ok(response);
+        //    }
+        //}
         #endregion
 
         #region dispose
