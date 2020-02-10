@@ -148,6 +148,7 @@
     <Compile Include="ModelsERP\package.cs" />
     <Compile Include="ModelsERP\position.cs" />
     <Compile Include="ModelsERP\product.cs" />
+    <Compile Include="ModelsERP\product_category.cs" />
     <Compile Include="ModelsERP\project.cs" />
     <Compile Include="ModelsERP\RefreshToken.cs" />
     <Compile Include="ModelsERP\service.cs" />
@@ -156,6 +157,8 @@
     <Compile Include="ModelsERP\sms_strategy.cs" />
     <Compile Include="ModelsERP\sms_template.cs" />
     <Compile Include="ModelsERP\staff.cs" />
+    <Compile Include="ModelsERP\supplier.cs" />
+    <Compile Include="ModelsERP\supplier_type.cs" />
     <Compile Include="ModelsERP\task.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -118,6 +118,7 @@
     <Compile Include="Repositories\IRepositories\IOrderServiceRepository.cs" />
     <Compile Include="Repositories\IRepositories\IPackageRepository.cs" />
     <Compile Include="Repositories\IRepositories\IPositionRepository.cs" />
+    <Compile Include="Repositories\IRepositories\IProductCategoryRepository.cs" />
     <Compile Include="Repositories\IRepositories\IProductRepository.cs" />
     <Compile Include="Repositories\IRepositories\IProjectRepository.cs" />
     <Compile Include="Repositories\IRepositories\IServiceRepository.cs" />
@@ -125,12 +126,15 @@
     <Compile Include="Repositories\IRepositories\ISmsStrategyRepository.cs" />
     <Compile Include="Repositories\IRepositories\ISmsTemplateRepository.cs" />
     <Compile Include="Repositories\IRepositories\IStaffRepository.cs" />
+    <Compile Include="Repositories\IRepositories\ISupplierRepository.cs" />
+    <Compile Include="Repositories\IRepositories\ISupplierTypeRepository.cs" />
     <Compile Include="Repositories\IRepositories\ITaskRepository.cs" />
     <Compile Include="Repositories\NotificationRepository.cs" />
     <Compile Include="Repositories\OrderProductRepository.cs" />
     <Compile Include="Repositories\OrderServiceRepository.cs" />
     <Compile Include="Repositories\PackageRepository.cs" />
     <Compile Include="Repositories\PositionRepository.cs" />
+    <Compile Include="Repositories\ProductCategoryResponsitory.cs" />
     <Compile Include="Repositories\ProductRepository.cs" />
     <Compile Include="Repositories\ProjectRepository.cs" />
     <Compile Include="Repositories\ServiceRepository.cs" />
@@ -138,6 +142,8 @@
     <Compile Include="Repositories\SmsStrategyRepository.cs" />
     <Compile Include="Repositories\SmsTemplateRepository.cs" />
     <Compile Include="Repositories\StaffRepository.cs" />
+    <Compile Include="Repositories\SupplierRepository.cs" />
+    <Compile Include="Repositories\SupplierTypeRepository.cs" />
     <Compile Include="Repositories\TaskRepository.cs" />
   </ItemGroup>
   <ItemGroup>
