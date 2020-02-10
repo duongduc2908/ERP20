@@ -18,9 +18,21 @@ namespace ERP.Service.Services
             this._repository = repository;
         }
 
-        public PagedResults<customer> CreatePagedResults(int pageNumber, int pageSize)
+        public PagedResults<customer> GetAllPage(int pageNumber, int pageSize)
         {
-            return this._repository.CreatePagedResults(pageNumber, pageSize);
+            return this._repository.GetAllPage(pageNumber, pageSize);
+        }
+        public PagedResults<customer> GetAllPageBySource(int pageNumber, int pageSize, int source_id)
+        {
+            return this._repository.GetAllPageBySource(pageNumber, pageSize,source_id);
+        }
+        public PagedResults<customer> GetAllPageByType(int pageNumber, int pageSize,int cu_type)
+        {
+            return this._repository.GetAllPageByType(pageNumber, pageSize, cu_type);
+        }
+        public PagedResults<customer> GetAllPageByGroup(int pageNumber, int pageSize,int customer_group_id)
+        {
+            return this._repository.GetAllPageByGroup(pageNumber, pageSize, customer_group_id);
         }
         public PagedResults<customer> GetInfor(string search_name)
         {

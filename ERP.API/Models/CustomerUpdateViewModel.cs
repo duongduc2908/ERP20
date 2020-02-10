@@ -41,10 +41,16 @@ namespace ERP.API.Models
         [StringLength(250)]
         public string cu_note { get; set; }
 
-        public int? cu_geocoding { get; set; }
+        public string cu_geocoding { get; set; }
 
         public int? customer_group_id { get; set; }
 
         public byte? cu_status { get; set; }
+
+        public int? source_id { get; set; }
+
+        public int? cu_age { get; set; }
+
+        public int? staff_id { get; set; }
     }
 }

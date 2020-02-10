@@ -1,6 +1,7 @@
 ﻿using ERP.Common.GenericRepository;
 using ERP.Common.Models;
 using ERP.Data.ModelsERP;
+using ERP.Data.ModelsERP.ModelView;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,10 @@ namespace ERP.Repository.Repositories.IRepositories
 {
     public interface ICustomerRepository : IGenericRepository<customer>
     {
-        PagedResults<customer> CreatePagedResults(int pageNumber, int pageSize);
+        PagedResults<customerviewmodel> GetAllPage(int pageNumber, int pageSize);
+        PagedResults<customerviewmodel> GetAllPageBySource(int pageNumber, int pageSize, int source_id);
+        PagedResults<customerviewmodel> GetAllPageByType(int pageNumber, int pageSize, int cu_type);
+        PagedResults<customerviewmodel> GetAllPageByGroup(int pageNumber, int pageSize, int customer_group_id);
         PagedResults<customer> GetInfor(string search_name);
        
     }

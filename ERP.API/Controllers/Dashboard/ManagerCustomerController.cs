@@ -143,8 +143,11 @@ namespace ERP.API.Controllers.Dashboard
                     cu_note = Convert.ToString(streamProvider.FormData["cu_note"]),
 
 
-                    cu_geocoding = Convert.ToInt32(streamProvider.FormData["cu_geocoding"]),
+                    cu_geocoding = Convert.ToString(streamProvider.FormData["cu_geocoding"]),
                     customer_group_id = Convert.ToInt32(streamProvider.FormData["customer_group_id"]),
+                    source_id = Convert.ToInt32(streamProvider.FormData["source_id"]),
+                    staff_id = Convert.ToInt32(streamProvider.FormData["staff_id"]),
+                    cu_age = Convert.ToInt32(streamProvider.FormData["cu_age"]),
                     
                     cu_create_date = Convert.ToDateTime(streamProvider.FormData["cu_create_date"]),
 
@@ -236,8 +239,12 @@ namespace ERP.API.Controllers.Dashboard
                     cu_note = Convert.ToString(streamProvider.FormData["cu_note"]),
 
 
-                    cu_geocoding = Convert.ToInt32(streamProvider.FormData["cu_geocoding"]),
+                    cu_geocoding = Convert.ToString(streamProvider.FormData["cu_geocoding"]),
                     customer_group_id = Convert.ToInt32(streamProvider.FormData["customer_group_id"]),
+                    source_id = Convert.ToInt32(streamProvider.FormData["source_id"]),
+                    staff_id = Convert.ToInt32(streamProvider.FormData["staff_id"]),
+                    cu_age = Convert.ToInt32(streamProvider.FormData["cu_age"]),
+
 
                     cu_create_date = Convert.ToDateTime(streamProvider.FormData["cu_create_date"]),
 
