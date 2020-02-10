@@ -38,6 +38,10 @@ namespace ERP.Service.Services
         {
             return this._repository.GetInforById(id);
         }
+        public PagedResults<staffviewmodel> GetAllActive(int status, int pageNumber, int pageSize)
+        {
+            return this._repository.GetAllActive(status, pageNumber, pageSize);
+        }
         public PagedResults<string> GetInforManager()
         {
             return this._repository.GetInforManager();

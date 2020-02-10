@@ -36,6 +36,7 @@ namespace ERP.API.AutoMapper
 
             CreateMap<ProductCreateViewModel, product>();
             CreateMap<ProductUpdateViewModel, product>();
+            CreateMap<product, productviewmodel>();
 
             CreateMap<OrderProductCreateViewModel, order_product>();
             CreateMap<OrderProductUpdateViewModel, order_product>();

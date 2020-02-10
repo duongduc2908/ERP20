@@ -100,6 +100,27 @@ namespace ERP.API.Controllers.Dashboard
 
             return Ok(response);
         }
+        [Route("api/staffs/active")]
+        public IHttpActionResult GetAllActive(int pageNumber, int pageSize, int status)
+        {
+            ResponseDataDTO<PagedResults<staffviewmodel>> response = new ResponseDataDTO<PagedResults<staffviewmodel>>();
+            try
+            {
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = _staffservice.GetAllActive( pageNumber,pageSize,status);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = "Không tìm thấy nhân sự";
+                response.Data = null;
+
+                Console.WriteLine(ex.ToString());
+            }
+
+            return Ok(response);
+        }
         [Route("api/staffs/manager")]
         public IHttpActionResult GetInforManager()
         {

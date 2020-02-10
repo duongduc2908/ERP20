@@ -17,6 +17,7 @@ namespace ERP.Service.Services.IServices
         void ChangePassword(ChangePasswordBindingModel model, int id);
         PagedResults<staffviewmodel> GetAllPage(int pageNumber, int pageSize);
         PagedResults<staffviewmodel> GetInforById(int id);
+        PagedResults<staffviewmodel> GetAllActive(int pageNumber, int pageSize, int status);
         PagedResults<string> GetInforManager();
     }
 }

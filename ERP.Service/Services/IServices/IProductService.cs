@@ -1,6 +1,7 @@
 ﻿using ERP.Common.GenericService;
 using ERP.Common.Models;
 using ERP.Data.ModelsERP;
+using ERP.Data.ModelsERP.ModelView;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,9 @@ namespace ERP.Service.Services.IServices
 {
     public interface IProductService : IGenericService<product>
     {
-        PagedResults<product> CreatePagedResults(int pageNumber, int pageSize);
+        PagedResults<productviewmodel> GetAllPage(int pageNumber, int pageSize);
+        PagedResults<productviewmodel> GetAllPageById(int pageNumber, int pageSize, int id);
+       
         PagedResults<product> GetProducts(string search_name);
     }
 }

@@ -20,8 +20,6 @@ namespace ERP.API.Models
 
         public DateTime? op_datetime { get; set; }
 
-
-
         public int? product_id { get; set; }
 
         public int? customer_order_id { get; set; }
