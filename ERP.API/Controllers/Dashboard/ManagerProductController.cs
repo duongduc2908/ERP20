@@ -10,6 +10,7 @@ using ERP.Service.Services.IServices;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -43,7 +44,7 @@ namespace ERP.API.Controllers.Dashboard
             {
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _productservice.GetAll();
+                response.Data = _productservice.GetAllIncluing(t => t.pu_quantity == 1, q => q.OrderBy(s => s.pu_id));
             }
             catch (Exception ex)
             {
