@@ -156,6 +156,7 @@
     <Compile Include="ModelsERP\sms.cs" />
     <Compile Include="ModelsERP\sms_strategy.cs" />
     <Compile Include="ModelsERP\sms_template.cs" />
+    <Compile Include="ModelsERP\source.cs" />
     <Compile Include="ModelsERP\staff.cs" />
     <Compile Include="ModelsERP\supplier.cs" />
     <Compile Include="ModelsERP\supplier_type.cs" />

@@ -4,6 +4,7 @@ using ERP.Common.Constants;
 using ERP.Common.Models;
 using ERP.Data.Dto;
 using ERP.Data.ModelsERP;
+using ERP.Data.ModelsERP.ModelView;
 using ERP.Extension.Extensions;
 using ERP.Service.Services.IServices;
 using System;
@@ -65,12 +66,12 @@ namespace ERP.API.Controllers.Dashboard
         [Route("api/customers/page")]
         public IHttpActionResult GetcustomersPaging(int pageSize, int pageNumber)
         {
-            ResponseDataDTO<PagedResults<customer>> response = new ResponseDataDTO<PagedResults<customer>>();
+            ResponseDataDTO<PagedResults<customerviewmodel>> response = new ResponseDataDTO<PagedResults<customerviewmodel>>();
             try
             {
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _customerservice.CreatePagedResults(pageNumber, pageSize);
+                response.Data = _customerservice.GetAllPage(pageNumber, pageSize);
             }
             catch (Exception ex)
             {

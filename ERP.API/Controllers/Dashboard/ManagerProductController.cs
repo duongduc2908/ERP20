@@ -4,6 +4,7 @@ using ERP.Common.Constants;
 using ERP.Common.Models;
 using ERP.Data.Dto;
 using ERP.Data.ModelsERP;
+using ERP.Data.ModelsERP.ModelView;
 using ERP.Extension.Extensions;
 using ERP.Service.Services.IServices;
 using System;
@@ -59,12 +60,12 @@ namespace ERP.API.Controllers.Dashboard
         [Route("api/products/page")]
         public IHttpActionResult GetproductsPaging(int pageSize, int pageNumber)
         {
-            ResponseDataDTO<PagedResults<product>> response = new ResponseDataDTO<PagedResults<product>>();
+            ResponseDataDTO<PagedResults<productviewmodel>> response = new ResponseDataDTO<PagedResults<productviewmodel>>();
             try
             {
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _productservice.CreatePagedResults(pageNumber, pageSize);
+                response.Data = _productservice.GetAllPage(pageNumber, pageSize);
             }
             catch (Exception ex)
             {

@@ -43,8 +43,10 @@ namespace ERP.Repository.Repositories
                     customerview.cu_type_name = EnumCustomer.cu_type_1;
                 }
                 var group_role = _dbContext.group_role.FirstOrDefault(x => x.gr_id == i.customer_group_id);
-                //var group_role = _dbContext.s.FirstOrDefault(x => x.gr_id == i.customer_group_id);
-                //var group_role = _dbContext.group_role.FirstOrDefault(x => x.gr_id == i.customer_group_id);
+                var sources = _dbContext.sources.FirstOrDefault(x => x.src_id == i.source_id);
+                customerview.customer_group_name = group_role.gr_name;
+                customerview.source_name = sources.src_name;
+
                 res.Add(customerview);
             }
 
