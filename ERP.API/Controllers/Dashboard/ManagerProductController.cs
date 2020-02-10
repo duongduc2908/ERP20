@@ -78,6 +78,27 @@ namespace ERP.API.Controllers.Dashboard
 
             return Ok(response);
         }
+        [Route("api/products/infor")]
+        public IHttpActionResult GetAllById(int id)
+        {
+            ResponseDataDTO<PagedResults<productviewmodel>> response = new ResponseDataDTO<PagedResults<productviewmodel>>();
+            try
+            {
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = _productservice.GetAllPageById(id);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+
+                Console.WriteLine(ex.ToString());
+            }
+
+            return Ok(response);
+        }
         [Route("api/products/search")]
         public IHttpActionResult GetProducts(string search_name)
         {
@@ -250,7 +271,7 @@ namespace ERP.API.Controllers.Dashboard
         }
 
         [HttpDelete]
-        [Route("api/products/delete/{productId}")]
+        [Route("api/products/delete")]
         public IHttpActionResult Deleteproduct(int productId)
         {
             ResponseDataDTO<product> response = new ResponseDataDTO<product>();
@@ -271,7 +292,7 @@ namespace ERP.API.Controllers.Dashboard
                 {
                     // return response
                     response.Code = HttpCode.NOT_FOUND;
-                    response.Message = MessageResponse.FAIL;
+                    response.Message = "Không thấy được sản phẩm";
                     response.Data = null;
 
                     return Ok(response);

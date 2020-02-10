@@ -13,7 +13,7 @@ namespace ERP.Repository.Repositories.IRepositories
     public interface IProductRepository : IGenericRepository<product>
     {
         PagedResults<productviewmodel> GetAllPage(int pageNumber, int pageSize);
-        PagedResults<productviewmodel> GetAllPageById(int pageNumber, int pageSize, int id);
+        PagedResults<productviewmodel> GetAllPageById(int id);
         PagedResults<product> GetProducts(string search_name);
     }
 }

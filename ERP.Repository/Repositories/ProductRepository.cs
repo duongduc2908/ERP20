@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ERP.Common.Constants.Enums;
 using ERP.Common.GenericRepository;
 using ERP.Common.Models;
 using ERP.Data.DbContext;
@@ -20,13 +21,35 @@ namespace ERP.Repository.Repositories
             this._mapper = _mapper;
         }
         
-        public PagedResults<productviewmodel> GetAllPageById(int pageNumber, int pageSize, int id)
+        public PagedResults<productviewmodel> GetAllPageById( int id)
         {
             List<productviewmodel> res = new List<productviewmodel>();
-            var list = _dbContext.products.OrderBy(t => t.pu_id).ToList();
-            var totalNumberOfRecords = list.Count();
-            var results = list.ToList();
+            
 
+            var list = _dbContext.products.Where(i => i.pu_id == id).ToList();
+            var totalNumberOfRecords = list.Count();
+
+            var results = list.ToList();
+            foreach (product i in results)
+            {
+                var productview = _mapper.Map<productviewmodel>(i);
+                var product_category = _dbContext.product_category.FirstOrDefault(x => x.pc_id == i.product_category_id);
+                var supplier = _dbContext.suppliers.FirstOrDefault(x => x.su_id == i.provider_id);
+
+                productview.product_category_name = product_category.pc_name;
+                productview.provider_name = supplier.su_name;
+
+                if (i.pu_unit == 0)
+                {
+                    productview.pu_unit = EnumProduct.pu_unit_0;
+                }
+                if (i.pu_unit == 1)
+                {
+                    productview.pu_unit = EnumProduct.pu_unit_1;
+                }
+                res.Add(productview);
+            }
+            
             return new PagedResults<productviewmodel>
             {
                 Results = res,
@@ -48,12 +71,20 @@ namespace ERP.Repository.Repositories
             foreach (product i in results)
             {
                 var productview = _mapper.Map<productviewmodel>(i);
-                //var deparment = _dbContext.departments.FirstOrDefault(x => x.de_id == i.department_id);
-                //var position = _dbContext.positions.FirstOrDefault(x => x.pos_id == i.position_id);
-                //var group_role = _dbContext.group_role.FirstOrDefault(x => x.gr_id == i.group_role_id);
-                //staffview.department_name = deparment.de_name;
-                //staffview.position_name = position.pos_name;
-                //staffview.group_name = group_role.gr_name;
+                var product_category = _dbContext.product_category.FirstOrDefault(x => x.pc_id == i.product_category_id);
+                var supplier = _dbContext.suppliers.FirstOrDefault(x => x.su_id == i.provider_id);
+               
+                productview.product_category_name = product_category.pc_name;
+                productview.provider_name = supplier.su_name;
+
+                if (i.pu_unit == 0)
+                {
+                    productview.pu_unit = EnumProduct.pu_unit_0;
+                }
+                if (i.pu_unit == 1)
+                {
+                    productview.pu_unit = EnumProduct.pu_unit_1;
+                }
                 res.Add(productview);
             }
             var mod = totalNumberOfRecords % pageSize;
