@@ -119,6 +119,7 @@
     <Compile Include="Repositories\IRepositories\IPackageRepository.cs" />
     <Compile Include="Repositories\IRepositories\IPositionRepository.cs" />
     <Compile Include="Repositories\IRepositories\IProductCategoryRepository.cs" />
+    <Compile Include="Repositories\IRepositories\IProductOrderRepository.cs" />
     <Compile Include="Repositories\IRepositories\IProductRepository.cs" />
     <Compile Include="Repositories\IRepositories\IProjectRepository.cs" />
     <Compile Include="Repositories\IRepositories\IServiceRepository.cs" />
@@ -136,6 +137,7 @@
     <Compile Include="Repositories\PackageRepository.cs" />
     <Compile Include="Repositories\PositionRepository.cs" />
     <Compile Include="Repositories\ProductCategoryResponsitory.cs" />
+    <Compile Include="Repositories\ProductOrderRepository.cs" />
     <Compile Include="Repositories\ProductRepository.cs" />
     <Compile Include="Repositories\ProjectRepository.cs" />
     <Compile Include="Repositories\ServiceRepository.cs" />
