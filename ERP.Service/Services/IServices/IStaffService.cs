@@ -18,6 +18,8 @@ namespace ERP.Service.Services.IServices
         PagedResults<staffviewmodel> GetAllPage(int pageNumber, int pageSize);
         PagedResults<staffviewmodel> GetInforById(int id);
         PagedResults<staffviewmodel> GetAllActive(int pageNumber, int pageSize, int status);
+        void Export(int pageNumber, int pageSize);
+        PagedResults<staffviewmodel> Import(string Path, string sheetname);
         PagedResults<string> GetInforManager();
     }
 }

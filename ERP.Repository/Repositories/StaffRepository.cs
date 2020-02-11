@@ -7,6 +7,8 @@ using ERP.Data.DbContext;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
 using ERP.Repository.Repositories.IRepositories;
+using OfficeOpenXml;
+using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,6 +61,79 @@ namespace ERP.Repository.Repositories
                 }
             }
         }
+        public void Export(int pageNumber, int pageSize)
+        {
+
+            List<staffviewmodel> res = new List<staffviewmodel>();
+
+            var skipAmount = pageSize * pageNumber;
+
+            var list = _dbContext.staffs.OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize);
+
+            var totalNumberOfRecords = _dbContext.staffs.Count();
+
+            var results = list.ToList();
+            foreach (staff i in results)
+            {
+                var staffview = _mapper.Map<staffviewmodel>(i);
+                var deparment = _dbContext.departments.FirstOrDefault(x => x.de_id == i.department_id);
+                var position = _dbContext.positions.FirstOrDefault(x => x.pos_id == i.position_id);
+                var group_role = _dbContext.group_role.FirstOrDefault(x => x.gr_id == i.group_role_id);
+                staffview.department_name = deparment.de_name;
+                staffview.position_name = position.pos_name;
+                staffview.group_name = group_role.gr_name;
+                res.Add(staffview);
+            }
+
+            var mod = totalNumberOfRecords % pageSize;
+
+            var totalPageCount = (totalNumberOfRecords / pageSize) + (mod == 0 ? 0 : 1);
+            
+            ExcelPackage pck = new ExcelPackage();
+            ExcelWorksheet ws = pck.Workbook.Worksheets.Add("Report");
+
+            ws.Cells["A1"].Value = "Communication";
+            ws.Cells["B1"].Value = "Com1";
+
+            ws.Cells["A2"].Value = "Report";
+            ws.Cells["B2"].Value = "Report1";
+
+            ws.Cells["A3"].Value = "Date";
+            ws.Cells["B3"].Value = string.Format("{0:dd MMMM yyyy} at {0:H: mm tt}", DateTimeOffset.Now);
+
+            ws.Cells["A6"].Value = "EmployeeId";
+            ws.Cells["B6"].Value = "EmployeeName";
+            ws.Cells["C6"].Value = "Email";
+            ws.Cells["D6"].Value = "Phone";
+            ws.Cells["E6"].Value = "Experience";
+
+            int rowStart = 7;
+            foreach (staffviewmodel item in res)
+            {
+                //if (item. < 5)
+                //{
+                //    ws.Row(rowStart).Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                //    ws.Row(rowStart).Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(string.Format("pink")));
+
+                //}
+
+                ws.Cells[string.Format("A{0}", rowStart)].Value = item.sta_aboutme;
+                ws.Cells[string.Format("B{0}", rowStart)].Value = item.sta_code;
+                ws.Cells[string.Format("C{0}", rowStart)].Value = item.sta_email;
+                ws.Cells[string.Format("D{0}", rowStart)].Value = item.sta_fullname;
+                ws.Cells[string.Format("E{0}", rowStart)].Value = item.sta_username;
+                rowStart++;
+            }
+
+            ws.Cells["A:AZ"].AutoFitColumns();
+
+            HttpContext.Current.Response.Clear();
+            HttpContext.Current.Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            HttpContext.Current.Response.AddHeader("content-disposition", "attachment: filename=" + "ExcelReport.xlsx");
+            HttpContext.Current.Response.BinaryWrite(pck.GetAsByteArray());
+            HttpContext.Current.Response.End();
+
+        }
         public PagedResults<staffviewmodel> GetAllPage(int pageNumber, int pageSize)
         {
             List<staffviewmodel> res = new List<staffviewmodel>();
@@ -71,6 +146,45 @@ namespace ERP.Repository.Repositories
             
             var results = list.ToList();
             foreach(staff i in results)
+            {
+                var staffview = _mapper.Map<staffviewmodel>(i);
+                var deparment = _dbContext.departments.FirstOrDefault(x => x.de_id == i.department_id);
+                var position = _dbContext.positions.FirstOrDefault(x => x.pos_id == i.position_id);
+                var group_role = _dbContext.group_role.FirstOrDefault(x => x.gr_id == i.group_role_id);
+                staffview.department_name = deparment.de_name;
+                staffview.position_name = position.pos_name;
+                staffview.group_name = group_role.gr_name;
+                res.Add(staffview);
+            }
+
+            var mod = totalNumberOfRecords % pageSize;
+
+            var totalPageCount = (totalNumberOfRecords / pageSize) + (mod == 0 ? 0 : 1);
+
+            return new PagedResults<staffviewmodel>
+            {
+                Results = res,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalNumberOfPages = totalPageCount,
+                TotalNumberOfRecords = totalNumberOfRecords
+            };
+        }
+        public PagedResults<staffviewmodel> Import(string Path, string sheetname)
+        {
+
+            List<staffviewmodel> res = new List<staffviewmodel>();
+            int pageSize = 0;
+            int pageNumber = 0;
+
+            var skipAmount = pageSize * pageNumber;
+
+            var list = _dbContext.staffs.OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize);
+
+            var totalNumberOfRecords = _dbContext.staffs.Count();
+
+            var results = list.ToList();
+            foreach (staff i in results)
             {
                 var staffview = _mapper.Map<staffviewmodel>(i);
                 var deparment = _dbContext.departments.FirstOrDefault(x => x.de_id == i.department_id);
