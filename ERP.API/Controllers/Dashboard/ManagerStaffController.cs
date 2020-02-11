@@ -310,7 +310,7 @@ namespace ERP.API.Controllers.Dashboard
 
         [HttpPut]
         [Route("api/staffs/update")]
-        public async Task<IHttpActionResult> Updatestaff(int? sta_id)
+        public async Task<IHttpActionResult> Updatestaff()
         {
             ResponseDataDTO<staff> response = new ResponseDataDTO<staff>();
             try
@@ -424,7 +424,7 @@ namespace ERP.API.Controllers.Dashboard
                 };
 
 
-                var existstaff = _staffservice.Find(sta_id);
+                var existstaff = _staffservice.Find(staffUpdateViewModel.sta_id);
 
                 if (fileName != "")
                 {
@@ -474,7 +474,7 @@ namespace ERP.API.Controllers.Dashboard
 
 
                 // update staff
-                _staffservice.Update(updatedstaff, sta_id);
+                _staffservice.Update(updatedstaff, staffUpdateViewModel.sta_id);
                 // return response
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;

@@ -52,6 +52,7 @@ namespace ERP.Data.ModelsERP.ModelView
         public DateTime? sta_created_date { get; set; }
         [StringLength(120)]
         public string department_name { get; set; }
+        public int department_id { get; set; }
 
         [StringLength(120)]
         public string group_name{ get; set; }
@@ -62,6 +63,7 @@ namespace ERP.Data.ModelsERP.ModelView
         public string sta_hometown { get; set; }
         [StringLength(120)]
         public string position_name { get; set; }
+        public int position_id { get; set; }
 
         public int? sta_leader_id { get; set; }
     }
