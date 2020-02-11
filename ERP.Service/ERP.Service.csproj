@@ -100,6 +100,7 @@
     <Compile Include="Services\IServices\IPackageService.cs" />
     <Compile Include="Services\IServices\IPositionService.cs" />
     <Compile Include="Services\IServices\IProductCategoryService.cs" />
+    <Compile Include="Services\IServices\IProductOrderService.cs" />
     <Compile Include="Services\IServices\IProductService.cs" />
     <Compile Include="Services\IServices\IProjectService.cs" />
     <Compile Include="Services\IServices\IServiceService.cs" />
@@ -117,6 +118,7 @@
     <Compile Include="Services\PackageService.cs" />
     <Compile Include="Services\PositionService.cs" />
     <Compile Include="Services\ProductCategoryService.cs" />
+    <Compile Include="Services\ProductOrderService.cs" />
     <Compile Include="Services\ProductService.cs" />
     <Compile Include="Services\ProjectService.cs" />
     <Compile Include="Services\ServiceService.cs" />

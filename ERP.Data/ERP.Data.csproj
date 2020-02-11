@@ -150,6 +150,7 @@
     <Compile Include="ModelsERP\position.cs" />
     <Compile Include="ModelsERP\product.cs" />
     <Compile Include="ModelsERP\product_category.cs" />
+    <Compile Include="ModelsERP\product_order.cs" />
     <Compile Include="ModelsERP\project.cs" />
     <Compile Include="ModelsERP\RefreshToken.cs" />
     <Compile Include="ModelsERP\service.cs" />
