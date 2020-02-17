@@ -38,7 +38,7 @@ namespace ERP.Data.ModelsERP
         public string cu_note { get; set; }
 
         public string cu_geocoding { get; set; }
-
+        
         public int? customer_group_id { get; set; }
 
         public byte? cu_status { get; set; }

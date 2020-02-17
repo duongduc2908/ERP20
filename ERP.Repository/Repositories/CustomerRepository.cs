@@ -271,6 +271,26 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = totalNumberOfRecords
             };
         }
-       
+        public PagedResults<customer_type> GetAllType()
+        {
+
+            List<customer_type> res = new List<customer_type>();
+            customer_type temp = new customer_type();
+            temp.id = 0; temp.name = EnumCustomer.cu_type_0;
+            res.Add(temp);
+            temp.id = 1; temp.name = EnumCustomer.cu_type_1;
+            res.Add(temp);
+           
+
+            return new PagedResults<customer_type>
+            {
+                Results = res,
+                PageNumber = 0,
+                PageSize = 0,
+                TotalNumberOfPages = 0,
+                TotalNumberOfRecords = 2
+            };
+        }
+
     }
 }

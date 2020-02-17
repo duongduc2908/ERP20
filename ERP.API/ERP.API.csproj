@@ -231,6 +231,7 @@
     <Compile Include="Controllers\Dashboard\ManagerCustomerGroupController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerCustomerOrderController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerOrderProductController.cs" />
+    <Compile Include="Controllers\Dashboard\ManagerSourceController.cs" />
     <Compile Include="Models\ChangePasswordBindingModel.cs" />
     <Compile Include="Controllers\Dashboard\ManagerCompanyController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerCustomerController.cs" />
@@ -378,6 +379,7 @@
     <Folder Include="Views\ManagerSmsStrategy\" />
     <Folder Include="Views\ManagerSmsTemplate\" />
     <Folder Include="Views\ManagerSms\" />
+    <Folder Include="Views\ManagerSource\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

@@ -129,6 +129,7 @@
     <Compile Include="ModelsERP\customer.cs" />
     <Compile Include="ModelsERP\customer_group.cs" />
     <Compile Include="ModelsERP\customer_order.cs" />
+    <Compile Include="ModelsERP\ModelView\customer_type.cs" />
     <Compile Include="ModelsERP\department.cs" />
     <Compile Include="ModelsERP\email.cs" />
     <Compile Include="ModelsERP\email_strategy.cs" />

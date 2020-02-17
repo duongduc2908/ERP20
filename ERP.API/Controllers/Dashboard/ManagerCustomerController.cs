@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ERP.API.Models;
 using ERP.Common.Constants;
+using ERP.Common.Constants.Enums;
 using ERP.Common.Models;
 using ERP.Data.Dto;
 using ERP.Data.ModelsERP;
@@ -116,6 +117,29 @@ namespace ERP.API.Controllers.Dashboard
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
                 response.Data = _customerservice.GetAllPageSearch(pageNumber, pageSize, source_id, cu_type, customer_group_id, name);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+
+                Console.WriteLine(ex.ToString());
+            }
+
+            return Ok(response);
+        }
+        [HttpGet]
+        [Route("api/customers/type")]
+        public IHttpActionResult GetAllType()
+        {
+            ResponseDataDTO<PagedResults<customer_type>> response = new ResponseDataDTO<PagedResults<customer_type>>();
+            try
+            {
+
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = _customerservice.GetAllType();
             }
             catch (Exception ex)
             {
