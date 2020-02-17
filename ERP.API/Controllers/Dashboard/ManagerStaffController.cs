@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ERP.API.Models;
 using ERP.Common.Constants;
+using ERP.Common.Excel;
 using ERP.Common.Models;
 using ERP.Data.Dto;
 using ERP.Data.ModelsERP;
@@ -9,6 +10,7 @@ using ERP.Extension.Extensions;
 using ERP.Service.Services.IServices;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -21,7 +23,7 @@ using System.Web.Security;
 namespace ERP.API.Controllers.Dashboard
 {
     [EnableCors("*", "*", "*")]
-    [Authorize]
+    //[Authorize]
     public class ManagerstaffsController : ApiController
     {
         private readonly IStaffService _staffservice;
@@ -57,13 +59,6 @@ namespace ERP.API.Controllers.Dashboard
             }
 
             return Ok(response);
-        }
-        [HttpGet]
-        [Route("api/staffs/export")]
-        public void Exports(int pageSize, int pageNumber)
-        {
-            _staffservice.Export(pageSize, pageNumber);
-           
         }
 
         [Route("api/staffs/page")]
@@ -726,115 +721,6 @@ namespace ERP.API.Controllers.Dashboard
             }
         }
 
-        //[HttpPost]
-        ////public async Task<IHttpActionResult> UploadExcel(User users, HttpPostedFileBase FileUpload)
-        //{
-
-            //List<string> data = new List<string>();
-            //if (FileUpload != null)
-            //{
-            //    // tdata.ExecuteCommand("truncate table OtherCompanyAssets");  
-            //    if (FileUpload.ContentType == "application/vnd.ms-excel" || FileUpload.ContentType == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-            //    {
-
-
-            //        string filename = FileUpload.FileName;
-            //        string targetpath = Server.MapPath("~/Doc/");
-            //        FileUpload.SaveAs(targetpath + filename);
-            //        string pathToExcelFile = targetpath + filename;
-            //        var connectionString = "";
-            //        if (filename.EndsWith(".xls"))
-            //        {
-            //            connectionString = string.Format("Provider=Microsoft.Jet.OLEDB.4.0; data source={0}; Extended Properties=Excel 8.0;", pathToExcelFile);
-            //        }
-            //        else if (filename.EndsWith(".xlsx"))
-            //        {
-            //            connectionString = string.Format("Provider=Microsoft.ACE.OLEDB.12.0;Data Source={0};Extended Properties=\"Excel 12.0 Xml;HDR=YES;IMEX=1\";", pathToExcelFile);
-            //        }
-
-            //        var adapter = new OleDbDataAdapter("SELECT * FROM [Sheet1$]", connectionString);
-            //        var ds = new DataSet();
-
-            //        adapter.Fill(ds, "ExcelTable");
-
-            //        DataTable dtable = ds.Tables["ExcelTable"];
-
-            //        string sheetName = "Sheet1";
-
-            //        var excelFile = new ExcelQueryFactory(pathToExcelFile);
-            //        var artistAlbums = from a in excelFile.Worksheet<User>(sheetName) select a;
-
-            //        foreach (var a in artistAlbums)
-            //        {
-            //            try
-            //            {
-            //                if (a.Name != "" && a.Address != "" && a.ContactNo != "")
-            //                {
-            //                    User TU = new User();
-            //                    TU.Name = a.Name;
-            //                    TU.Address = a.Address;
-            //                    TU.ContactNo = a.ContactNo;
-            //                    db.Users.Add(TU);
-
-            //                    db.SaveChanges();
-
-
-
-            //                }
-            //                else
-            //                {
-            //                    data.Add("<ul>");
-            //                    if (a.Name == "" || a.Name == null) data.Add("<li> name is required</li>");
-            //                    if (a.Address == "" || a.Address == null) data.Add("<li> Address is required</li>");
-            //                    if (a.ContactNo == "" || a.ContactNo == null) data.Add("<li>ContactNo is required</li>");
-
-            //                    data.Add("</ul>");
-            //                    data.ToArray();
-            //                    return Json(data, JsonRequestBehavior.AllowGet);
-            //                }
-            //            }
-
-            //            catch (DbEntityValidationException ex)
-            //            {
-            //                foreach (var entityValidationErrors in ex.EntityValidationErrors)
-            //                {
-
-            //                    foreach (var validationError in entityValidationErrors.ValidationErrors)
-            //                    {
-
-            //                        Response.Write("Property: " + validationError.PropertyName + " Error: " + validationError.ErrorMessage);
-
-            //                    }
-
-            //                }
-            //            }
-            //        }
-            //        //deleting excel file from folder  
-            //        if ((System.IO.File.Exists(pathToExcelFile)))
-            //        {
-            //            System.IO.File.Delete(pathToExcelFile);
-            //        }
-            //        return Json("success", JsonRequestBehavior.AllowGet);
-            //    }
-            //    else
-            //    {
-            //        //alert message for invalid file format  
-            //        data.Add("<ul>");
-            //        data.Add("<li>Only Excel file format is allowed</li>");
-            //        data.Add("</ul>");
-            //        data.ToArray();
-            //        return Json(data, JsonRequestBehavior.AllowGet);
-            //    }
-            //}
-            //else
-            //{
-            //    data.Add("<ul>");
-            //    if (FileUpload == null) data.Add("<li>Please choose Excel file</li>");
-            //    data.Add("</ul>");
-            //    data.ToArray();
-            //    return Json(data, JsonRequestBehavior.AllowGet);
-            //}
-        //}
         [Route("api/staffs/Logout")]
         public IHttpActionResult Logout()
         {
@@ -857,9 +743,74 @@ namespace ERP.API.Controllers.Dashboard
                 return Ok(response);
             }
         }
-       
+
         #endregion
 
+        #region["Excel"]
+
+        [HttpGet]
+        [Route("api/staffs/export")]
+        public void Exports(int pageSize, int pageNumber)
+        {
+            _staffservice.Export(pageSize, pageNumber);
+
+        }
+        [HttpPost]
+        [Route("api/staffs/import_ex")]
+        public async Task<IHttpActionResult> Import_Excel()
+        {
+            ResponseDataDTO<staff> response = new ResponseDataDTO<staff>();
+            try
+            {
+                HttpContext context = HttpContext.Current;
+                var path = Path.GetTempPath();
+
+                if (!Request.Content.IsMimeMultipartContent("form-data"))
+                {
+                    throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.UnsupportedMediaType));
+                }
+
+                MultipartFormDataStreamProvider streamProvider = new MultipartFormDataStreamProvider(path);
+
+                await Request.Content.ReadAsMultipartAsync(streamProvider);
+                // save file
+                string fileName = "";
+                foreach (MultipartFileData fileData in streamProvider.FileData)
+                {
+                    fileName = (FileExtension.SaveFileOnDisk(fileData));
+                    fileName = @"D:\ERP20\ERP.API\"+fileName;
+                    var res = ExcelImport.ImportExcelXLS(fileName, true);
+                    DataTable TestTable = (DataTable)res.Tables[0];
+                    foreach (DataRow row in TestTable.Rows)
+                    {
+                        for (int i = 0; i < TestTable.Columns.Count; i++)
+                        {
+                            context.Response.Write(row.ToString().Replace(",", string.Empty) + ",");
+                        }
+
+                        context.Response.Write(Environment.NewLine);
+                    }
+                }
+                context.Response.ContentType = "text/csv";
+                context.Response.AppendHeader("Content-Disposition", "attachment; filename=" + fileName + ".csv");
+                context.Response.End();
+
+                // return response
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = null;
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+
+                return Ok(response);
+            }
+        }
+        #endregion
         #region dispose
 
         protected override void Dispose(bool disposing)
