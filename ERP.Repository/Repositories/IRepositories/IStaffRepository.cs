@@ -18,6 +18,7 @@ namespace ERP.Repository.Repositories.IRepositories
         void Export(int pageNumber, int pageSize);
         PagedResults<staffviewmodel> Import(string Path, string sheetname);
         PagedResults<staffviewmodel> GetAllPage(int pageNumber, int pageSize);
+        PagedResults<staffviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? status, string name);
         PagedResults<staffviewmodel> GetInforById(int id);
         PagedResults<staffviewmodel> GetAllActive(int pageNumber, int pageSize, int status);
 

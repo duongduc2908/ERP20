@@ -47,8 +47,10 @@ namespace ERP.API.Models
 
         public int? source_id { get; set; }
 
-        public int? cu_age { get; set; }
+        public DateTime? cu_birthday { get; set; }
 
         public int? staff_id { get; set; }
+        public int? cu_curator_id { get; set; }
     }
+
 }

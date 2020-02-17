@@ -170,6 +170,65 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = totalNumberOfRecords
             };
         }
+        public PagedResults<staffviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? status, string name)
+        {
+            List<staffviewmodel> res = new List<staffviewmodel>();
+
+            var skipAmount = pageSize * pageNumber;
+            
+            var list = _dbContext.staffs.Where(t => t.sta_status == status && t.sta_fullname.Contains(name)).OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize);
+            if (status == null)
+            {
+                if(name != null)
+                {
+                    list = _dbContext.staffs.Where(t => t.sta_fullname.Contains(name)).OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize);
+                }
+                else
+                {
+                    list = _dbContext.staffs.OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize);
+                }
+                
+            }
+            if(name == null)
+            {
+                if (status != null)
+                {
+                    list = _dbContext.staffs.Where(t => t.sta_status == status).OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize);
+                }
+                else
+                {
+                    list = _dbContext.staffs.OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize);
+                }
+            }
+
+            var totalNumberOfRecords = _dbContext.staffs.Count();
+
+            var results = list.ToList();
+            foreach (staff i in results)
+            {
+                var staffview = _mapper.Map<staffviewmodel>(i);
+                var deparment = _dbContext.departments.FirstOrDefault(x => x.de_id == i.department_id);
+                var position = _dbContext.positions.FirstOrDefault(x => x.pos_id == i.position_id);
+                //var group_role = _dbContext.group_role.FirstOrDefault(x => x.gr_id == i.group_role_id);
+                staffview.department_name = deparment.de_name;
+                staffview.position_name = position.pos_name;
+                //staffview.group_name = group_role.gr_name;
+                res.Add(staffview);
+            }
+
+            var mod = totalNumberOfRecords % pageSize;
+
+            var totalPageCount = (totalNumberOfRecords / pageSize) + (mod == 0 ? 0 : 1);
+
+            return new PagedResults<staffviewmodel>
+            {
+                Results = res,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalNumberOfPages = totalPageCount,
+                TotalNumberOfRecords = totalNumberOfRecords
+            };
+        }
         public PagedResults<staffviewmodel> Import(string Path, string sheetname)
         {
 

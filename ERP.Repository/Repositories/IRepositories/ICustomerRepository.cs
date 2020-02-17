@@ -16,6 +16,7 @@ namespace ERP.Repository.Repositories.IRepositories
         PagedResults<customerviewmodel> GetAllPageBySource(int pageNumber, int pageSize, int source_id);
         PagedResults<customerviewmodel> GetAllPageByType(int pageNumber, int pageSize, int cu_type);
         PagedResults<customerviewmodel> GetAllPageByGroup(int pageNumber, int pageSize, int customer_group_id);
+        PagedResults<customerviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, string name);
         PagedResults<customer> GetInfor(string search_name);
        
     }

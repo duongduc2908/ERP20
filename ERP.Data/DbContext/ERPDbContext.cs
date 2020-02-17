@@ -58,5 +58,6 @@ namespace ERP.Data.DbContext
         public virtual DbSet<supplier_type> supplier_type { get; set; }
         public virtual DbSet<source> sources { get; set; }
         public virtual DbSet<product_order> product_order { get; set; }
+        public virtual DbSet<customer_group> customer_group { get; set; }
     }
 }

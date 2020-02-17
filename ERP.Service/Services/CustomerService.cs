@@ -35,6 +35,12 @@ namespace ERP.Service.Services
         {
             return this._repository.GetAllPageByGroup(pageNumber, pageSize, customer_group_id);
         }
+        public PagedResults<customerviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, string name)
+        {
+            return this._repository.GetAllPageSearch(pageNumber, pageSize, source_id, cu_type, customer_group_id, name);
+        }
+        
+
         public PagedResults<customer> GetInfor(string search_name)
         {
             return this._repository.GetInfor(search_name);

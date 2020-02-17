@@ -87,6 +87,27 @@ namespace ERP.API.Controllers.Dashboard
 
             return Ok(response);
         }
+        [Route("api/staffs/search-active-name")]
+        public IHttpActionResult GetstaffsPaging(int pageSize, int pageNumber, int? status, string name)
+        {
+            ResponseDataDTO<PagedResults<staffviewmodel>> response = new ResponseDataDTO<PagedResults<staffviewmodel>>();
+            try
+            {
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = _staffservice.GetAllPageSearch(  pageNumber, pageSize, status,name);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+
+                Console.WriteLine(ex.ToString());
+            }
+
+            return Ok(response);
+        }
         [Route("api/staffs/infor")]
         public IHttpActionResult GetInforById(int id)
         {
@@ -233,7 +254,7 @@ namespace ERP.API.Controllers.Dashboard
                 StaffCreateViewModel StaffCreateViewModel = new StaffCreateViewModel
                 {
                     sta_fullname = Convert.ToString(streamProvider.FormData["sta_fullname"]),
-                    sta_code = Convert.ToString(streamProvider.FormData["sta_code"]),
+                    //sta_code = Convert.ToString(streamProvider.FormData["sta_code"]),
                     sta_username = Convert.ToString(streamProvider.FormData["sta_username"]),
                     sta_password = Convert.ToString(streamProvider.FormData["sta_password"]),
                     sta_email = Convert.ToString(streamProvider.FormData["sta_email"]),
@@ -243,6 +264,8 @@ namespace ERP.API.Controllers.Dashboard
                     sta_identity_card = Convert.ToString(streamProvider.FormData["sta_identity_card"]),
                     sta_address = Convert.ToString(streamProvider.FormData["sta_address"]),
                     sta_hometown = Convert.ToString(streamProvider.FormData["sta_hometown"]),
+                    sta_reason_to_end_work = Convert.ToString(streamProvider.FormData["sta_reason_to_end_work"]),
+                    sta_note = Convert.ToString(streamProvider.FormData["sta_note"]),
 
                     department_id = Convert.ToInt32(streamProvider.FormData["department_id"]),
                     group_role_id = Convert.ToInt32(streamProvider.FormData["group_role_id"]),
@@ -250,13 +273,13 @@ namespace ERP.API.Controllers.Dashboard
                     position_id = Convert.ToInt32(streamProvider.FormData["position_id"]),
                     sta_leader_flag = Convert.ToByte(streamProvider.FormData["sta_leader_flag"]),
 
-                    sta_birthday = Convert.ToDateTime(streamProvider.FormData["sta_birthday"]),
-                    sta_identity_card_date = Convert.ToDateTime(streamProvider.FormData["sta_identity_card_date"]),
+                   
 
 
                     sta_status = Convert.ToByte(streamProvider.FormData["sta_status"]),
                     sta_sex = Convert.ToByte(streamProvider.FormData["sta_sex"]),
                 };
+                
                 //md5
                 if (StaffCreateViewModel.sta_email != null)
                 {
@@ -276,14 +299,40 @@ namespace ERP.API.Controllers.Dashboard
                    response.Data = null;
                    return Ok(response);
                }
+                //check datetime
+                
                 if (streamProvider.FormData["sta_birthday"] == null)
                 {
                     StaffCreateViewModel.sta_birthday = null;
+                }
+                else
+                {
+                    StaffCreateViewModel.sta_birthday = Convert.ToDateTime(streamProvider.FormData["sta_birthday"]);
                 }
 
                 if (streamProvider.FormData["sta_identity_card_date"] == null)
                 {
                     StaffCreateViewModel.sta_identity_card_date = null;
+                }
+                else
+                {
+                    StaffCreateViewModel.sta_identity_card_date = Convert.ToDateTime(streamProvider.FormData["sta_identity_card_date"]);
+                }
+                if (streamProvider.FormData["sta_end_work_date"] == null)
+                {
+                    StaffCreateViewModel.sta_end_work_date = null;
+                }
+                else
+                {
+                    StaffCreateViewModel.sta_end_work_date = Convert.ToDateTime(streamProvider.FormData["sta_end_work_date"]);
+                }
+                if (streamProvider.FormData["sta_start_work_date"] == null)
+                {
+                    StaffCreateViewModel.sta_start_work_date = null;
+                }
+                else
+                {
+                    StaffCreateViewModel.sta_start_work_date = Convert.ToDateTime(streamProvider.FormData["sta_start_work_date"]);
                 }
 
 
@@ -291,7 +340,8 @@ namespace ERP.API.Controllers.Dashboard
                 {
                     StaffCreateViewModel.sta_created_date = DateTime.Now;
                 }
-
+                int count = _staffservice.Count();
+                StaffCreateViewModel.sta_code = Utilis.CreateCode("KH", count, 7);
                 // mapping view model to entity
                 var createdstaff = _mapper.Map<staff>(StaffCreateViewModel);
                 createdstaff.sta_thumbnai = fileName;
@@ -299,6 +349,11 @@ namespace ERP.API.Controllers.Dashboard
 
                 // save new staff
                 _staffservice.Create(createdstaff);
+
+
+
+
+
                 // return response
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
@@ -414,6 +469,8 @@ namespace ERP.API.Controllers.Dashboard
                     sta_identity_card = Convert.ToString(streamProvider.FormData["sta_identity_card"]),
                     sta_address = Convert.ToString(streamProvider.FormData["sta_address"]),
                     sta_hometown = Convert.ToString(streamProvider.FormData["sta_hometown"]),
+                    sta_reason_to_end_work = Convert.ToString(streamProvider.FormData["sta_reason_to_end_work"]),
+                    sta_note = Convert.ToString(streamProvider.FormData["sta_note"]),
 
                     department_id = Convert.ToInt32(streamProvider.FormData["department_id"]),
                     group_role_id = Convert.ToInt32(streamProvider.FormData["group_role_id"]),
@@ -421,10 +478,8 @@ namespace ERP.API.Controllers.Dashboard
                     position_id = Convert.ToInt32(streamProvider.FormData["position_id"]),
                     sta_leader_flag = Convert.ToByte(streamProvider.FormData["sta_leader_flag"]),
 
+                    
 
-                    sta_birthday = Convert.ToDateTime(streamProvider.FormData["sta_birthday"]),
-                    sta_identity_card_date = Convert.ToDateTime(streamProvider.FormData["sta_identity_card_date"]),
-                    sta_created_date = Convert.ToDateTime(streamProvider.FormData["sta_created_date"]),
 
                     sta_status = Convert.ToByte(streamProvider.FormData["sta_status"]),
                     sta_sex = Convert.ToByte(streamProvider.FormData["sta_sex"]),
@@ -434,15 +489,20 @@ namespace ERP.API.Controllers.Dashboard
 
                 var existstaff = _staffservice.Find(staffUpdateViewModel.sta_id);
 
-                if (fileName != "")
+                if (streamProvider.FormData["cu_thumbnail"] != null)
                 {
-                    staffUpdateViewModel.sta_thumbnai = fileName;
-                }
-                else
-                {
+                    if (fileName != "")
+                    {
+                        staffUpdateViewModel.sta_thumbnai = fileName;
+                    }
+                    else
+                    {
 
-                    staffUpdateViewModel.sta_thumbnai = existstaff.sta_thumbnai;
+                        staffUpdateViewModel.sta_thumbnai = existstaff.sta_thumbnai;
+                    }
                 }
+               
+               
                 //md5
                 if (staffUpdateViewModel.sta_email != null)
                 {
@@ -453,33 +513,126 @@ namespace ERP.API.Controllers.Dashboard
                         return Ok(response);
                     }
                 }
-
+                else
+                {
+                    staffUpdateViewModel.sta_email = null;
+                }
                 //check_phone_number
+                
                 if (CheckNumber.IsPhoneNumber(staffUpdateViewModel.sta_mobile) == false)
                 {
                     response.Message = "Số điện thoại không hợp lệ";
                     response.Data = null;
                     return Ok(response);
                 }
+                //Ma code
+                staffUpdateViewModel.sta_code = existstaff.sta_code;
+                
+                //Address 
+                if (streamProvider.FormData["sta_address"] == null)
+                {
+                    staffUpdateViewModel.sta_address = null;
+                    
+                }
+                // Option choose 
+                if (streamProvider.FormData["sta_sex"] == null)
+                {
+                    if (existstaff.sta_sex != null)
+                    {
+                        staffUpdateViewModel.sta_sex = existstaff.sta_sex;
+                    }
+                    else
+                    {
+                        staffUpdateViewModel.sta_sex = null;
+                    }
+                }
+                
+
+                //checkdatetime
                 if (streamProvider.FormData["sta_birthday"] == null)
                 {
-                    staffUpdateViewModel.sta_birthday = null;
+                    if(existstaff.sta_birthday != null)
+                    {
+                        staffUpdateViewModel.sta_birthday = existstaff.sta_birthday;
+                    }
+                    else
+                    {
+                        staffUpdateViewModel.sta_birthday = null;
+                    }
+                }
+                else
+                {
+                    staffUpdateViewModel.sta_birthday = Convert.ToDateTime(streamProvider.FormData["sta_birthday"]);
+                }
+                if (streamProvider.FormData["sta_identity_card"] == null)
+                {
+                    if (existstaff.sta_identity_card != null)
+                    {
+                        staffUpdateViewModel.sta_identity_card = existstaff.sta_identity_card;
+                    }
+                    else
+                    {
+                        staffUpdateViewModel.sta_identity_card = null;
+                    }
+                }
+                else
+                {
+                    staffUpdateViewModel.sta_identity_card = Convert.ToString(streamProvider.FormData["sta_identity_card"]);
                 }
 
                 if (streamProvider.FormData["sta_identity_card_date"] == null)
                 {
-                    staffUpdateViewModel.sta_identity_card_date = null;
+                    if(existstaff.sta_identity_card_date != null)
+                    {
+                        staffUpdateViewModel.sta_identity_card_date = existstaff.sta_identity_card_date;
+                    }
+                    else
+                    {
+                        staffUpdateViewModel.sta_identity_card_date = null;
+                    }
+
                 }
-
-
-                if (streamProvider.FormData["sta_created_date"] == null)
+                else
                 {
-                    staffUpdateViewModel.sta_created_date = DateTime.Now;
+                    staffUpdateViewModel.sta_identity_card_date = Convert.ToDateTime(streamProvider.FormData["sta_identity_card_date"]);
                 }
+                if (streamProvider.FormData["sta_end_work_date"] == null)
+                {
+                    if(existstaff.sta_end_work_date != null)
+                    {
+                        staffUpdateViewModel.sta_end_work_date = existstaff.sta_end_work_date;
+                    }
+                    else
+                    {
+                        staffUpdateViewModel.sta_end_work_date = null;
+                    }
+                   
+                }
+                else
+                {
+                    staffUpdateViewModel.sta_end_work_date = Convert.ToDateTime(streamProvider.FormData["sta_end_work_date"]);
+                }
+
+                if (streamProvider.FormData["sta_start_work_date"] == null)
+                {
+                    if(existstaff.sta_start_work_date != null)
+                    {
+                        staffUpdateViewModel.sta_start_work_date = existstaff.sta_start_work_date;
+                    }
+                    else
+                    {
+                        staffUpdateViewModel.sta_start_work_date = null;
+                    }
+
+                }
+                else
+                {
+                    staffUpdateViewModel.sta_start_work_date = Convert.ToDateTime(streamProvider.FormData["sta_start_work_date"]);
+                }
+
+                staffUpdateViewModel.sta_created_date =existstaff.sta_created_date;
                 // mapping view model to entity
                 var updatedstaff = _mapper.Map<staff>(staffUpdateViewModel);
-
-
 
                 // update staff
                 _staffservice.Update(updatedstaff, staffUpdateViewModel.sta_id);

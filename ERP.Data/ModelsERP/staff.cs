@@ -64,5 +64,14 @@ namespace ERP.Data.ModelsERP
         public int? position_id { get; set; }
 
         public byte? sta_leader_flag { get; set; }
+
+        public DateTime? sta_end_work_date { get; set; }
+        public DateTime? sta_start_work_date { get; set; }
+
+        [StringLength(255)]
+        public string sta_reason_to_end_work { get; set; }
+
+        [Column(TypeName = "text")]
+        public string sta_note { get; set; }
     }
 }

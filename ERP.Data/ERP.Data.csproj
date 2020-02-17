@@ -127,6 +127,7 @@
     <Compile Include="ModelsERP\ClientMaster.cs" />
     <Compile Include="ModelsERP\company.cs" />
     <Compile Include="ModelsERP\customer.cs" />
+    <Compile Include="ModelsERP\customer_group.cs" />
     <Compile Include="ModelsERP\customer_order.cs" />
     <Compile Include="ModelsERP\department.cs" />
     <Compile Include="ModelsERP\email.cs" />
@@ -137,6 +138,7 @@
     <Compile Include="ModelsERP\function.cs" />
     <Compile Include="ModelsERP\function_setting.cs" />
     <Compile Include="ModelsERP\group_role.cs" />
+    <Compile Include="ModelsERP\ModelView\customergroupviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\customerorderviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\customerviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\orderproductviewmodel.cs" />

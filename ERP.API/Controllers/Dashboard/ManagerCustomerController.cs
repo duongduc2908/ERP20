@@ -106,8 +106,30 @@ namespace ERP.API.Controllers.Dashboard
 
             return Ok(response);
         }
-        
-        
+        [HttpGet]
+        [Route("api/customers/search")]
+        public IHttpActionResult GetInforByName(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, string name)
+        {
+            ResponseDataDTO<PagedResults<customerviewmodel>> response = new ResponseDataDTO<PagedResults<customerviewmodel>>();
+            try
+            {
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = _customerservice.GetAllPageSearch(pageNumber, pageSize, source_id, cu_type, customer_group_id, name);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+
+                Console.WriteLine(ex.ToString());
+            }
+
+            return Ok(response);
+        }
+
+
 
         [HttpPost]
         [Route("api/customers/create")]
@@ -133,6 +155,51 @@ namespace ERP.API.Controllers.Dashboard
                 {
                     fileName = (FileExtension.SaveFileOnDisk(fileData));
                 }
+
+
+                //Cach truong bat buoc 
+                if (streamProvider.FormData["cu_fullname"] == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Họ và tên không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+                if (streamProvider.FormData["cu_mobile"] == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Số điện thoại không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+                if (streamProvider.FormData["cu_email"] == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Email không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+                if (streamProvider.FormData["cu_type"] == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Loại khách hàng không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+                if (streamProvider.FormData["customer_group_id"] == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Nhóm khách hàng không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+                if (streamProvider.FormData["source_id"] == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Nguồn không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
                 // get data from formdata
                 CustomerCreateViewModel customerCreateViewModel = new CustomerCreateViewModel
                 {
@@ -148,17 +215,28 @@ namespace ERP.API.Controllers.Dashboard
                     customer_group_id = Convert.ToInt32(streamProvider.FormData["customer_group_id"]),
                     source_id = Convert.ToInt32(streamProvider.FormData["source_id"]),
                     staff_id = Convert.ToInt32(streamProvider.FormData["staff_id"]),
-                    cu_age = Convert.ToInt32(streamProvider.FormData["cu_age"]),
                     
-                    cu_create_date = Convert.ToDateTime(streamProvider.FormData["cu_create_date"]),
+                    cu_curator_id = Convert.ToInt32(streamProvider.FormData["cu_curator_id"]),
+                    cu_birthday = Convert.ToDateTime(streamProvider.FormData["cu_birthday"]),
+                    
+                    
 
                     cu_type = Convert.ToByte(streamProvider.FormData["cu_type"]),
                     cu_status = Convert.ToByte(streamProvider.FormData["cu_status"]),
 
 
-                };
-                //md5
 
+                };
+                customerCreateViewModel.cu_create_date = DateTime.Now;
+                //md5
+                if (streamProvider.FormData["cu_birthday"] == null)
+                {
+                    customerCreateViewModel.cu_birthday = null;
+                }
+                else
+                {
+                    customerCreateViewModel.cu_birthday = Convert.ToDateTime(streamProvider.FormData["cu_birthday"]);
+                }
                 if (CheckEmail.IsValidEmail(customerCreateViewModel.cu_email) == false && customerCreateViewModel.cu_email == "")
                 {
                     response.Message = "Định dạng email không hợp lệ !";
@@ -172,10 +250,11 @@ namespace ERP.API.Controllers.Dashboard
                     response.Data = null;
                     return Ok(response);
                 }
+                int count = _customerservice.Count();
+                customerCreateViewModel.cu_code = Utilis.CreateCode("CU", count, 7);
                 // mapping view model to entity
                 var createdcustomer = _mapper.Map<customer>(customerCreateViewModel);
                 createdcustomer.cu_thumbnail = fileName;
-
                 // save new customer
                 _customerservice.Create(createdcustomer);
 
@@ -203,7 +282,7 @@ namespace ERP.API.Controllers.Dashboard
         [HttpPut]
         [Route("api/customers/update/")]
 
-        public async Task<IHttpActionResult> Updatecustomer(int? cu_id)
+        public async Task<IHttpActionResult> Updatecustomer()
         {
             ResponseDataDTO<customer> response = new ResponseDataDTO<customer>();
             try
@@ -227,7 +306,49 @@ namespace ERP.API.Controllers.Dashboard
                         fileName = FileExtension.SaveFileOnDisk(fileData);
                     }
                 }
-
+                //Cach truong bat buoc 
+                if (streamProvider.FormData["cu_fullname"] == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Họ và tên không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+                if (streamProvider.FormData["cu_mobile"] == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Số điện thoại không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+                if (streamProvider.FormData["cu_email"] == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Email không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+                if (streamProvider.FormData["cu_type"] == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Loại khách hàng không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+                if (streamProvider.FormData["customer_group_id"] == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Nhóm khách hàng không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+                if (streamProvider.FormData["source_id"] == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Nguồn không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
                 // get data from formdata
                 CustomerUpdateViewModel customerUpdateViewModel = new CustomerUpdateViewModel
                 {
@@ -238,16 +359,16 @@ namespace ERP.API.Controllers.Dashboard
                     cu_fullname = Convert.ToString(streamProvider.FormData["cu_fullname"]),
                     cu_address = Convert.ToString(streamProvider.FormData["cu_address"]),
                     cu_note = Convert.ToString(streamProvider.FormData["cu_note"]),
-
-
                     cu_geocoding = Convert.ToString(streamProvider.FormData["cu_geocoding"]),
+                    
                     customer_group_id = Convert.ToInt32(streamProvider.FormData["customer_group_id"]),
                     source_id = Convert.ToInt32(streamProvider.FormData["source_id"]),
                     staff_id = Convert.ToInt32(streamProvider.FormData["staff_id"]),
-                    cu_age = Convert.ToInt32(streamProvider.FormData["cu_age"]),
+
+                    cu_curator_id = Convert.ToInt32(streamProvider.FormData["cu_curator_id"]),
+                    //cu_birthday = Convert.ToDateTime(streamProvider.FormData["cu_birthday"]),
 
 
-                    cu_create_date = Convert.ToDateTime(streamProvider.FormData["cu_create_date"]),
 
                     cu_type = Convert.ToByte(streamProvider.FormData["cu_type"]),
                     cu_status = Convert.ToByte(streamProvider.FormData["cu_status"]),
@@ -255,17 +376,23 @@ namespace ERP.API.Controllers.Dashboard
                 };
 
 
-                var existcustomer = _customerservice.Find(cu_id);
+                var existcustomer = _customerservice.Find(customerUpdateViewModel.cu_id);
+                customerUpdateViewModel.cu_code = existcustomer.cu_code;
+                customerUpdateViewModel.cu_create_date = existcustomer.cu_create_date;
 
-                if (fileName != "")
+                if(streamProvider.FormData["cu_thumbnail"] != null)
                 {
-                    customerUpdateViewModel.cu_thumbnail = fileName;
-                }
-                else
-                {
+                    if (fileName != "")
+                    {
+                        customerUpdateViewModel.cu_thumbnail = fileName;
+                    }
+                    else
+                    {
 
-                    customerUpdateViewModel.cu_thumbnail = existcustomer.cu_thumbnail;
+                        customerUpdateViewModel.cu_thumbnail = existcustomer.cu_thumbnail;
+                    }
                 }
+                
                 //md5
 
                 if (CheckEmail.IsValidEmail(customerUpdateViewModel.cu_email) == false && customerUpdateViewModel.cu_email == "")
@@ -281,13 +408,32 @@ namespace ERP.API.Controllers.Dashboard
                     response.Data = null;
                     return Ok(response);
                 }
+
+                if (streamProvider.FormData["cu_birthday"] == null)
+                {
+                    customerUpdateViewModel.cu_birthday = null;
+                }
+                else
+                {
+                    customerUpdateViewModel.cu_birthday = Convert.ToDateTime(streamProvider.FormData["cu_birthday"]);
+                }
+                if (streamProvider.FormData["cu_address"] == null)
+                {
+                    customerUpdateViewModel.cu_address = null;
+
+                }
+                if (streamProvider.FormData["cu_geocoding"] == null)
+                {
+                    customerUpdateViewModel.cu_geocoding = null;
+
+                }
                 // mapping view model to entity
                 var updatedcustomer = _mapper.Map<customer>(customerUpdateViewModel);
 
 
 
                 // update customer
-                _customerservice.Update(updatedcustomer, cu_id);
+                _customerservice.Update(updatedcustomer, customerUpdateViewModel.cu_id);
 
                 // return response
                 response.Code = HttpCode.OK;
@@ -307,7 +453,7 @@ namespace ERP.API.Controllers.Dashboard
         }
 
         [HttpDelete]
-        [Route("api/customers/delete/{customerId}")]
+        [Route("api/customers/delete")]
         public IHttpActionResult Deletecustomer(int customerId)
         {
             ResponseDataDTO<customer> response = new ResponseDataDTO<customer>();

@@ -32,7 +32,7 @@ namespace ERP.Data.ModelsERP.ModelView
         [StringLength(45)]
         public string cu_thumbnail { get; set; }
 
-        public int? cu_age { get; set; }
+        
         public string cu_geocoding { get; set; }
         [StringLength(250)]
         public string cu_note { get; set; }
@@ -40,5 +40,7 @@ namespace ERP.Data.ModelsERP.ModelView
 
         public string source_name { get; set; }
         public byte? cu_status { get; set; }
+        public DateTime? cu_birthday { get; set; }
+        public string cu_curator_name { get; set; }
     }
 }

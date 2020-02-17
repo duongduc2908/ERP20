@@ -473,6 +473,7 @@
     <Compile Include="Repositories\AuthenticationRepository.cs" />
     <Compile Include="Repositories\ClientMasterRepository.cs" />
     <Compile Include="Repositories\CompanyRepository.cs" />
+    <Compile Include="Repositories\CustomerGroupRepository.cs" />
     <Compile Include="Repositories\CustomerOrderRepository.cs" />
     <Compile Include="Repositories\CustomerRepository.cs" />
     <Compile Include="Repositories\DepartmentRepository.cs" />
@@ -485,6 +486,7 @@
     <Compile Include="Repositories\FunctionSettingRepository.cs" />
     <Compile Include="Repositories\GroupRoleRepository.cs" />
     <Compile Include="Repositories\IRepositories\ICompanyRepository.cs" />
+    <Compile Include="Repositories\IRepositories\ICustomerGroupRepository.cs" />
     <Compile Include="Repositories\IRepositories\ICustomerOrderRepository.cs" />
     <Compile Include="Repositories\IRepositories\ICustomerRepository.cs" />
     <Compile Include="Repositories\IRepositories\IDepartmentRepository.cs" />
