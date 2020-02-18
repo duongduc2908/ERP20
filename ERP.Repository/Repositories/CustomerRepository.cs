@@ -28,6 +28,7 @@ namespace ERP.Repository.Repositories
             var list = _dbContext.customers.OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
 
             var totalNumberOfRecords = list.Count();
+            var total = _dbContext.customers.Count();
 
             var results = list.ToList();
             foreach(customer i in results)
@@ -50,9 +51,9 @@ namespace ERP.Repository.Repositories
                 res.Add(customerview);
             }
 
-            var mod = totalNumberOfRecords % pageSize;
+            var mod = total % pageSize;
 
-            var totalPageCount = (totalNumberOfRecords / pageSize) + (mod == 0 ? 0 : 1);
+            var totalPageCount = (total / pageSize) + (mod == 0 ? 0 : 1);
 
             return new PagedResults<customerviewmodel>
             {
@@ -72,12 +73,13 @@ namespace ERP.Repository.Repositories
             var list = _dbContext.customers.OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
 
             var totalNumberOfRecords = list.Count();
+            var total = _dbContext.customers.Count();
 
             var results = list.ToList();
 
-            var mod = totalNumberOfRecords % pageSize;
+            var mod = total % pageSize;
 
-            var totalPageCount = (totalNumberOfRecords / pageSize) + (mod == 0 ? 0 : 1);
+            var totalPageCount = (total / pageSize) + (mod == 0 ? 0 : 1);
 
             return new PagedResults<customerviewmodel>
             {
@@ -97,12 +99,13 @@ namespace ERP.Repository.Repositories
             var list = _dbContext.customers.OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
 
             var totalNumberOfRecords = list.Count();
+            var total = _dbContext.customers.Count();
 
             var results = list.ToList();
 
-            var mod = totalNumberOfRecords % pageSize;
+            var mod = total % pageSize;
 
-            var totalPageCount = (totalNumberOfRecords / pageSize) + (mod == 0 ? 0 : 1);
+            var totalPageCount = (total / pageSize) + (mod == 0 ? 0 : 1);
 
             return new PagedResults<customerviewmodel>
             {
@@ -122,12 +125,13 @@ namespace ERP.Repository.Repositories
             var list = _dbContext.customers.OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
 
             var totalNumberOfRecords = list.Count();
+            var total = _dbContext.customers.Count();
 
             var results = list.ToList();
 
-            var mod = totalNumberOfRecords % pageSize;
+            var mod = total % pageSize;
 
-            var totalPageCount = (totalNumberOfRecords / pageSize) + (mod == 0 ? 0 : 1);
+            var totalPageCount = (total / pageSize) + (mod == 0 ? 0 : 1);
 
             return new PagedResults<customerviewmodel>
             {
@@ -219,7 +223,8 @@ namespace ERP.Repository.Repositories
                 list = _dbContext.customers.Where(t => t.source_id == source_id && t.cu_type == cu_type && t.customer_group_id == customer_group_id && t.cu_fullname.Contains(name)).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
             }            
                      
-            var totalNumberOfRecords = _dbContext.customers.Count();
+            var totalNumberOfRecords = list.Count();
+            var total = _dbContext.customers.Count();
 
             var results = list.ToList();
             foreach(customer i in results)
@@ -241,9 +246,9 @@ namespace ERP.Repository.Repositories
                 res.Add(customerview);
             }
 
-            var mod = totalNumberOfRecords % pageSize;
+            var mod = total % pageSize;
 
-            var totalPageCount = (totalNumberOfRecords / pageSize) + (mod == 0 ? 0 : 1);
+            var totalPageCount = (total / pageSize) + (mod == 0 ? 0 : 1);
 
             return new PagedResults<customerviewmodel>
             {

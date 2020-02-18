@@ -438,7 +438,7 @@ namespace ERP.API.Controllers.Dashboard
         #endregion
 
         #region["Export Excel"]
-        [HttpPost]
+        [HttpGet]
         [Route("api/departments/export")]
         public async Task<IHttpActionResult> Export()
         {

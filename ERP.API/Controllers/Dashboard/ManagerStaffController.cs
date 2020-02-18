@@ -19,12 +19,13 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.Security;
+using ERP.API.Controllers.Dashboard;
 
 namespace ERP.API.Controllers.Dashboard
 {
     [EnableCors("*", "*", "*")]
     //[Authorize]
-    public class ManagerstaffsController : ApiController
+    public class ManagerstaffsController : BaseController
     {
         private readonly IStaffService _staffservice;
 
@@ -746,15 +747,56 @@ namespace ERP.API.Controllers.Dashboard
 
         #endregion
 
-        #region["Excel"]
+        
 
+        #region["Export Excel"]
         [HttpGet]
-        [Route("api/staffs/export")]
-        public void Exports(int pageSize, int pageNumber)
+        [Route("api/satffs/export")]
+        public async Task<IHttpActionResult> Export(int pageSize, int pageNumber)
         {
-            _staffservice.Export(pageSize, pageNumber);
+            ResponseDataDTO<staffviewmodel> response = new ResponseDataDTO<staffviewmodel>();
+            try
+            {
+                var listStaff = new List<staffviewmodel>();
+                
+                //Đưa ra danh sách staff trong trang nào đó 
+                var objRT_Mst_Staff = _staffservice.GetAllPage(pageSize: pageSize, pageNumber: pageNumber);
+                if (objRT_Mst_Staff != null)
+                {
+                    listStaff.AddRange(objRT_Mst_Staff.Results);
 
+                    Dictionary<string, string> dicColNames = GetImportDicColums();
+
+                    string url = "";
+                    string filePath = GenExcelExportFilePath(string.Format(typeof(department).Name), ref url);
+
+                    ExcelExport.ExportToExcelFromList(listStaff, dicColNames, filePath, string.Format("Staffs"));
+
+                    response.Code = HttpCode.NOT_FOUND;
+                    response.Message = "Đã xuất excel thành công!";
+                    response.Data = null;
+                }
+                else
+                {
+                    response.Code = HttpCode.NOT_FOUND;
+                    response.Message = "File excel import không có dữ liệu!";
+                    response.Data = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message; ;
+                response.Data = null;
+                Console.WriteLine(ex.ToString());
+
+                return Ok(response);
+            }
+            return Ok(response);
         }
+
+    
+        #endregion
         [HttpPost]
         [Route("api/staffs/import_ex")]
         public async Task<IHttpActionResult> Import_Excel()
@@ -809,6 +851,161 @@ namespace ERP.API.Controllers.Dashboard
 
                 return Ok(response);
             }
+        }
+
+        #region["DicColums"]
+        private Dictionary<string, string> GetImportDicColums()
+        {
+            return new Dictionary<string, string>()
+            {
+                 {"sta_code","MNV"},
+                 {"sta_username","Tên đăng nhập"},
+                 {"sta_mobile","Số điện thoại"},
+                 {"sta_email","Email"},
+                 {"position_name","Chức vụ"},
+                 {"sta_status","Trạng thái"}
+            };
+        }
+        private Dictionary<string, string> GetImportDicColumsTemplate()
+        {
+            return new Dictionary<string, string>()
+            {
+                  {"email","Email phong ban"},
+                 {"id","Ma bộ phận phòng ban"}
+            };
+        }
+        #endregion
+       
+        #region["Import Excel"]
+        [HttpPost]
+        [Route("api/satffs/import")]
+        public async Task<IHttpActionResult> Import()
+        {
+            ResponseDataDTO<department> response = new ResponseDataDTO<department>();
+            var exitsData = "";
+            try
+            {
+                var path = Path.GetTempPath();
+
+                if (!Request.Content.IsMimeMultipartContent("form-data"))
+                {
+                    throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.UnsupportedMediaType));
+                }
+
+                MultipartFormDataStreamProvider streamProvider = new MultipartFormDataStreamProvider(path);
+
+                await Request.Content.ReadAsMultipartAsync(streamProvider);
+
+                // save file
+                string fileName = "";
+                if (streamProvider.FileData.Count > 0)
+                {
+                    foreach (MultipartFileData fileData in streamProvider.FileData)
+                    {
+                        fileName = FileExtension.SaveFileOnDisk(fileData);
+                        if (fileData.Headers.ContentDisposition.FileName.Equals("Test.xlsx") || fileData.Headers.ContentDisposition.FileName.Equals("Test.xls"))
+                        {
+                            fileName = FileExtension.SaveFileOnDisk(fileData);
+                        }
+                        else
+                        {
+                            throw new Exception("File excel import không hợp lệ!");
+                        }
+
+                    }
+                }
+
+                var list = new List<department>();
+                fileName = @"D:\ERP20\ERP.API\" + fileName;
+                var dataset = ExcelImport.ImportExcelXLS(fileName, true);
+                DataTable table = (DataTable)dataset.Tables[0];
+                if (table != null && table.Rows.Count > 0)
+                {
+                    if (table.Columns.Count != 2)
+                    {
+                        exitsData = "File excel import không hợp lệ!";
+                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                        response.Message = exitsData;
+                        response.Data = null;
+                        return Ok(response);
+                    }
+                    else
+                    {
+                        #region["Check null"]
+                        foreach (DataRow dr in table.Rows)
+                        {
+                            if (dr["email"] is null)
+                            {
+                                exitsData = "Email phòng ban không được trống!";
+                                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                                response.Message = exitsData;
+                                response.Data = null;
+                                return Ok(response);
+                            }
+                            if (dr["id"] is null)
+                            {
+                                exitsData = "ma phòng ban không được trống!";
+                                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                                response.Message = exitsData;
+                                response.Data = null;
+                                return Ok(response);
+                            }
+                        }
+                        #endregion
+
+                        #region["Check duplicate"]
+                        for (var i = 0; i < table.Rows.Count; i++)
+                        {
+                            var DepartmentCodeCur = table.Rows[i]["id"].ToString().Trim();
+                            for (var j = 0; j < table.Rows.Count; j++)
+                            {
+                                if (i != j)
+                                {
+                                    var _idDepartmentCur = table.Rows[j]["id"].ToString().Trim();
+                                    if (DepartmentCodeCur.Equals(_idDepartmentCur))
+                                    {
+                                        exitsData = "Mã bộ phận phòng ban'" + DepartmentCodeCur + "' bị lặp trong file excel!";
+                                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                                        response.Message = exitsData;
+                                        response.Data = null;
+                                        return Ok(response);
+                                    }
+                                }
+                            }
+                        }
+                        #endregion
+                    }
+                    list = DataTableCmUtils.ToListof<department>(table); ;
+                    // Gọi hàm save data
+                    if (list != null && list.Count > 0)
+                    {
+
+                    }
+                    exitsData = "Đã nhập dữ liệu excel thành công!";
+                    response.Code = HttpCode.OK;
+                    response.Message = exitsData;
+                    response.Data = null;
+                    return Ok(response);
+                }
+                else
+                {
+                    exitsData = "File excel import không có dữ liệu!";
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = exitsData;
+                    response.Data = null;
+                    return Ok(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message; ;
+                response.Data = null;
+                Console.WriteLine(ex.ToString());
+
+                return Ok(response);
+            }
+            return Ok(response);
         }
         #endregion
         #region dispose

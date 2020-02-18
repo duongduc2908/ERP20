@@ -9,7 +9,7 @@ namespace ERP.Data.ModelsERP.ModelView
     public class customerviewmodel
     {
         
-
+        public string cu_id { get; set; }
         [StringLength(45)]
         public string cu_code { get; set; }
 
