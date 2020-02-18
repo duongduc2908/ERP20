@@ -28,14 +28,14 @@ namespace ERP.Repository.Repositories
             var skipAmount = pageSize * pageNumber;
 
             var list = _dbContext.staffs.OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize);
-
+            var total = _dbContext.staffs.Count();
             var totalNumberOfRecords = list.Count();
 
             var results = list.ToList();
 
-            var mod = totalNumberOfRecords % pageSize;
+            var mod = total % pageSize;
 
-            var totalPageCount = (totalNumberOfRecords / pageSize) + (mod == 0 ? 0 : 1);
+            var totalPageCount = (total / pageSize) + (mod == 0 ? 0 : 1);
 
             return new PagedResults<staff>
             {
@@ -141,8 +141,8 @@ namespace ERP.Repository.Repositories
             var skipAmount = pageSize * pageNumber;
 
             var list = _dbContext.staffs.OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize);
-
-            var totalNumberOfRecords = _dbContext.staffs.Count();
+            var total = _dbContext.staffs.Count();
+            var totalNumberOfRecords = list.Count();
             
             var results = list.ToList();
             foreach(staff i in results)
@@ -157,9 +157,9 @@ namespace ERP.Repository.Repositories
                 res.Add(staffview);
             }
 
-            var mod = totalNumberOfRecords % pageSize;
+            var mod = total % pageSize;
 
-            var totalPageCount = (totalNumberOfRecords / pageSize) + (mod == 0 ? 0 : 1);
+            var totalPageCount = (total / pageSize) + (mod == 0 ? 0 : 1);
 
             return new PagedResults<staffviewmodel>
             {
@@ -201,7 +201,8 @@ namespace ERP.Repository.Repositories
                 }
             }
 
-            var totalNumberOfRecords = _dbContext.staffs.Count();
+            var total = _dbContext.staffs.Count();
+            var totalNumberOfRecords = list.Count();
 
             var results = list.ToList();
             foreach (staff i in results)
@@ -216,9 +217,9 @@ namespace ERP.Repository.Repositories
                 res.Add(staffview);
             }
 
-            var mod = totalNumberOfRecords % pageSize;
+            var mod = total % pageSize;
 
-            var totalPageCount = (totalNumberOfRecords / pageSize) + (mod == 0 ? 0 : 1);
+            var totalPageCount = (total / pageSize) + (mod == 0 ? 0 : 1);
 
             return new PagedResults<staffviewmodel>
             {
@@ -280,6 +281,7 @@ namespace ERP.Repository.Repositories
             {
                 list = _dbContext.staffs.Where(t => t.sta_status == 0).OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize);
             }
+            var total = _dbContext.staffs.Count();
             var totalNumberOfRecords = list.Count();
 
             var results = list.ToList();
@@ -295,9 +297,9 @@ namespace ERP.Repository.Repositories
                 res.Add(staffview);
             }
 
-            var mod = totalNumberOfRecords % pageSize;
+            var mod = total % pageSize;
 
-            var totalPageCount = (totalNumberOfRecords / pageSize) + (mod == 0 ? 0 : 1);
+            var totalPageCount = (total / pageSize) + (mod == 0 ? 0 : 1);
 
             return new PagedResults<staffviewmodel>
             {
@@ -316,13 +318,13 @@ namespace ERP.Repository.Repositories
 
             var staff = _dbContext.staffs.Find(id);
 
-            var totalNumberOfRecords = _dbContext.staffs.Count();
+           
 
             var staffview = _mapper.Map<staffviewmodel>(staff);
             var deparment = _dbContext.departments.FirstOrDefault(x => x.de_id == staff.department_id);
             staffview.department_name = deparment.de_name;
             res.Add(staffview);
-            
+            var totalNumberOfRecords = res.Count();
 
             return new PagedResults<staffviewmodel>
             {
