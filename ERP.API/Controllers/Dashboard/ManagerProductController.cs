@@ -20,7 +20,7 @@ using System.Web.Http.Cors;
 namespace ERP.API.Controllers.Dashboard
 {
     [EnableCors("*", "*", "*")]
-    //[Authorize]
+    [Authorize]
     public class ManagerProductController : ApiController
     {
         private readonly IProductService _productservice;

@@ -18,6 +18,8 @@ using System.Web.Http;
 using System.Web.Http.Cors;
 namespace ERP.API.Controllers.Dashboard
 {
+    [EnableCors("*", "*", "*")]
+    [Authorize]
     public class ManagerProductCategoryController : ApiController
     {
         private readonly IProductCategoryService _product_categoryservice;
