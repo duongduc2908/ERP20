@@ -170,5 +170,20 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = totalNumberOfRecords
             };
         }
+        public PagedResults<string> GetUnit()
+        {
+
+            List<string> res = new List<string>();
+            res.Add(EnumProduct.pu_unit_0);
+            res.Add(EnumProduct.pu_unit_1);
+            return new PagedResults<string>
+            {
+                Results = res,
+                PageNumber = 0,
+                PageSize = 0,
+                TotalNumberOfPages = 0,
+                TotalNumberOfRecords = 0
+            };
+        }
     }
 }

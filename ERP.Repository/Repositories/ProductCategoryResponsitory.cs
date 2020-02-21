@@ -86,8 +86,6 @@ namespace ERP.Repository.Repositories
         {
 
             List<string> res = new List<string>();
-            
-
             var list = _dbContext.product_category.OrderBy(t => t.pc_id).ToList();
             var totalNumberOfRecords = list.Count();
 
@@ -98,8 +96,6 @@ namespace ERP.Repository.Repositories
                 name = i.pc_name;
                 res.Add(name);
             }
-            
-
             return new PagedResults<string>
             {
                 Results = res,

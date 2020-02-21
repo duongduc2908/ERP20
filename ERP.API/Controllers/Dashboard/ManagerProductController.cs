@@ -79,6 +79,27 @@ namespace ERP.API.Controllers.Dashboard
 
             return Ok(response);
         }
+        [Route("api/products/unit")]
+        public IHttpActionResult GetUnit()
+        {
+            ResponseDataDTO<PagedResults<string>> response = new ResponseDataDTO<PagedResults<string>>();
+            try
+            {
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = _productservice.GetUnit();
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+
+                Console.WriteLine(ex.ToString());
+            }
+
+            return Ok(response);
+        }
         #region [Get By Id]
         [Route("api/products/infor")]
         public IHttpActionResult GetAllById(int pu_id)
