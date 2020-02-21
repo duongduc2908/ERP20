@@ -41,11 +41,11 @@ namespace ERP.Repository.Repositories
 
                 if (i.pu_unit == 0)
                 {
-                    productview.pu_unit = EnumProduct.pu_unit_0;
+                    productview.pu_unit_name = EnumProduct.pu_unit_0;
                 }
                 if (i.pu_unit == 1)
                 {
-                    productview.pu_unit = EnumProduct.pu_unit_1;
+                    productview.pu_unit_name = EnumProduct.pu_unit_1;
                 }
                 res.Add(productview);
             }
@@ -79,11 +79,11 @@ namespace ERP.Repository.Repositories
 
                 if (i.pu_unit == 0)
                 {
-                    productview.pu_unit = EnumProduct.pu_unit_0;
+                    productview.pu_unit_name = EnumProduct.pu_unit_0;
                 }
                 if (i.pu_unit == 1)
                 {
-                    productview.pu_unit = EnumProduct.pu_unit_1;
+                    productview.pu_unit_name = EnumProduct.pu_unit_1;
                 }
                 res.Add(productview);
             }
@@ -148,11 +148,11 @@ namespace ERP.Repository.Repositories
 
                 if (i.pu_unit == 0)
                 {
-                    productview.pu_unit = EnumProduct.pu_unit_0;
+                    productview.pu_unit_name = EnumProduct.pu_unit_0;
                 }
                 if (i.pu_unit == 1)
                 {
-                    productview.pu_unit = EnumProduct.pu_unit_1;
+                    productview.pu_unit_name = EnumProduct.pu_unit_1;
                 }
                 res.Add(productview);
             }
