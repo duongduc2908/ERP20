@@ -68,6 +68,10 @@ namespace ERP.Common.GenericService
         {
             return _repository.GetByID(id);
         }
+        public TEntity GetLast()
+        {
+            return _repository.GetLast();
+        }
 
         public IEnumerable<TEntity> GetAll()
         {

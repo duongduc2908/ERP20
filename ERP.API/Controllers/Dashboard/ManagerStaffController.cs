@@ -19,7 +19,7 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.Security;
-using ERP.API.Controllers.Dashboard;
+using ERP.Common.Constants;
 
 namespace ERP.API.Controllers.Dashboard
 {
@@ -166,6 +166,8 @@ namespace ERP.API.Controllers.Dashboard
 
             return Ok(response);
         }
+        #endregion
+        #region["Create"]
         [HttpPost]
         [Route("api/staffs/create")]
         public async Task<IHttpActionResult> Createstaff()
@@ -336,8 +338,9 @@ namespace ERP.API.Controllers.Dashboard
                 {
                     StaffCreateViewModel.sta_created_date = DateTime.Now;
                 }
-                int count = _staffservice.Count();
-                StaffCreateViewModel.sta_code = Utilis.CreateCode("KH", count, 7);
+                var x = _staffservice.GetLast();
+                
+                StaffCreateViewModel.sta_code = Utilis.CreateCode("KH", x.sta_id, 7);
                 // mapping view model to entity
                 var createdstaff = _mapper.Map<staff>(StaffCreateViewModel);
                 createdstaff.sta_thumbnai = fileName;
@@ -366,7 +369,8 @@ namespace ERP.API.Controllers.Dashboard
             }
 
         }
-
+        #endregion
+        #region["Update"]
         [HttpPut]
         [Route("api/staffs/update")]
         public async Task<IHttpActionResult> Updatestaff()
@@ -648,7 +652,8 @@ namespace ERP.API.Controllers.Dashboard
                 return Ok(response);
             }
         }
-
+        #endregion
+        #region["delete"]
         [HttpDelete]
         [Route("api/staffs/delete")]
         public IHttpActionResult Deletestaff(int staffId)
@@ -689,7 +694,8 @@ namespace ERP.API.Controllers.Dashboard
                 return Ok(response);
             }
         }
-
+        #endregion
+        #region["Change Password"]
         [HttpPut]
         [Route("api/staffs/ChangePassword")]
         public async Task<IHttpActionResult> ChangePasswordTest(ERP.Data.ChangePasswordBindingModel model, int id)
@@ -721,7 +727,8 @@ namespace ERP.API.Controllers.Dashboard
                 return Ok(response);
             }
         }
-
+        #endregion
+        #region["Logout"]
         [Route("api/staffs/Logout")]
         public IHttpActionResult Logout()
         {
@@ -746,9 +753,6 @@ namespace ERP.API.Controllers.Dashboard
         }
 
         #endregion
-
-        
-
         #region["Export Excel"]
         [HttpGet]
         [Route("api/satffs/export")]
@@ -795,8 +799,9 @@ namespace ERP.API.Controllers.Dashboard
             return Ok(response);
         }
 
-    
+
         #endregion
+        #region["Import"]
         [HttpPost]
         [Route("api/staffs/import_ex")]
         public async Task<IHttpActionResult> Import_Excel()
@@ -852,7 +857,7 @@ namespace ERP.API.Controllers.Dashboard
                 return Ok(response);
             }
         }
-
+        #endregion
         #region["DicColums"]
         private Dictionary<string, string> GetImportDicColums()
         {
@@ -881,7 +886,7 @@ namespace ERP.API.Controllers.Dashboard
         [Route("api/satffs/import")]
         public async Task<IHttpActionResult> Import()
         {
-            ResponseDataDTO<department> response = new ResponseDataDTO<department>();
+            ResponseDataDTO<staff> response = new ResponseDataDTO<staff>();
             var exitsData = "";
             try
             {
@@ -897,13 +902,16 @@ namespace ERP.API.Controllers.Dashboard
                 await Request.Content.ReadAsMultipartAsync(streamProvider);
 
                 // save file
-                string fileName = "";
+                string fileName="";
                 if (streamProvider.FileData.Count > 0)
                 {
                     foreach (MultipartFileData fileData in streamProvider.FileData)
                     {
-                        fileName = FileExtension.SaveFileOnDisk(fileData);
-                        if (fileData.Headers.ContentDisposition.FileName.Equals("Test.xlsx") || fileData.Headers.ContentDisposition.FileName.Equals("Test.xls"))
+                        fileName = fileData.Headers.ContentDisposition.FileName;
+                        //fileName = fileName.Replace(@"","");
+
+                        string fileFormat = Utilis.GetFileFormat(fileName);
+                        if (fileFormat.Equals("xlsx") || fileFormat.Equals("xls"))
                         {
                             fileName = FileExtension.SaveFileOnDisk(fileData);
                         }
@@ -914,14 +922,13 @@ namespace ERP.API.Controllers.Dashboard
 
                     }
                 }
-
-                var list = new List<department>();
-                fileName = @"D:\ERP20\ERP.API\" + fileName;
+                var list = new List<staff>();
+                fileName = @"D:\BootAi\ERP20\ERP.API\TempFiles\2020-02-19\department_200219165142.xlsx";
                 var dataset = ExcelImport.ImportExcelXLS(fileName, true);
                 DataTable table = (DataTable)dataset.Tables[0];
                 if (table != null && table.Rows.Count > 0)
                 {
-                    if (table.Columns.Count != 2)
+                    if (table.Columns.Count != 13)
                     {
                         exitsData = "File excel import không hợp lệ!";
                         response.Code = HttpCode.INTERNAL_SERVER_ERROR;
@@ -934,52 +941,91 @@ namespace ERP.API.Controllers.Dashboard
                         #region["Check null"]
                         foreach (DataRow dr in table.Rows)
                         {
-                            if (dr["email"] is null)
+                            if (dr.IsNull("sta_fullname"))
                             {
-                                exitsData = "Email phòng ban không được trống!";
                                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                                response.Message = exitsData;
+                                response.Message = "Họ và tên không được để trống";
                                 response.Data = null;
                                 return Ok(response);
                             }
-                            if (dr["id"] is null)
+                            if (dr.IsNull("sta_username"))
                             {
-                                exitsData = "ma phòng ban không được trống!";
                                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                                response.Message = exitsData;
+                                response.Message = "Tên đăng nhập không được để trống";
+                                response.Data = null;
+                                return Ok(response);
+                            }
+                            if (dr.IsNull("sta_password"))
+                            {
+                                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                                response.Message = "Mật khẩu không được để trống";
+                                response.Data = null;
+                                return Ok(response);
+                            }
+
+                            if (dr.IsNull("sta_mobile"))
+                            {
+                                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                                response.Message = "Số điện thoại không được để trống";
+                                response.Data = null;
+                                return Ok(response);
+                            }
+
+                            if (dr.IsNull("sta_status"))
+                            {
+                                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                                response.Message = "Trạng thái không được để trống";
+                                response.Data = null;
+                                return Ok(response);
+                            }
+
+                            if (dr.IsNull("department_id"))
+                            {
+                                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                                response.Message = "Phòng ban không được để trống";
+                                response.Data = null;
+                                return Ok(response);
+                            }
+
+
+                            if (dr.IsNull("position_id"))
+                            {
+                                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                                response.Message = "Chức vụ không được để trống";
                                 response.Data = null;
                                 return Ok(response);
                             }
                         }
                         #endregion
 
-                        #region["Check duplicate"]
-                        for (var i = 0; i < table.Rows.Count; i++)
-                        {
-                            var DepartmentCodeCur = table.Rows[i]["id"].ToString().Trim();
-                            for (var j = 0; j < table.Rows.Count; j++)
-                            {
-                                if (i != j)
-                                {
-                                    var _idDepartmentCur = table.Rows[j]["id"].ToString().Trim();
-                                    if (DepartmentCodeCur.Equals(_idDepartmentCur))
-                                    {
-                                        exitsData = "Mã bộ phận phòng ban'" + DepartmentCodeCur + "' bị lặp trong file excel!";
-                                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                                        response.Message = exitsData;
-                                        response.Data = null;
-                                        return Ok(response);
-                                    }
-                                }
-                            }
-                        }
-                        #endregion
+                        //#region["Check duplicate"]
+                        //for (var i = 0; i < table.Rows.Count; i++)
+                        //{
+                        //    var DepartmentCodeCur = table.Rows[i]["id"].ToString().Trim();
+                        //    for (var j = 0; j < table.Rows.Count; j++)
+                        //    {
+                        //        if (i != j)
+                        //        {
+                        //            var _idDepartmentCur = table.Rows[j]["id"].ToString().Trim();
+                        //            if (DepartmentCodeCur.Equals(_idDepartmentCur))
+                        //            {
+                        //                exitsData = "Mã bộ phận phòng ban'" + DepartmentCodeCur + "' bị lặp trong file excel!";
+                        //                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                        //                response.Message = exitsData;
+                        //                response.Data = null;
+                        //                return Ok(response);
+                        //            }
+                        //        }
+                        //    }
+                        //}
+                        //#endregion
                     }
-                    list = DataTableCmUtils.ToListof<department>(table); ;
+                    list = DataTableCmUtils.ToListof<staff>(table); ;
                     // Gọi hàm save data
                     if (list != null && list.Count > 0)
                     {
-
+                        StaffCreateViewModel StaffCreateViewModel = new StaffCreateViewModel();
+                        
                     }
                     exitsData = "Đã nhập dữ liệu excel thành công!";
                     response.Code = HttpCode.OK;

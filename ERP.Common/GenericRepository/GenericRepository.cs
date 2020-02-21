@@ -5,7 +5,9 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Web;
+using System.Reflection;
 
 namespace ERP.Common.GenericRepository
 {
@@ -75,6 +77,13 @@ namespace ERP.Common.GenericRepository
         {
             return _dbSet.Find(Id);
         }
+        public TEntity GetLast()
+        {
+            int t = _dbSet.Count();
+            var m = _dbSet.ToList()[t-1];
+            return null;
+        }
+
 
         public void Create(TEntity entity)
         {

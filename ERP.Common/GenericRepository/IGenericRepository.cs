@@ -14,7 +14,7 @@ namespace ERP.Common.GenericRepository
             string includeProperties = "");
 
         ICollection<TEntity> GetAll();
-
+        TEntity GetLast();
         int Count(Expression<Func<TEntity, bool>> spec = null);
 
         bool Exist(Expression<Func<TEntity, bool>> spec = null);

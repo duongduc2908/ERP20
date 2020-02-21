@@ -7,6 +7,15 @@ namespace ERP.Common.Constants
 {
     public class Utilis
     {
+        public static string GetFileFormat(string filename)
+        {
+            string res = "";
+            string[] arrListStr = filename.Split('.');
+            int a = arrListStr.Length;
+            res = arrListStr[a-1];
+            res = res.Replace("\"","");
+            return res;
+        }
         public static string CreateCode(string code, int id, int lenght)
         {
             string res = "";

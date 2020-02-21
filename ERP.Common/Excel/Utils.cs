@@ -463,9 +463,10 @@ namespace ERP.Common.Excel
 
 
             DataTable dtRet = new DataTable();
-
+            
             foreach (var col in dicColumnNames.Keys)
             {
+                dtRet.Columns.Add(col, typeof(string));
                 dtRet.Columns.Add(dicColumnNames[col], typeof(string));
             }
 

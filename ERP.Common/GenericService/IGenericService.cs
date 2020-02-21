@@ -13,6 +13,7 @@ namespace ERP.Common.GenericService
         IEnumerable<TEntity> GetAll();
 
         TEntity Find(object id);
+        TEntity GetLast();
 
         IEnumerable<TEntity> GetAllIncluing(Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
@@ -27,6 +28,8 @@ namespace ERP.Common.GenericService
         void Delete(TEntity entity);
 
         void Update(TEntity entity, object id);
+
+        
 
         void Dispose();
     }
