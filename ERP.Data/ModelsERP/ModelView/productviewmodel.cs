@@ -22,9 +22,12 @@ namespace ERP.Data.ModelsERP.ModelView
 
         public int? pu_sale_price { get; set; }
 
-        public string pu_unit { get; set; }
+        public string pu_unit_name { get; set; }
+        public int pu_unit_id { get; set; }
         public string product_category_name { get; set; }
+        public string product_category_id { get; set; }
         public string provider_name { get; set; }
+        public string provider_id { get; set; }
         public string pu_tax { get; set; }
 
         public DateTime? pu_expired_date { get; set; }
