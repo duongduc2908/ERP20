@@ -121,7 +121,7 @@ namespace ERP.API.Controllers.Dashboard
 
             return Ok(response);
         }
-
+        #region [Create]
         [HttpPost]
         [Route("api/products/create")]
 
@@ -193,10 +193,9 @@ namespace ERP.API.Controllers.Dashboard
             }
 
         }
+        #endregion
 
-
-
-
+        #region[Update]
         [HttpPut]
         [Route("api/products/update")]
 
@@ -270,7 +269,8 @@ namespace ERP.API.Controllers.Dashboard
                 return Ok(response);
             }
         }
-
+        #endregion
+        #region [Delete]
         [HttpDelete]
         [Route("api/products/delete")]
         public IHttpActionResult Deleteproduct(int productId)
@@ -311,6 +311,7 @@ namespace ERP.API.Controllers.Dashboard
                 return Ok(response);
             }
         }
+        #endregion
         #endregion
 
         #region dispose

@@ -248,7 +248,7 @@ namespace ERP.API.Controllers.Dashboard
 
 
                 
-                // get data from formdata
+                // get data from formdata những trường bắt buộc
                 StaffCreateViewModel StaffCreateViewModel = new StaffCreateViewModel
                 {
                     sta_fullname = Convert.ToString(streamProvider.FormData["sta_fullname"]),
@@ -277,7 +277,7 @@ namespace ERP.API.Controllers.Dashboard
                     sta_status = Convert.ToByte(streamProvider.FormData["sta_status"]),
                     sta_sex = Convert.ToByte(streamProvider.FormData["sta_sex"]),
                 };
-                
+                //Kiểm tra các trường rằng buộc
                 //md5
                 if (StaffCreateViewModel.sta_email != null)
                 {
@@ -297,6 +297,7 @@ namespace ERP.API.Controllers.Dashboard
                    response.Data = null;
                    return Ok(response);
                }
+               //Bắt các truongf còn lại 
                 //check datetime
                 
                 if (streamProvider.FormData["sta_birthday"] == null)
@@ -338,6 +339,7 @@ namespace ERP.API.Controllers.Dashboard
                 {
                     StaffCreateViewModel.sta_created_date = DateTime.Now;
                 }
+                //Lấy ra bản ghi cuối cùng tạo mã code 
                 var x = _staffservice.GetLast();
                 
                 StaffCreateViewModel.sta_code = Utilis.CreateCode("KH", x.sta_id, 7);
@@ -348,10 +350,6 @@ namespace ERP.API.Controllers.Dashboard
 
                 // save new staff
                 _staffservice.Create(createdstaff);
-
-
-
-
 
                 // return response
                 response.Code = HttpCode.OK;
