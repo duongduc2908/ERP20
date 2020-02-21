@@ -24,7 +24,7 @@ using ERP.Common.Constants;
 namespace ERP.API.Controllers.Dashboard
 {
     [EnableCors("*", "*", "*")]
-    //[Authorize]
+    [Authorize]
     public class ManagerstaffsController : BaseController
     {
         private readonly IStaffService _staffservice;
