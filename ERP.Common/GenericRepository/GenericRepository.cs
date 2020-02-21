@@ -81,7 +81,7 @@ namespace ERP.Common.GenericRepository
         {
             int t = _dbSet.Count();
             var m = _dbSet.ToList()[t-1];
-            return null;
+            return m ;
         }
 
 

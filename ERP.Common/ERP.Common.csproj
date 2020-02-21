@@ -104,7 +104,6 @@
     <Compile Include="Excel\Utils.cs" />
     <Compile Include="GenericRepository\GenericRepository.cs" />
     <Compile Include="GenericRepository\IGenericRepository.cs" />
-    <Compile Include="GenericRepository\IIdentifier.cs" />
     <Compile Include="GenericService\GenericService.cs" />
     <Compile Include="GenericService\IGenericService.cs" />
     <Compile Include="Models\PagedResults.cs" />

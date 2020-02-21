@@ -5,6 +5,7 @@ using ERP.Data.DbContext;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
 using ERP.Repository.Repositories.IRepositories;
+using Microsoft.AspNetCore.Cors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,11 +49,7 @@ namespace ERP.Repository.Repositories
             foreach (product_category i in results)
             {
                 var productview = _mapper.Map<product_category>(i);
-                //var deparment = _dbContext.departments.FirstOrDefault(x => x.de_id == i.department_id);
-                //var position = _dbContext.positions.FirstOrDefault(x => x.pos_id == i.position_id);
-                //var group_role = _dbContext.group_role.FirstOrDefault(x => x.gr_id == i.group_role_id);
-                //staffview.department_name = deparment.de_name;
-                //staffview.position_name = position.pos_name;
+                
                 //staffview.group_name = group_role.gr_name;
                 res.Add(productview);
             }
@@ -83,6 +80,33 @@ namespace ERP.Repository.Repositories
                 PageSize = 0,
                 TotalNumberOfPages = 0,
                 TotalNumberOfRecords = totalNumberOfRecords
+            };
+        }
+        public PagedResults<string> GetAllName()
+        {
+
+            List<string> res = new List<string>();
+            
+
+            var list = _dbContext.product_category.OrderBy(t => t.pc_id).ToList();
+            var totalNumberOfRecords = list.Count();
+
+            var results = list.ToList();
+            foreach (product_category i in results)
+            {
+                string name = "";
+                name = i.pc_name;
+                res.Add(name);
+            }
+            
+
+            return new PagedResults<string>
+            {
+                Results = res,
+                PageNumber = 0,
+                PageSize = 0,
+                TotalNumberOfPages = 0,
+                TotalNumberOfRecords = 0
             };
         }
     }

@@ -26,6 +26,11 @@ namespace ERP.Service.Services
         {
             return this._repository.GetAllPageById(pageNumber, pageSize, id);
         }
+        public PagedResults<string> GetAllName()
+        {
+            return this._repository.GetAllName();
+        }
+
 
         public PagedResults<supplier> GetSupliers(string search_name)
         {

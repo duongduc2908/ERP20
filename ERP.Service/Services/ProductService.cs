@@ -27,9 +27,9 @@ namespace ERP.Service.Services
             return this._repository.GetAllPageById(id);
         }
         
-        public PagedResults<product> GetProducts(string search_name)
+        public PagedResults<productviewmodel> GetProducts(int pageNumber, int pageSize, string search_name, int? category_id)
         {
-            return this._repository.GetProducts(search_name);
+            return this._repository.GetProducts(pageNumber,pageSize, search_name,category_id);
         }
     }
 }

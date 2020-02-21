@@ -39,6 +39,7 @@ namespace ERP.API.Controllers.Dashboard
         }
 
         #region methods
+
         [HttpGet]
         [Route("api/staffs/all")]
         public IHttpActionResult Getstaffs()
@@ -83,6 +84,7 @@ namespace ERP.API.Controllers.Dashboard
 
             return Ok(response);
         }
+
         [Route("api/staffs/search-active-name")]
         public IHttpActionResult GetstaffsPaging(int pageSize, int pageNumber, int? status, string name)
         {
@@ -104,6 +106,7 @@ namespace ERP.API.Controllers.Dashboard
 
             return Ok(response);
         }
+
         [Route("api/staffs/infor")]
         public IHttpActionResult GetInforById(int id)
         {
@@ -125,6 +128,7 @@ namespace ERP.API.Controllers.Dashboard
 
             return Ok(response);
         }
+
         [Route("api/staffs/active")]
         public IHttpActionResult GetAllActive(int pageNumber, int pageSize, int status)
         {
@@ -146,6 +150,7 @@ namespace ERP.API.Controllers.Dashboard
 
             return Ok(response);
         }
+
         [Route("api/staffs/manager")]
         public IHttpActionResult GetInforManager()
         {
@@ -166,8 +171,7 @@ namespace ERP.API.Controllers.Dashboard
 
             return Ok(response);
         }
-        #endregion
-        #region["Create"]
+
         [HttpPost]
         [Route("api/staffs/create")]
         public async Task<IHttpActionResult> Createstaff()
@@ -212,7 +216,7 @@ namespace ERP.API.Controllers.Dashboard
                     response.Data = null;
                     return Ok(response);
                 }
-                
+
                 if (streamProvider.FormData["sta_mobile"] == null)
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
@@ -220,7 +224,7 @@ namespace ERP.API.Controllers.Dashboard
                     response.Data = null;
                     return Ok(response);
                 }
-               
+
                 if (streamProvider.FormData["sta_status"] == null)
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
@@ -236,8 +240,8 @@ namespace ERP.API.Controllers.Dashboard
                     response.Data = null;
                     return Ok(response);
                 }
-               
-                
+
+
                 if (streamProvider.FormData["position_id"] == null)
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
@@ -245,9 +249,6 @@ namespace ERP.API.Controllers.Dashboard
                     response.Data = null;
                     return Ok(response);
                 }
-
-
-                
                 // get data from formdata những trường bắt buộc
                 StaffCreateViewModel StaffCreateViewModel = new StaffCreateViewModel
                 {
@@ -271,13 +272,14 @@ namespace ERP.API.Controllers.Dashboard
                     position_id = Convert.ToInt32(streamProvider.FormData["position_id"]),
                     sta_leader_flag = Convert.ToByte(streamProvider.FormData["sta_leader_flag"]),
 
-                   
+
 
 
                     sta_status = Convert.ToByte(streamProvider.FormData["sta_status"]),
                     sta_sex = Convert.ToByte(streamProvider.FormData["sta_sex"]),
                 };
                 //Kiểm tra các trường rằng buộc
+
                 //md5
                 if (StaffCreateViewModel.sta_email != null)
                 {
@@ -299,7 +301,7 @@ namespace ERP.API.Controllers.Dashboard
                }
                //Bắt các truongf còn lại 
                 //check datetime
-                
+
                 if (streamProvider.FormData["sta_birthday"] == null)
                 {
                     StaffCreateViewModel.sta_birthday = null;
@@ -341,7 +343,7 @@ namespace ERP.API.Controllers.Dashboard
                 }
                 //Lấy ra bản ghi cuối cùng tạo mã code 
                 var x = _staffservice.GetLast();
-                
+
                 StaffCreateViewModel.sta_code = Utilis.CreateCode("KH", x.sta_id, 7);
                 // mapping view model to entity
                 var createdstaff = _mapper.Map<staff>(StaffCreateViewModel);
@@ -362,13 +364,13 @@ namespace ERP.API.Controllers.Dashboard
                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
                 response.Message = ex.Message;
                 response.Data = null;
-              
+
                 return Ok(response);
             }
 
         }
-        #endregion
-        #region["Update"]
+
+
         [HttpPut]
         [Route("api/staffs/update")]
         public async Task<IHttpActionResult> Updatestaff()
@@ -449,7 +451,7 @@ namespace ERP.API.Controllers.Dashboard
                     response.Data = null;
                     return Ok(response);
                 }
-                
+
                 // get data from formdata
 
                 StaffUpdateViewModel staffUpdateViewModel = new StaffUpdateViewModel
@@ -476,7 +478,7 @@ namespace ERP.API.Controllers.Dashboard
                     position_id = Convert.ToInt32(streamProvider.FormData["position_id"]),
                     sta_leader_flag = Convert.ToByte(streamProvider.FormData["sta_leader_flag"]),
 
-                    
+
 
 
                     sta_status = Convert.ToByte(streamProvider.FormData["sta_status"]),
@@ -499,8 +501,8 @@ namespace ERP.API.Controllers.Dashboard
                         staffUpdateViewModel.sta_thumbnai = existstaff.sta_thumbnai;
                     }
                 }
-               
-               
+
+
                 //md5
                 if (staffUpdateViewModel.sta_email != null)
                 {
@@ -516,7 +518,7 @@ namespace ERP.API.Controllers.Dashboard
                     staffUpdateViewModel.sta_email = null;
                 }
                 //check_phone_number
-                
+
                 if (CheckNumber.IsPhoneNumber(staffUpdateViewModel.sta_mobile) == false)
                 {
                     response.Message = "Số điện thoại không hợp lệ";
@@ -525,12 +527,12 @@ namespace ERP.API.Controllers.Dashboard
                 }
                 //Ma code
                 staffUpdateViewModel.sta_code = existstaff.sta_code;
-                
+
                 //Address 
                 if (streamProvider.FormData["sta_address"] == null)
                 {
                     staffUpdateViewModel.sta_address = null;
-                    
+
                 }
                 // Option choose 
                 if (streamProvider.FormData["sta_sex"] == null)
@@ -544,12 +546,12 @@ namespace ERP.API.Controllers.Dashboard
                         staffUpdateViewModel.sta_sex = null;
                     }
                 }
-                
+
 
                 //checkdatetime
                 if (streamProvider.FormData["sta_birthday"] == null)
                 {
-                    if(existstaff.sta_birthday != null)
+                    if (existstaff.sta_birthday != null)
                     {
                         staffUpdateViewModel.sta_birthday = existstaff.sta_birthday;
                     }
@@ -564,14 +566,7 @@ namespace ERP.API.Controllers.Dashboard
                 }
                 if (streamProvider.FormData["sta_identity_card"] == null)
                 {
-                    if (existstaff.sta_identity_card != null)
-                    {
-                        staffUpdateViewModel.sta_identity_card = existstaff.sta_identity_card;
-                    }
-                    else
-                    {
-                        staffUpdateViewModel.sta_identity_card = null;
-                    }
+                    staffUpdateViewModel.sta_identity_card = null;
                 }
                 else
                 {
@@ -580,7 +575,7 @@ namespace ERP.API.Controllers.Dashboard
 
                 if (streamProvider.FormData["sta_identity_card_date"] == null)
                 {
-                    if(existstaff.sta_identity_card_date != null)
+                    if (existstaff.sta_identity_card_date != null)
                     {
                         staffUpdateViewModel.sta_identity_card_date = existstaff.sta_identity_card_date;
                     }
@@ -596,7 +591,7 @@ namespace ERP.API.Controllers.Dashboard
                 }
                 if (streamProvider.FormData["sta_end_work_date"] == null)
                 {
-                    if(existstaff.sta_end_work_date != null)
+                    if (existstaff.sta_end_work_date != null)
                     {
                         staffUpdateViewModel.sta_end_work_date = existstaff.sta_end_work_date;
                     }
@@ -604,7 +599,7 @@ namespace ERP.API.Controllers.Dashboard
                     {
                         staffUpdateViewModel.sta_end_work_date = null;
                     }
-                   
+
                 }
                 else
                 {
@@ -613,7 +608,7 @@ namespace ERP.API.Controllers.Dashboard
 
                 if (streamProvider.FormData["sta_start_work_date"] == null)
                 {
-                    if(existstaff.sta_start_work_date != null)
+                    if (existstaff.sta_start_work_date != null)
                     {
                         staffUpdateViewModel.sta_start_work_date = existstaff.sta_start_work_date;
                     }
@@ -628,7 +623,7 @@ namespace ERP.API.Controllers.Dashboard
                     staffUpdateViewModel.sta_start_work_date = Convert.ToDateTime(streamProvider.FormData["sta_start_work_date"]);
                 }
 
-                staffUpdateViewModel.sta_created_date =existstaff.sta_created_date;
+                staffUpdateViewModel.sta_created_date = existstaff.sta_created_date;
                 // mapping view model to entity
                 var updatedstaff = _mapper.Map<staff>(staffUpdateViewModel);
 
@@ -650,8 +645,8 @@ namespace ERP.API.Controllers.Dashboard
                 return Ok(response);
             }
         }
-        #endregion
-        #region["delete"]
+
+
         [HttpDelete]
         [Route("api/staffs/delete")]
         public IHttpActionResult Deletestaff(int staffId)
@@ -692,8 +687,8 @@ namespace ERP.API.Controllers.Dashboard
                 return Ok(response);
             }
         }
-        #endregion
-        #region["Change Password"]
+
+
         [HttpPut]
         [Route("api/staffs/ChangePassword")]
         public async Task<IHttpActionResult> ChangePasswordTest(ERP.Data.ChangePasswordBindingModel model, int id)
@@ -701,7 +696,7 @@ namespace ERP.API.Controllers.Dashboard
             ResponseDataDTO<bool> response = new ResponseDataDTO<bool>();
             try
             {
-                if( model.NewPassword != model.ConfirmPassword)
+                if (model.NewPassword != model.ConfirmPassword)
                 {
                     response.Code = HttpCode.OK;
                     response.Message = "ConfirmPassword not true";
@@ -725,8 +720,7 @@ namespace ERP.API.Controllers.Dashboard
                 return Ok(response);
             }
         }
-        #endregion
-        #region["Logout"]
+
         [Route("api/staffs/Logout")]
         public IHttpActionResult Logout()
         {
@@ -749,136 +743,8 @@ namespace ERP.API.Controllers.Dashboard
                 return Ok(response);
             }
         }
-
         #endregion
-        #region["Export Excel"]
-        [HttpGet]
-        [Route("api/satffs/export")]
-        public async Task<IHttpActionResult> Export(int pageSize, int pageNumber)
-        {
-            ResponseDataDTO<staffviewmodel> response = new ResponseDataDTO<staffviewmodel>();
-            try
-            {
-                var listStaff = new List<staffviewmodel>();
-                
-                //Đưa ra danh sách staff trong trang nào đó 
-                var objRT_Mst_Staff = _staffservice.GetAllPage(pageSize: pageSize, pageNumber: pageNumber);
-                if (objRT_Mst_Staff != null)
-                {
-                    listStaff.AddRange(objRT_Mst_Staff.Results);
 
-                    Dictionary<string, string> dicColNames = GetImportDicColums();
-
-                    string url = "";
-                    string filePath = GenExcelExportFilePath(string.Format(typeof(department).Name), ref url);
-
-                    ExcelExport.ExportToExcelFromList(listStaff, dicColNames, filePath, string.Format("Staffs"));
-
-                    response.Code = HttpCode.NOT_FOUND;
-                    response.Message = "Đã xuất excel thành công!";
-                    response.Data = null;
-                }
-                else
-                {
-                    response.Code = HttpCode.NOT_FOUND;
-                    response.Message = "File excel import không có dữ liệu!";
-                    response.Data = null;
-                }
-            }
-            catch (Exception ex)
-            {
-                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = ex.Message; ;
-                response.Data = null;
-                Console.WriteLine(ex.ToString());
-
-                return Ok(response);
-            }
-            return Ok(response);
-        }
-
-
-        #endregion
-        #region["Import"]
-        [HttpPost]
-        [Route("api/staffs/import_ex")]
-        public async Task<IHttpActionResult> Import_Excel()
-        {
-            ResponseDataDTO<staff> response = new ResponseDataDTO<staff>();
-            try
-            {
-                HttpContext context = HttpContext.Current;
-                var path = Path.GetTempPath();
-
-                if (!Request.Content.IsMimeMultipartContent("form-data"))
-                {
-                    throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.UnsupportedMediaType));
-                }
-
-                MultipartFormDataStreamProvider streamProvider = new MultipartFormDataStreamProvider(path);
-
-                await Request.Content.ReadAsMultipartAsync(streamProvider);
-                // save file
-                string fileName = "";
-                foreach (MultipartFileData fileData in streamProvider.FileData)
-                {
-                    fileName = (FileExtension.SaveFileOnDisk(fileData));
-                    fileName = @"D:\ERP20\ERP.API\"+fileName;
-                    var res = ExcelImport.ImportExcelXLS(fileName, true);
-                    DataTable TestTable = (DataTable)res.Tables[0];
-                    foreach (DataRow row in TestTable.Rows)
-                    {
-                        for (int i = 0; i < TestTable.Columns.Count; i++)
-                        {
-                            context.Response.Write(row.ToString().Replace(",", string.Empty) + ",");
-                        }
-
-                        context.Response.Write(Environment.NewLine);
-                    }
-                }
-                context.Response.ContentType = "text/csv";
-                context.Response.AppendHeader("Content-Disposition", "attachment; filename=" + fileName + ".csv");
-                context.Response.End();
-
-                // return response
-                response.Code = HttpCode.OK;
-                response.Message = MessageResponse.SUCCESS;
-                response.Data = null;
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = ex.Message;
-                response.Data = null;
-
-                return Ok(response);
-            }
-        }
-        #endregion
-        #region["DicColums"]
-        private Dictionary<string, string> GetImportDicColums()
-        {
-            return new Dictionary<string, string>()
-            {
-                 {"sta_code","MNV"},
-                 {"sta_username","Tên đăng nhập"},
-                 {"sta_mobile","Số điện thoại"},
-                 {"sta_email","Email"},
-                 {"position_name","Chức vụ"},
-                 {"sta_status","Trạng thái"}
-            };
-        }
-        private Dictionary<string, string> GetImportDicColumsTemplate()
-        {
-            return new Dictionary<string, string>()
-            {
-                  {"email","Email phong ban"},
-                 {"id","Ma bộ phận phòng ban"}
-            };
-        }
-        #endregion
-       
         #region["Import Excel"]
         [HttpPost]
         [Route("api/satffs/import")]
@@ -900,7 +766,7 @@ namespace ERP.API.Controllers.Dashboard
                 await Request.Content.ReadAsMultipartAsync(streamProvider);
 
                 // save file
-                string fileName="";
+                string fileName = "";
                 if (streamProvider.FileData.Count > 0)
                 {
                     foreach (MultipartFileData fileData in streamProvider.FileData)
@@ -1023,7 +889,7 @@ namespace ERP.API.Controllers.Dashboard
                     if (list != null && list.Count > 0)
                     {
                         StaffCreateViewModel StaffCreateViewModel = new StaffCreateViewModel();
-                        
+
                     }
                     exitsData = "Đã nhập dữ liệu excel thành công!";
                     response.Code = HttpCode.OK;
@@ -1051,7 +917,134 @@ namespace ERP.API.Controllers.Dashboard
             }
             return Ok(response);
         }
+
+        [HttpPost]
+        [Route("api/staffs/import_ex")]
+        public async Task<IHttpActionResult> Import_Excel()
+        {
+            ResponseDataDTO<staff> response = new ResponseDataDTO<staff>();
+            try
+            {
+                HttpContext context = HttpContext.Current;
+                var path = Path.GetTempPath();
+
+                if (!Request.Content.IsMimeMultipartContent("form-data"))
+                {
+                    throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.UnsupportedMediaType));
+                }
+
+                MultipartFormDataStreamProvider streamProvider = new MultipartFormDataStreamProvider(path);
+
+                await Request.Content.ReadAsMultipartAsync(streamProvider);
+                // save file
+                string fileName = "";
+                foreach (MultipartFileData fileData in streamProvider.FileData)
+                {
+                    fileName = (FileExtension.SaveFileOnDisk(fileData));
+                    fileName = @"D:\ERP20\ERP.API\" + fileName;
+                    var res = ExcelImport.ImportExcelXLS(fileName, true);
+                    DataTable TestTable = (DataTable)res.Tables[0];
+                    foreach (DataRow row in TestTable.Rows)
+                    {
+                        for (int i = 0; i < TestTable.Columns.Count; i++)
+                        {
+                            context.Response.Write(row.ToString().Replace(",", string.Empty) + ",");
+                        }
+
+                        context.Response.Write(Environment.NewLine);
+                    }
+                }
+                context.Response.ContentType = "text/csv";
+                context.Response.AppendHeader("Content-Disposition", "attachment; filename=" + fileName + ".csv");
+                context.Response.End();
+
+                // return response
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = null;
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+
+                return Ok(response);
+            }
+        }
         #endregion
+
+        #region["Export Excel"]
+        [HttpGet]
+        [Route("api/satffs/export")]
+        public async Task<IHttpActionResult> Export(int pageSize, int pageNumber)
+        {
+            ResponseDataDTO<staffviewmodel> response = new ResponseDataDTO<staffviewmodel>();
+            try
+            {
+                var listStaff = new List<staffviewmodel>();
+                
+                //Đưa ra danh sách staff trong trang nào đó 
+                var objRT_Mst_Staff = _staffservice.GetAllPage(pageSize: pageSize, pageNumber: pageNumber);
+                if (objRT_Mst_Staff != null)
+                {
+                    listStaff.AddRange(objRT_Mst_Staff.Results);
+
+                    Dictionary<string, string> dicColNames = GetImportDicColums();
+
+                    string url = "";
+                    string filePath = GenExcelExportFilePath(string.Format(typeof(department).Name), ref url);
+
+                    ExcelExport.ExportToExcelFromList(listStaff, dicColNames, filePath, string.Format("Staffs"));
+
+                    response.Code = HttpCode.NOT_FOUND;
+                    response.Message = "Đã xuất excel thành công!";
+                    response.Data = null;
+                }
+                else
+                {
+                    response.Code = HttpCode.NOT_FOUND;
+                    response.Message = "File excel import không có dữ liệu!";
+                    response.Data = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message; ;
+                response.Data = null;
+                Console.WriteLine(ex.ToString());
+
+                return Ok(response);
+            }
+            return Ok(response);
+        }
+        #endregion
+
+        #region["DicColums"]
+        private Dictionary<string, string> GetImportDicColums()
+        {
+            return new Dictionary<string, string>()
+            {
+                 {"sta_code","MNV"},
+                 {"sta_username","Tên đăng nhập"},
+                 {"sta_mobile","Số điện thoại"},
+                 {"sta_email","Email"},
+                 {"position_name","Chức vụ"},
+                 {"sta_status","Trạng thái"}
+            };
+        }
+        private Dictionary<string, string> GetImportDicColumsTemplate()
+        {
+            return new Dictionary<string, string>()
+            {
+                  {"email","Email phong ban"},
+                 {"id","Ma bộ phận phòng ban"}
+            };
+        }
+        #endregion
+
         #region dispose
 
         protected override void Dispose(bool disposing)

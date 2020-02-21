@@ -47,12 +47,7 @@ namespace ERP.Repository.Repositories
             foreach (supplier i in results)
             {
                 var productview = _mapper.Map<supplier>(i);
-                //var deparment = _dbContext.departments.FirstOrDefault(x => x.de_id == i.department_id);
-                //var position = _dbContext.positions.FirstOrDefault(x => x.pos_id == i.position_id);
-                //var group_role = _dbContext.group_role.FirstOrDefault(x => x.gr_id == i.group_role_id);
-                //staffview.department_name = deparment.de_name;
-                //staffview.position_name = position.pos_name;
-                //staffview.group_name = group_role.gr_name;
+               
                 res.Add(productview);
             }
             var mod = totalNumberOfRecords % pageSize;
@@ -84,5 +79,33 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = totalNumberOfRecords
             };
         }
+        public PagedResults<string> GetAllName()
+        {
+
+            List<string> res = new List<string>();
+
+
+            var list = _dbContext.suppliers.OrderBy(t => t.su_id).ToList();
+            var totalNumberOfRecords = list.Count();
+
+            var results = list.ToList();
+            foreach (supplier i in results)
+            {
+                string name = "";
+                name = i.su_name;
+                res.Add(name);
+            }
+
+
+            return new PagedResults<string>
+            {
+                Results = res,
+                PageNumber = 0,
+                PageSize = 0,
+                TotalNumberOfPages = 0,
+                TotalNumberOfRecords = totalNumberOfRecords
+            };
+        }
+
     }
 }
