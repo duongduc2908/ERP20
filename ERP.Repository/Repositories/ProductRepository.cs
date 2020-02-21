@@ -182,7 +182,7 @@ namespace ERP.Repository.Repositories
                 PageNumber = 0,
                 PageSize = 0,
                 TotalNumberOfPages = 0,
-                TotalNumberOfRecords = 0
+                TotalNumberOfRecords = 2
             };
         }
     }
