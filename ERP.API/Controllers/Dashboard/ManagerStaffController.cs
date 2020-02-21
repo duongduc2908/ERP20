@@ -1031,8 +1031,6 @@ namespace ERP.API.Controllers.Dashboard
             }
             return Ok(response);
         }
-
-
         #endregion
 
         #region["DicColums"]
