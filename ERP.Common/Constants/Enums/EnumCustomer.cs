@@ -7,8 +7,8 @@ namespace ERP.Common.Constants.Enums
 {
     public class EnumCustomer
     {
-        public static string cu_type_0 = "Khách sỉ";
-        public static string cu_type_1 = "Khách lẻ";
+        public static string[] cu_type = new string[2] { "Khách sỉ" , "Khách lẻ"};
+        
         
     }
 }

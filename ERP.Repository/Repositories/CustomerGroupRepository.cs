@@ -49,8 +49,8 @@ namespace ERP.Repository.Repositories
                     list = _dbContext.customer_group.OrderBy(t => t.cg_id).Skip(skipAmount).Take(pageSize);
                 }
             }
-
-            var totalNumberOfRecords = _dbContext.customer_group.Count();
+            var total = _dbContext.customer_group.Count();
+            var totalNumberOfRecords = list.Count();
 
             var results = list.ToList();
             foreach (customer_group i in results)
@@ -63,9 +63,9 @@ namespace ERP.Repository.Repositories
                 res.Add(customer_group_view);
             }
 
-            var mod = totalNumberOfRecords % pageSize;
+            var mod = total % pageSize;
 
-            var totalPageCount = (totalNumberOfRecords / pageSize) + (mod == 0 ? 0 : 1);
+            var totalPageCount = (total / pageSize) + (mod == 0 ? 0 : 1);
 
             return new PagedResults<customergroupviewmodel>
             {

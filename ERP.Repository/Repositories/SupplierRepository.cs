@@ -3,6 +3,7 @@ using ERP.Common.GenericRepository;
 using ERP.Common.Models;
 using ERP.Data.DbContext;
 using ERP.Data.ModelsERP;
+using ERP.Data.ModelsERP.ModelView;
 using ERP.Repository.Repositories.IRepositories;
 using System;
 using System.Collections.Generic;
@@ -79,10 +80,10 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = totalNumberOfRecords
             };
         }
-        public PagedResults<string> GetAllName()
+        public PagedResults<dropdown> GetAllName()
         {
 
-            List<string> res = new List<string>();
+            List<dropdown> res = new List<dropdown>();
 
 
             var list = _dbContext.suppliers.OrderBy(t => t.su_id).ToList();
@@ -91,13 +92,14 @@ namespace ERP.Repository.Repositories
             var results = list.ToList();
             foreach (supplier i in results)
             {
-                string name = "";
-                name = i.su_name;
-                res.Add(name);
+                var dr = new dropdown();
+                dr.id = i.su_id;
+                dr.name = i.su_name;
+                res.Add(dr);
             }
 
 
-            return new PagedResults<string>
+            return new PagedResults<dropdown>
             {
                 Results = res,
                 PageNumber = 0,

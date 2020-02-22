@@ -38,15 +38,14 @@ namespace ERP.Repository.Repositories
 
                 productview.product_category_name = product_category.pc_name;
                 productview.provider_name = supplier.su_name;
-
-                if (i.pu_unit == 0)
+                for(int j = 0; j< 2; j++)
                 {
-                    productview.pu_unit_name = EnumProduct.pu_unit_0;
+                    if(j == i.pu_unit)
+                    {
+                        productview.pu_unit_name = EnumProduct.pu_unit[j];
+                    }
                 }
-                if (i.pu_unit == 1)
-                {
-                    productview.pu_unit_name = EnumProduct.pu_unit_1;
-                }
+               
                 res.Add(productview);
             }
             
@@ -77,13 +76,12 @@ namespace ERP.Repository.Repositories
                 productview.product_category_name = product_category.pc_name;
                 productview.provider_name = supplier.su_name;
 
-                if (i.pu_unit == 0)
+                for (int j = 0; j < 2; j++)
                 {
-                    productview.pu_unit_name = EnumProduct.pu_unit_0;
-                }
-                if (i.pu_unit == 1)
-                {
-                    productview.pu_unit_name = EnumProduct.pu_unit_1;
+                    if (j == i.pu_unit)
+                    {
+                        productview.pu_unit_name = EnumProduct.pu_unit[j];
+                    }
                 }
                 res.Add(productview);
             }
@@ -146,13 +144,12 @@ namespace ERP.Repository.Repositories
                 productview.product_category_name = product_category.pc_name;
                 productview.provider_name = supplier.su_name;
 
-                if (i.pu_unit == 0)
+                for (int j = 0; j < 2; j++)
                 {
-                    productview.pu_unit_name = EnumProduct.pu_unit_0;
-                }
-                if (i.pu_unit == 1)
-                {
-                    productview.pu_unit_name = EnumProduct.pu_unit_1;
+                    if (j == i.pu_unit)
+                    {
+                        productview.pu_unit_name = EnumProduct.pu_unit[j];
+                    }
                 }
                 res.Add(productview);
             }
@@ -170,13 +167,20 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = totalNumberOfRecords
             };
         }
-        public PagedResults<string> GetUnit()
+        public PagedResults<dropdown> GetUnit()
         {
 
-            List<string> res = new List<string>();
-            res.Add(EnumProduct.pu_unit_0);
-            res.Add(EnumProduct.pu_unit_1);
-            return new PagedResults<string>
+            List<dropdown> res = new List<dropdown>();
+            for(int i = 0; i < 2; i++)
+            {
+                dropdown pu = new dropdown();
+                pu.id = i;
+                pu.name = EnumProduct.pu_unit[i];
+                
+                res.Add(pu);
+            }
+            
+            return new PagedResults<dropdown>
             {
                 Results = res,
                 PageNumber = 0,

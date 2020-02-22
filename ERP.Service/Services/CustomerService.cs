@@ -45,7 +45,7 @@ namespace ERP.Service.Services
         {
             return this._repository.GetInfor(search_name);
         }
-        public PagedResults<customer_type> GetAllType()
+        public PagedResults<dropdown> GetAllType()
         {
             return this._repository.GetAllType();
         }

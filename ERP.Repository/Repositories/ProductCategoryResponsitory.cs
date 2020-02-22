@@ -82,21 +82,22 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = totalNumberOfRecords
             };
         }
-        public PagedResults<string> GetAllName()
+        public PagedResults<dropdown> GetAllName()
         {
 
-            List<string> res = new List<string>();
+            List<dropdown> res = new List<dropdown>();
             var list = _dbContext.product_category.OrderBy(t => t.pc_id).ToList();
             var totalNumberOfRecords = list.Count();
 
             var results = list.ToList();
             foreach (product_category i in results)
             {
-                string name = "";
-                name = i.pc_name;
-                res.Add(name);
+                var dr = new dropdown();
+                dr.id = i.pc_id;
+                dr.name = i.pc_name;
+                res.Add(dr);
             }
-            return new PagedResults<string>
+            return new PagedResults<dropdown>
             {
                 Results = res,
                 PageNumber = 0,

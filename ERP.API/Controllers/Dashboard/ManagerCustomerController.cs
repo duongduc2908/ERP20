@@ -23,7 +23,7 @@ using System.Web.Http.Cors;
 namespace ERP.API.Controllers.Dashboard
 {
     [EnableCors("*", "*", "*")]
-    [Authorize]
+    //[Authorize]
     public class ManagerCustomerController : ApiController
     {
         private readonly ICustomerService _customerservice;
@@ -133,7 +133,7 @@ namespace ERP.API.Controllers.Dashboard
         [Route("api/customers/type")]
         public IHttpActionResult GetAllType()
         {
-            ResponseDataDTO<PagedResults<customer_type>> response = new ResponseDataDTO<PagedResults<customer_type>>();
+            ResponseDataDTO<PagedResults<dropdown>> response = new ResponseDataDTO<PagedResults<dropdown>>();
             try
             {
 

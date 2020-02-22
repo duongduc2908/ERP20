@@ -145,6 +145,7 @@
     <Compile Include="ModelsERP\ModelView\orderproductviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\productorderviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\productviewmodel.cs" />
+    <Compile Include="ModelsERP\ModelView\dropdown.cs" />
     <Compile Include="ModelsERP\ModelView\staffviewmodel.cs" />
     <Compile Include="ModelsERP\notification.cs" />
     <Compile Include="ModelsERP\order_product.cs" />

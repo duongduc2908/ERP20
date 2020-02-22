@@ -19,7 +19,7 @@ using System.Web.Http.Cors;
 namespace ERP.API.Controllers.Dashboard
 {
     [EnableCors("*", "*", "*")]
-    [Authorize]
+    //[Authorize]
     public class ManagerCustomerGroupController : ApiController
     {
         private readonly ICustomerGroupService _customer_groupservice;

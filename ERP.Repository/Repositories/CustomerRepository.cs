@@ -35,13 +35,12 @@ namespace ERP.Repository.Repositories
             {
                 var customerview = _mapper.Map<customerviewmodel>(i);
 
-                if(i.cu_type == 0)
+                for (int j = 0; j < 2; j++)
                 {
-                    customerview.cu_type_name = EnumCustomer.cu_type_0;
-                }
-                if (i.cu_type == 1)
-                {
-                    customerview.cu_type_name = EnumCustomer.cu_type_1;
+                    if (j == i.cu_type)
+                    {
+                        customerview.cu_type_name = EnumCustomer.cu_type[j];
+                    }
                 }
                 var group_role = _dbContext.group_role.FirstOrDefault(x => x.gr_id == i.customer_group_id);
                 var sources = _dbContext.sources.FirstOrDefault(x => x.src_id == i.source_id);
@@ -234,14 +233,14 @@ namespace ERP.Repository.Repositories
                 var customergroup = _dbContext.customer_group.FirstOrDefault(x => x.cg_id == i.customer_group_id);
                 customerview.source_name = sources.src_name;
                 customerview.customer_group_name = customergroup.cg_name;
-                if(i.cu_type == 0)
+                for (int j = 0; j < 2; j++)
                 {
-                    customerview.cu_type_name = EnumCustomer.cu_type_0;
+                    if (j == i.cu_type)
+                    {
+                        customerview.cu_type_name = EnumCustomer.cu_type[j];
+                    }
                 }
-                if (i.cu_type == 1)
-                {
-                    customerview.cu_type_name = EnumCustomer.cu_type_1;
-                }
+                
 
                 res.Add(customerview);
             }
@@ -276,18 +275,21 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = totalNumberOfRecords
             };
         }
-        public PagedResults<customer_type> GetAllType()
+        public PagedResults<dropdown> GetAllType()
         {
 
-            List<customer_type> res = new List<customer_type>();
-            customer_type temp = new customer_type();
-            temp.id = 0; temp.name = EnumCustomer.cu_type_0;
-            res.Add(temp);
-            temp.id = 1; temp.name = EnumCustomer.cu_type_1;
-            res.Add(temp);
-           
+            List<dropdown> res = new List<dropdown>();
+            
+            for (int i = 0; i < 2; i++)
+            {
+                dropdown pu = new dropdown();
+                pu.id = i;
+                pu.name = EnumCustomer.cu_type[i];
 
-            return new PagedResults<customer_type>
+                res.Add(pu);
+            }
+
+            return new PagedResults<dropdown>
             {
                 Results = res,
                 PageNumber = 0,

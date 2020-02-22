@@ -1,6 +1,7 @@
 ﻿using ERP.Common.GenericRepository;
 using ERP.Common.Models;
 using ERP.Data.ModelsERP;
+using ERP.Data.ModelsERP.ModelView;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,6 @@ namespace ERP.Repository.Repositories.IRepositories
         PagedResults<supplier> GetAllPage(int pageNumber, int pageSize);
         PagedResults<supplier> GetAllPageById(int pageNumber, int pageSize, int id);
         PagedResults<supplier> GetSupliers(string search_name);
-        PagedResults<string> GetAllName();
+        PagedResults<dropdown> GetAllName();
     }
 }

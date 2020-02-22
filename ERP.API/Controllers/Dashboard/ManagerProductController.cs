@@ -20,7 +20,7 @@ using System.Web.Http.Cors;
 namespace ERP.API.Controllers.Dashboard
 {
     [EnableCors("*", "*", "*")]
-    [Authorize]
+    //[Authorize]
     public class ManagerProductController : ApiController
     {
         private readonly IProductService _productservice;
@@ -82,7 +82,7 @@ namespace ERP.API.Controllers.Dashboard
         [Route("api/products/unit")]
         public IHttpActionResult GetUnit()
         {
-            ResponseDataDTO<PagedResults<string>> response = new ResponseDataDTO<PagedResults<string>>();
+            ResponseDataDTO<PagedResults<dropdown>> response = new ResponseDataDTO<PagedResults<dropdown>> ();
             try
             {
                 response.Code = HttpCode.OK;

@@ -39,7 +39,7 @@ namespace ERP.API.Controllers.Dashboard
         [Route("api/product-categorys/get-name")]
         public IHttpActionResult GetproductsPaging()
         {
-            ResponseDataDTO<PagedResults<string>> response = new ResponseDataDTO<PagedResults<string>>();
+            ResponseDataDTO<PagedResults<dropdown>> response = new ResponseDataDTO<PagedResults<dropdown>>();
             try
             {
                 response.Code = HttpCode.OK;
