@@ -862,7 +862,7 @@ namespace ERP.API.Controllers.Dashboard
                         }
                         #endregion
 
-                        //#region["Check duplicate"]
+                        #region["Check duplicate"]
                         //for (var i = 0; i < table.Rows.Count; i++)
                         //{
                         //    var DepartmentCodeCur = table.Rows[i]["id"].ToString().Trim();
@@ -882,7 +882,7 @@ namespace ERP.API.Controllers.Dashboard
                         //        }
                         //    }
                         //}
-                        //#endregion
+                        #endregion
                     }
                     list = DataTableCmUtils.ToListof<staff>(table); ;
                     // Gọi hàm save data
@@ -916,62 +916,6 @@ namespace ERP.API.Controllers.Dashboard
                 return Ok(response);
             }
             return Ok(response);
-        }
-
-        [HttpPost]
-        [Route("api/staffs/import_ex")]
-        public async Task<IHttpActionResult> Import_Excel()
-        {
-            ResponseDataDTO<staff> response = new ResponseDataDTO<staff>();
-            try
-            {
-                HttpContext context = HttpContext.Current;
-                var path = Path.GetTempPath();
-
-                if (!Request.Content.IsMimeMultipartContent("form-data"))
-                {
-                    throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.UnsupportedMediaType));
-                }
-
-                MultipartFormDataStreamProvider streamProvider = new MultipartFormDataStreamProvider(path);
-
-                await Request.Content.ReadAsMultipartAsync(streamProvider);
-                // save file
-                string fileName = "";
-                foreach (MultipartFileData fileData in streamProvider.FileData)
-                {
-                    fileName = (FileExtension.SaveFileOnDisk(fileData));
-                    fileName = @"D:\ERP20\ERP.API\" + fileName;
-                    var res = ExcelImport.ImportExcelXLS(fileName, true);
-                    DataTable TestTable = (DataTable)res.Tables[0];
-                    foreach (DataRow row in TestTable.Rows)
-                    {
-                        for (int i = 0; i < TestTable.Columns.Count; i++)
-                        {
-                            context.Response.Write(row.ToString().Replace(",", string.Empty) + ",");
-                        }
-
-                        context.Response.Write(Environment.NewLine);
-                    }
-                }
-                context.Response.ContentType = "text/csv";
-                context.Response.AppendHeader("Content-Disposition", "attachment; filename=" + fileName + ".csv");
-                context.Response.End();
-
-                // return response
-                response.Code = HttpCode.OK;
-                response.Message = MessageResponse.SUCCESS;
-                response.Data = null;
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = ex.Message;
-                response.Data = null;
-
-                return Ok(response);
-            }
         }
         #endregion
 
