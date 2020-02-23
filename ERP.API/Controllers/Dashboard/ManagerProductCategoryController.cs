@@ -34,8 +34,6 @@ namespace ERP.API.Controllers.Dashboard
         }
 
         #region methods
-        
-
         [Route("api/product-categorys/get-name")]
         public IHttpActionResult GetproductsPaging()
         {
