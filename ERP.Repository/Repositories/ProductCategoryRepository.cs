@@ -2,6 +2,7 @@
 using ERP.Common.Models;
 using ERP.Data.DbContext;
 using ERP.Data.ModelsERP;
+using ERP.Data.ModelsERP.ModelView;
 using ERP.Repository.Repositories.IRepositories;
 using System;
 using System.Collections.Generic;
@@ -15,28 +16,17 @@ namespace ERP.Repository.Repositories
         public ProductCategoryRepository(ERPDbContext dbContext) : base(dbContext)
         {
         }
-        public PagedResults<product_category> CreatePagedResults(int pageNumber, int pageSize)
+        public List<dropdown> GetAllName()
         {
-            var skipAmount = pageSize * pageNumber;
-
-            var list = _dbContext.product_category.OrderBy(t => t.pc_id).Skip(skipAmount).Take(pageSize);
-
-            var totalNumberOfRecords = _dbContext.product_category.Count();
-
-            var results = list.ToList();
-
-            var mod = totalNumberOfRecords % pageSize;
-
-            var totalPageCount = (totalNumberOfRecords / pageSize) + (mod == 0 ? 0 : 1);
-
-            return new PagedResults<product_category>
-            {
-                Results = results,
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-                TotalNumberOfPages = totalPageCount,
-                TotalNumberOfRecords = totalNumberOfRecords
-            };
+            List<dropdown> lst_res = new List<dropdown>();
+            dropdown dr = new dropdown();
+            var list = _dbContext.product_category.ToList();
+            foreach (product_category p in _dbContext.product_category) {
+                dr.id = p.pc_id;
+                dr.name = p.pc_name;
+                lst_res.Add(dr);
+            }
+            return lst_res;
         }
     }
 }

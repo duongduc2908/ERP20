@@ -1,6 +1,7 @@
 ﻿using ERP.Common.GenericRepository;
 using ERP.Common.Models;
 using ERP.Data.ModelsERP;
+using ERP.Data.ModelsERP.ModelView;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,6 @@ namespace ERP.Repository.Repositories.IRepositories
 {
     public interface IProductCategoryRepository : IGenericRepository<product_category>
     {
-        PagedResults<product_category> CreatePagedResults(int pageNumber, int pageSize);
+        List<dropdown> GetAllName();
     }
 }
