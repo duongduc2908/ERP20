@@ -512,7 +512,7 @@ namespace ERP.Common.Excel
 
                 foreach (var properties in objectProperties.Where(properties => columnNames.Contains(properties.Name.ToUpper()) && dataRow[properties.Name.ToUpper()] != DBNull.Value))
                 {
-                    properties.SetValue(instanceOfT, dataRow[properties.Name], null);
+                    properties.SetValue(instanceOfT, ChangeType(dataRow[properties.Name], properties.PropertyType), null);
                 }
                 return instanceOfT;
             }).ToList();
@@ -555,6 +555,22 @@ namespace ERP.Common.Excel
                 table.Rows.Add(row);
             }
             return table;
+        }
+        public static object ChangeType(object value, Type conversion)
+        {
+            var t = conversion;
+
+            if (t.IsGenericType && t.GetGenericTypeDefinition().Equals(typeof(Nullable<>)))
+            {
+                if (value == null)
+                {
+                    return null;
+                }
+
+                t = Nullable.GetUnderlyingType(t);
+            }
+
+            return Convert.ChangeType(value, t);
         }
     }
 }

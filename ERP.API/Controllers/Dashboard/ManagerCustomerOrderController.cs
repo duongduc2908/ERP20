@@ -19,6 +19,7 @@ using System.Web.Http.Cors;
 namespace ERP.API.Controllers.Dashboard
 {
     [EnableCors("*", "*", "*")]
+    [Authorize]
     public class ManagerCustomerOrderController : ApiController
     {
         private readonly ICustomerOrderService _customer_orderservice;
@@ -37,6 +38,7 @@ namespace ERP.API.Controllers.Dashboard
             this._mapper = mapper;
         }
 
+
         #region methods
         [HttpGet]
         [Route("api/customer-orders/infor")]
@@ -53,6 +55,28 @@ namespace ERP.API.Controllers.Dashboard
             {
                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
                 response.Message = "Không tìm thấy nhân sự";
+                response.Data = null;
+
+                Console.WriteLine(ex.ToString());
+            }
+
+            return Ok(response);
+        }
+        [HttpGet]
+        [Route("api/customer-orders/search")]
+        public IHttpActionResult GetAllSearch(int pageNumber, int pageSize, int? payment_type_id, string code)
+        {
+            ResponseDataDTO<PagedResults<customerorderviewmodel>> response = new ResponseDataDTO<PagedResults<customerorderviewmodel>>();
+            try
+            {
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = _customer_orderservice.GetAllSearch(pageNumber:pageNumber, pageSize:pageSize, payment_type_id:payment_type_id, code);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = "Không tìm thấy";
                 response.Data = null;
 
                 Console.WriteLine(ex.ToString());

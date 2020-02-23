@@ -56,8 +56,8 @@
 //            return Ok(response);
 //        }
 
-        
-        
+
+
 //        #endregion
 //        #region [Create]
 //        [HttpPost]
@@ -79,66 +79,36 @@
 
 //                await Request.Content.ReadAsMultipartAsync(streamProvider);
 //                //Các trường bắt buộc 
-//                if (streamProvider.FormData["pu_name"] == null)
+//                if (streamProvider.FormData["add_city"] == null)
 //                {
 //                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-//                    response.Message = "Tên sản phẩm không được để trống";
+//                    response.Message = "Thành phố không được để trống";
 //                    response.Data = null;
 //                    return Ok(response);
 //                }
-//                if (streamProvider.FormData["pu_quantity"] == null)
+//                if (streamProvider.FormData["add_district"] == null)
 //                {
 //                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-//                    response.Message = "Số lượng không được để trống";
+//                    response.Message = "Huyện không được để trống";
 //                    response.Data = null;
 //                    return Ok(response);
 //                }
-//                if (streamProvider.FormData["pu_buy_price"] == null)
+//                if (streamProvider.FormData["add_geocoding"] == null)
 //                {
 //                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-//                    response.Message = "Giá bán không được để trống";
-//                    response.Data = null;
-//                    return Ok(response);
-//                }
-
-//                if (streamProvider.FormData["pu_sale_price"] == null)
-//                {
-//                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-//                    response.Message = "Giá mua không được để trống";
-//                    response.Data = null;
-//                    return Ok(response);
-//                }
-//                if (streamProvider.FormData["pu_tax"] == null)
-//                {
-//                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-//                    response.Message = "Thuế không được để trống";
+//                    response.Message = "Xã không được để trống";
 //                    response.Data = null;
 //                    return Ok(response);
 //                }
 
-//                if (streamProvider.FormData["pu_unit"] == null)
+//                if (streamProvider.FormData["add_detail"] == null)
 //                {
 //                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-//                    response.Message = "Đơn vị không được để trống";
+//                    response.Message = "Chi tiết không được để trống";
 //                    response.Data = null;
 //                    return Ok(response);
 //                }
-//                if (streamProvider.FormData["address_category_id"] == null)
-//                {
-//                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-//                    response.Message = "Loại sản phẩm không được để trống";
-//                    response.Data = null;
-//                    return Ok(response);
-//                }
-//                if (streamProvider.FormData["provider_id"] == null)
-//                {
-//                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-//                    response.Message = "Nhà cung cấp không được để trống";
-//                    response.Data = null;
-//                    return Ok(response);
-//                }
-
-
+                
 //                // get data from formdata
 //                AddressCreateViewModel addressCreateViewModel = new AddressCreateViewModel
 //                {

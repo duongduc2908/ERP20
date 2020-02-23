@@ -14,5 +14,6 @@ namespace ERP.Service.Services.IServices
     {
         PagedResults<customerorderviewmodel> CreatePagedResults(int pageNumber, int pageSize);
         PagedResults<customer_order> GetAllOrderById(int id);
+        PagedResults<customerorderviewmodel> GetAllSearch(int pageNumber, int pageSize, int? payment_type_id, string name);
     }
 }

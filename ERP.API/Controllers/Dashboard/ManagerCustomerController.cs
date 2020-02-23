@@ -24,7 +24,7 @@ namespace ERP.API.Controllers.Dashboard
 {
     [EnableCors("*", "*", "*")]
     [Authorize]
-    public class ManagerCustomerController : ApiController
+    public class ManagerCustomerController : BaseController
     {
         private readonly ICustomerService _customerservice;
 
@@ -338,6 +338,9 @@ namespace ERP.API.Controllers.Dashboard
                 {
                     customerCreateViewModel.cu_status = Convert.ToByte(streamProvider.FormData["cu_status"]);
                 }
+                new BaseController();
+                var current_id = BaseController.current_id;
+                customerCreateViewModel.staff_id = Convert.ToInt32(current_id);
                 customerCreateViewModel.cu_create_date = DateTime.Now;
                 var cu = _customerservice.GetLast();
                 customerCreateViewModel.cu_code = Utilis.CreateCode("CU", cu.cu_id, 7);
