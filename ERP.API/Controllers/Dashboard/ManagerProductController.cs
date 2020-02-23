@@ -13,6 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Cors;
@@ -21,7 +22,7 @@ namespace ERP.API.Controllers.Dashboard
 {
     [EnableCors("*", "*", "*")]
     [Authorize]
-    public class ManagerProductController : ApiController
+    public class ManagerProductController : BaseController
     {
         private readonly IProductService _productservice;
 
@@ -39,6 +40,9 @@ namespace ERP.API.Controllers.Dashboard
         [Route("api/products/all")]
         public IHttpActionResult Getproducts()
         {
+
+            new BaseController();
+            var current_id = BaseController.current_id;
             ResponseDataDTO<IEnumerable<product>> response = new ResponseDataDTO<IEnumerable<product>>();
             try
             {
