@@ -63,6 +63,8 @@ namespace ERP.API.Controllers.Dashboard
 
             return Ok(response);
         }
+        #endregion
+        #region [Get All Page]
         [HttpGet]
         [Route("api/customers/page")]
         public IHttpActionResult GetcustomersPaging(int pageSize, int pageNumber)
@@ -85,6 +87,32 @@ namespace ERP.API.Controllers.Dashboard
 
             return Ok(response);
         }
+        #endregion
+        #region [Get Infor by Id]
+        [HttpGet]
+        [Route("api/customers/infor")]
+        public IHttpActionResult GetIforId(int cu_id)
+        {
+            ResponseDataDTO<PagedResults<customerviewmodel>> response = new ResponseDataDTO<PagedResults<customerviewmodel>>();
+            try
+            {
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = _customerservice.GetInfor(cu_id);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+
+                Console.WriteLine(ex.ToString());
+            }
+
+            return Ok(response);
+        }
+        #endregion
+        #region [Search Name]
         [HttpGet]
         [Route("api/customers/search")]
         public IHttpActionResult GetInforByName(string search_name)
@@ -107,6 +135,8 @@ namespace ERP.API.Controllers.Dashboard
 
             return Ok(response);
         }
+        #endregion
+        #region [Search source, type, group, name Page]
         [HttpGet]
         [Route("api/customers/search")]
         public IHttpActionResult GetInforByName(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, string name)
@@ -129,6 +159,8 @@ namespace ERP.API.Controllers.Dashboard
 
             return Ok(response);
         }
+        #endregion
+        #region [Get Type]
         [HttpGet]
         [Route("api/customers/type")]
         public IHttpActionResult GetAllType()
@@ -152,12 +184,10 @@ namespace ERP.API.Controllers.Dashboard
 
             return Ok(response);
         }
-
-
-
+        #endregion
+        #region[Create Customer]
         [HttpPost]
         [Route("api/customers/create")]
-
         public async Task<IHttpActionResult> Createcustomer()
         {
             ResponseDataDTO<customer> response = new ResponseDataDTO<customer>();
@@ -179,8 +209,6 @@ namespace ERP.API.Controllers.Dashboard
                 {
                     fileName = (FileExtension.SaveFileOnDisk(fileData));
                 }
-
-
                 //Cach truong bat buoc 
                 if (streamProvider.FormData["cu_fullname"] == null)
                 {
@@ -227,32 +255,33 @@ namespace ERP.API.Controllers.Dashboard
                 // get data from formdata
                 CustomerCreateViewModel customerCreateViewModel = new CustomerCreateViewModel
                 {
-                    cu_code = Convert.ToString(streamProvider.FormData["cu_code"]),
                     cu_mobile = Convert.ToString(streamProvider.FormData["cu_mobile"]),
                     cu_email = Convert.ToString(streamProvider.FormData["cu_email"]),
                     cu_fullname = Convert.ToString(streamProvider.FormData["cu_fullname"]),
-                    cu_address = Convert.ToString(streamProvider.FormData["cu_address"]),
-                    cu_note = Convert.ToString(streamProvider.FormData["cu_note"]),
-
-
-                    cu_geocoding = Convert.ToString(streamProvider.FormData["cu_geocoding"]),
+                    
                     customer_group_id = Convert.ToInt32(streamProvider.FormData["customer_group_id"]),
                     source_id = Convert.ToInt32(streamProvider.FormData["source_id"]),
-                    staff_id = Convert.ToInt32(streamProvider.FormData["staff_id"]),
                     
-                    cu_curator_id = Convert.ToInt32(streamProvider.FormData["cu_curator_id"]),
-                    cu_birthday = Convert.ToDateTime(streamProvider.FormData["cu_birthday"]),
-                    
-                    
-
                     cu_type = Convert.ToByte(streamProvider.FormData["cu_type"]),
-                    cu_status = Convert.ToByte(streamProvider.FormData["cu_status"]),
-
-
-
+                    
                 };
-                customerCreateViewModel.cu_create_date = DateTime.Now;
-                //md5
+                //Bat cac dieu kien rang buoc
+                if (CheckEmail.IsValidEmail(customerCreateViewModel.cu_email) == false && customerCreateViewModel.cu_email == "")
+                {
+                    response.Message = "Định dạng email không hợp lệ !";
+                    response.Data = null;
+                    return Ok(response);
+                }
+               
+                if (CheckNumber.IsPhoneNumber(customerCreateViewModel.cu_mobile) == false && customerCreateViewModel.cu_mobile == "")
+                {
+                    response.Message = "Số điện thoại không hợp lệ";
+                    response.Data = null;
+                    return Ok(response);
+                }
+                
+
+                //bat cac truog con lai 
                 if (streamProvider.FormData["cu_birthday"] == null)
                 {
                     customerCreateViewModel.cu_birthday = null;
@@ -261,21 +290,57 @@ namespace ERP.API.Controllers.Dashboard
                 {
                     customerCreateViewModel.cu_birthday = Convert.ToDateTime(streamProvider.FormData["cu_birthday"]);
                 }
-                if (CheckEmail.IsValidEmail(customerCreateViewModel.cu_email) == false && customerCreateViewModel.cu_email == "")
+                if (streamProvider.FormData["cu_address"] == null)
                 {
-                    response.Message = "Định dạng email không hợp lệ !";
-                    response.Data = null;
-                    return Ok(response);
+                    customerCreateViewModel.cu_address = null;
                 }
-                //check_phone_number
-                if (CheckNumber.IsPhoneNumber(customerCreateViewModel.cu_mobile) == false && customerCreateViewModel.cu_mobile == "")
+                else
                 {
-                    response.Message = "Số điện thoại không hợp lệ";
-                    response.Data = null;
-                    return Ok(response);
+                    customerCreateViewModel.cu_address = Convert.ToString(streamProvider.FormData["cu_address"]);
                 }
-                int count = _customerservice.Count();
-                customerCreateViewModel.cu_code = Utilis.CreateCode("CU", count, 7);
+                if (streamProvider.FormData["cu_note"] == null)
+                {
+                    customerCreateViewModel.cu_note = null;
+                }
+                else
+                {
+                    customerCreateViewModel.cu_note = Convert.ToString(streamProvider.FormData["cu_note"]);
+                }
+                if (streamProvider.FormData["cu_geocoding"] == null)
+                {
+                    customerCreateViewModel.cu_geocoding = null;
+                }
+                else
+                {
+                    customerCreateViewModel.cu_geocoding = Convert.ToString(streamProvider.FormData["cu_geocoding"]);
+                }
+                if (streamProvider.FormData["cu_curator_id"] == null)
+                {
+                    customerCreateViewModel.cu_curator_id = null;
+                }
+                else
+                {
+                    customerCreateViewModel.cu_curator_id = Convert.ToInt32(streamProvider.FormData["cu_curator_id"]);
+                }
+                if (streamProvider.FormData["cu_age"] == null)
+                {
+                    customerCreateViewModel.cu_age = null;
+                }
+                else
+                {
+                    customerCreateViewModel.cu_age = Convert.ToInt32(streamProvider.FormData["cu_age"]);
+                }
+                if (streamProvider.FormData["cu_status"] == null)
+                {
+                    customerCreateViewModel.cu_status = null;
+                }
+                else
+                {
+                    customerCreateViewModel.cu_status = Convert.ToByte(streamProvider.FormData["cu_status"]);
+                }
+                customerCreateViewModel.cu_create_date = DateTime.Now;
+                var cu = _customerservice.GetLast();
+                customerCreateViewModel.cu_code = Utilis.CreateCode("CU", cu.cu_id, 7);
                 // mapping view model to entity
                 var createdcustomer = _mapper.Map<customer>(customerCreateViewModel);
                 createdcustomer.cu_thumbnail = fileName;
@@ -299,9 +364,8 @@ namespace ERP.API.Controllers.Dashboard
             }
 
         }
-
-
-
+        #endregion
+        #region[Update]
 
         [HttpPut]
         [Route("api/customers/update/")]
@@ -377,33 +441,19 @@ namespace ERP.API.Controllers.Dashboard
                 CustomerUpdateViewModel customerUpdateViewModel = new CustomerUpdateViewModel
                 {
                     cu_id = Convert.ToInt32(streamProvider.FormData["cu_id"]),
-                    cu_code = Convert.ToString(streamProvider.FormData["cu_code"]),
                     cu_mobile = Convert.ToString(streamProvider.FormData["cu_mobile"]),
                     cu_email = Convert.ToString(streamProvider.FormData["cu_email"]),
                     cu_fullname = Convert.ToString(streamProvider.FormData["cu_fullname"]),
-                    cu_address = Convert.ToString(streamProvider.FormData["cu_address"]),
-                    cu_note = Convert.ToString(streamProvider.FormData["cu_note"]),
-                    cu_geocoding = Convert.ToString(streamProvider.FormData["cu_geocoding"]),
-                    
+
                     customer_group_id = Convert.ToInt32(streamProvider.FormData["customer_group_id"]),
                     source_id = Convert.ToInt32(streamProvider.FormData["source_id"]),
-                    staff_id = Convert.ToInt32(streamProvider.FormData["staff_id"]),
-
-                    cu_curator_id = Convert.ToInt32(streamProvider.FormData["cu_curator_id"]),
-                    //cu_birthday = Convert.ToDateTime(streamProvider.FormData["cu_birthday"]),
-
-
 
                     cu_type = Convert.ToByte(streamProvider.FormData["cu_type"]),
-                    cu_status = Convert.ToByte(streamProvider.FormData["cu_status"]),
-
                 };
 
 
                 var existcustomer = _customerservice.Find(customerUpdateViewModel.cu_id);
-                customerUpdateViewModel.cu_code = existcustomer.cu_code;
-                customerUpdateViewModel.cu_create_date = existcustomer.cu_create_date;
-
+                
                 if(streamProvider.FormData["cu_thumbnail"] != null)
                 {
                     if (fileName != "")
@@ -432,10 +482,18 @@ namespace ERP.API.Controllers.Dashboard
                     response.Data = null;
                     return Ok(response);
                 }
-
+                //bat cac truog con lai 
                 if (streamProvider.FormData["cu_birthday"] == null)
                 {
-                    customerUpdateViewModel.cu_birthday = null;
+                    if(existcustomer.cu_birthday != null)
+                    {
+                        customerUpdateViewModel.cu_birthday = existcustomer.cu_birthday;
+                    }
+                    else
+                    {
+                        customerUpdateViewModel.cu_birthday = null;
+                    }
+                    
                 }
                 else
                 {
@@ -444,13 +502,54 @@ namespace ERP.API.Controllers.Dashboard
                 if (streamProvider.FormData["cu_address"] == null)
                 {
                     customerUpdateViewModel.cu_address = null;
-
+                }
+                else
+                {
+                    customerUpdateViewModel.cu_address = Convert.ToString(streamProvider.FormData["cu_address"]);
+                }
+                if (streamProvider.FormData["cu_note"] == null)
+                {
+                    customerUpdateViewModel.cu_note = null;
+                }
+                else
+                {
+                    customerUpdateViewModel.cu_note = Convert.ToString(streamProvider.FormData["cu_note"]);
                 }
                 if (streamProvider.FormData["cu_geocoding"] == null)
                 {
                     customerUpdateViewModel.cu_geocoding = null;
-
                 }
+                else
+                {
+                    customerUpdateViewModel.cu_geocoding = Convert.ToString(streamProvider.FormData["cu_geocoding"]);
+                }
+                if (streamProvider.FormData["cu_curator_id"] == null)
+                {
+                    customerUpdateViewModel.cu_curator_id = null;
+                }
+                else
+                {
+                    customerUpdateViewModel.cu_curator_id = Convert.ToInt32(streamProvider.FormData["cu_curator_id"]);
+                }
+                if (streamProvider.FormData["cu_age"] == null)
+                {
+                    customerUpdateViewModel.cu_age = null;
+                }
+                else
+                {
+                    customerUpdateViewModel.cu_age = Convert.ToInt32(streamProvider.FormData["cu_age"]);
+                }
+
+
+                if (streamProvider.FormData["cu_status"] == null)
+                {
+                    customerUpdateViewModel.cu_status = null;
+                }
+                else
+                {
+                    customerUpdateViewModel.cu_status = Convert.ToByte(streamProvider.FormData["cu_status"]);
+                }
+
                 // mapping view model to entity
                 var updatedcustomer = _mapper.Map<customer>(customerUpdateViewModel);
 
@@ -475,7 +574,8 @@ namespace ERP.API.Controllers.Dashboard
                 return Ok(response);
             }
         }
-
+        #endregion
+        #region[Delete]
         [HttpDelete]
         [Route("api/customers/delete")]
         public IHttpActionResult Deletecustomer(int customerId)

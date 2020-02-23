@@ -275,6 +275,45 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = totalNumberOfRecords
             };
         }
+        public PagedResults<customerviewmodel> GetInfor(int cu_id)
+        {
+
+            List<customerviewmodel> res = new List<customerviewmodel>();
+            
+
+            var list = _dbContext.customers.Where(i => i.cu_id == cu_id).ToList();
+
+            var totalNumberOfRecords = list.Count();
+            var total = _dbContext.customers.Count();
+            var results = list.ToList();
+            foreach (customer i in results)
+            {
+                var customerview = _mapper.Map<customerviewmodel>(i);
+                var sources = _dbContext.sources.FirstOrDefault(x => x.src_id == i.source_id);
+                var customergroup = _dbContext.customer_group.FirstOrDefault(x => x.cg_id == i.customer_group_id);
+                customerview.source_name = sources.src_name;
+                customerview.customer_group_name = customergroup.cg_name;
+                for (int j = 0; j < 2; j++)
+                {
+                    if (j == i.cu_type)
+                    {
+                        customerview.cu_type_name = EnumCustomer.cu_type[j];
+                    }
+                }
+
+
+                res.Add(customerview);
+            }
+
+            return new PagedResults<customerviewmodel>
+            {
+                Results = res,
+                PageNumber = 0,
+                PageSize = 0,
+                TotalNumberOfPages = 0,
+                TotalNumberOfRecords = totalNumberOfRecords
+            };
+        }
         public PagedResults<dropdown> GetAllType()
         {
 

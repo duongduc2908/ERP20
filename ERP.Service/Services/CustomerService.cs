@@ -45,6 +45,10 @@ namespace ERP.Service.Services
         {
             return this._repository.GetInfor(search_name);
         }
+        public PagedResults<customerviewmodel> GetInfor(int cu_id)
+        {
+            return this._repository.GetInfor(cu_id);
+        }
         public PagedResults<dropdown> GetAllType()
         {
             return this._repository.GetAllType();

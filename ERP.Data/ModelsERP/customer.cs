@@ -50,5 +50,6 @@ namespace ERP.Data.ModelsERP
 
         public int? staff_id { get; set; }
         public int? cu_curator_id { get; set; }
+        public int? cu_age { get; set; }
     }
 }

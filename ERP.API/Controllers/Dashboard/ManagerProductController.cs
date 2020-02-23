@@ -289,7 +289,7 @@ namespace ERP.API.Controllers.Dashboard
                 }
                 //Tạo mã 
                 var x = _productservice.GetLast();
-                productCreateViewModel.pu_code = Utilis.CreateCode("CH", x.pu_id, 7);
+                productCreateViewModel.pu_code = Utilis.CreateCode("PR", x.pu_id, 7);
                 //Create date
                 productCreateViewModel.pu_create_date = DateTime.Now;
 
@@ -418,7 +418,7 @@ namespace ERP.API.Controllers.Dashboard
                 var existproduct = _productservice.Find(productUpdateViewModel.pu_id);
                 //Kiem tra cac truong con lại 
                 //Nếu là datetime, option  mà null thì cập nhập lại cái cũ 
-                //Các trường khác datetime thì trả về null 
+                //Các trường khác thì trả về null 
                 if (streamProvider.FormData["pu_update_date"] == null)
                 {
                     if (existproduct.pu_update_date != null)

@@ -53,5 +53,6 @@ namespace ERP.API.Models
 
         public int? staff_id { get; set; }
         public int? cu_curator_id { get; set; }
+        public int? cu_age { get; set; }
     }
 }

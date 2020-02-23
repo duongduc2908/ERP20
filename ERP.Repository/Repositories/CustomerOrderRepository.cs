@@ -33,43 +33,28 @@ namespace ERP.Repository.Repositories
             foreach (customer_order i in results)
             {
                 var orderview = _mapper.Map<customerorderviewmodel>(i);
-                if(i.cuo_status == 0)
+                for (int j = 0; j < 3; j++)
                 {
-                    orderview.cuo_status = EnumCustomerOrder.status_0;
-                }
-                if (i.cuo_status == 1)
-                {
-                    orderview.cuo_status = EnumCustomerOrder.status_1;
-                }
-                if (i.cuo_status == 2)
-                {
-                    orderview.cuo_status = EnumCustomerOrder.status_2;
-                }
-
-                
-                if (i.cuo_payment_type == 1)
-                {
-                    orderview.cuo_payment_type = EnumCustomerOrder.cuo_payment_type_1;
-                }
-                if (i.cuo_payment_type == 2)
-                {
-                    orderview.cuo_payment_type = EnumCustomerOrder.cuo_payment_type_2;
-                }
-                if (i.cuo_payment_type == 3)
-                {
-                    orderview.cuo_payment_type = EnumCustomerOrder.cuo_payment_type_3;
-                }
-
-                if (i.cuo_payment_status == 1)
-                {
-                    orderview.cuo_payment_status = EnumCustomerOrder.cuo_payment_status_1;
-                }
-                if (i.cuo_payment_status == 2)
-                {
-                    orderview.cuo_payment_status = EnumCustomerOrder.cuo_payment_status_2;
+                    if (j == i.cuo_status)
+                    {
+                        orderview.cuo_status = EnumCustomerOrder.status[j];
+                    }
                 }
                 
-
+                for (int j = 0; j < 3; j++)
+                {
+                    if (j == i.cuo_payment_type)
+                    {
+                        orderview.cuo_payment_type = EnumCustomerOrder.cuo_payment_type[j];
+                    }
+                }
+                for (int j = 0; j < 2; j++)
+                {
+                    if (j == i.cuo_payment_status)
+                    {
+                        orderview.cuo_payment_status = EnumCustomerOrder.cuo_payment_status[j];
+                    }
+                }
                 res.Add(orderview);
             }
 

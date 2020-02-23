@@ -30,5 +30,8 @@ namespace ERP.Data.ModelsERP
 
         public int? cuo_ship_tax { get; set; }
         public int? staff_id { get; set; }
+        public string cuo_note { get; set; }
+        public string cuo_who_support { get; set; }
+        
     }
 }
