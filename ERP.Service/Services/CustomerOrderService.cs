@@ -23,5 +23,9 @@ namespace ERP.Service.Services
         {
             return this._repository.GetAllOrderById(id);
         }
+        public PagedResults<customerorderviewmodel> GetAllSearch(int pageNumber, int pageSize, int? payment_type_id, string name)
+        {
+            return this._repository.GetAllSearch(pageNumber, pageSize,  payment_type_id, name);
+        }
     }
 }

@@ -19,9 +19,9 @@ namespace ERP.Repository.Repositories
         public List<dropdown> GetAllName()
         {
             List<dropdown> lst_res = new List<dropdown>();
-            dropdown dr = new dropdown();
             var list = _dbContext.product_category.ToList();
-            foreach (product_category p in _dbContext.product_category) {
+            foreach (product_category p in list) {
+                dropdown dr = new dropdown();
                 dr.id = p.pc_id;
                 dr.name = p.pc_name;
                 lst_res.Add(dr);

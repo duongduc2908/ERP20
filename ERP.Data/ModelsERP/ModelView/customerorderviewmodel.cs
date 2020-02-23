@@ -9,7 +9,7 @@ namespace ERP.Data.ModelsERP.ModelView
     public class customerorderviewmodel
     {
        
-
+        public int cuo_id { get; set; }
         public DateTime? cuo_date { get; set; }
 
         [StringLength(50)]
