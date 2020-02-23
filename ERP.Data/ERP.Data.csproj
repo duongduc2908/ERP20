@@ -123,6 +123,7 @@
     <Compile Include="Identity\AppIdentityClaims.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="DbContext\ERPDbContext.cs" />
+    <Compile Include="ModelsERP\address.cs" />
     <Compile Include="ModelsERP\ChangePasswordBindingModel.cs" />
     <Compile Include="ModelsERP\ClientMaster.cs" />
     <Compile Include="ModelsERP\company.cs" />
