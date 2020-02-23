@@ -19,7 +19,6 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.Security;
-using ERP.Common.Constants;
 
 namespace ERP.API.Controllers.Dashboard
 {
@@ -28,14 +27,19 @@ namespace ERP.API.Controllers.Dashboard
     public class ManagerstaffsController : BaseController
     {
         private readonly IStaffService _staffservice;
-
+        private readonly IDepartmentService _departmentservice;
+        private readonly IGroupRoleService _groupRoleservice;
+        private readonly IPositionService _positionService;
         private readonly IMapper _mapper;
 
         public ManagerstaffsController() { }
-        public ManagerstaffsController(IStaffService staffservice, IMapper mapper)
+        public ManagerstaffsController(IStaffService staffservice, IMapper mapper, IDepartmentService departmentService, IGroupRoleService groupRoleService, IPositionService positionService)
         {
             this._staffservice = staffservice;
             this._mapper = mapper;
+            this._departmentservice = departmentService;
+            this._groupRoleservice = groupRoleService;
+            this._positionService = positionService;
         }
 
         #region methods
@@ -195,6 +199,8 @@ namespace ERP.API.Controllers.Dashboard
                 {
                     fileName = (FileExtension.SaveFileOnDisk(fileData));
                 }
+                #region["Check null"]
+
                 if (streamProvider.FormData["sta_fullname"] == null)
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
@@ -249,6 +255,32 @@ namespace ERP.API.Controllers.Dashboard
                     response.Data = null;
                     return Ok(response);
                 }
+                #endregion
+
+                #region["Check exits"]
+                if (!check_department(Convert.ToInt32(streamProvider.FormData["department_id"])))
+                {
+                    response.Code = HttpCode.NOT_FOUND;
+                    response.Message = "Khong co ma phong ban trong csdl!";
+                    response.Data = null;
+                    return Ok(response);
+                }
+                if (!check_position(Convert.ToInt32(Convert.ToInt32(streamProvider.FormData["position_id"]))))
+                {
+                    response.Code = HttpCode.NOT_FOUND;
+                    response.Message = "Khong co ma bo phan trong csdl!";
+                    response.Data = null;
+                    return Ok(response);
+                }
+                if (!check_grouprole(Convert.ToInt32(streamProvider.FormData["group_role_id"])))
+                {
+                    response.Code = HttpCode.NOT_FOUND;
+                    response.Message = "Khong co ma nhom quyen trong csdl!";
+                    response.Data = null;
+                    return Ok(response);
+                }
+                
+                #endregion
                 // get data from formdata những trường bắt buộc
                 StaffCreateViewModel StaffCreateViewModel = new StaffCreateViewModel
                 {
@@ -279,7 +311,13 @@ namespace ERP.API.Controllers.Dashboard
                     sta_sex = Convert.ToByte(streamProvider.FormData["sta_sex"]),
                 };
                 //Kiểm tra các trường rằng buộc
-
+                if (check_username_email(StaffCreateViewModel.sta_username, StaffCreateViewModel.sta_email))
+                {
+                    response.Code = HttpCode.NOT_FOUND;
+                    response.Message = "Da co username '" + StaffCreateViewModel.sta_username+"' hoac email '"+ StaffCreateViewModel.sta_email+"' trong csdl";
+                    response.Data = null;
+                    return Ok(response);
+                }
                 //md5
                 if (StaffCreateViewModel.sta_email != null)
                 {
@@ -369,7 +407,6 @@ namespace ERP.API.Controllers.Dashboard
             }
 
         }
-
 
         [HttpPut]
         [Route("api/staffs/update")]
@@ -646,7 +683,6 @@ namespace ERP.API.Controllers.Dashboard
             }
         }
 
-
         [HttpDelete]
         [Route("api/staffs/delete")]
         public IHttpActionResult Deletestaff(int staffId)
@@ -687,7 +723,6 @@ namespace ERP.API.Controllers.Dashboard
                 return Ok(response);
             }
         }
-
 
         [HttpPut]
         [Route("api/staffs/ChangePassword")]
@@ -787,7 +822,7 @@ namespace ERP.API.Controllers.Dashboard
                     }
                 }
                 var list = new List<staff>();
-                fileName = @"D:\BootAi\ERP20\ERP.API\TempFiles\2020-02-19\department_200219165142.xlsx";
+                fileName = @"D:\ERP20\ERP.API\" + fileName;
                 var dataset = ExcelImport.ImportExcelXLS(fileName, true);
                 DataTable table = (DataTable)dataset.Tables[0];
                 if (table != null && table.Rows.Count > 0)
@@ -863,33 +898,72 @@ namespace ERP.API.Controllers.Dashboard
                         #endregion
 
                         #region["Check duplicate"]
-                        //for (var i = 0; i < table.Rows.Count; i++)
-                        //{
-                        //    var DepartmentCodeCur = table.Rows[i]["id"].ToString().Trim();
-                        //    for (var j = 0; j < table.Rows.Count; j++)
-                        //    {
-                        //        if (i != j)
-                        //        {
-                        //            var _idDepartmentCur = table.Rows[j]["id"].ToString().Trim();
-                        //            if (DepartmentCodeCur.Equals(_idDepartmentCur))
-                        //            {
-                        //                exitsData = "Mã bộ phận phòng ban'" + DepartmentCodeCur + "' bị lặp trong file excel!";
-                        //                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                        //                response.Message = exitsData;
-                        //                response.Data = null;
-                        //                return Ok(response);
-                        //            }
-                        //        }
-                        //    }
-                        //}
+                        for (var i = 0; i < table.Rows.Count; i++)
+                        {
+                            var usernameCur = table.Rows[i]["sta_username"].ToString().Trim();
+                            var emailCur = table.Rows[i]["sta_email"].ToString().Trim();
+                            for (var j = 0; j < table.Rows.Count; j++)
+                            {
+                                if (i != j)
+                                {
+                                    var _usernameCur = table.Rows[j]["sta_username"].ToString().Trim();
+                                    var _emailCur = table.Rows[j]["sta_email"].ToString().Trim();
+                                    if (usernameCur.Equals(_usernameCur))
+                                    {
+                                        exitsData = "Username '" + usernameCur + "' bị lặp trong file excel!";
+                                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                                        response.Message = exitsData;
+                                        response.Data = null;
+                                        return Ok(response);
+                                    }
+                                    if (emailCur.Equals(_emailCur))
+                                    {
+                                        exitsData = "Email '" + emailCur + "' bị lặp trong file excel!";
+                                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                                        response.Message = exitsData;
+                                        response.Data = null;
+                                        return Ok(response);
+                                    }
+                                }
+                            }
+                        }
+                        #endregion
+
+                        #region["Check logic"]
+                        foreach (DataRow dr in table.Rows)
+                        {
+                            if (!check_department(Convert.ToInt32(dr["department_id"])))
+                            {
+                                exitsData = "Khong co ma phong ban trong csdl!";
+                                response.Code = HttpCode.NOT_FOUND;
+                                response.Message = exitsData;
+                                response.Data = null;
+                                return Ok(response);
+                            }
+                            if(!check_position(Convert.ToInt32(dr["position_id"])))
+                            {
+                                exitsData = "Khong co ma bo phan trong csdl!";
+                                response.Code = HttpCode.NOT_FOUND;
+                                response.Message = exitsData;
+                                response.Data = null;
+                                return Ok(response);
+                            }
+                            if (!check_grouprole(Convert.ToInt32(dr["group_role_id"])))
+                            {
+                                exitsData = "Khong co ma nhom quyen trong csdl!";
+                                response.Code = HttpCode.NOT_FOUND;
+                                response.Message = exitsData;
+                                response.Data = null;
+                                return Ok(response);
+                            }
+                        }
                         #endregion
                     }
-                    list = DataTableCmUtils.ToListof<staff>(table); ;
+                    list = DataTableCmUtils.ToListof<staff>(table);
                     // Gọi hàm save data
-                    if (list != null && list.Count > 0)
+                    foreach(staff i in list)
                     {
-                        StaffCreateViewModel StaffCreateViewModel = new StaffCreateViewModel();
-
+                        _staffservice.Create(i);
                     }
                     exitsData = "Đã nhập dữ liệu excel thành công!";
                     response.Code = HttpCode.OK;
@@ -915,7 +989,6 @@ namespace ERP.API.Controllers.Dashboard
 
                 return Ok(response);
             }
-            return Ok(response);
         }
         #endregion
 
@@ -986,6 +1059,32 @@ namespace ERP.API.Controllers.Dashboard
                   {"email","Email phong ban"},
                  {"id","Ma bộ phận phòng ban"}
             };
+        }
+        #endregion
+
+        #region["Common funtion"]
+        private bool check_department(int _id)
+        {
+            bool res = _departmentservice.Exist(x => x.de_id == _id);
+            return res;
+        }
+
+        private bool check_grouprole(int _id)
+        {
+            bool res = _groupRoleservice.Exist(x => x.gr_id == _id);
+            return res;
+        }
+
+        private bool check_position(int _id)
+        {
+            bool res = _positionService.Exist(x => x.pos_id == _id);
+            return res;
+        }
+
+        private bool check_username_email(string _username, string _email)
+        {
+            bool res = _staffservice.Exist(x => x.sta_username == _username || x.sta_email == _email);
+            return res;
         }
         #endregion
 
