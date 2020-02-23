@@ -52,6 +52,7 @@ namespace ERP.API.Providers
             identity.AddClaim(new Claim(ClaimTypes.Role, role));
             identity.AddClaim(new Claim(ClaimTypes.Name, user.sta_fullname));
             identity.AddClaim(new Claim(ClaimTypes.Email, user.sta_email));
+            identity.AddClaim(new Claim("Id", user.sta_id.ToString()));
             var props = new AuthenticationProperties(new Dictionary<string, string>
                 {
                     {

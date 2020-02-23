@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
@@ -17,7 +18,7 @@ namespace ERP.API.Controllers.Dashboard
         public string Ft_RecordStartExportExcel = "0";
         public string Ft_RecordCount = "123456000";
         public string Ft_WhereClause = "";
-
+        public static string current_id ;
         public string Hethong = "";
         public string FolderUploadTest = "";
         public static string SubPath = "";
@@ -33,6 +34,13 @@ namespace ERP.API.Controllers.Dashboard
         public string FlagActive = "1";
         public string FlagInActive = "0";
         private int inext = 0;
+        public BaseController() {
+            var lst_claims = ClaimsPrincipal.Current.Identities.First().Claims.ToList();
+            if(lst_claims.Count() == 4)
+            {
+                current_id = lst_claims[3].Value;
+            }
+        }
         public string GetNextTId()
         {
             //string fileId = Guid.NewGuid().ToString("D");
