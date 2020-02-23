@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 
 namespace ERP.Repository.Repositories.IRepositories
 {
-    public interface IProductCategoryRepository : IGenericRepository<product_category>
+    public interface IAddressRepository : IGenericRepository<address>
     {
-        PagedResults<product_category> CreatePagedResults(int pageNumber, int pageSize);
+        PagedResults<address> CreatePagedResults(int pageNumber, int pageSize);
     }
 }

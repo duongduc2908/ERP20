@@ -10,15 +10,15 @@ using System.Web;
 
 namespace ERP.Service.Services
 {
-    public class ProductCategoryService : GenericService<product_category>, IProductCategoryService
+    public class AddressService : GenericService<address>, IAddressService
     {
-        private readonly IProductCategoryRepository _repository;
-        public ProductCategoryService(IProductCategoryRepository repository) : base(repository)
+        private readonly IAddressRepository _repository;
+        public AddressService(IAddressRepository repository) : base(repository)
         {
             this._repository = repository;
         }
 
-        public PagedResults<product_category> CreatePagedResults(int pageNumber, int pageSize)
+        public PagedResults<address> CreatePagedResults(int pageNumber, int pageSize)
         {
             return this._repository.CreatePagedResults(pageNumber, pageSize);
         }

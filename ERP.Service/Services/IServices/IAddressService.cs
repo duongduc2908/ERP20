@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 
 namespace ERP.Service.Services.IServices
 {
-    public interface IProductCategoryService : IGenericService<product_category>
+    public interface IAddressService : IGenericService<address>
     {
-        PagedResults<product_category> CreatePagedResults(int pageNumber, int pageSize);
+        PagedResults<address> CreatePagedResults(int pageNumber, int pageSize);
     }
 }
