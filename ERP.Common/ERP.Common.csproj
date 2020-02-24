@@ -90,6 +90,7 @@
   <ItemGroup>
     <Compile Include="Constants\CheckEmail.cs" />
     <Compile Include="Constants\Default.cs" />
+    <Compile Include="Constants\Enums\EnumAddress.cs" />
     <Compile Include="Constants\Enums\EnumCustomer.cs" />
     <Compile Include="Constants\Enums\EnumCustomerOrder.cs" />
     <Compile Include="Constants\Enums\EnumProduct.cs" />

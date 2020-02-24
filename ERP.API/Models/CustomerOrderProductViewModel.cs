@@ -8,7 +8,19 @@ namespace ERP.API.Models
 {
     public class CustomerOrderProductViewModel
     {
-        public List<product> list { get; set; }
-        public department depart_ment{get;set ;}
+        public List<product> list_product { get; set; }
+        public customer customer{get;set ;}
+        public int? cuo_total_price { get; set; }
+
+        public byte? cuo_status { get; set; }
+
+        public int? cuo_discount { get; set; }
+
+        public byte? cuo_payment_type { get; set; }
+
+        public byte? cuo_payment_status { get; set; }
+
+        public int? cuo_ship_tax { get; set; }
+        
     }
 }
