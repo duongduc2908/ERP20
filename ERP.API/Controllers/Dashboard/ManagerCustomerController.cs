@@ -25,6 +25,7 @@ namespace ERP.API.Controllers.Dashboard
     public class ManagerCustomerController : BaseController
     {
         private readonly ICustomerService _customerservice;
+        private readonly IAddressService _addressservice;
 
         private readonly IMapper _mapper;
 
@@ -32,9 +33,10 @@ namespace ERP.API.Controllers.Dashboard
         {
 
         }
-        public ManagerCustomerController(ICustomerService customerservice, IMapper mapper)
+        public ManagerCustomerController(ICustomerService customerservice, IAddressService addressservice, IMapper mapper)
         {
             this._customerservice = customerservice;
+            this._addressservice = addressservice;
             this._mapper = mapper;
         }
 
@@ -91,7 +93,7 @@ namespace ERP.API.Controllers.Dashboard
         [Route("api/customers/infor")]
         public IHttpActionResult GetIforId(int cu_id)
         {
-            ResponseDataDTO<PagedResults<customerviewmodel>> response = new ResponseDataDTO<PagedResults<customerviewmodel>>();
+            ResponseDataDTO<customerviewmodel> response = new ResponseDataDTO<customerviewmodel>();
             try
             {
                 response.Code = HttpCode.OK;
@@ -110,30 +112,7 @@ namespace ERP.API.Controllers.Dashboard
             return Ok(response);
         }
         #endregion
-        #region [Search Name]
-        [HttpGet]
-        [Route("api/customers/search")]
-        public IHttpActionResult GetInforByName(string search_name)
-        {
-            ResponseDataDTO<PagedResults<customer>> response = new ResponseDataDTO<PagedResults<customer>>();
-            try
-            {
-                response.Code = HttpCode.OK;
-                response.Message = MessageResponse.SUCCESS;
-                response.Data = _customerservice.GetInfor(search_name);
-            }
-            catch (Exception ex)
-            {
-                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = ex.Message;
-                response.Data = null;
-
-                Console.WriteLine(ex.ToString());
-            }
-
-            return Ok(response);
-        }
-        #endregion
+        
         #region [Search source, type, group, name Page]
         [HttpGet]
         [Route("api/customers/search")]
@@ -347,6 +326,20 @@ namespace ERP.API.Controllers.Dashboard
                 createdcustomer.cu_thumbnail = fileName;
                 // save new customer
                 _customerservice.Create(createdcustomer);
+
+                var get_last_id = _customerservice.GetLast();
+                //Create address
+                AddressCreateViewModel addressCreateViewModel = new AddressCreateViewModel
+                {
+                    add_province = Convert.ToString(streamProvider.FormData["add_province"]),
+
+                    add_district = Convert.ToString(streamProvider.FormData["add_district"]),
+                    add_ward = Convert.ToString(streamProvider.FormData["add_ward"]),
+
+                };
+                addressCreateViewModel.customer_id = get_last_id.cu_id;
+                var createAddress = _mapper.Map<address>(addressCreateViewModel);
+                _addressservice.Create(createAddress);
 
                 // return response
                 response.Code = HttpCode.OK;

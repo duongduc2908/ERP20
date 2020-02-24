@@ -12,6 +12,8 @@ namespace ERP.API.Models
         {
 
         }
+        
+
         [StringLength(50)]
         public string add_ward { get; set; }
 
@@ -19,7 +21,7 @@ namespace ERP.API.Models
         public string add_district { get; set; }
 
         [StringLength(50)]
-        public string add_city { get; set; }
+        public string add_province { get; set; }
 
         [StringLength(50)]
         public string add_detail { get; set; }

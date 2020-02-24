@@ -8,7 +8,7 @@ namespace ERP.Data.ModelsERP.ModelView
 {
     public class customerviewmodel
     {
-        
+        public List<addressviewmodel> list_address { get; set; }
         public int cu_id { get; set; }
 
         [StringLength(45)]

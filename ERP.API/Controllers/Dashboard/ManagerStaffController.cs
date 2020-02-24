@@ -30,16 +30,18 @@ namespace ERP.API.Controllers.Dashboard
         private readonly IDepartmentService _departmentservice;
         private readonly IGroupRoleService _groupRoleservice;
         private readonly IPositionService _positionService;
+        private readonly IAddressService _addressService;
         private readonly IMapper _mapper;
 
         public ManagerstaffsController() { }
-        public ManagerstaffsController(IStaffService staffservice, IMapper mapper, IDepartmentService departmentService, IGroupRoleService groupRoleService, IPositionService positionService)
+        public ManagerstaffsController(IStaffService staffservice, IMapper mapper, IDepartmentService departmentService, IGroupRoleService groupRoleService, IPositionService positionService, IAddressService addressService)
         {
             this._staffservice = staffservice;
             this._mapper = mapper;
             this._departmentservice = departmentService;
             this._groupRoleservice = groupRoleService;
             this._positionService = positionService;
+            this._addressService = addressService;
         }
 
         #region methods
@@ -114,7 +116,7 @@ namespace ERP.API.Controllers.Dashboard
         [Route("api/staffs/infor")]
         public IHttpActionResult GetInforById(int id)
         {
-            ResponseDataDTO<PagedResults<staffviewmodel>> response = new ResponseDataDTO<PagedResults<staffviewmodel>>();
+            ResponseDataDTO<staffviewmodel> response = new ResponseDataDTO<staffviewmodel>();
             try
             {
                 response.Code = HttpCode.OK;
@@ -158,7 +160,7 @@ namespace ERP.API.Controllers.Dashboard
         [Route("api/staffs/manager")]
         public IHttpActionResult GetInforManager()
         {
-            ResponseDataDTO<PagedResults<string>> response = new ResponseDataDTO<PagedResults<string>>();
+            ResponseDataDTO<List<dropdown>> response = new ResponseDataDTO<List<dropdown>>();
             try
             {
                 response.Code = HttpCode.OK;
@@ -252,6 +254,27 @@ namespace ERP.API.Controllers.Dashboard
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
                     response.Message = "Chức vụ không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+                if (streamProvider.FormData["add_province"] == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Tinh/Thanh pho không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+                if (streamProvider.FormData["add_district"] == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Quan/Huyen không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+                if (streamProvider.FormData["add_ward"] == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Xa/Phuong không được để trống";
                     response.Data = null;
                     return Ok(response);
                 }
@@ -390,6 +413,19 @@ namespace ERP.API.Controllers.Dashboard
 
                 // save new staff
                 _staffservice.Create(createdstaff);
+                var get_last_id = _staffservice.GetLast();
+                //Create address
+                AddressCreateViewModel addressCreateViewModel = new AddressCreateViewModel 
+                {
+                    add_province = Convert.ToString(streamProvider.FormData["add_province"]),
+                    
+                    add_district = Convert.ToString(streamProvider.FormData["add_district"]),
+                    add_ward = Convert.ToString(streamProvider.FormData["add_ward"]),
+               
+                };
+                addressCreateViewModel.staff_id = get_last_id.sta_id;
+                var createAddress = _mapper.Map<address>(addressCreateViewModel);
+                _addressService.Create(createAddress);
 
                 // return response
                 response.Code = HttpCode.OK;
@@ -666,6 +702,7 @@ namespace ERP.API.Controllers.Dashboard
 
                 // update staff
                 _staffservice.Update(updatedstaff, staffUpdateViewModel.sta_id);
+                
                 // return response
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;

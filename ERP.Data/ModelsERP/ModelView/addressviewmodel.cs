@@ -1,25 +1,27 @@
-namespace ERP.Data.ModelsERP
-{
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Web;
 
-    [Table("address")]
-    public partial class address
+namespace ERP.Data.ModelsERP.ModelView
+{
+    public class addressviewmodel
     {
         [Key]
         public int add_id { get; set; }
 
         [StringLength(50)]
         public string add_ward { get; set; }
+        public int ward_id { get; set; }
 
         [StringLength(50)]
         public string add_district { get; set; }
+        public int district_id { get; set; }
 
         [StringLength(50)]
         public string add_province { get; set; }
+        public int province_id { get; set; }
 
         [StringLength(50)]
         public string add_detail { get; set; }

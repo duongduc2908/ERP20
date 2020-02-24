@@ -41,11 +41,8 @@ namespace ERP.Service.Services
         }
         
 
-        public PagedResults<customer> GetInfor(string search_name)
-        {
-            return this._repository.GetInfor(search_name);
-        }
-        public PagedResults<customerviewmodel> GetInfor(int cu_id)
+       
+        public customerviewmodel GetInfor(int cu_id)
         {
             return this._repository.GetInfor(cu_id);
         }

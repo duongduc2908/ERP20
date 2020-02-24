@@ -38,7 +38,7 @@ namespace ERP.Service.Services
         {
             return this._repository.GetAllPageSearch(pageNumber, pageSize, status, name);
         }
-        public PagedResults<staffviewmodel> GetInforById(int id)
+        public staffviewmodel GetInforById(int id)
         {
             return this._repository.GetInforById(id);
         }
@@ -46,19 +46,13 @@ namespace ERP.Service.Services
         {
             return this._repository.GetAllActive(status, pageNumber, pageSize);
         }
-        public void Export(int pageNumber, int pageSize)
-        {
-            this._repository.Export(pageSize,pageNumber);
-        }
+        
 
-        public PagedResults<string> GetInforManager()
+        public List<dropdown> GetInforManager()
         {
             return this._repository.GetInforManager();
         }
 
-        public PagedResults<staffviewmodel> Import(string Path, string sheetname)
-        {
-            return this._repository.Import(Path, sheetname);
-        }
+        
     }
 }

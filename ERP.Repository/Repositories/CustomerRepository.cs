@@ -275,44 +275,36 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = totalNumberOfRecords
             };
         }
-        public PagedResults<customerviewmodel> GetInfor(int cu_id)
+        public customerviewmodel GetInfor(int cu_id)
         {
 
-            List<customerviewmodel> res = new List<customerviewmodel>();
-            
-
-            var list = _dbContext.customers.Where(i => i.cu_id == cu_id).ToList();
-
-            var totalNumberOfRecords = list.Count();
-            var total = _dbContext.customers.Count();
-            var results = list.ToList();
-            foreach (customer i in results)
+            customerviewmodel res = new customerviewmodel();
+            var customer_cur = _dbContext.customers.Where(i => i.cu_id == cu_id).FirstOrDefault();
+            var customerview = _mapper.Map<customerviewmodel>(customer_cur);
+            res = customerview;
+            var sources = _dbContext.sources.FirstOrDefault(x => x.src_id == customer_cur.source_id);
+            var customergroup = _dbContext.customer_group.FirstOrDefault(x => x.cg_id == customer_cur.customer_group_id);
+            res.source_name = sources.src_name;
+            res.customer_group_name = customergroup.cg_name;
+            for (int j = 0; j < 2; j++)
             {
-                var customerview = _mapper.Map<customerviewmodel>(i);
-                var sources = _dbContext.sources.FirstOrDefault(x => x.src_id == i.source_id);
-                var customergroup = _dbContext.customer_group.FirstOrDefault(x => x.cg_id == i.customer_group_id);
-                customerview.source_name = sources.src_name;
-                customerview.customer_group_name = customergroup.cg_name;
-                for (int j = 0; j < 2; j++)
+                if (j == customer_cur.cu_type)
                 {
-                    if (j == i.cu_type)
-                    {
-                        customerview.cu_type_name = EnumCustomer.cu_type[j];
-                    }
+                    res.cu_type_name = EnumCustomer.cu_type[j];
                 }
-
-
-                res.Add(customerview);
             }
-
-            return new PagedResults<customerviewmodel>
+            var list_address = _dbContext.address.Where(i => i.customer_id == customer_cur.cu_id).ToList();
+            List<addressviewmodel> lst = new List<addressviewmodel>();
+            foreach(address i in list_address)
             {
-                Results = res,
-                PageNumber = 0,
-                PageSize = 0,
-                TotalNumberOfPages = 0,
-                TotalNumberOfRecords = totalNumberOfRecords
-            };
+                addressviewmodel add = _mapper.Map<addressviewmodel>(i);
+                add.ward_id = _dbContext.ward.Where(t => t.Name.Contains(i.add_ward)).FirstOrDefault().Id;
+                add.district_id = _dbContext.district.Where(t => t.Name.Contains(i.add_district)).FirstOrDefault().Id;
+                add.province_id = _dbContext.province.Where(t => t.Name.Contains(i.add_province)).FirstOrDefault().Id;
+                lst.Add(add);
+            }
+            res.list_address = lst;
+            return res;
         }
         public List<dropdown> GetAllType()
         {

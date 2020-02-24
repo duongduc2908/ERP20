@@ -9,6 +9,7 @@ namespace ERP.Data.ModelsERP.ModelView
 {
     public class staffviewmodel
     {
+        public List<addressviewmodel> list_address { get; set; }
         [Key]
         public int sta_id { get; set; }
 
