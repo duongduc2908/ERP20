@@ -167,7 +167,7 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = totalNumberOfRecords
             };
         }
-        public PagedResults<dropdown> GetUnit()
+        public List<dropdown> GetUnit()
         {
 
             List<dropdown> res = new List<dropdown>();
@@ -179,15 +179,7 @@ namespace ERP.Repository.Repositories
                 
                 res.Add(pu);
             }
-            
-            return new PagedResults<dropdown>
-            {
-                Results = res,
-                PageNumber = 0,
-                PageSize = 0,
-                TotalNumberOfPages = 0,
-                TotalNumberOfRecords = 2
-            };
+            return res;
         }
     }
 }

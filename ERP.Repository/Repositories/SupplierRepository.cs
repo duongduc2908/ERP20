@@ -80,7 +80,7 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = totalNumberOfRecords
             };
         }
-        public PagedResults<dropdown> GetAllName()
+        public List<dropdown> GetAllName()
         {
 
             List<dropdown> res = new List<dropdown>();
@@ -99,14 +99,7 @@ namespace ERP.Repository.Repositories
             }
 
 
-            return new PagedResults<dropdown>
-            {
-                Results = res,
-                PageNumber = 0,
-                PageSize = 0,
-                TotalNumberOfPages = 0,
-                TotalNumberOfRecords = totalNumberOfRecords
-            };
+            return res;
         }
 
     }

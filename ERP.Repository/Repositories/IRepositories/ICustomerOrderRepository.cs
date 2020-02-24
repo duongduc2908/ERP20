@@ -12,7 +12,7 @@ namespace ERP.Repository.Repositories.IRepositories
     public interface ICustomerOrderRepository : IGenericRepository<customer_order>
     {
         PagedResults<customerorderviewmodel> CreatePagedResults(int pageNumber, int pageSize);
-        PagedResults<customer_order> GetAllOrderById(int id);
+        customerordermodelview GetAllOrderById(int id);
         PagedResults<customerorderviewmodel> GetAllSearch(int pageNumber, int pageSize, int? payment_type_id, string name);
     }
 }

@@ -49,7 +49,7 @@ namespace ERP.Service.Services
         {
             return this._repository.GetInfor(cu_id);
         }
-        public PagedResults<dropdown> GetAllType()
+        public List<dropdown> GetAllType()
         {
             return this._repository.GetAllType();
         }

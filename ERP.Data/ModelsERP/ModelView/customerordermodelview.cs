@@ -1,16 +1,14 @@
-﻿using ERP.Data.ModelsERP;
-using ERP.Data.ModelsERP.ModelView;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace ERP.API.Models
+namespace ERP.Data.ModelsERP.ModelView
 {
-    public class CustomerOrderProductViewModel
+    public class customerordermodelview
     {
         public List<productorderviewmodel> list_product { get; set; }
-        public customer customer{get;set ;}
+        public customer customer { get; set; }
         public int? cuo_total_price { get; set; }
 
         public byte? cuo_status { get; set; }
@@ -22,6 +20,5 @@ namespace ERP.API.Models
         public byte? cuo_payment_status { get; set; }
 
         public int? cuo_ship_tax { get; set; }
-        
     }
 }

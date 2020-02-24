@@ -19,7 +19,7 @@ using System.Web.Http.Cors;
 namespace ERP.API.Controllers.Dashboard
 {
     [EnableCors("*", "*", "*")]
-    //[Authorize]
+    [Authorize]
     public class ManagerSupplierController : ApiController
     {
         private readonly ISupplierService _supplierservice;
@@ -39,7 +39,7 @@ namespace ERP.API.Controllers.Dashboard
         [Route("api/suppliers/get-name")]
         public IHttpActionResult GetproductsPaging()
         {
-            ResponseDataDTO<PagedResults<dropdown>> response = new ResponseDataDTO<PagedResults<dropdown>>();
+            ResponseDataDTO<List<dropdown>> response = new ResponseDataDTO<List<dropdown>>();
             try
             {
                 response.Code = HttpCode.OK;

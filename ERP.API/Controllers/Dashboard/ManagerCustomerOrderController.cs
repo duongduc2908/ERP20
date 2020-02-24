@@ -24,6 +24,7 @@ namespace ERP.API.Controllers.Dashboard
     {
         private readonly ICustomerOrderService _customer_orderservice;
         private readonly ICustomerService _customerservice;
+        private readonly IOrderProductService _order_productservice;
 
         private readonly IMapper _mapper;
 
@@ -31,11 +32,12 @@ namespace ERP.API.Controllers.Dashboard
         {
             
         }
-        public ManagerCustomerOrderController(ICustomerOrderService customer_orderservice, ICustomerService _customerservice, IMapper mapper)
+        public ManagerCustomerOrderController(ICustomerOrderService customer_orderservice, ICustomerService customerservice, IOrderProductService order_productservice, IMapper mapper)
         {
             this._customer_orderservice = customer_orderservice;
-            this._customerservice = _customerservice;
+            this._customerservice = customerservice;
             this._mapper = mapper;
+            this._order_productservice = order_productservice;
         }
 
 
@@ -44,7 +46,7 @@ namespace ERP.API.Controllers.Dashboard
         [Route("api/customer-orders/infor")]
         public IHttpActionResult GetInforById(int id)
         {
-            ResponseDataDTO<PagedResults<customer_order>> response = new ResponseDataDTO<PagedResults<customer_order>>();
+            ResponseDataDTO<customerordermodelview> response = new ResponseDataDTO<customerordermodelview>();
             try
             {
                 response.Code = HttpCode.OK;
@@ -54,7 +56,7 @@ namespace ERP.API.Controllers.Dashboard
             catch (Exception ex)
             {
                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = "Không tìm thấy nhân sự";
+                response.Message = ex.Message;
                 response.Data = null;
 
                 Console.WriteLine(ex.ToString());
@@ -131,6 +133,7 @@ namespace ERP.API.Controllers.Dashboard
                 var current_id = BaseController.current_id;
                 if (c.customer.cu_id == 0)
                 {
+                    #region[Create Customer]
                     //Cach truong bat buoc 
                     if (c.customer.cu_fullname == null)
                     {
@@ -267,29 +270,16 @@ namespace ERP.API.Controllers.Dashboard
                     customerCreateViewModel.cu_code = Utilis.CreateCode("CU", cu.cu_id, 7);
                     // mapping view model to entity
                     var createdcustomer = _mapper.Map<customer>(customerCreateViewModel);
-                    
+                
                     // save new customer
                     _customerservice.Create(createdcustomer);
                     var cu_last = _customerservice.GetLast();
                     c.customer.cu_id = cu_last.cu_id;
+                    #endregion
                 }
-
+                
                 // get data from formdata
-                CustomerOrderCreateViewModel customer_orderCreateViewModel = new CustomerOrderCreateViewModel
-                {
-                    //cuo_code = Convert.ToString(c.customer.cuo_code),
-
-                    //cuo_total_price = Convert.ToInt32(c.customer.cuo_total_price),
-                    
-                    
-                    //cuo_discount = Convert.ToInt32(c.customer.cuo_discount),
-                    //cuo_ship_tax = Convert.ToInt32(c.customer.cuo_ship_tax),
-                    
-
-                    //cuo_payment_type = Convert.ToByte(c.customer.cuo_payment_type),
-                    //cuo_status = Convert.ToByte(c.customer.cuo_status),
-                    //cuo_payment_status = Convert.ToByte(c.customer.cuo_payment_status),
-                };
+                CustomerOrderCreateViewModel customer_orderCreateViewModel = new CustomerOrderCreateViewModel{};
                 customer_orderCreateViewModel.customer_id = c.customer.cu_id;
                 customer_orderCreateViewModel.staff_id = Convert.ToInt32(current_id);
                 customer_orderCreateViewModel.cuo_payment_status = c.cuo_payment_status;
@@ -302,17 +292,34 @@ namespace ERP.API.Controllers.Dashboard
 
 
                 customer_orderCreateViewModel.cuo_date = DateTime.Now;
-
                 // mapping view model to entity
                 var createdcustomer_order = _mapper.Map<customer_order>(customer_orderCreateViewModel);
 
 
                 // save new customer_order
                 _customer_orderservice.Create(createdcustomer_order);
+
+                //create order product
+                OrderProductCreateViewModel orderCreateViewModel = new OrderProductCreateViewModel {};
+                var op_last = _customer_orderservice.GetLast();
+                foreach (productorderviewmodel i in c.list_product)
+                {
+                    orderCreateViewModel.customer_order_id = op_last.cuo_id;
+                    orderCreateViewModel.op_discount = i.op_discount;
+                    orderCreateViewModel.op_note = i.op_note;
+                    orderCreateViewModel.op_quantity = i.op_quantity;
+                    orderCreateViewModel.product_id = i.product_id;
+
+                    var createdorderproduct = _mapper.Map<order_product>(orderCreateViewModel);
+
+                    _order_productservice.Create(createdorderproduct);
+                }
+                
+                
                 // return response
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = createdcustomer_order;
+                response.Data = null;
                 return Ok(response);
             }
             catch (Exception ex)
@@ -326,62 +333,228 @@ namespace ERP.API.Controllers.Dashboard
             }
 
         }
-
-
-
-
         [HttpPut]
-        [Route("api/customer_orders/update")]
+        [Route("api/customer-orders/update")]
 
-        public async Task<IHttpActionResult> Updatecustomer_order(int? ema_id)
+        public async Task<IHttpActionResult> UpdateCustomerOder([FromBody] CustomerOrderProductViewModelUpdate customer_order_update)
         {
-            ResponseDataDTO<customer_order> response = new ResponseDataDTO<customer_order>();
+            ResponseDataDTO<bool> response = new ResponseDataDTO<bool>();
+            
             try
             {
-                var path = Path.GetTempPath();
-
-                if (!Request.Content.IsMimeMultipartContent("form-data"))
+                
+                //Id user now
+                new BaseController();
+                var current_id = BaseController.current_id;
+                if (customer_order_update.customer.cu_id == 0)
                 {
-                    throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.UnsupportedMediaType));
+                    #region[Create Customer]
+                    //Cach truong bat buoc 
+                    if (customer_order_update.customer.cu_fullname == null)
+                    {
+                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                        response.Message = "Họ và tên không được để trống";
+                        response.Data = false;
+                        return Ok(response);
+                    }
+                    if (customer_order_update.customer.cu_mobile == null)
+                    {
+                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                        response.Message = "Số điện thoại không được để trống";
+                        response.Data = false;
+                        return Ok(response);
+                    }
+                    if (customer_order_update.customer.cu_email == null)
+                    {
+                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                        response.Message = "Email không được để trống";
+                        response.Data = false;
+                        return Ok(response);
+                    }
+                    if (customer_order_update.customer.cu_type == 0)
+                    {
+                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                        response.Message = "Loại khách hàng không được để trống";
+                        response.Data = false;
+                        return Ok(response);
+                    }
+                    if (customer_order_update.customer.customer_group_id == 0)
+                    {
+                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                        response.Message = "Nhóm khách hàng không được để trống";
+                        response.Data = false;
+                        return Ok(response);
+                    }
+                    if (customer_order_update.customer.source_id == 0)
+                    {
+                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                        response.Message = "Nguồn không được để trống";
+                        response.Data = false;
+                        return Ok(response);
+                    }
+                    // get data from formdata
+                    CustomerCreateViewModel customerCreateViewModel = new CustomerCreateViewModel
+                    {
+                        cu_mobile = Convert.ToString(customer_order_update.customer.cu_mobile),
+                        cu_email = Convert.ToString(customer_order_update.customer.cu_email),
+                        cu_fullname = Convert.ToString(customer_order_update.customer.cu_fullname),
+
+                        customer_group_id = Convert.ToInt32(customer_order_update.customer.customer_group_id),
+                        source_id = Convert.ToInt32(customer_order_update.customer.source_id),
+
+                        cu_type = Convert.ToByte(customer_order_update.customer.cu_type),
+
+                    };
+                    //Bat cac dieu kien rang buoc
+                    if (CheckEmail.IsValidEmail(customerCreateViewModel.cu_email) == false && customerCreateViewModel.cu_email == "")
+                    {
+                        response.Message = "Định dạng email không hợp lệ !";
+                        response.Data = false;
+                        return Ok(response);
+                    }
+
+                    if (CheckNumber.IsPhoneNumber(customerCreateViewModel.cu_mobile) == false && customerCreateViewModel.cu_mobile == "")
+                    {
+                        response.Message = "Số điện thoại không hợp lệ";
+                        response.Data = false;
+                        return Ok(response);
+                    }
+
+
+                    //bat cac truog con lai 
+                    if (customer_order_update.customer.cu_birthday == null)
+                    {
+                        customerCreateViewModel.cu_birthday = null;
+                    }
+                    else
+                    {
+                        customerCreateViewModel.cu_birthday = Convert.ToDateTime(customer_order_update.customer.cu_birthday);
+                    }
+                    if (customer_order_update.customer.cu_address == null)
+                    {
+                        customerCreateViewModel.cu_address = null;
+                    }
+                    else
+                    {
+                        customerCreateViewModel.cu_address = Convert.ToString(customer_order_update.customer.cu_address);
+                    }
+                    if (customer_order_update.customer.cu_note == null)
+                    {
+                        customerCreateViewModel.cu_note = null;
+                    }
+                    else
+                    {
+                        customerCreateViewModel.cu_note = Convert.ToString(customer_order_update.customer.cu_note);
+                    }
+                    if (customer_order_update.customer.cu_geocoding == null)
+                    {
+                        customerCreateViewModel.cu_geocoding = null;
+                    }
+                    else
+                    {
+                        customerCreateViewModel.cu_geocoding = Convert.ToString(customer_order_update.customer.cu_geocoding);
+                    }
+                    if (customer_order_update.customer.cu_curator_id == 0)
+                    {
+                        customerCreateViewModel.cu_curator_id = null;
+                    }
+                    else
+                    {
+                        customerCreateViewModel.cu_curator_id = Convert.ToInt32(customer_order_update.customer.cu_curator_id);
+                    }
+                    if (customer_order_update.customer.cu_age == 0)
+                    {
+                        customerCreateViewModel.cu_age = null;
+                    }
+                    else
+                    {
+                        customerCreateViewModel.cu_age = Convert.ToInt32(customer_order_update.customer.cu_age);
+                    }
+                    if (customer_order_update.customer.cu_status == 0)
+                    {
+                        customerCreateViewModel.cu_status = null;
+                    }
+                    else
+                    {
+                        customerCreateViewModel.cu_status = Convert.ToByte(customer_order_update.customer.cu_status);
+                    }
+
+                    customerCreateViewModel.staff_id = Convert.ToInt32(current_id);
+                    customerCreateViewModel.cu_create_date = DateTime.Now;
+                    var cu = _customerservice.GetLast();
+                    customerCreateViewModel.cu_code = Utilis.CreateCode("CU", cu.cu_id, 7);
+                    // mapping view model to entity
+                    var createdcustomer = _mapper.Map<customer>(customerCreateViewModel);
+
+                    // save new customer
+                    _customerservice.Create(createdcustomer);
+                    var cu_last = _customerservice.GetLast();
+                    customer_order_update.customer.cu_id = cu_last.cu_id;
+                    #endregion
                 }
 
-                MultipartFormDataStreamProvider streamProvider = new MultipartFormDataStreamProvider(path);
 
-                await Request.Content.ReadAsMultipartAsync(streamProvider);
+                var existscustomerorder = _customer_orderservice.Find(customer_order_update.cuo_id);
+                
+                existscustomerorder.customer_id = customer_order_update.customer.cu_id;
+                existscustomerorder.staff_id = Convert.ToInt32(current_id);
+                existscustomerorder.cuo_payment_status = customer_order_update.cuo_payment_status;
+                existscustomerorder.cuo_payment_type = customer_order_update.cuo_payment_type;
+                existscustomerorder.cuo_ship_tax = customer_order_update.cuo_ship_tax;
+                existscustomerorder.cuo_total_price = customer_order_update.cuo_total_price;
+                existscustomerorder.cuo_discount = customer_order_update.cuo_discount;
+                existscustomerorder.cuo_status = customer_order_update.cuo_status;
 
 
-                // get data from formdata
-                CustomerOrderUpdateViewModel customer_orderUpdateViewModel = new CustomerOrderUpdateViewModel
+
+
+
+
+                // update customer order
+                _customer_orderservice.Update(existscustomerorder, existscustomerorder.cuo_id);
+
+                //update order product
+               
+                OrderProductCreateViewModel orderCreateViewModel = new OrderProductCreateViewModel { };
+
+                foreach (productorderviewmodel i in customer_order_update.list_product)
                 {
+                    var order_product_delete = _order_productservice.Find(i.op_id);
+                    if(order_product_delete != null)
+                    {
+                        _order_productservice.Delete(order_product_delete);
+                    }
                     
+                    orderCreateViewModel.customer_order_id = customer_order_update.cuo_id;
+                    orderCreateViewModel.op_discount = i.op_discount;
+                    orderCreateViewModel.op_note = i.op_note;
+                    orderCreateViewModel.op_quantity = i.op_quantity;
+                    orderCreateViewModel.product_id = i.product_id;
 
-                };
+                    var createdorderproduct = _mapper.Map<order_product>(orderCreateViewModel);
+
+                    _order_productservice.Create(createdorderproduct);
+                }
 
 
-
-                // mapping view model to entity
-                var updatedcustomer_order = _mapper.Map<customer_order>(customer_orderUpdateViewModel);
-
-
-
-                // update customer_order
-                _customer_orderservice.Update(updatedcustomer_order, ema_id);
                 // return response
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = updatedcustomer_order;
+                response.Data = false;
                 return Ok(response);
             }
             catch (Exception ex)
             {
                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
                 response.Message = ex.Message;
-                response.Data = null;
+                response.Data = true;
                 Console.WriteLine(ex.ToString());
 
                 return Ok(response);
             }
+
         }
+
 
         [HttpDelete]
         [Route("api/customer_orders/delete")]

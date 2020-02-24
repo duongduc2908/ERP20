@@ -7,6 +7,17 @@ namespace ERP.Data.ModelsERP.ModelView
 {
     public class productorderviewmodel
     {
+        public int op_id { get; set; }
+
+       
+        public int? op_quantity { get; set; }
+
+        public string op_note { get; set; }
+
+        public int? product_id { get; set; }
+
+        public int? op_discount { get; set; }
+        public byte? pu_unit { get; set; }
 
     }
 }

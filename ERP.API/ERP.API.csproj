@@ -261,6 +261,7 @@
     <Compile Include="Models\CustomerCreateViewModel.cs" />
     <Compile Include="Models\CustomerOrderCreateViewModel.cs" />
     <Compile Include="Models\CustomerOrderProductViewModel.cs" />
+    <Compile Include="Models\CustomerOrderProductViewModelUpdate.cs" />
     <Compile Include="Models\CustomerOrderUpdateViewModel.cs" />
     <Compile Include="Models\CustomerUpdateViewModel.cs" />
     <Compile Include="Models\DepartmentCreateViewModel.cs" />

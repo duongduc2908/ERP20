@@ -15,8 +15,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Http.Cors;
 
@@ -165,7 +163,7 @@ namespace ERP.API.Controllers.Dashboard
         [Route("api/customers/type")]
         public IHttpActionResult GetAllType()
         {
-            ResponseDataDTO<PagedResults<dropdown>> response = new ResponseDataDTO<PagedResults<dropdown>>();
+            ResponseDataDTO<List<dropdown>> response = new ResponseDataDTO<List<dropdown>>();
             try
             {
 

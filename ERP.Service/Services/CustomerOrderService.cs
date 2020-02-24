@@ -19,7 +19,7 @@ namespace ERP.Service.Services
         {
             return this._repository.CreatePagedResults(pageNumber, pageSize);
         }
-        public PagedResults<customer_order> GetAllOrderById(int id)
+        public customerordermodelview GetAllOrderById(int id)
         {
             return this._repository.GetAllOrderById(id);
         }

@@ -17,6 +17,6 @@ namespace ERP.Service.Services.IServices
         
        
         PagedResults<productviewmodel> GetProducts(int pageNumber, int pageSize,string search_name, int? category_id);
-        PagedResults<dropdown> GetUnit();
+        List<dropdown> GetUnit();
     }
 }

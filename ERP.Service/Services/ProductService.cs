@@ -31,7 +31,7 @@ namespace ERP.Service.Services
         {
             return this._repository.GetProducts(pageNumber,pageSize, search_name,category_id);
         }
-        public PagedResults<dropdown> GetUnit()
+        public List<dropdown> GetUnit()
         {
             return this._repository.GetUnit();
         }

@@ -86,7 +86,7 @@ namespace ERP.API.Controllers.Dashboard
         [Route("api/products/unit")]
         public IHttpActionResult GetUnit()
         {
-            ResponseDataDTO<PagedResults<dropdown>> response = new ResponseDataDTO<PagedResults<dropdown>> ();
+            ResponseDataDTO<List<dropdown>> response = new ResponseDataDTO<List<dropdown>> ();
             try
             {
                 response.Code = HttpCode.OK;

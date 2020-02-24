@@ -71,26 +71,29 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = totalNumberOfRecords
             };
         }
-        public PagedResults<customer_order> GetAllOrderById(int id)
+        public customerordermodelview GetAllOrderById(int id)
         {
-            
-
-            var order = _dbContext.customer_order.Where(cuo => cuo.cuo_id == id).ToList();
-
-            var totalNumberOfRecords = _dbContext.customer_order.Count();
-
-
-            
-            var totalPageCount = 0;
-
-            return new PagedResults<customer_order>
+            customerordermodelview res = new customerordermodelview();
+            var cuo = _dbContext.customer_order.Where(i => i.cuo_id == id).FirstOrDefault();
+            if(cuo != null)
             {
-                Results = order,
-                PageNumber = 0,
-                PageSize = 0,
-                TotalNumberOfPages = totalPageCount,
-                TotalNumberOfRecords = totalNumberOfRecords
-            };
+                res.customer = _dbContext.customers.Where(i => i.cu_id == cuo.customer_id).FirstOrDefault();
+                var lst_order_product = _dbContext.order_product.Where(i => i.customer_order_id == cuo.cuo_id).ToList();
+                res.list_product = new List<productorderviewmodel>();
+                foreach (order_product i in lst_order_product)
+                {
+                    var x = _mapper.Map<productorderviewmodel>(i);
+                    x.pu_unit = _dbContext.products.Where(t => t.pu_id == i.product_id).FirstOrDefault().pu_unit;
+                    res.list_product.Add(x);
+                }
+                res.cuo_ship_tax = cuo.cuo_ship_tax;
+                res.cuo_status = cuo.cuo_status;
+                res.cuo_total_price = cuo.cuo_total_price;
+                res.cuo_payment_status = cuo.cuo_payment_status;
+                res.cuo_payment_type = cuo.cuo_payment_type;
+                res.cuo_discount = cuo.cuo_discount;
+            }
+            return res;
         }
         public PagedResults<customerorderviewmodel> GetAllSearch(int pageNumber, int pageSize, int? payment_type_id, string code)
         {

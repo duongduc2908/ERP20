@@ -314,11 +314,11 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = totalNumberOfRecords
             };
         }
-        public PagedResults<dropdown> GetAllType()
+        public List<dropdown> GetAllType()
         {
 
             List<dropdown> res = new List<dropdown>();
-            
+
             for (int i = 0; i < 2; i++)
             {
                 dropdown pu = new dropdown();
@@ -327,15 +327,8 @@ namespace ERP.Repository.Repositories
 
                 res.Add(pu);
             }
+            return res;
 
-            return new PagedResults<dropdown>
-            {
-                Results = res,
-                PageNumber = 0,
-                PageSize = 0,
-                TotalNumberOfPages = 0,
-                TotalNumberOfRecords = 2
-            };
         }
 
     }

@@ -19,7 +19,7 @@ namespace ERP.Repository.Repositories.IRepositories
         PagedResults<customerviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, string name);
         PagedResults<customer> GetInfor(string search_name);
         PagedResults<customerviewmodel> GetInfor(int cu_id);
-        PagedResults<dropdown> GetAllType();
+        List<dropdown> GetAllType();
        
     }
 }
