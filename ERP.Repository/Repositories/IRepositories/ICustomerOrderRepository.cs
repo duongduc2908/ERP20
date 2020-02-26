@@ -14,5 +14,8 @@ namespace ERP.Repository.Repositories.IRepositories
         PagedResults<customerorderviewmodel> CreatePagedResults(int pageNumber, int pageSize);
         customerordermodelview GetAllOrderById(int id);
         PagedResults<customerorderviewmodel> GetAllSearch(int pageNumber, int pageSize, int? payment_type_id, string name);
+        int ResultStatisticsByMonth(int staff_id);
+        int ResultStatisticsByWeek(int staff_id);
+        int ResultStatisticsByDay(int staff_id);
     }
 }

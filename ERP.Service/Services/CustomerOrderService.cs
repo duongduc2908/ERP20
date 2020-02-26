@@ -27,5 +27,17 @@ namespace ERP.Service.Services
         {
             return this._repository.GetAllSearch(pageNumber, pageSize,  payment_type_id, name);
         }
+        public int ResultStatisticsByMonth(int staff_id)
+        {
+            return this._repository.ResultStatisticsByMonth(staff_id);
+        }
+        public int ResultStatisticsByWeek(int staff_id)
+        {
+            return this._repository.ResultStatisticsByWeek(staff_id);
+        }
+        public int ResultStatisticsByDay(int staff_id)
+        {
+            return this._repository.ResultStatisticsByDay(staff_id);
+        }
     }
 }
