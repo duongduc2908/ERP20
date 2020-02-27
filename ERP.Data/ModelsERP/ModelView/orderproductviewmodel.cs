@@ -8,7 +8,6 @@ namespace ERP.Data.ModelsERP.ModelView
 {
     public class orderproductviewmodel
     {
-        public List<shipaddressviewmodel> list_address { get; set; }
         [StringLength(50)]
 
         public int? op_quantity { get; set; }
