@@ -15,6 +15,6 @@ namespace ERP.Data.ModelsERP.ModelView.Customer
         public string cuo_code { get; set; }
 
         public int? staff_id { get; set; }
-        public string? staff_name { get; set; }
+        public string staff_name { get; set; }
     }
 }
