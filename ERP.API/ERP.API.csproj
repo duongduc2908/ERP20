@@ -230,6 +230,7 @@
     <Compile Include="Controllers\Dashboard\BaseController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerCustomerGroupController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerCustomerOrderController.cs" />
+    <Compile Include="Controllers\Dashboard\ManagerStatisticalController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerOrderProductController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerProductCategoryController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerShipAddressController.cs" />
@@ -376,6 +377,7 @@
     <Folder Include="Views\ManagerCustomerGroup\" />
     <Folder Include="Views\ManagerCustomerOrder\" />
     <Folder Include="Views\ManagerCustomer\" />
+    <Folder Include="Views\ManagerDashboard\" />
     <Folder Include="Views\ManagerDepartment\" />
     <Folder Include="Views\ManagerEmailStrategy\" />
     <Folder Include="Views\ManagerEmailTemplate\" />

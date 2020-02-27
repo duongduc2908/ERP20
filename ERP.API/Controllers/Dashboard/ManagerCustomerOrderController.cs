@@ -113,7 +113,7 @@ namespace ERP.API.Controllers.Dashboard
         [HttpPost]
         [Route("api/customer-orders/create")]
 
-        public async Task<IHttpActionResult> Createcustomer_order([FromBody] CustomerOrderProductViewModel customer_order)
+        public async Task<IHttpActionResult> CreateCustomerOrder([FromBody] CustomerOrderProductViewModel customer_order)
         {
             ResponseDataDTO<customer_order> response = new ResponseDataDTO<customer_order>();
             try
@@ -279,8 +279,9 @@ namespace ERP.API.Controllers.Dashboard
                 customer_orderCreateViewModel.cuo_total_price = c.cuo_total_price;
                 customer_orderCreateViewModel.cuo_discount = c.cuo_discount;
                 customer_orderCreateViewModel.cuo_status = c.cuo_status;
+                var x = _customer_orderservice.GetLast();
 
-
+                customer_orderCreateViewModel.cuo_code = Utilis.CreateCode("OR", x.cuo_id, 7);
 
                 customer_orderCreateViewModel.cuo_date = DateTime.Now;
                 // mapping view model to entity

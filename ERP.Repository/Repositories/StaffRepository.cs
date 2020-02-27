@@ -101,22 +101,19 @@ namespace ERP.Repository.Repositories
         public PagedResults<staffviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? status, string name)
         {
             List<staffviewmodel> res = new List<staffviewmodel>();
-
             var skipAmount = pageSize * pageNumber;
-            
-            var list = _dbContext.staffs.Where(t => t.sta_status == status && t.sta_fullname.Contains(name)).OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize);
+            name = name.Trim();
+            var list = _dbContext.staffs.Where(t => t.sta_status == status && t.sta_fullname.Contains(name) || t.sta_mobile.Contains(name) || t.sta_email.Contains(name) || t.sta_code.Contains(name)).OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize);
             if (status == null)
             {
                 if(name != null)
                 {
-                    list = _dbContext.staffs.Where(t => t.sta_fullname.Contains(name)).OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize);
+                    list = _dbContext.staffs.Where(t => t.sta_fullname.Contains(name) || t.sta_mobile.Contains(name) || t.sta_email.Contains(name) || t.sta_code.Contains(name) ).OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize);
                 }
                 else
                 {
                     list = _dbContext.staffs.OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize);
-                }
-                
-            }
+                }            }
             if(name == null)
             {
                 if (status != null)

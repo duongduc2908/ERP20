@@ -27,5 +27,22 @@ namespace ERP.Service.Services
         {
             return this._repository.GetAllSearch(pageNumber, pageSize,  payment_type_id, name);
         }
+        
+        public PagedResults<customerorderviewmodel> ResultStatisticsCustomerOrder(int pageNumber, int pageSize, int staff_id, bool month, bool week, bool day)
+        {
+            return this._repository.ResultStatisticsCustomerOrder(pageNumber, pageSize, staff_id,month,  week, day);
+        }
+        public int ResultStatisticsByMonth(int staff_id)
+        {
+            return this._repository.ResultStatisticsByMonth(staff_id);
+        }
+        public int ResultStatisticsByWeek(int staff_id)
+        {
+            return this._repository.ResultStatisticsByWeek(staff_id);
+        }
+        public int ResultStatisticsByDay(int staff_id)
+        {
+            return this._repository.ResultStatisticsByDay(staff_id);
+        }
     }
 }

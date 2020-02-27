@@ -5,6 +5,7 @@ using ERP.Common.Models;
 using ERP.Data.DbContext;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
+using ERP.Data.ModelsERP.ModelView.Customer;
 using ERP.Repository.Repositories.IRepositories;
 using System;
 using System.Collections.Generic;
@@ -149,8 +150,9 @@ namespace ERP.Repository.Repositories
             var skipAmount = pageSize * pageNumber;
 
             var list = _dbContext.customers.OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            
+
             /**24TH**/
+            #region [24 case]
             int check_source_id = 0;
             int check_type = 0;
             int check_group_id = 0;
@@ -220,8 +222,10 @@ namespace ERP.Repository.Repositories
             if(check_source_id == 1 && check_type == 1 && check_group_id == 1 && check_name ==1)
             {
                 list = _dbContext.customers.Where(t => t.source_id == source_id && t.cu_type == cu_type && t.customer_group_id == customer_group_id && t.cu_fullname.Contains(name)).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }            
-                     
+            }
+            #endregion
+
+
             var totalNumberOfRecords = list.Count();
             var total = _dbContext.customers.Count();
 
@@ -240,7 +244,29 @@ namespace ERP.Repository.Repositories
                         customerview.cu_type_name = EnumCustomer.cu_type[j];
                     }
                 }
-                
+                // lay ra dia chi khach hang 
+                var list_address = _dbContext.ship_address.Where(s => s.customer_id == i.cu_id).ToList();
+                List<shipaddressviewmodel> lst_add = new List<shipaddressviewmodel>();
+                foreach (ship_address s in list_address)
+                {
+                    shipaddressviewmodel add = _mapper.Map<shipaddressviewmodel>(i);
+                    add.ward_id = _dbContext.ward.Where(t => t.Name.Contains(s.sha_ward)).FirstOrDefault().Id;
+                    add.district_id = _dbContext.district.Where(t => t.Name.Contains(s.sha_district)).FirstOrDefault().Id;
+                    add.province_id = _dbContext.province.Where(t => t.Name.Contains(s.sha_province)).FirstOrDefault().Id;
+                    lst_add.Add(add);
+                }
+                customerview.list_address = lst_add;
+                //lay ra don hang cua khach hang
+                var list_cuo_history = _dbContext.customer_order.Where(s => s.customer_id == i.cu_id).ToList();
+                List<customerorderhistoryviewmodel> lst_his = new List<customerorderhistoryviewmodel>();
+                foreach (customer_order s in list_cuo_history)
+                {
+                    customerorderhistoryviewmodel add = _mapper.Map<customerorderhistoryviewmodel>(i);
+                    add.staff_name = _dbContext.staffs.Where(t => t.sta_id == s.staff_id).FirstOrDefault().sta_fullname;
+                    
+                    lst_his.Add(add);
+                }
+                customerview.list_customer_order = lst_his;
 
                 res.Add(customerview);
             }
