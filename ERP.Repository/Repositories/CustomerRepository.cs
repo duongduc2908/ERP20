@@ -249,7 +249,7 @@ namespace ERP.Repository.Repositories
                 List<shipaddressviewmodel> lst_add = new List<shipaddressviewmodel>();
                 foreach (ship_address s in list_address)
                 {
-                    shipaddressviewmodel add = _mapper.Map<shipaddressviewmodel>(i);
+                    shipaddressviewmodel add = _mapper.Map<shipaddressviewmodel>(s);
                     add.ward_id = _dbContext.ward.Where(t => t.Name.Contains(s.sha_ward)).FirstOrDefault().Id;
                     add.district_id = _dbContext.district.Where(t => t.Name.Contains(s.sha_district)).FirstOrDefault().Id;
                     add.province_id = _dbContext.province.Where(t => t.Name.Contains(s.sha_province)).FirstOrDefault().Id;
@@ -261,7 +261,7 @@ namespace ERP.Repository.Repositories
                 List<customerorderhistoryviewmodel> lst_his = new List<customerorderhistoryviewmodel>();
                 foreach (customer_order s in list_cuo_history)
                 {
-                    customerorderhistoryviewmodel add = _mapper.Map<customerorderhistoryviewmodel>(i);
+                    customerorderhistoryviewmodel add = _mapper.Map<customerorderhistoryviewmodel>(s);
                     add.staff_name = _dbContext.staffs.Where(t => t.sta_id == s.staff_id).FirstOrDefault().sta_fullname;
                     
                     lst_his.Add(add);
@@ -340,7 +340,7 @@ namespace ERP.Repository.Repositories
             for (int i = 0; i < 2; i++)
             {
                 dropdown pu = new dropdown();
-                pu.id = i;
+                pu.id = i+1;
                 pu.name = EnumCustomer.cu_type[i];
 
                 res.Add(pu);

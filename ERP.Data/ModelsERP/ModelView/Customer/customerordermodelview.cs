@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ERP.Data.ModelsERP.ModelView.Customer;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,7 +9,7 @@ namespace ERP.Data.ModelsERP.ModelView
     public class customerordermodelview
     {
         public List<productorderviewmodel> list_product { get; set; }
-        public customer customer { get; set; }
+        public customerviewmodel customer { get; set; }
         public int? cuo_total_price { get; set; }
 
         public byte? cuo_status { get; set; }

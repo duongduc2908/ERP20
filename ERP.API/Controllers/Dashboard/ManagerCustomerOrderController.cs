@@ -109,6 +109,29 @@ namespace ERP.API.Controllers.Dashboard
 
             return Ok(response);
         }
+        
+        [HttpGet]
+        [Route("api/customer-orders/get-all-payment")]
+        public IHttpActionResult GetAllPayment()
+        {
+            ResponseDataDTO<List<dropdown>> response = new ResponseDataDTO<List<dropdown>>();
+            try
+            {
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = _customer_orderservice.GetAllPayment();
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+
+                Console.WriteLine(ex.ToString());
+            }
+
+            return Ok(response);
+        }
 
         [HttpPost]
         [Route("api/customer-orders/create")]

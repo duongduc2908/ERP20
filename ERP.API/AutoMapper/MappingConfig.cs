@@ -2,6 +2,7 @@
 using ERP.API.Models;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
+using ERP.Data.ModelsERP.ModelView.Customer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,6 +35,7 @@ namespace ERP.API.AutoMapper
 
             CreateMap<customer_order, customerorderviewmodel>();
             CreateMap<customer_order, customerorderhistoryviewmodel>();
+            
             CreateMap<customer_group, customergroupviewmodel>();
            
 
@@ -43,7 +45,7 @@ namespace ERP.API.AutoMapper
 
             CreateMap<ShipAddressCreateViewModel, ship_address>();
             CreateMap<ShipAddressUpdateViewModel, ship_address>();
-            CreateMap<product, shipaddressviewmodel>();
+            CreateMap<ship_address, shipaddressviewmodel>();
 
             CreateMap<UndertakenLocationCreateViewModel, undertaken_location>();
             CreateMap<UndertakenLocationUpdateViewModel, undertaken_location>();

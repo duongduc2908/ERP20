@@ -15,6 +15,7 @@ namespace ERP.Repository.Repositories.IRepositories
         customerordermodelview GetAllOrderById(int id);
         PagedResults<customerorderviewmodel> GetAllSearch(int pageNumber, int pageSize, int? payment_type_id, string name);
         PagedResults<customerorderviewmodel> ResultStatisticsCustomerOrder(int pageNumber, int pageSize, int staff_id, bool month, bool week, bool day);
+        List<dropdown> GetAllPayment();
         int ResultStatisticsByMonth(int staff_id);
         int ResultStatisticsByWeek(int staff_id);
         int ResultStatisticsByDay(int staff_id);

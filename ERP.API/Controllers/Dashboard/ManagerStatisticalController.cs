@@ -105,7 +105,7 @@ namespace ERP.API.Controllers.Dashboard
         #endregion
         #region[Statistics by day]
         [HttpGet]
-        [Route("api/dashboards/statistics_by_week")]
+        [Route("api/dashboards/statistics_by_day")]
         public IHttpActionResult GetDay(int staff_id)
         {
             ResponseDataDTO<int> response = new ResponseDataDTO<int>();

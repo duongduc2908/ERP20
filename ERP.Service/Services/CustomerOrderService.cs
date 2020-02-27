@@ -4,6 +4,7 @@ using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
 using ERP.Repository.Repositories.IRepositories;
 using ERP.Service.Services.IServices;
+using System.Collections.Generic;
 
 namespace ERP.Service.Services
 {
@@ -26,6 +27,10 @@ namespace ERP.Service.Services
         public PagedResults<customerorderviewmodel> GetAllSearch(int pageNumber, int pageSize, int? payment_type_id, string name)
         {
             return this._repository.GetAllSearch(pageNumber, pageSize,  payment_type_id, name);
+        }
+        public List<dropdown> GetAllPayment()
+        {
+            return this._repository.GetAllPayment();
         }
         
         public PagedResults<customerorderviewmodel> ResultStatisticsCustomerOrder(int pageNumber, int pageSize, int staff_id, bool month, bool week, bool day)
