@@ -1,4 +1,4 @@
-﻿using ERP.Common.GenericRepository;
+﻿using ERP.Common.GenericService;
 using ERP.Common.Models;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
@@ -8,13 +8,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ERP.Repository.Repositories.IRepositories
+namespace ERP.Service.Services.IServices
 {
-    public interface IAddressRepository : IGenericRepository<address>
+    public interface IShipAddressService : IGenericService<ship_address>
     {
-        PagedResults<address> CreatePagedResults(int pageNumber, int pageSize);
+        PagedResults<ship_address> CreatePagedResults(int pageNumber, int pageSize);
         List<dropdown> GetAllProvince();
         List<dropdown> GetAllDistrictByIdPro(int? province_id);
         List<dropdown> GetAllWardByIdDis(int? district_id);
+
     }
 }

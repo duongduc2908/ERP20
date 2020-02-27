@@ -30,18 +30,18 @@ namespace ERP.API.Controllers.Dashboard
         private readonly IDepartmentService _departmentservice;
         private readonly IGroupRoleService _groupRoleservice;
         private readonly IPositionService _positionService;
-        private readonly IAddressService _addressService;
+        private readonly IUndertakenLocationService _undertakenlocationService;
         private readonly IMapper _mapper;
 
         public ManagerstaffsController() { }
-        public ManagerstaffsController(IStaffService staffservice, IMapper mapper, IDepartmentService departmentService, IGroupRoleService groupRoleService, IPositionService positionService, IAddressService addressService)
+        public ManagerstaffsController(IStaffService staffservice, IMapper mapper, IDepartmentService departmentService, IGroupRoleService groupRoleService, IPositionService positionService, IUndertakenLocationService undertakenlocationService)
         {
             this._staffservice = staffservice;
             this._mapper = mapper;
             this._departmentservice = departmentService;
             this._groupRoleservice = groupRoleService;
             this._positionService = positionService;
-            this._addressService = addressService;
+            this._undertakenlocationService = undertakenlocationService;
         }
 
         #region methods
@@ -413,20 +413,6 @@ namespace ERP.API.Controllers.Dashboard
 
                 // save new staff
                 _staffservice.Create(createdstaff);
-                var get_last_id = _staffservice.GetLast();
-                //Create address
-                AddressCreateViewModel addressCreateViewModel = new AddressCreateViewModel 
-                {
-                    add_province = Convert.ToString(streamProvider.FormData["add_province"]),
-                    
-                    add_district = Convert.ToString(streamProvider.FormData["add_district"]),
-                    add_ward = Convert.ToString(streamProvider.FormData["add_ward"]),
-               
-                };
-                addressCreateViewModel.staff_id = get_last_id.sta_id;
-                var createAddress = _mapper.Map<address>(addressCreateViewModel);
-                _addressService.Create(createAddress);
-
                 // return response
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
@@ -861,10 +847,10 @@ namespace ERP.API.Controllers.Dashboard
                 var list = new List<staff>();
                 fileName = @"D:\ERP20\ERP.API\" + fileName;
                 var dataset = ExcelImport.ImportExcelXLS(fileName, true);
-                DataTable table = (DataTable)dataset.Tables[0];
+                DataTable table = (DataTable)dataset.Tables[6];
                 if (table != null && table.Rows.Count > 0)
                 {
-                    if (table.Columns.Count != 13)
+                    if (table.Columns.Count != 20)
                     {
                         exitsData = "File excel import không hợp lệ!";
                         response.Code = HttpCode.INTERNAL_SERVER_ERROR;
@@ -888,13 +874,6 @@ namespace ERP.API.Controllers.Dashboard
                             {
                                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
                                 response.Message = "Tên đăng nhập không được để trống";
-                                response.Data = null;
-                                return Ok(response);
-                            }
-                            if (dr.IsNull("sta_password"))
-                            {
-                                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                                response.Message = "Mật khẩu không được để trống";
                                 response.Data = null;
                                 return Ok(response);
                             }
@@ -922,8 +901,6 @@ namespace ERP.API.Controllers.Dashboard
                                 response.Data = null;
                                 return Ok(response);
                             }
-
-
                             if (dr.IsNull("position_id"))
                             {
                                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
@@ -969,30 +946,35 @@ namespace ERP.API.Controllers.Dashboard
                         #region["Check logic"]
                         foreach (DataRow dr in table.Rows)
                         {
-                            if (!check_department(Convert.ToInt32(dr["department_id"])))
+                            int i = 1;
+                            if (i == 2)
                             {
-                                exitsData = "Khong co ma phong ban trong csdl!";
-                                response.Code = HttpCode.NOT_FOUND;
-                                response.Message = exitsData;
-                                response.Data = null;
-                                return Ok(response);
+                                if (!check_department(Convert.ToInt32(dr["department_id"])))
+                                {
+                                    exitsData = "Khong co ma phong ban trong csdl!";
+                                    response.Code = HttpCode.NOT_FOUND;
+                                    response.Message = exitsData;
+                                    response.Data = null;
+                                    return Ok(response);
+                                }
+                                if (!check_position(Convert.ToInt32(dr["position_id"])))
+                                {
+                                    exitsData = "Khong co ma bo phan trong csdl!";
+                                    response.Code = HttpCode.NOT_FOUND;
+                                    response.Message = exitsData;
+                                    response.Data = null;
+                                    return Ok(response);
+                                }
+                                if (!check_grouprole(Convert.ToInt32(dr["group_role_id"])))
+                                {
+                                    exitsData = "Khong co ma nhom quyen trong csdl!";
+                                    response.Code = HttpCode.NOT_FOUND;
+                                    response.Message = exitsData;
+                                    response.Data = null;
+                                    return Ok(response);
+                                }
                             }
-                            if(!check_position(Convert.ToInt32(dr["position_id"])))
-                            {
-                                exitsData = "Khong co ma bo phan trong csdl!";
-                                response.Code = HttpCode.NOT_FOUND;
-                                response.Message = exitsData;
-                                response.Data = null;
-                                return Ok(response);
-                            }
-                            if (!check_grouprole(Convert.ToInt32(dr["group_role_id"])))
-                            {
-                                exitsData = "Khong co ma nhom quyen trong csdl!";
-                                response.Code = HttpCode.NOT_FOUND;
-                                response.Message = exitsData;
-                                response.Data = null;
-                                return Ok(response);
-                            }
+                            i++;
                         }
                         #endregion
                     }

@@ -11,18 +11,18 @@ using System.Web;
 
 namespace ERP.Repository.Repositories
 {
-    public class AddressRepository : GenericRepository<address>, IAddressRepository
+    public class UndertakenLocationRepository : GenericRepository<undertaken_location>, IUndertakenLocationRepository
     {
-        public AddressRepository(ERPDbContext dbContext) : base(dbContext)
+        public UndertakenLocationRepository(ERPDbContext dbContext) : base(dbContext)
         {
         }
-        public PagedResults<address> CreatePagedResults(int pageNumber, int pageSize)
+        public PagedResults<undertaken_location> CreatePagedResults(int pageNumber, int pageSize)
         {
             var skipAmount = pageSize * pageNumber;
 
-            var list = _dbContext.address.OrderBy(t => t.add_id).Skip(skipAmount).Take(pageSize);
+            var list = _dbContext.undertaken_location.OrderBy(t => t.unl_id).Skip(skipAmount).Take(pageSize);
 
-            var totalNumberOfRecords = _dbContext.address.Count();
+            var totalNumberOfRecords = _dbContext.undertaken_location.Count();
 
             var results = list.ToList();
 
@@ -30,7 +30,7 @@ namespace ERP.Repository.Repositories
 
             var totalPageCount = (totalNumberOfRecords / pageSize) + (mod == 0 ? 0 : 1);
 
-            return new PagedResults<address>
+            return new PagedResults<undertaken_location>
             {
                 Results = results,
                 PageNumber = pageNumber,
@@ -39,7 +39,7 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = totalNumberOfRecords
             };
         }
-       
+
         public List<dropdown> GetAllProvince()
         {
             List<dropdown> lst_res = new List<dropdown>();
@@ -69,7 +69,7 @@ namespace ERP.Repository.Repositories
         public List<dropdown> GetAllWardByIdDis(int? district_id)
         {
             List<dropdown> lst_res = new List<dropdown>();
-            var list = _dbContext.ward.Where(i=>i.DistrictID == district_id).ToList();
+            var list = _dbContext.ward.Where(i => i.DistrictID == district_id).ToList();
             foreach (Ward p in list)
             {
                 dropdown dr = new dropdown();

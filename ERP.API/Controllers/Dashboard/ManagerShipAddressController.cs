@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
 using ERP.API.Models;
 using ERP.Common.Constants;
-using ERP.Common.Models;
 using ERP.Data.Dto;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
-using ERP.Extension.Extensions;
 using ERP.Service.Services.IServices;
 using System;
 using System.Collections.Generic;
@@ -15,7 +13,6 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Cors;
 
 namespace ERP.API.Controllers.Dashboard
 {
@@ -23,19 +20,19 @@ namespace ERP.API.Controllers.Dashboard
     [Authorize]
     public class ManagerAddressController : BaseController
     {
-        private readonly IAddressService _addressservice;
+        private readonly IShipAddressService _shipaddressservice;
 
         private readonly IMapper _mapper;
 
-        public ManagerAddressController() { }
-        public ManagerAddressController(IAddressService addressservice, IMapper mapper)
+        public ManagerShipAddressController() { }
+        public ManagerShipAddressController(IShipAddressService shipaddressservice, IMapper mapper)
         {
-            this._addressservice = addressservice;
+            this._shipaddressservice = shipaddressservice;
             this._mapper = mapper;
         }
         #region[Get Province]
         [HttpGet]
-        [Route("api/addresss/get-province")]
+        [Route("api/ship-addresss/get-province")]
         public IHttpActionResult Getaddresss()
         {
             ResponseDataDTO<IEnumerable<dropdown>> response = new ResponseDataDTO<IEnumerable<dropdown>>();
@@ -43,7 +40,7 @@ namespace ERP.API.Controllers.Dashboard
             {
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _addressservice.GetAllProvince();
+                response.Data = _shipaddressservice.GetAllProvince();
             }
             catch (Exception ex)
             {
@@ -57,7 +54,7 @@ namespace ERP.API.Controllers.Dashboard
             return Ok(response);
         }
         [HttpGet]
-        [Route("api/addresss/get-district")]
+        [Route("api/ship-addresss/get-district")]
         public IHttpActionResult GetDistrict(int? province_id)
         {
             ResponseDataDTO<IEnumerable<dropdown>> response = new ResponseDataDTO<IEnumerable<dropdown>>();
@@ -65,7 +62,7 @@ namespace ERP.API.Controllers.Dashboard
             {
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _addressservice.GetAllDistrictByIdPro(province_id);
+                response.Data = _shipaddressservice.GetAllDistrictByIdPro(province_id);
             }
             catch (Exception ex)
             {
@@ -79,7 +76,7 @@ namespace ERP.API.Controllers.Dashboard
             return Ok(response);
         }
         [HttpGet]
-        [Route("api/addresss/get-ward")]
+        [Route("api/ship-addresss/get-ward")]
         public IHttpActionResult GetWard(int? district_id)
         {
             ResponseDataDTO<IEnumerable<dropdown>> response = new ResponseDataDTO<IEnumerable<dropdown>>();
@@ -87,7 +84,7 @@ namespace ERP.API.Controllers.Dashboard
             {
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _addressservice.GetAllWardByIdDis(district_id);
+                response.Data = _shipaddressservice.GetAllWardByIdDis(district_id);
             }
             catch (Exception ex)
             {
@@ -104,10 +101,10 @@ namespace ERP.API.Controllers.Dashboard
 
         #region methods
         [HttpGet]
-        [Route("api/addresss/all")]
+        [Route("api/ship-addresss/all")]
         public IHttpActionResult GetAll()
         {
-            ResponseDataDTO<IEnumerable<address>> response = new ResponseDataDTO<IEnumerable<address>>();
+            ResponseDataDTO<IEnumerable<ship_address>> response = new ResponseDataDTO<IEnumerable<ship_address>>();
             try
             {
                 response.Code = HttpCode.OK;
@@ -129,13 +126,13 @@ namespace ERP.API.Controllers.Dashboard
 
 
         #endregion
+
         #region [Create]
         [HttpPost]
-        [Route("api/addresss/create")]
-
+        [Route("api/ship-addresss/create")]
         public async Task<IHttpActionResult> Createaddress()
         {
-            ResponseDataDTO<address> response = new ResponseDataDTO<address>();
+            ResponseDataDTO<ship_address> response = new ResponseDataDTO<ship_address>();
             try
             {
                 var path = Path.GetTempPath();
@@ -149,65 +146,49 @@ namespace ERP.API.Controllers.Dashboard
 
                 await Request.Content.ReadAsMultipartAsync(streamProvider);
                 //Các trường bắt buộc 
-                if (streamProvider.FormData["add_province"] == null)
+                if (streamProvider.FormData["sha_province"] == null)
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
                     response.Message = "Tinh/Thành phố không được để trống";
                     response.Data = null;
                     return Ok(response);
                 }
-                if (streamProvider.FormData["add_district"] == null)
+                if (streamProvider.FormData["sha_district"] == null)
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
                     response.Message = "Quan/Huyen phố không được để trống";
                     response.Data = null;
                     return Ok(response);
                 }
-                if (streamProvider.FormData["add_ward"] == null)
+                if (streamProvider.FormData["sha_ward"] == null)
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
                     response.Message = "Phuong/Xa phố không được để trống";
                     response.Data = null;
                     return Ok(response);
-                }
-                if (streamProvider.FormData["staff_id"] == null && streamProvider.FormData["customer_id"] == null)
-                {
-                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                    response.Message = "Phuong/Xa phố không được để trống";
-                    response.Data = null;
-                    return Ok(response);
-                }
-                AddressCreateViewModel addressCreateViewModel = new AddressCreateViewModel
-                {
-                    add_province = Convert.ToString(streamProvider.FormData["add_province"]),
-
-                    add_district = Convert.ToString(streamProvider.FormData["add_district"]),
-                    add_ward = Convert.ToString(streamProvider.FormData["add_ward"]),
-
-                };
-                if (streamProvider.FormData["staff_id"] == null)
-                {
-                    addressCreateViewModel.staff_id = null;
-                }
-                else
-                {
-                    addressCreateViewModel.staff_id = Convert.ToInt32(streamProvider.FormData["staff_id"]);
                 }
                 if (streamProvider.FormData["customer_id"] == null)
                 {
-                    addressCreateViewModel.customer_id = null;
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Mã khách hàng không được để trống";
+                    response.Data = null;
+                    return Ok(response);
                 }
-                else
+                ShipAddressCreateViewModel shipaddressCreateViewModel = new ShipAddressCreateViewModel
                 {
-                    addressCreateViewModel.customer_id = Convert.ToInt32(streamProvider.FormData["customer_id"]);
-                }
+                    sha_province = Convert.ToString(streamProvider.FormData["sha_province"]),
+                    sha_district = Convert.ToString(streamProvider.FormData["sha_district"]),
+                    sha_ward = Convert.ToString(streamProvider.FormData["sha_ward"]),
 
-                var createAddress = _mapper.Map<address>(addressCreateViewModel);
-                _addressservice.Create(createAddress);
+                };
+                shipaddressCreateViewModel.customer_id = Convert.ToInt32(streamProvider.FormData["customer_id"]);
+
+                var createShipAddress = _mapper.Map<ship_address>(shipaddressCreateViewModel);
+                _shipaddressservice.Create(createShipAddress);
                 // return response
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = createAddress;
+                response.Data = createShipAddress;
                 return Ok(response);
             }
             catch (Exception ex)
@@ -226,10 +207,9 @@ namespace ERP.API.Controllers.Dashboard
         #region[Update]
         [HttpPut]
         [Route("api/addresss/update")]
-
         public async Task<IHttpActionResult> Updateaddress()
         {
-            ResponseDataDTO<address> response = new ResponseDataDTO<address>();
+            ResponseDataDTO<ship_address> response = new ResponseDataDTO<ship_address>();
             try
             {
                 var path = Path.GetTempPath();
@@ -243,68 +223,60 @@ namespace ERP.API.Controllers.Dashboard
 
                 await Request.Content.ReadAsMultipartAsync(streamProvider);
                 //Các trường bắt buộc 
-                if (streamProvider.FormData["add_province"] == null)
+                if (streamProvider.FormData["sha_id"] == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Mã địa chỉ không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+                if (streamProvider.FormData["sha_province"] == null)
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
                     response.Message = "Tinh/Thành phố không được để trống";
                     response.Data = null;
                     return Ok(response);
                 }
-                if (streamProvider.FormData["add_district"] == null)
+                if (streamProvider.FormData["sha_district"] == null)
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
                     response.Message = "Quan/Huyen phố không được để trống";
                     response.Data = null;
                     return Ok(response);
                 }
-                if (streamProvider.FormData["add_ward"] == null)
+                if (streamProvider.FormData["sha_ward"] == null)
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
                     response.Message = "Phuong/Xa phố không được để trống";
                     response.Data = null;
                     return Ok(response);
-                }
-                if (streamProvider.FormData["staff_id"] == null && streamProvider.FormData["customer_id"] == null)
-                {
-                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                    response.Message = "Phuong/Xa phố không được để trống";
-                    response.Data = null;
-                    return Ok(response);
-                }
-                AddressUpdateViewModel addressUpdateViewModel = new AddressUpdateViewModel
-                {
-                    add_id = Convert.ToInt32(streamProvider.FormData["add_id"]),
-                    add_province = Convert.ToString(streamProvider.FormData["add_province"]),
-
-                    add_district = Convert.ToString(streamProvider.FormData["add_district"]),
-                    add_ward = Convert.ToString(streamProvider.FormData["add_ward"]),
-
-                };
-                if (streamProvider.FormData["staff_id"] == null)
-                {
-                    addressUpdateViewModel.staff_id = null;
-                }
-                else
-                {
-                    addressUpdateViewModel.staff_id = Convert.ToInt32(streamProvider.FormData["staff_id"]);
                 }
                 if (streamProvider.FormData["customer_id"] == null)
                 {
-                    addressUpdateViewModel.customer_id = null;
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Mã khách hàng không được để trống";
+                    response.Data = null;
+                    return Ok(response);
                 }
-                else
+                ShipAddressUpdateViewModel shipaddressUpdateViewModel = new ShipAddressUpdateViewModel
                 {
-                    addressUpdateViewModel.customer_id = Convert.ToInt32(streamProvider.FormData["customer_id"]);
-                }
+                    sha_id = Convert.ToInt32(streamProvider.FormData["sha_id"]),
+                    sha_province = Convert.ToString(streamProvider.FormData["sha_province"]),
+
+                    sha_district = Convert.ToString(streamProvider.FormData["sha_district"]),
+                    sha_ward = Convert.ToString(streamProvider.FormData["sha_ward"]),
+
+                };
+                shipaddressUpdateViewModel.customer_id = Convert.ToInt32(streamProvider.FormData["customer_id"]);
                 // mapping view model to entity
-                var updatedaddress = _mapper.Map<address>(addressUpdateViewModel);
+                var updatedshipaddress = _mapper.Map<ship_address>(shipaddressUpdateViewModel);
 
                 // update address
-                _addressservice.Update(updatedaddress, addressUpdateViewModel.add_id);
+                _shipaddressservice.Update(updatedshipaddress, shipaddressUpdateViewModel.sha_id);
                 // return response
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = updatedaddress;
+                response.Data = updatedshipaddress;
                 return Ok(response);
             }
             catch (Exception ex)
@@ -318,18 +290,19 @@ namespace ERP.API.Controllers.Dashboard
             }
         }
         #endregion
+
         #region [Delete]
         [HttpDelete]
         [Route("api/addresss/delete")]
-        public IHttpActionResult Deleteaddress(int addressId)
+        public IHttpActionResult Deleteaddress(int shipaddressId)
         {
-            ResponseDataDTO<address> response = new ResponseDataDTO<address>();
+            ResponseDataDTO<ship_address> response = new ResponseDataDTO<ship_address>();
             try
             {
-                var addressDeleted = _addressservice.Find(addressId);
-                if (addressDeleted != null)
+                var shipaddressDeleted = _shipaddressservice.Find(shipaddressId);
+                if (shipaddressDeleted != null)
                 {
-                    _addressservice.Delete(addressDeleted);
+                    _shipaddressservice.Delete(shipaddressDeleted);
 
                     // return response
                     response.Code = HttpCode.OK;
@@ -341,12 +314,11 @@ namespace ERP.API.Controllers.Dashboard
                 {
                     // return response
                     response.Code = HttpCode.NOT_FOUND;
-                    response.Message = "Không thấy được sản phẩm";
+                    response.Message = "Không thấy được địa chỉ";
                     response.Data = null;
 
                     return Ok(response);
                 }
-
 
             }
             catch (Exception ex)
@@ -361,14 +333,13 @@ namespace ERP.API.Controllers.Dashboard
         }
         #endregion
 
-
         #region dispose
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                _addressservice.Dispose();
+                _shipaddressservice.Dispose();
             }
             base.Dispose(disposing);
         }

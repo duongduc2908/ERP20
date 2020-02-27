@@ -123,7 +123,6 @@
     <Compile Include="Identity\AppIdentityClaims.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="DbContext\ERPDbContext.cs" />
-    <Compile Include="ModelsERP\address.cs" />
     <Compile Include="ModelsERP\ChangePasswordBindingModel.cs" />
     <Compile Include="ModelsERP\ClientMaster.cs" />
     <Compile Include="ModelsERP\company.cs" />
@@ -131,7 +130,6 @@
     <Compile Include="ModelsERP\customer_group.cs" />
     <Compile Include="ModelsERP\customer_order.cs" />
     <Compile Include="ModelsERP\District.cs" />
-    <Compile Include="ModelsERP\ModelView\addressviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\customerordermodelview.cs" />
     <Compile Include="ModelsERP\ModelView\customer_type.cs" />
     <Compile Include="ModelsERP\department.cs" />
@@ -150,7 +148,9 @@
     <Compile Include="ModelsERP\ModelView\productorderviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\productviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\dropdown.cs" />
+    <Compile Include="ModelsERP\ModelView\shipaddressviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\staffviewmodel.cs" />
+    <Compile Include="ModelsERP\ModelView\undertakenlocationviewmodel.cs" />
     <Compile Include="ModelsERP\notification.cs" />
     <Compile Include="ModelsERP\order_product.cs" />
     <Compile Include="ModelsERP\order_service.cs" />
@@ -164,6 +164,7 @@
     <Compile Include="ModelsERP\RefreshToken.cs" />
     <Compile Include="ModelsERP\service.cs" />
     <Compile Include="ModelsERP\service_time.cs" />
+    <Compile Include="ModelsERP\ship_address.cs" />
     <Compile Include="ModelsERP\sms.cs" />
     <Compile Include="ModelsERP\sms_strategy.cs" />
     <Compile Include="ModelsERP\sms_template.cs" />
@@ -172,6 +173,7 @@
     <Compile Include="ModelsERP\supplier.cs" />
     <Compile Include="ModelsERP\supplier_type.cs" />
     <Compile Include="ModelsERP\task.cs" />
+    <Compile Include="ModelsERP\undertaken_location.cs" />
     <Compile Include="ModelsERP\Ward.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

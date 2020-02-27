@@ -25,7 +25,7 @@ namespace ERP.API.Controllers.Dashboard
     public class ManagerCustomerController : BaseController
     {
         private readonly ICustomerService _customerservice;
-        private readonly IAddressService _addressservice;
+        private readonly IShipAddressService _shipaddressservice;
 
         private readonly IMapper _mapper;
 
@@ -33,10 +33,10 @@ namespace ERP.API.Controllers.Dashboard
         {
 
         }
-        public ManagerCustomerController(ICustomerService customerservice, IAddressService addressservice, IMapper mapper)
+        public ManagerCustomerController(ICustomerService customerservice, IShipAddressService shipaddressservice, IMapper mapper)
         {
             this._customerservice = customerservice;
-            this._addressservice = addressservice;
+            this._shipaddressservice = shipaddressservice;
             this._mapper = mapper;
         }
 
@@ -64,6 +64,7 @@ namespace ERP.API.Controllers.Dashboard
             return Ok(response);
         }
         #endregion
+
         #region [Get All Page]
         [HttpGet]
         [Route("api/customers/page")]
@@ -88,6 +89,7 @@ namespace ERP.API.Controllers.Dashboard
             return Ok(response);
         }
         #endregion
+
         #region [Get Infor by Id]
         [HttpGet]
         [Route("api/customers/infor")]
@@ -112,7 +114,7 @@ namespace ERP.API.Controllers.Dashboard
             return Ok(response);
         }
         #endregion
-        
+
         #region [Search source, type, group, name Page]
         [HttpGet]
         [Route("api/customers/search")]
@@ -137,6 +139,7 @@ namespace ERP.API.Controllers.Dashboard
             return Ok(response);
         }
         #endregion
+
         #region [Get Type]
         [HttpGet]
         [Route("api/customers/type")]
@@ -162,6 +165,7 @@ namespace ERP.API.Controllers.Dashboard
             return Ok(response);
         }
         #endregion
+
         #region[Create Customer]
         [HttpPost]
         [Route("api/customers/create")]
@@ -326,21 +330,6 @@ namespace ERP.API.Controllers.Dashboard
                 createdcustomer.cu_thumbnail = fileName;
                 // save new customer
                 _customerservice.Create(createdcustomer);
-
-                var get_last_id = _customerservice.GetLast();
-                //Create address
-                AddressCreateViewModel addressCreateViewModel = new AddressCreateViewModel
-                {
-                    add_province = Convert.ToString(streamProvider.FormData["add_province"]),
-
-                    add_district = Convert.ToString(streamProvider.FormData["add_district"]),
-                    add_ward = Convert.ToString(streamProvider.FormData["add_ward"]),
-
-                };
-                addressCreateViewModel.customer_id = get_last_id.cu_id;
-                var createAddress = _mapper.Map<address>(addressCreateViewModel);
-                _addressservice.Create(createAddress);
-
                 // return response
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
@@ -359,6 +348,7 @@ namespace ERP.API.Controllers.Dashboard
 
         }
         #endregion
+
         #region[Update]
 
         [HttpPut]
@@ -569,6 +559,7 @@ namespace ERP.API.Controllers.Dashboard
             }
         }
         #endregion
+
         #region[Delete]
         [HttpDelete]
         [Route("api/customers/delete")]

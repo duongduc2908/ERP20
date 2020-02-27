@@ -470,7 +470,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\AddressRepository.cs" />
     <Compile Include="Repositories\AuthenticationRepository.cs" />
     <Compile Include="Repositories\ClientMasterRepository.cs" />
     <Compile Include="Repositories\CompanyRepository.cs" />
@@ -486,7 +485,6 @@
     <Compile Include="Repositories\FunctionRepository.cs" />
     <Compile Include="Repositories\FunctionSettingRepository.cs" />
     <Compile Include="Repositories\GroupRoleRepository.cs" />
-    <Compile Include="Repositories\IRepositories\IAddressRepository.cs" />
     <Compile Include="Repositories\IRepositories\ICompanyRepository.cs" />
     <Compile Include="Repositories\IRepositories\ICustomerGroupRepository.cs" />
     <Compile Include="Repositories\IRepositories\ICustomerOrderRepository.cs" />
@@ -510,6 +508,7 @@
     <Compile Include="Repositories\IRepositories\IProductRepository.cs" />
     <Compile Include="Repositories\IRepositories\IProjectRepository.cs" />
     <Compile Include="Repositories\IRepositories\IServiceRepository.cs" />
+    <Compile Include="Repositories\IRepositories\IShipAddressRepository.cs" />
     <Compile Include="Repositories\IRepositories\ISmsRepository.cs" />
     <Compile Include="Repositories\IRepositories\ISmsStrategyRepository.cs" />
     <Compile Include="Repositories\IRepositories\ISmsTemplateRepository.cs" />
@@ -518,6 +517,7 @@
     <Compile Include="Repositories\IRepositories\ISupplierRepository.cs" />
     <Compile Include="Repositories\IRepositories\ISupplierTypeRepository.cs" />
     <Compile Include="Repositories\IRepositories\ITaskRepository.cs" />
+    <Compile Include="Repositories\IRepositories\IUndertakenLocationRepository.cs" />
     <Compile Include="Repositories\NotificationRepository.cs" />
     <Compile Include="Repositories\OrderProductRepository.cs" />
     <Compile Include="Repositories\OrderServiceRepository.cs" />
@@ -528,6 +528,7 @@
     <Compile Include="Repositories\ProductRepository.cs" />
     <Compile Include="Repositories\ProjectRepository.cs" />
     <Compile Include="Repositories\ServiceRepository.cs" />
+    <Compile Include="Repositories\ShipAddressRepository.cs" />
     <Compile Include="Repositories\SmsRepository.cs" />
     <Compile Include="Repositories\SmsStrategyRepository.cs" />
     <Compile Include="Repositories\SmsTemplateRepository.cs" />
@@ -536,6 +537,7 @@
     <Compile Include="Repositories\SupplierRepository.cs" />
     <Compile Include="Repositories\SupplierTypeRepository.cs" />
     <Compile Include="Repositories\TaskRepository.cs" />
+    <Compile Include="Repositories\UndertakenLocationRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

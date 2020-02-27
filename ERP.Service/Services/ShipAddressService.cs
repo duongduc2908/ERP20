@@ -11,15 +11,15 @@ using System.Web;
 
 namespace ERP.Service.Services
 {
-    public class AddressService : GenericService<address>, IAddressService
+    public class ShipAddressService : GenericService<ship_address>, IShipAddressService
     {
-        private readonly IAddressRepository _repository;
-        public AddressService(IAddressRepository repository) : base(repository)
+        private readonly IShipAddressRepository _repository;
+        public ShipAddressService(IShipAddressRepository repository) : base(repository)
         {
             this._repository = repository;
         }
-     
-        public PagedResults<address> CreatePagedResults(int pageNumber, int pageSize)
+
+        public PagedResults<ship_address> CreatePagedResults(int pageNumber, int pageSize)
         {
             return this._repository.CreatePagedResults(pageNumber, pageSize);
         }
