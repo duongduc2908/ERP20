@@ -71,7 +71,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\AddressService.cs" />
     <Compile Include="Services\CompanyService.cs" />
     <Compile Include="Services\CustomerGroupService.cs" />
     <Compile Include="Services\CustomerOrderService.cs" />
@@ -84,7 +83,6 @@
     <Compile Include="Services\FieldTemplateService.cs" />
     <Compile Include="Services\FunctionService.cs" />
     <Compile Include="Services\GroupRoleService.cs" />
-    <Compile Include="Services\IServices\IAddressService.cs" />
     <Compile Include="Services\IServices\ICompanyService.cs" />
     <Compile Include="Services\IServices\ICustomerGroupService.cs" />
     <Compile Include="Services\IServices\ICustomerOrderService.cs" />
@@ -108,6 +106,7 @@
     <Compile Include="Services\IServices\IProductService.cs" />
     <Compile Include="Services\IServices\IProjectService.cs" />
     <Compile Include="Services\IServices\IServiceService.cs" />
+    <Compile Include="Services\IServices\IShipAddressService.cs" />
     <Compile Include="Services\IServices\ISmsService.cs" />
     <Compile Include="Services\IServices\ISmsStrategyService.cs" />
     <Compile Include="Services\IServices\ISmsTemplateService.cs" />
@@ -116,6 +115,7 @@
     <Compile Include="Services\IServices\ISupplierService.cs" />
     <Compile Include="Services\IServices\ISupplierTypeService.cs" />
     <Compile Include="Services\IServices\ITaskService.cs" />
+    <Compile Include="Services\IServices\IUndertakenLocationService.cs" />
     <Compile Include="Services\NotificationService.cs" />
     <Compile Include="Services\OrderProducService.cs" />
     <Compile Include="Services\OrderServiceService.cs" />
@@ -126,6 +126,7 @@
     <Compile Include="Services\ProductService.cs" />
     <Compile Include="Services\ProjectService.cs" />
     <Compile Include="Services\ServiceService.cs" />
+    <Compile Include="Services\ShipAddressService.cs" />
     <Compile Include="Services\SmsService.cs" />
     <Compile Include="Services\SmsStrategyService.cs" />
     <Compile Include="Services\SmsTemplateService.cs" />
@@ -133,6 +134,7 @@
     <Compile Include="Services\StaffService.cs" />
     <Compile Include="Services\SupplierService.cs" />
     <Compile Include="Services\SupplierTypeService.cs" />
+    <Compile Include="Services\UndertakenLocationService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -6,34 +6,29 @@ using System.Web;
 
 namespace ERP.Data.ModelsERP.ModelView
 {
-    public class addressviewmodel
+    public class shipaddressviewmodel
     {
-        [Key]
-        public int add_id { get; set; }
+        public int sha_id { get; set; }
 
         [StringLength(50)]
-        public string add_ward { get; set; }
+        public string sha_ward { get; set; }
         public int ward_id { get; set; }
 
         [StringLength(50)]
-        public string add_district { get; set; }
+        public string sha_district { get; set; }
         public int district_id { get; set; }
 
         [StringLength(50)]
-        public string add_province { get; set; }
+        public string sha_province { get; set; }
         public int province_id { get; set; }
 
         [StringLength(50)]
-        public string add_detail { get; set; }
+        public string sha_detail { get; set; }
 
         [StringLength(50)]
-        public string add_note { get; set; }
+        public string sha_note { get; set; }
 
         [StringLength(50)]
-        public string add_geocoding { get; set; }
-
-        public int? customer_id { get; set; }
-
-        public int? staff_id { get; set; }
+        public string sha_geocoding { get; set; }
     }
 }

@@ -293,14 +293,14 @@ namespace ERP.Repository.Repositories
                     res.cu_type_name = EnumCustomer.cu_type[j];
                 }
             }
-            var list_address = _dbContext.address.Where(i => i.customer_id == customer_cur.cu_id).ToList();
-            List<addressviewmodel> lst = new List<addressviewmodel>();
-            foreach(address i in list_address)
+            var list_address = _dbContext.ship_address.Where(i => i.customer_id == customer_cur.cu_id).ToList();
+            List<shipaddressviewmodel> lst = new List<shipaddressviewmodel>();
+            foreach(ship_address i in list_address)
             {
-                addressviewmodel add = _mapper.Map<addressviewmodel>(i);
-                add.ward_id = _dbContext.ward.Where(t => t.Name.Contains(i.add_ward)).FirstOrDefault().Id;
-                add.district_id = _dbContext.district.Where(t => t.Name.Contains(i.add_district)).FirstOrDefault().Id;
-                add.province_id = _dbContext.province.Where(t => t.Name.Contains(i.add_province)).FirstOrDefault().Id;
+                shipaddressviewmodel add = _mapper.Map<shipaddressviewmodel>(i);
+                add.ward_id = _dbContext.ward.Where(t => t.Name.Contains(i.sha_ward)).FirstOrDefault().Id;
+                add.district_id = _dbContext.district.Where(t => t.Name.Contains(i.sha_district)).FirstOrDefault().Id;
+                add.province_id = _dbContext.province.Where(t => t.Name.Contains(i.sha_province)).FirstOrDefault().Id;
                 lst.Add(add);
             }
             res.list_address = lst;

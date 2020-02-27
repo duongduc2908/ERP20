@@ -6,32 +6,29 @@ namespace ERP.Data.ModelsERP
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    [Table("address")]
-    public partial class address
+    public partial class ship_address
     {
         [Key]
-        public int add_id { get; set; }
+        public int sha_id { get; set; }
 
         [StringLength(50)]
-        public string add_ward { get; set; }
+        public string sha_ward { get; set; }
 
         [StringLength(50)]
-        public string add_district { get; set; }
+        public string sha_district { get; set; }
 
         [StringLength(50)]
-        public string add_province { get; set; }
+        public string sha_province { get; set; }
 
         [StringLength(50)]
-        public string add_detail { get; set; }
+        public string sha_detail { get; set; }
 
         [StringLength(50)]
-        public string add_note { get; set; }
+        public string sha_note { get; set; }
 
         [StringLength(50)]
-        public string add_geocoding { get; set; }
+        public string sha_geocoding { get; set; }
 
         public int? customer_id { get; set; }
-
-        public int? staff_id { get; set; }
     }
 }

@@ -59,9 +59,10 @@ namespace ERP.Data.DbContext
         public virtual DbSet<source> sources { get; set; }
         public virtual DbSet<product_order> product_order { get; set; }
         public virtual DbSet<customer_group> customer_group { get; set; }
-        public virtual DbSet<address> address { get; set; }
         public virtual DbSet<Province> province { get; set; }
         public virtual DbSet<District> district { get; set; }
         public virtual DbSet<Ward> ward { get; set; }
+        public virtual DbSet<ship_address> ship_address { get; set; }
+        public virtual DbSet<undertaken_location> undertaken_location { get; set; }
     }
 }

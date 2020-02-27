@@ -211,14 +211,14 @@ namespace ERP.Repository.Repositories
             var position = _dbContext.positions.FirstOrDefault(x => x.pos_id == staff_cur.position_id);
             res.position_name = position.pos_name;
             
-            var list_address = _dbContext.address.Where(i => i.staff_id == staff_cur.sta_id).ToList();
-            List<addressviewmodel> lst = new List<addressviewmodel>();
-            foreach (address i in list_address)
+            var list_address = _dbContext.undertaken_location.Where(i => i.staff_id == staff_cur.sta_id).ToList();
+            List<undertakenlocationviewmodel> lst = new List<undertakenlocationviewmodel>();
+            foreach (undertaken_location i in list_address)
             {
-                addressviewmodel add = _mapper.Map<addressviewmodel>(i);
-                add.ward_id = _dbContext.ward.Where(t => t.Name.Contains(i.add_ward)).FirstOrDefault().Id;
-                add.district_id = _dbContext.district.Where(t => t.Name.Contains(i.add_district)).FirstOrDefault().Id;
-                add.province_id = _dbContext.province.Where(t => t.Name.Contains(i.add_province)).FirstOrDefault().Id;
+                undertakenlocationviewmodel add = _mapper.Map<undertakenlocationviewmodel>(i);
+                add.ward_id = _dbContext.ward.Where(t => t.Name.Contains(i.unl_ward)).FirstOrDefault().Id;
+                add.district_id = _dbContext.district.Where(t => t.Name.Contains(i.unl_district)).FirstOrDefault().Id;
+                add.province_id = _dbContext.province.Where(t => t.Name.Contains(i.unl_province)).FirstOrDefault().Id;
                 lst.Add(add);
             }
             res.list_address = lst;

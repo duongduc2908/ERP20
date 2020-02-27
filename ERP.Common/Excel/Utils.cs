@@ -502,11 +502,11 @@ namespace ERP.Common.Excel
         public static List<T> ToListof<T>(DataTable dt)
         {
             const BindingFlags flags = BindingFlags.Public | BindingFlags.Instance;
-            var columnNames = dt.Columns.Cast<DataColumn>()
+            var columnNames = dt.Columns .Cast<DataColumn>()
                 .Select(c => c.ColumnName.ToUpper())
                 .ToList();
             var objectProperties = typeof(T).GetProperties(flags);
-            var targetList = dt.AsEnumerable().Select(dataRow =>
+            var targetList = dt.AsEnumerable().Skip(1).Select(dataRow =>
             {
                 var instanceOfT = Activator.CreateInstance<T>();
 
