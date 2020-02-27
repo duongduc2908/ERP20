@@ -30,6 +30,30 @@ namespace ERP.API.Controllers.Dashboard
             this._customerorderservice = customerorderservice;
             this._mapper = mapper;
         }
+        #region[Statistics by]
+        [HttpGet]
+        [Route("api/dashboards/statistics_by_product")]
+        public IHttpActionResult GetProduct(int pageNumber, int pageSize,int staff_id, bool month, bool week, bool day)
+        {
+            ResponseDataDTO<PagedResults<customerorderviewmodel>> response = new ResponseDataDTO<PagedResults<customerorderviewmodel>>();
+            try
+            {
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+
+                response.Data = _customerorderservice.ResultStatisticsCustomerOrder(pageNumber:pageNumber, pageSize:pageSize, staff_id,month,week,day);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+                Console.WriteLine(ex.ToString());
+            }
+
+            return Ok(response);
+        }
+        #endregion
         #region[Statistics by month]
         [HttpGet]
         [Route("api/dashboards/statistics_by_month")]
@@ -54,36 +78,7 @@ namespace ERP.API.Controllers.Dashboard
             return Ok(response);
         }
         #endregion
-        #region[Statistics by]
-        [HttpGet]
-        [Route("api/dashboards/statistics_by_product")]
-        public IHttpActionResult GetProduct(int staff_id, bool month, bool week, bool day)
-        {
-            ResponseDataDTO<int> response = new ResponseDataDTO<int>();
-            try
-            {
-                DateTime datetimesearch = new DateTime();
-                if (month) datetimesearch = Utilis.GetFirstDayOfMonth(DateTime.Now);
-                if (week) datetimesearch = Utilis.GetFirstDayOfWeek(DateTime.Now); 
-                if (day) datetimesearch = DateTime.Now;
-
-                var x = _customerorderservice.GetAllIncluing(i => i.cuo_date <= DateTime.Now && i.cuo_date >= datetimesearch);
-                response.Code = HttpCode.OK;
-                response.Message = MessageResponse.SUCCESS;
-
-                response.Data = _customerorderservice.ResultStatisticsByMonth(staff_id);
-            }
-            catch (Exception ex)
-            {
-                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = ex.Message;
-                response.Data = 0;
-                Console.WriteLine(ex.ToString());
-            }
-
-            return Ok(response);
-        }
-        #endregion
+       
         #region[Statistics by week]
         [HttpGet]
         [Route("api/dashboards/statistics_by_week")]

@@ -72,6 +72,62 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = totalNumberOfRecords
             };
         }
+        public PagedResults<customerorderviewmodel> ResultStatisticsCustomerOrder(int pageNumber, int pageSize, int staff_id, bool month, bool week, bool day)
+        {
+            List<customerorderviewmodel> res = new List<customerorderviewmodel>();
+            var skipAmount = pageSize * pageNumber;
+            DateTime datetimesearch = new DateTime();
+            if (month) datetimesearch = Utilis.GetFirstDayOfMonth(DateTime.Now);
+            if (week) datetimesearch = Utilis.GetFirstDayOfWeek(DateTime.Now);
+            if (day) datetimesearch = DateTime.Now;
+
+            var list = _dbContext.customer_order.Where(i => i.cuo_date <= DateTime.Now && i.cuo_date >= datetimesearch && i.staff_id == staff_id).OrderBy(t => t.cuo_id).Skip(skipAmount).Take(pageSize);
+
+            var total = _dbContext.customer_order.Count();
+            var totalNumberOfRecords = list.Count();
+
+            var results = list.ToList();
+            foreach (customer_order i in results)
+            {
+                var orderview = _mapper.Map<customerorderviewmodel>(i);
+                for (int j = 0; j < 3; j++)
+                {
+                    if (j == i.cuo_status)
+                    {
+                        orderview.cuo_status = EnumCustomerOrder.status[j];
+                    }
+                }
+                
+                for (int j = 0; j < 3; j++)
+                {
+                    if (j == i.cuo_payment_type)
+                    {
+                        orderview.cuo_payment_type = EnumCustomerOrder.cuo_payment_type[j];
+                    }
+                }
+                for (int j = 0; j < 2; j++)
+                {
+                    if (j == i.cuo_payment_status)
+                    {
+                        orderview.cuo_payment_status = EnumCustomerOrder.cuo_payment_status[j];
+                    }
+                }
+                res.Add(orderview);
+            }
+
+            var mod = total % pageSize;
+
+            var totalPageCount = (total / pageSize) + (mod == 0 ? 0 : 1);
+
+            return new PagedResults<customerorderviewmodel>
+            {
+                Results = res,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalNumberOfPages = totalPageCount,
+                TotalNumberOfRecords = totalNumberOfRecords
+            };
+        }
         public customerordermodelview GetAllOrderById(int id)
         {
             customerordermodelview res = new customerordermodelview();
