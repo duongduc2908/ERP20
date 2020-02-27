@@ -86,15 +86,6 @@ namespace ERP.API.Controllers.Dashboard
 
             return Ok(response);
         }
-        [HttpPost]
-        [Route("api/customer-orders/test")]
-        public IHttpActionResult Test([FromBody] CustomerOrderProductViewModel customer_order)
-        {
-            var c= customer_order;
-            ResponseDataDTO<PagedResults<customerorderviewmodel>> response = new ResponseDataDTO<PagedResults<customerorderviewmodel>>();
-            
-            return Ok(response);
-        }
 
         [HttpGet]
         [Route("api/customer-orders/page")]
