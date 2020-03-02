@@ -15,9 +15,11 @@ namespace ERP.Data.ModelsERP.ModelView
         public string op_note { get; set; }
 
         public int? product_id { get; set; }
+        public string pu_name { get; set; }
 
         public int? op_discount { get; set; }
         public byte? pu_unit { get; set; }
+        public string pu_unit_name { get; set; }
 
     }
 }

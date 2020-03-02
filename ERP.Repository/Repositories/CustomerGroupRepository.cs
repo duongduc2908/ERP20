@@ -50,8 +50,6 @@ namespace ERP.Repository.Repositories
                 }
             }
             var total = _dbContext.customer_group.Count();
-            var totalNumberOfRecords = list.Count();
-
             var results = list.ToList();
             foreach (customer_group i in results)
             {
@@ -73,7 +71,7 @@ namespace ERP.Repository.Repositories
                 PageNumber = pageNumber,
                 PageSize = pageSize,
                 TotalNumberOfPages = totalPageCount,
-                TotalNumberOfRecords = totalNumberOfRecords
+                TotalNumberOfRecords = total
             };
         }
     }

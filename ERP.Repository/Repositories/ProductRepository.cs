@@ -5,6 +5,7 @@ using ERP.Common.Models;
 using ERP.Data.DbContext;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
+using ERP.Data.ModelsERP.ModelView.Product;
 using ERP.Repository.Repositories.IRepositories;
 using System;
 using System.Collections.Generic;
@@ -24,10 +25,8 @@ namespace ERP.Repository.Repositories
         public PagedResults<productviewmodel> GetAllPageById( int id)
         {
             List<productviewmodel> res = new List<productviewmodel>();
-            
-
             var list = _dbContext.products.Where(i => i.pu_id == id).ToList();
-            var totalNumberOfRecords = list.Count();
+            var totalNumberOfRecords = _dbContext.products.Count();
 
             var results = list.ToList();
             foreach (product i in results)
@@ -38,11 +37,11 @@ namespace ERP.Repository.Repositories
 
                 productview.product_category_name = product_category.pc_name;
                 productview.provider_name = supplier.su_name;
-                for(int j = 0; j< 2; j++)
+                for(int j = 1; j< 3; j++)
                 {
                     if(j == i.pu_unit)
                     {
-                        productview.pu_unit_name = EnumProduct.pu_unit[j];
+                        productview.pu_unit_name = EnumProduct.pu_unit[j-1];
                     }
                 }
                
@@ -76,11 +75,11 @@ namespace ERP.Repository.Repositories
                 productview.product_category_name = product_category.pc_name;
                 productview.provider_name = supplier.su_name;
 
-                for (int j = 0; j < 2; j++)
+                for (int j = 1; j < 3; j++)
                 {
                     if (j == i.pu_unit)
                     {
-                        productview.pu_unit_name = EnumProduct.pu_unit[j];
+                        productview.pu_unit_name = EnumProduct.pu_unit[j-1];
                     }
                 }
                 res.Add(productview);
@@ -130,10 +129,8 @@ namespace ERP.Repository.Repositories
                     list = _dbContext.products.OrderBy(t => t.pu_id).Skip(skipAmount).Take(pageSize);
                 }
             }
-
             var total = _dbContext.products.Count();
-            var totalNumberOfRecords = list.Count();
-
+            
             var results = list.ToList();
             foreach (product i in results)
             {
@@ -144,13 +141,34 @@ namespace ERP.Repository.Repositories
                 productview.product_category_name = product_category.pc_name;
                 productview.provider_name = supplier.su_name;
 
-                for (int j = 0; j < 2; j++)
+                for (int j = 1; j < 3; j++)
                 {
                     if (j == i.pu_unit)
                     {
-                        productview.pu_unit_name = EnumProduct.pu_unit[j];
+                        productview.pu_unit_name = EnumProduct.pu_unit[j-1];
                     }
                 }
+
+                //Lay ra thong tin san pham 
+                var list_orp_history = _dbContext.order_product.Where(s => s.product_id == i.pu_id).ToList();
+                List<orderproducthistoryviewmodel> lst_orp = new List<orderproducthistoryviewmodel>();
+                foreach (order_product s in list_orp_history)
+                {
+                    orderproducthistoryviewmodel add = _mapper.Map<orderproducthistoryviewmodel>(s);
+                    var customer_order = _dbContext.customer_order.Where(cuo => cuo.cuo_id == s.customer_order_id).FirstOrDefault();
+                    add.cuo_code = customer_order.cuo_code;
+                    add.cuo_date = customer_order.cuo_date;
+
+                    //Lay ra khach hang 
+                    var customer = _dbContext.customers.Where(c => c.cu_id == customer_order.customer_id).FirstOrDefault();
+                    add.cu_fullname = customer.cu_fullname;
+
+                    var staff = _dbContext.staffs.Where(sta => sta.sta_id == customer_order.staff_id).FirstOrDefault();
+                    add.sta_fullname = staff.sta_fullname;
+                    add.pu_unit_name = productview.pu_unit_name;
+                    lst_orp.Add(add);
+                }
+                productview.list_orp_history = lst_orp;
                 res.Add(productview);
             }
 
@@ -164,18 +182,18 @@ namespace ERP.Repository.Repositories
                 PageNumber = pageNumber,
                 PageSize = pageSize,
                 TotalNumberOfPages = totalPageCount,
-                TotalNumberOfRecords = totalNumberOfRecords
+                TotalNumberOfRecords = total
             };
         }
         public List<dropdown> GetUnit()
         {
 
             List<dropdown> res = new List<dropdown>();
-            for(int i = 0; i < 2; i++)
+            for(int i = 1; i < 3; i++)
             {
                 dropdown pu = new dropdown();
                 pu.id = i;
-                pu.name = EnumProduct.pu_unit[i];
+                pu.name = EnumProduct.pu_unit[i-1];
                 
                 res.Add(pu);
             }

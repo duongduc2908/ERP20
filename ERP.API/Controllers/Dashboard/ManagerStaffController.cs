@@ -833,7 +833,7 @@ namespace ERP.API.Controllers.Dashboard
                         //fileName = fileName.Replace(@"","");
 
                         string fileFormat = Utilis.GetFileFormat(fileName);
-                        if (fileFormat.Equals("xlsx") || fileFormat.Equals("xls"))
+                        if (fileFormat.Equals("xlsm") || fileFormat.Equals("xlsx"))
                         {
                             fileName = FileExtension.SaveFileOnDisk(fileData);
                         }
@@ -982,6 +982,8 @@ namespace ERP.API.Controllers.Dashboard
                     // Gọi hàm save data
                     foreach(staff i in list)
                     {
+                        var x = _staffservice.GetLast().sta_id;
+                        i.sta_code = Utilis.CreateCode("NV", x, 7);
                         _staffservice.Create(i);
                     }
                     exitsData = "Đã nhập dữ liệu excel thành công!";

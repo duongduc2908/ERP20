@@ -31,7 +31,7 @@ namespace ERP.API.Controllers.Dashboard
 
         #region[Get Province]
         [HttpGet]
-        [Route("api/UndertakenLocations/get-province")]
+        [Route("api/undertakenLocations/get-province")]
         public IHttpActionResult GetUndertakenLocations()
         {
             ResponseDataDTO<IEnumerable<dropdown>> response = new ResponseDataDTO<IEnumerable<dropdown>>();
@@ -53,7 +53,7 @@ namespace ERP.API.Controllers.Dashboard
             return Ok(response);
         }
         [HttpGet]
-        [Route("api/UndertakenLocations/get-district")]
+        [Route("api/undertakenLocations/get-district")]
         public IHttpActionResult GetDistrict(int? province_id)
         {
             ResponseDataDTO<IEnumerable<dropdown>> response = new ResponseDataDTO<IEnumerable<dropdown>>();
@@ -75,7 +75,7 @@ namespace ERP.API.Controllers.Dashboard
             return Ok(response);
         }
         [HttpGet]
-        [Route("api/UndertakenLocations/get-ward")]
+        [Route("api/undertakenLocations/get-ward")]
         public IHttpActionResult GetWard(int? district_id)
         {
             ResponseDataDTO<IEnumerable<dropdown>> response = new ResponseDataDTO<IEnumerable<dropdown>>();
@@ -102,7 +102,7 @@ namespace ERP.API.Controllers.Dashboard
 
         #region["Get All"]
         [HttpGet]
-        [Route("api/UndertakenLocations/all")]
+        [Route("api/undertakenLocations/all")]
         public IHttpActionResult GetAll()
         {
             ResponseDataDTO<IEnumerable<undertaken_location>> response = new ResponseDataDTO<IEnumerable<undertaken_location>>();
@@ -127,7 +127,7 @@ namespace ERP.API.Controllers.Dashboard
 
         #region [Create]
         [HttpPost]
-        [Route("api/UndertakenLocations/create")]
+        [Route("api/undertakenLocations/create")]
         public async Task<IHttpActionResult> CreateUndertakenLocation()
         {
             ResponseDataDTO<undertaken_location> response = new ResponseDataDTO<undertaken_location>();
@@ -204,7 +204,7 @@ namespace ERP.API.Controllers.Dashboard
 
         #region[Update]
         [HttpPut]
-        [Route("api/UndertakenLocations/update")]
+        [Route("api/undertakenLocations/update")]
 
         public async Task<IHttpActionResult> UpdateUndertakenLocation()
         {
@@ -285,7 +285,7 @@ namespace ERP.API.Controllers.Dashboard
 
         #region [Delete]
         [HttpDelete]
-        [Route("api/UndertakenLocations/delete")]
+        [Route("api/undertakenLocations/delete")]
         public IHttpActionResult DeleteUndertakenLocation(int undertakenlocationId)
         {
             ResponseDataDTO<undertaken_location> response = new ResponseDataDTO<undertaken_location>();

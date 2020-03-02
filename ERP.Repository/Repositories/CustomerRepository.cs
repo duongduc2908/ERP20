@@ -27,8 +27,6 @@ namespace ERP.Repository.Repositories
             var skipAmount = pageSize * pageNumber;
 
             var list = _dbContext.customers.OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-
-            var totalNumberOfRecords = list.Count();
             var total = _dbContext.customers.Count();
 
             var results = list.ToList();
@@ -36,11 +34,11 @@ namespace ERP.Repository.Repositories
             {
                 var customerview = _mapper.Map<customerviewmodel>(i);
 
-                for (int j = 0; j < 2; j++)
+                for (int j = 1; j < 3; j++)
                 {
                     if (j == i.cu_type)
                     {
-                        customerview.cu_type_name = EnumCustomer.cu_type[j];
+                        customerview.cu_type_name = EnumCustomer.cu_type[j-1];
                     }
                 }
                 var group_role = _dbContext.group_role.FirstOrDefault(x => x.gr_id == i.customer_group_id);
@@ -61,7 +59,7 @@ namespace ERP.Repository.Repositories
                 PageNumber = pageNumber,
                 PageSize = pageSize,
                 TotalNumberOfPages = totalPageCount,
-                TotalNumberOfRecords = totalNumberOfRecords
+                TotalNumberOfRecords = total
             };
 
         }
@@ -72,7 +70,7 @@ namespace ERP.Repository.Repositories
 
             var list = _dbContext.customers.OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
 
-            var totalNumberOfRecords = list.Count();
+           
             var total = _dbContext.customers.Count();
 
             var results = list.ToList();
@@ -87,7 +85,7 @@ namespace ERP.Repository.Repositories
                 PageNumber = pageNumber,
                 PageSize = pageSize,
                 TotalNumberOfPages = totalPageCount,
-                TotalNumberOfRecords = totalNumberOfRecords
+                TotalNumberOfRecords = total
             };
 
         }
@@ -98,7 +96,7 @@ namespace ERP.Repository.Repositories
 
             var list = _dbContext.customers.OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
 
-            var totalNumberOfRecords = list.Count();
+            
             var total = _dbContext.customers.Count();
 
             var results = list.ToList();
@@ -113,7 +111,7 @@ namespace ERP.Repository.Repositories
                 PageNumber = pageNumber,
                 PageSize = pageSize,
                 TotalNumberOfPages = totalPageCount,
-                TotalNumberOfRecords = totalNumberOfRecords
+                TotalNumberOfRecords = total
             };
 
         }
@@ -124,7 +122,7 @@ namespace ERP.Repository.Repositories
 
             var list = _dbContext.customers.OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
 
-            var totalNumberOfRecords = list.Count();
+            
             var total = _dbContext.customers.Count();
 
             var results = list.ToList();
@@ -139,7 +137,7 @@ namespace ERP.Repository.Repositories
                 PageNumber = pageNumber,
                 PageSize = pageSize,
                 TotalNumberOfPages = totalPageCount,
-                TotalNumberOfRecords = totalNumberOfRecords
+                TotalNumberOfRecords = total
             };
 
         }
@@ -165,7 +163,7 @@ namespace ERP.Repository.Repositories
                     
             if(check_source_id == 0 && check_type == 0 && check_group_id == 0 && check_name ==1) 
             {
-                list = _dbContext.customers.Where(t => t.cu_fullname.Contains(name)).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
+                list = _dbContext.customers.Where(t => (t.cu_fullname.Contains(name) || t.cu_mobile.Contains(name) || t.cu_email.Contains(name) || t.cu_code.Contains(name))).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
             }            
             if(check_source_id == 0 && check_type == 0 && check_group_id == 1 && check_name ==0) 
             {
@@ -173,7 +171,7 @@ namespace ERP.Repository.Repositories
             }            
             if(check_source_id == 0 && check_type == 0 && check_group_id == 1 && check_name ==1) 
             {
-                list = _dbContext.customers.Where(t => t.cu_fullname.Contains(name) && t.customer_group_id == customer_group_id).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
+                list = _dbContext.customers.Where(t => (t.cu_fullname.Contains(name) || t.cu_mobile.Contains(name) || t.cu_email.Contains(name) || t.cu_code.Contains(name))&& t.customer_group_id == customer_group_id).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
             }            
             if(check_source_id == 0 && check_type == 1 && check_group_id == 0 && check_name ==0) 
             {
@@ -205,7 +203,7 @@ namespace ERP.Repository.Repositories
             }            
             if(check_source_id == 1 && check_type == 0 && check_group_id == 1 && check_name ==1) 
             {
-                list = _dbContext.customers.Where(t => t.source_id == source_id && t.cu_fullname.Contains(name) && t.customer_group_id == customer_group_id).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
+                list = _dbContext.customers.Where(t => t.source_id == source_id && (t.cu_fullname.Contains(name) || t.cu_mobile.Contains(name) || t.cu_email.Contains(name) || t.cu_code.Contains(name))&& t.customer_group_id == customer_group_id).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
             }            
             if(check_source_id == 1 && check_type == 1 && check_group_id == 0 && check_name ==0) 
             {
@@ -224,9 +222,6 @@ namespace ERP.Repository.Repositories
                 list = _dbContext.customers.Where(t => t.source_id == source_id && t.cu_type == cu_type && t.customer_group_id == customer_group_id && t.cu_fullname.Contains(name)).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
             }
             #endregion
-
-
-            var totalNumberOfRecords = list.Count();
             var total = _dbContext.customers.Count();
 
             var results = list.ToList();
@@ -237,11 +232,11 @@ namespace ERP.Repository.Repositories
                 var customergroup = _dbContext.customer_group.FirstOrDefault(x => x.cg_id == i.customer_group_id);
                 customerview.source_name = sources.src_name;
                 customerview.customer_group_name = customergroup.cg_name;
-                for (int j = 0; j < 2; j++)
+                for (int j = 1; j < 3; j++)
                 {
                     if (j == i.cu_type)
                     {
-                        customerview.cu_type_name = EnumCustomer.cu_type[j];
+                        customerview.cu_type_name = EnumCustomer.cu_type[j-1];
                     }
                 }
                 // lay ra dia chi khach hang 
@@ -256,17 +251,28 @@ namespace ERP.Repository.Repositories
                     lst_add.Add(add);
                 }
                 customerview.list_address = lst_add;
-                //lay ra don hang cua khach hang
+                //lay ra lich su mua cua khach hang
                 var list_cuo_history = _dbContext.customer_order.Where(s => s.customer_id == i.cu_id).ToList();
-                List<customerorderhistoryviewmodel> lst_his = new List<customerorderhistoryviewmodel>();
+                List<customerorderhistoryviewmodel> lst_cuo_his = new List<customerorderhistoryviewmodel>();
                 foreach (customer_order s in list_cuo_history)
                 {
                     customerorderhistoryviewmodel add = _mapper.Map<customerorderhistoryviewmodel>(s);
                     add.staff_name = _dbContext.staffs.Where(t => t.sta_id == s.staff_id).FirstOrDefault().sta_fullname;
-                    
-                    lst_his.Add(add);
+                    lst_cuo_his.Add(add);
                 }
-                customerview.list_customer_order = lst_his;
+
+                customerview.list_customer_order = lst_cuo_his;
+                //lay ra lich su cham soc cua khach hang
+                var list_tran_history = _dbContext.transactions.Where(s => s.customer_id == i.cu_id).ToList();
+                List<customertransactionviewmodel> lst_tra_his = new List<customertransactionviewmodel>();
+                foreach (transaction s in list_tran_history)
+                {
+                    customertransactionviewmodel add = _mapper.Map<customertransactionviewmodel>(s);
+                    add.staff_name = _dbContext.staffs.Where(t => t.sta_id == s.staff_id).FirstOrDefault().sta_fullname;
+                    lst_tra_his.Add(add);
+                }
+
+                customerview.list_transaction= lst_tra_his;
 
                 res.Add(customerview);
             }
@@ -281,7 +287,7 @@ namespace ERP.Repository.Repositories
                 PageNumber = pageNumber,
                 PageSize = pageSize,
                 TotalNumberOfPages = totalPageCount,
-                TotalNumberOfRecords = totalNumberOfRecords
+                TotalNumberOfRecords = total
             };
 
         }
@@ -312,11 +318,11 @@ namespace ERP.Repository.Repositories
             var customergroup = _dbContext.customer_group.FirstOrDefault(x => x.cg_id == customer_cur.customer_group_id);
             res.source_name = sources.src_name;
             res.customer_group_name = customergroup.cg_name;
-            for (int j = 0; j < 2; j++)
+            for (int j = 1; j < 3; j++)
             {
                 if (j == customer_cur.cu_type)
                 {
-                    res.cu_type_name = EnumCustomer.cu_type[j];
+                    res.cu_type_name = EnumCustomer.cu_type[j-1];
                 }
             }
             var list_address = _dbContext.ship_address.Where(i => i.customer_id == customer_cur.cu_id).ToList();
@@ -337,11 +343,11 @@ namespace ERP.Repository.Repositories
 
             List<dropdown> res = new List<dropdown>();
 
-            for (int i = 0; i < 2; i++)
+            for (int i = 1; i < 3; i++)
             {
                 dropdown pu = new dropdown();
-                pu.id = i+1;
-                pu.name = EnumCustomer.cu_type[i];
+                pu.id = i;
+                pu.name = EnumCustomer.cu_type[i-1];
 
                 res.Add(pu);
             }

@@ -1,19 +1,14 @@
-﻿using ERP.Data.ModelsERP.ModelView.Customer;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
-namespace ERP.Data.ModelsERP.ModelView
+namespace ERP.Data.ModelsERP.ModelView.Transaction
 {
-    public class customerviewmodel
+    public class transactioncustomerviewmodel
     {
-        public List<shipaddressviewmodel> list_address { get; set; }
-        public List<customerorderhistoryviewmodel> list_customer_order { get; set; }
-        public List<customertransactionviewmodel> list_transaction { get; set; }
-        
-        
+        public List<transactionorderproductviewmodel> list_order_product { get; set; }
         public int cu_id { get; set; }
 
         [StringLength(45)]
@@ -28,8 +23,8 @@ namespace ERP.Data.ModelsERP.ModelView
 
         [StringLength(40)]
         public string cu_email { get; set; }
-        public string cu_type_name  { get; set; }
-        public int cu_type  { get; set; }
+        public string cu_type_name { get; set; }
+        public int cu_type { get; set; }
 
         public string customer_group_name { get; set; }
         public int customer_group_id { get; set; }
@@ -40,7 +35,7 @@ namespace ERP.Data.ModelsERP.ModelView
         [StringLength(45)]
         public string cu_thumbnail { get; set; }
 
-        
+
         public string cu_geocoding { get; set; }
         [StringLength(250)]
         public string cu_note { get; set; }

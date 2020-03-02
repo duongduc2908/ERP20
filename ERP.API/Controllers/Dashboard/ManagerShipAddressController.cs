@@ -207,7 +207,7 @@ namespace ERP.API.Controllers.Dashboard
 
         #region[Update]
         [HttpPut]
-        [Route("api/addresss/update")]
+        [Route("api/ship-addresss/update")]
         public async Task<IHttpActionResult> Updateaddress()
         {
             ResponseDataDTO<ship_address> response = new ResponseDataDTO<ship_address>();
@@ -294,7 +294,7 @@ namespace ERP.API.Controllers.Dashboard
 
         #region [Delete]
         [HttpDelete]
-        [Route("api/addresss/delete")]
+        [Route("api/ship-addresss/delete")]
         public IHttpActionResult Deleteaddress(int shipaddressId)
         {
             ResponseDataDTO<ship_address> response = new ResponseDataDTO<ship_address>();

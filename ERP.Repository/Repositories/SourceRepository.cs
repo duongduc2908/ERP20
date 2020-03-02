@@ -47,12 +47,6 @@ namespace ERP.Repository.Repositories
             foreach (source i in results)
             {
                 var productview = _mapper.Map<source>(i);
-                //var deparment = _dbContext.departments.FirstOrDefault(x => x.de_id == i.department_id);
-                //var position = _dbContext.positions.FirstOrDefault(x => x.pos_id == i.position_id);
-                //var group_role = _dbContext.group_role.FirstOrDefault(x => x.gr_id == i.group_role_id);
-                //staffview.department_name = deparment.de_name;
-                //staffview.position_name = position.pos_name;
-                //staffview.group_name = group_role.gr_name;
                 res.Add(productview);
             }
             var mod = totalNumberOfRecords % pageSize;

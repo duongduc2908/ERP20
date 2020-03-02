@@ -29,7 +29,7 @@ namespace ERP.Repository.Repositories
 
             var list = _dbContext.staffs.OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize);
             var total = _dbContext.staffs.Count();
-            var totalNumberOfRecords = list.Count();
+           
 
             var results = list.ToList();
 
@@ -43,7 +43,7 @@ namespace ERP.Repository.Repositories
                 PageNumber = pageNumber,
                 PageSize = pageSize,
                 TotalNumberOfPages = totalPageCount,
-                TotalNumberOfRecords = totalNumberOfRecords
+                TotalNumberOfRecords = total
             };
         }
         public void ChangePassword(ChangePasswordBindingModel model, int id)
@@ -70,8 +70,6 @@ namespace ERP.Repository.Repositories
 
             var list = _dbContext.staffs.OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize);
             var total = _dbContext.staffs.Count();
-            var totalNumberOfRecords = list.Count();
-            
             var results = list.ToList();
             foreach(staff i in results)
             {
@@ -95,25 +93,25 @@ namespace ERP.Repository.Repositories
                 PageNumber = pageNumber,
                 PageSize = pageSize,
                 TotalNumberOfPages = totalPageCount,
-                TotalNumberOfRecords = totalNumberOfRecords
+                TotalNumberOfRecords = total
             };
         }
         public PagedResults<staffviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? status, string name)
         {
             List<staffviewmodel> res = new List<staffviewmodel>();
             var skipAmount = pageSize * pageNumber;
-            name = name.Trim();
-            var list = _dbContext.staffs.Where(t => t.sta_status == status && t.sta_fullname.Contains(name) || t.sta_mobile.Contains(name) || t.sta_email.Contains(name) || t.sta_code.Contains(name)).OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize);
+            var list = _dbContext.staffs.Where(t => t.sta_status == status && t.sta_fullname.Contains(name) || t.sta_mobile.Contains(name) || t.sta_email.Contains(name) || t.sta_code.Contains(name) || t.sta_username.Contains(name)).OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize);
             if (status == null)
             {
-                if(name != null)
+                if (name != null)
                 {
-                    list = _dbContext.staffs.Where(t => t.sta_fullname.Contains(name) || t.sta_mobile.Contains(name) || t.sta_email.Contains(name) || t.sta_code.Contains(name) ).OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize);
+                    list = _dbContext.staffs.Where(t => t.sta_fullname.Contains(name) || t.sta_mobile.Contains(name) || t.sta_email.Contains(name) || t.sta_code.Contains(name) || t.sta_username.Contains(name)).OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize);
                 }
                 else
                 {
                     list = _dbContext.staffs.OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize);
-                }            }
+                }
+            }
             if(name == null)
             {
                 if (status != null)
@@ -127,7 +125,7 @@ namespace ERP.Repository.Repositories
             }
 
             var total = _dbContext.staffs.Count();
-            var totalNumberOfRecords = list.Count();
+            
 
             var results = list.ToList();
             foreach (staff i in results)
@@ -139,8 +137,23 @@ namespace ERP.Repository.Repositories
                 staffview.department_name = deparment.de_name;
                 staffview.position_name = position.pos_name;
                 //staffview.group_name = group_role.gr_name;
+                
+                //Lay dia chi 
+                var list_address = _dbContext.undertaken_location.Where(s => s.staff_id == i.sta_id).ToList();
+                List<undertakenlocationviewmodel> lst_add = new List<undertakenlocationviewmodel>();
+                foreach (undertaken_location s in list_address)
+                {
+                    undertakenlocationviewmodel  add = _mapper.Map<undertakenlocationviewmodel>(s);
+                    add.ward_id = _dbContext.ward.Where(t => t.Name.Contains(s.unl_ward)).FirstOrDefault().Id;
+                    add.district_id = _dbContext.district.Where(t => t.Name.Contains(s.unl_district)).FirstOrDefault().Id;
+                    add.province_id = _dbContext.province.Where(t => t.Name.Contains(s.unl_province)).FirstOrDefault().Id;
+                    lst_add.Add(add);
+                }
+                staffview.list_address = lst_add;
                 res.Add(staffview);
             }
+
+            
 
             var mod = total % pageSize;
 
@@ -152,7 +165,7 @@ namespace ERP.Repository.Repositories
                 PageNumber = pageNumber,
                 PageSize = pageSize,
                 TotalNumberOfPages = totalPageCount,
-                TotalNumberOfRecords = totalNumberOfRecords
+                TotalNumberOfRecords = total
             };
         }
      
@@ -169,7 +182,7 @@ namespace ERP.Repository.Repositories
                 list = _dbContext.staffs.Where(t => t.sta_status == 0).OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize);
             }
             var total = _dbContext.staffs.Count();
-            var totalNumberOfRecords = list.Count();
+            
 
             var results = list.ToList();
             foreach (staff i in results)
@@ -194,7 +207,7 @@ namespace ERP.Repository.Repositories
                 PageNumber = pageNumber,
                 PageSize = pageSize,
                 TotalNumberOfPages = totalPageCount,
-                TotalNumberOfRecords = totalNumberOfRecords
+                TotalNumberOfRecords = total
             };
         }
         public staffviewmodel GetInforById(int id)

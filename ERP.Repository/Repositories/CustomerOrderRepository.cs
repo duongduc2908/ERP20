@@ -35,26 +35,26 @@ namespace ERP.Repository.Repositories
             foreach (customer_order i in results)
             {
                 var orderview = _mapper.Map<customerorderviewmodel>(i);
-                for (int j = 0; j < 3; j++)
+                for (int j = 1; j < 4; j++)
                 {
                     if (j == i.cuo_status)
                     {
-                        orderview.cuo_status = EnumCustomerOrder.status[j];
+                        orderview.cuo_status = EnumCustomerOrder.status[j-1];
                     }
                 }
 
-                for (int j = 0; j < 3; j++)
+                for (int j = 1; j < 4; j++)
                 {
                     if (j == i.cuo_payment_type)
                     {
-                        orderview.cuo_payment_type = EnumCustomerOrder.cuo_payment_type[j];
+                        orderview.cuo_payment_type = EnumCustomerOrder.cuo_payment_type[j-1];
                     }
                 }
-                for (int j = 0; j < 2; j++)
+                for (int j = 1; j < 3; j++)
                 {
                     if (j == i.cuo_payment_status)
                     {
-                        orderview.cuo_payment_status = EnumCustomerOrder.cuo_payment_status[j];
+                        orderview.cuo_payment_status = EnumCustomerOrder.cuo_payment_status[j-1];
                     }
                 }
                 res.Add(orderview);
@@ -85,32 +85,30 @@ namespace ERP.Repository.Repositories
             var list = _dbContext.customer_order.Where(i => i.cuo_date <= DateTime.Now && i.cuo_date >= datetimesearch && i.staff_id == staff_id).OrderBy(t => t.cuo_id).Skip(skipAmount).Take(pageSize);
 
             var total = _dbContext.customer_order.Count();
-            var totalNumberOfRecords = list.Count();
-
             var results = list.ToList();
             foreach (customer_order i in results)
             {
                 var orderview = _mapper.Map<customerorderviewmodel>(i);
-                for (int j = 0; j < 3; j++)
+                for (int j = 1; j < 4; j++)
                 {
                     if (j == i.cuo_status)
                     {
-                        orderview.cuo_status = EnumCustomerOrder.status[j];
+                        orderview.cuo_status = EnumCustomerOrder.status[j-1];
                     }
                 }
 
-                for (int j = 0; j < 3; j++)
+                for (int j = 1; j < 4; j++)
                 {
                     if (j == i.cuo_payment_type)
                     {
-                        orderview.cuo_payment_type = EnumCustomerOrder.cuo_payment_type[j];
+                        orderview.cuo_payment_type = EnumCustomerOrder.cuo_payment_type[j-1];
                     }
                 }
-                for (int j = 0; j < 2; j++)
+                for (int j = 1; j < 3; j++)
                 {
                     if (j == i.cuo_payment_status)
                     {
-                        orderview.cuo_payment_status = EnumCustomerOrder.cuo_payment_status[j];
+                        orderview.cuo_payment_status = EnumCustomerOrder.cuo_payment_status[j-1];
                     }
                 }
                 res.Add(orderview);
@@ -126,7 +124,7 @@ namespace ERP.Repository.Repositories
                 PageNumber = pageNumber,
                 PageSize = pageSize,
                 TotalNumberOfPages = totalPageCount,
-                TotalNumberOfRecords = totalNumberOfRecords
+                TotalNumberOfRecords = total
             };
         }
         public customerordermodelview GetAllOrderById(int id)
@@ -138,16 +136,16 @@ namespace ERP.Repository.Repositories
                 // la ra thong tin nguoi dung 
                 var cu_curr = _dbContext.customers.Where(i => i.cu_id == cuo.customer_id).FirstOrDefault();
                
-                var customerview = _mapper.Map<customerviewmodel>(cu_curr);
+                var customerview = _mapper.Map<customeraddressviewmodel>(cu_curr);
                 var sources = _dbContext.sources.FirstOrDefault(x => x.src_id == cu_curr.source_id);
                 var customergroup = _dbContext.customer_group.FirstOrDefault(x => x.cg_id == cu_curr.customer_group_id);
                 customerview.source_name = sources.src_name;
                 customerview.customer_group_name = customergroup.cg_name;
-                for (int j = 0; j < 2; j++)
+                for (int j = 1; j < 3; j++)
                 {
                     if (j == cu_curr.cu_type)
                     {
-                        customerview.cu_type_name = EnumCustomer.cu_type[j];
+                        customerview.cu_type_name = EnumCustomer.cu_type[j-1];
                     }
                 }
                 // lay ra dia chi khach hang 
@@ -162,19 +160,8 @@ namespace ERP.Repository.Repositories
                     lst_add.Add(add);
                 }
                 customerview.list_address = lst_add;
-                //lay ra don hang cua khach hang
-                var list_cuo_history = _dbContext.customer_order.Where(s => s.customer_id == cu_curr.cu_id).ToList();
-                List<customerorderhistoryviewmodel> lst_his = new List<customerorderhistoryviewmodel>();
-                foreach (customer_order s in list_cuo_history)
-                {
-                    customerorderhistoryviewmodel add = _mapper.Map<customerorderhistoryviewmodel>(s);
-                    add.staff_name = _dbContext.staffs.Where(t => t.sta_id == s.staff_id).FirstOrDefault().sta_fullname;
-
-                    lst_his.Add(add);
-                }
-                customerview.list_customer_order = lst_his;
                 res.customer = customerview;
-
+                
                 //Lay ra danh sach san phan dat hang 
                 var lst_order_product = _dbContext.order_product.Where(i => i.customer_order_id == cuo.cuo_id).ToList();
                 res.list_product = new List<productorderviewmodel>();
@@ -182,6 +169,9 @@ namespace ERP.Repository.Repositories
                 {
                     var x = _mapper.Map<productorderviewmodel>(i);
                     x.pu_unit = _dbContext.products.Where(t => t.pu_id == i.product_id).FirstOrDefault().pu_unit;
+                    x.pu_unit_name = EnumProduct.pu_unit[(int)x.pu_unit - 1];
+                    x.pu_name = _dbContext.products.Where(p => p.pu_id == i.product_id).FirstOrDefault().pu_name;
+                   
                     res.list_product.Add(x);
                 }
                 res.cuo_ship_tax = cuo.cuo_ship_tax;
@@ -225,34 +215,31 @@ namespace ERP.Repository.Repositories
                     list = _dbContext.customer_order.OrderBy(t => t.cuo_id).Skip(skipAmount).Take(pageSize);
                 }
             }
-
             var total = _dbContext.customer_order.Count();
-            var totalNumberOfRecords = list.Count();
-
             var results = list.ToList();
             foreach (customer_order i in results)
             {
                 var orderview = _mapper.Map<customerorderviewmodel>(i);
-                for (int j = 0; j < 3; j++)
+                for (int j = 1; j < 4; j++)
                 {
                     if (j == i.cuo_status)
                     {
-                        orderview.cuo_status = EnumCustomerOrder.status[j];
+                        orderview.cuo_status = EnumCustomerOrder.status[j-1];
                     }
                 }
 
-                for (int j = 0; j < 3; j++)
+                for (int j = 1; j < 4; j++)
                 {
                     if (j == i.cuo_payment_type)
                     {
-                        orderview.cuo_payment_type = EnumCustomerOrder.cuo_payment_type[j];
+                        orderview.cuo_payment_type = EnumCustomerOrder.cuo_payment_type[j-1];
                     }
                 }
-                for (int j = 0; j < 2; j++)
+                for (int j = 1; j < 3; j++)
                 {
                     if (j == i.cuo_payment_status)
                     {
-                        orderview.cuo_payment_status = EnumCustomerOrder.cuo_payment_status[j];
+                        orderview.cuo_payment_status = EnumCustomerOrder.cuo_payment_status[j-1];
                     }
                 }
                 res.Add(orderview);
@@ -268,7 +255,7 @@ namespace ERP.Repository.Repositories
                 PageNumber = pageNumber,
                 PageSize = pageSize,
                 TotalNumberOfPages = totalPageCount,
-                TotalNumberOfRecords = totalNumberOfRecords
+                TotalNumberOfRecords = total
             };
         }
 

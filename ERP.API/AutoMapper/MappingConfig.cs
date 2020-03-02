@@ -3,6 +3,8 @@ using ERP.API.Models;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
 using ERP.Data.ModelsERP.ModelView.Customer;
+using ERP.Data.ModelsERP.ModelView.Product;
+using ERP.Data.ModelsERP.ModelView.Transaction;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,6 +31,8 @@ namespace ERP.API.AutoMapper
             CreateMap<CustomerCreateViewModel, customer>();
             CreateMap<CustomerUpdateViewModel, customer>();
             CreateMap<customer, customerviewmodel>();
+            CreateMap<customer, customeraddressviewmodel>();
+            CreateMap<customer, transactioncustomerviewmodel>();
 
             CreateMap<CustomerOrderCreateViewModel, customer_order>();
             CreateMap<CustomerOrderUpdateViewModel, customer_order>();
@@ -54,6 +58,9 @@ namespace ERP.API.AutoMapper
             CreateMap<OrderProductCreateViewModel, order_product>();
             CreateMap<OrderProductUpdateViewModel, order_product>();
             CreateMap<order_product,productorderviewmodel >();
+            CreateMap<order_product,orderproducthistoryviewmodel >();
+            CreateMap<order_product,transactionorderproductviewmodel >();
+            
 
             CreateMap<ServiceCreateViewModel, service>();
             CreateMap<ServiceUpdateViewModel, service>();
@@ -87,6 +94,10 @@ namespace ERP.API.AutoMapper
 
             CreateMap<EmailStrategyCreateViewModel, email_strategy>();
             CreateMap<EmailStrategyUpdateViewModel, email_strategy>();
+
+            CreateMap<transaction, transactionviewmodel>();
+            CreateMap<TransactionCreateViewModel, transaction>();
+            CreateMap<TransactionUpdateViewModel, transaction>();
         }
 
         private void CreateMappingFromEntitiesToViewModels()

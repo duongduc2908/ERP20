@@ -130,6 +130,7 @@
     <Compile Include="ModelsERP\customer_group.cs" />
     <Compile Include="ModelsERP\customer_order.cs" />
     <Compile Include="ModelsERP\District.cs" />
+    <Compile Include="ModelsERP\ModelView\Customer\customeraddressviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Customer\customerorderhistoryviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Customer\customerordermodelview.cs" />
     <Compile Include="ModelsERP\department.cs" />
@@ -144,12 +145,17 @@
     <Compile Include="ModelsERP\ModelView\Customer\customergroupviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Customer\customerorderviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Customer\customerviewmodel.cs" />
-    <Compile Include="ModelsERP\ModelView\orderproductviewmodel.cs" />
-    <Compile Include="ModelsERP\ModelView\productorderviewmodel.cs" />
-    <Compile Include="ModelsERP\ModelView\productviewmodel.cs" />
+    <Compile Include="ModelsERP\ModelView\Customer\customertransactionviewmodel.cs" />
+    <Compile Include="ModelsERP\ModelView\Product\orderproducthistoryviewmodel.cs" />
+    <Compile Include="ModelsERP\ModelView\Product\orderproductviewmodel.cs" />
+    <Compile Include="ModelsERP\ModelView\Product\productorderviewmodel.cs" />
+    <Compile Include="ModelsERP\ModelView\Product\productviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\dropdown.cs" />
     <Compile Include="ModelsERP\ModelView\Customer\shipaddressviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\staffviewmodel.cs" />
+    <Compile Include="ModelsERP\ModelView\Transaction\transactioncustomerviewmodel.cs" />
+    <Compile Include="ModelsERP\ModelView\Transaction\transactionorderproductviewmodel.cs" />
+    <Compile Include="ModelsERP\ModelView\Transaction\transactionviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\undertakenlocationviewmodel.cs" />
     <Compile Include="ModelsERP\notification.cs" />
     <Compile Include="ModelsERP\order_product.cs" />
@@ -173,6 +179,7 @@
     <Compile Include="ModelsERP\supplier.cs" />
     <Compile Include="ModelsERP\supplier_type.cs" />
     <Compile Include="ModelsERP\task.cs" />
+    <Compile Include="ModelsERP\transaction.cs" />
     <Compile Include="ModelsERP\undertaken_location.cs" />
     <Compile Include="ModelsERP\Ward.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
