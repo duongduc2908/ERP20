@@ -183,6 +183,30 @@ namespace ERP.API.Controllers.Dashboard
 
                 };
                 shipaddressCreateViewModel.customer_id = Convert.ToInt32(streamProvider.FormData["customer_id"]);
+                if (streamProvider.FormData["sha_detail"] == null)
+                {
+                    shipaddressCreateViewModel.sha_detail = null;
+                }
+                else
+                {
+                    shipaddressCreateViewModel.sha_detail = Convert.ToString(streamProvider.FormData["sha_detail"]);
+                }
+                if (streamProvider.FormData["sha_note"] == null)
+                {
+                    shipaddressCreateViewModel.sha_note = null;
+                }
+                else
+                {
+                    shipaddressCreateViewModel.sha_note = Convert.ToString(streamProvider.FormData["sha_note"]);
+                }
+                if (streamProvider.FormData["sha_geocoding"] == null)
+                {
+                    shipaddressCreateViewModel.sha_geocoding = null;
+                }
+                else
+                {
+                    shipaddressCreateViewModel.sha_geocoding = Convert.ToString(streamProvider.FormData["sha_geocoding"]);
+                }
 
                 var createShipAddress = _mapper.Map<ship_address>(shipaddressCreateViewModel);
                 _shipaddressservice.Create(createShipAddress);
@@ -269,6 +293,30 @@ namespace ERP.API.Controllers.Dashboard
 
                 };
                 shipaddressUpdateViewModel.customer_id = Convert.ToInt32(streamProvider.FormData["customer_id"]);
+                if (streamProvider.FormData["sha_detail"] == null)
+                {
+                    shipaddressUpdateViewModel.sha_detail = null;
+                }
+                else
+                {
+                    shipaddressUpdateViewModel.sha_detail = Convert.ToString(streamProvider.FormData["sha_detail"]);
+                }
+                if (streamProvider.FormData["sha_note"] == null)
+                {
+                    shipaddressUpdateViewModel.sha_note = null;
+                }
+                else
+                {
+                    shipaddressUpdateViewModel.sha_note = Convert.ToString(streamProvider.FormData["sha_note"]);
+                }
+                if (streamProvider.FormData["sha_geocoding"] == null)
+                {
+                    shipaddressUpdateViewModel.sha_geocoding = null;
+                }
+                else
+                {
+                    shipaddressUpdateViewModel.sha_geocoding = Convert.ToString(streamProvider.FormData["sha_geocoding"]);
+                }
                 // mapping view model to entity
                 var updatedshipaddress = _mapper.Map<ship_address>(shipaddressUpdateViewModel);
 

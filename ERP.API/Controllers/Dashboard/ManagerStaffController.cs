@@ -384,7 +384,7 @@ namespace ERP.API.Controllers.Dashboard
                 //Lấy ra bản ghi cuối cùng tạo mã code 
                 var x = _staffservice.GetLast();
 
-                StaffCreateViewModel.sta_code = Utilis.CreateCode("KH", x.sta_id, 7);
+                StaffCreateViewModel.sta_code = Utilis.CreateCode("NV", x.sta_id, 7);
                 // mapping view model to entity
                 var createdstaff = _mapper.Map<staff>(StaffCreateViewModel);
                 createdstaff.sta_thumbnai = fileName;
