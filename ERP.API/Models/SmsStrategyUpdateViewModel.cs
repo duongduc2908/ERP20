@@ -31,5 +31,7 @@ namespace ERP.API.Models
         public int? sms_template_id { get; set; }
 
         public int? customer_group_id { get; set; }
+        public int? staff_id { get; set; }
+        public byte? smss_status { get; set; }
     }
 }

@@ -4,12 +4,13 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
-namespace ERP.API.Models
+namespace ERP.Data.ModelsERP.ModelView.Sms
 {
-    public class SmsStrategyCreateViewModel
+    public class smsstrategyviewmodel
     {
-        public SmsStrategyCreateViewModel() { }
-        
+        [Key]
+        public int smss_id { get; set; }
+
         [StringLength(50)]
         public string smss_code { get; set; }
 
@@ -31,5 +32,8 @@ namespace ERP.API.Models
         public int? customer_group_id { get; set; }
         public int? staff_id { get; set; }
         public byte? smss_status { get; set; }
+        public string customer_group_name { get; set; }
+        public string staff_name { get; set; }
+        public string smss_status_name { get; set; }
     }
 }

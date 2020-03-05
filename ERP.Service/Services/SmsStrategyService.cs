@@ -1,6 +1,7 @@
 ﻿using ERP.Common.GenericService;
 using ERP.Common.Models;
 using ERP.Data.ModelsERP;
+using ERP.Data.ModelsERP.ModelView.Sms;
 using ERP.Repository.Repositories.IRepositories;
 using ERP.Service.Services.IServices;
 using System;
@@ -17,10 +18,10 @@ namespace ERP.Service.Services
         {
             this._repository = repository;
         }
-
-        public PagedResults<sms_strategy> CreatePagedResults(int pageNumber, int pageSize)
+        
+        public PagedResults<smsstrategyviewmodel> GetAllPageSearch(int pageNumber, int pageSize, string search_name)
         {
-            return this._repository.CreatePagedResults(pageNumber, pageSize);
+            return this._repository.GetAllPageSearch(pageNumber, pageSize, search_name);
         }
     }
 }

@@ -57,5 +57,33 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = totalNumberOfRecords
             };
         }
+
+        public PagedResults<smstemplatestrategyviewmodel> CreatePagedSmsTrategy(int pageNumber, int pageSize)
+        {
+            List<smstemplatestrategyviewmodel> results = new List<smstemplatestrategyviewmodel>();
+            var skipAmount = pageSize * pageNumber;
+            List<sms_template> list = new List<sms_template>();
+            list = _dbContext.sms_template.OrderBy(x => x.smt_id).Skip(skipAmount).Take(pageSize).ToList();            
+            var totalNumberOfRecords = _dbContext.sms_template.Count();
+            foreach (sms_template i in list)
+            {
+                var smstem = _mapper.Map<smstemplatestrategyviewmodel>(i);
+                smstem.staff_name= _dbContext.staffs.Where(s => s.sta_id == i.staff_id).FirstOrDefault().sta_fullname;
+                results.Add(smstem);
+            }
+
+            var mod = totalNumberOfRecords % pageSize;
+
+            var totalPageCount = (totalNumberOfRecords / pageSize) + (mod == 0 ? 0 : 1);
+
+            return new PagedResults<smstemplatestrategyviewmodel>
+            {
+                Results = results,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalNumberOfPages = totalPageCount,
+                TotalNumberOfRecords = totalNumberOfRecords
+            };
+        }
     }
 }

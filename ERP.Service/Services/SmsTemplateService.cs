@@ -23,5 +23,9 @@ namespace ERP.Service.Services
         {
             return this._repository.CreatePagedResults(pageNumber, pageSize, search_name);
         }
+        public PagedResults<smstemplatestrategyviewmodel> CreatePagedSmsTrategy(int pageNumber, int pageSize)
+        {
+            return this._repository.CreatePagedSmsTrategy(pageNumber, pageSize);
+        }
     }
 }

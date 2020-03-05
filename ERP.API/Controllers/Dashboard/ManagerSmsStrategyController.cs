@@ -4,6 +4,7 @@ using ERP.Common.Constants;
 using ERP.Common.Models;
 using ERP.Data.Dto;
 using ERP.Data.ModelsERP;
+using ERP.Data.ModelsERP.ModelView.Sms;
 using ERP.Extension.Extensions;
 using ERP.Service.Services.IServices;
 using System;
@@ -56,15 +57,15 @@ namespace ERP.API.Controllers.Dashboard
             return Ok(response);
         }
 
-        [Route("api/sms-strategys/page")]
-        public IHttpActionResult Getsms_strategysPaging(int pageSize, int pageNumber)
+        [Route("api/sms-strategys/page-search")]
+        public IHttpActionResult GetSmsStrategysPaging(int pageSize, int pageNumber, string search_name)
         {
-            ResponseDataDTO<PagedResults<sms_strategy>> response = new ResponseDataDTO<PagedResults<sms_strategy>>();
+            ResponseDataDTO<PagedResults<smsstrategyviewmodel>> response = new ResponseDataDTO<PagedResults<smsstrategyviewmodel>>();
             try
             {
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _smsstrategyservice.CreatePagedResults(pageNumber, pageSize);
+                response.Data = _smsstrategyservice.GetAllPageSearch(pageNumber, pageSize, search_name);
             }
             catch (Exception ex)
             {
@@ -100,25 +101,24 @@ namespace ERP.API.Controllers.Dashboard
                 // get data from formdata
                 SmsStrategyCreateViewModel sms_strategyCreateViewModel = new SmsStrategyCreateViewModel
                 {
-                    smss_code = Convert.ToString(streamProvider.FormData["smss_code"]),
                     smss_title = Convert.ToString(streamProvider.FormData["smss_title"]),
 
                     smss_send_count = Convert.ToInt32(streamProvider.FormData["smss_send_count"]),
                     sms_id = Convert.ToInt32(streamProvider.FormData["sms_id"]),
                     sms_template_id = Convert.ToInt32(streamProvider.FormData["sms_template_id"]),
                     customer_group_id = Convert.ToInt32(streamProvider.FormData["customer_group_id"]),
-
                     smss_send_date = Convert.ToDateTime(streamProvider.FormData["smss_send_date"]),
-                    smss_created_date = Convert.ToDateTime(streamProvider.FormData["smss_created_date"]),
-
                     smss_cost = Convert.ToDouble(streamProvider.FormData["smss_cost"]),
-
-
 
                 };
 
                 // mapping view model to entity
                 var createdsms_strategy = _mapper.Map<sms_strategy>(sms_strategyCreateViewModel);
+                var x = _smsstrategyservice.GetLast();
+                createdsms_strategy.smss_code = Utilis.CreateCode("SMSS", x.smss_id, 7);
+                createdsms_strategy.smss_created_date = DateTime.Now;
+                createdsms_strategy.staff_id = BaseController.get_id_current();
+                createdsms_strategy.smss_status = 1;
 
 
                 // save new sms_strategy
@@ -168,17 +168,12 @@ namespace ERP.API.Controllers.Dashboard
                 SmsStrategyUpdateViewModel sms_strategyUpdateViewModel = new SmsStrategyUpdateViewModel
                 {
                     smss_id = Convert.ToInt32(streamProvider.FormData["smss_id"]),
-                    smss_code = Convert.ToString(streamProvider.FormData["smss_code"]),
                     smss_title = Convert.ToString(streamProvider.FormData["smss_title"]),
 
                     smss_send_count = Convert.ToInt32(streamProvider.FormData["smss_send_count"]),
                     sms_id = Convert.ToInt32(streamProvider.FormData["sms_id"]),
                     sms_template_id = Convert.ToInt32(streamProvider.FormData["sms_template_id"]),
                     customer_group_id = Convert.ToInt32(streamProvider.FormData["customer_group_id"]),
-
-                    smss_send_date = Convert.ToDateTime(streamProvider.FormData["smss_send_date"]),
-                    smss_created_date = Convert.ToDateTime(streamProvider.FormData["smss_created_date"]),
-
                     smss_cost = Convert.ToDouble(streamProvider.FormData["smss_cost"]),
 
                 };

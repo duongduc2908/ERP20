@@ -56,7 +56,7 @@ namespace ERP.API.Controllers.Dashboard
 
             return Ok(response);
         }
-
+        [HttpGet]
         [Route("api/sms-templates/page-search")]
         public IHttpActionResult Getsms_templatesPaging(int pageSize, int pageNumber, string search_name)
         {
@@ -66,6 +66,28 @@ namespace ERP.API.Controllers.Dashboard
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
                 response.Data = _smstemplateservice.CreatePagedResults(pageNumber, pageSize, search_name);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+
+                Console.WriteLine(ex.ToString());
+            }
+
+            return Ok(response);
+        }
+        [HttpGet]
+        [Route("api/smsstrategy-templates/search")]
+        public IHttpActionResult Getsmsstrategy_templatesPaging(int pageSize, int pageNumber)
+        {
+            ResponseDataDTO<PagedResults<smstemplatestrategyviewmodel>> response = new ResponseDataDTO<PagedResults<smstemplatestrategyviewmodel>>();
+            try
+            {
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = _smstemplateservice.CreatePagedSmsTrategy(pageNumber, pageSize);
             }
             catch (Exception ex)
             {

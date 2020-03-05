@@ -152,7 +152,10 @@
     <Compile Include="ModelsERP\ModelView\Product\productviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\dropdown.cs" />
     <Compile Include="ModelsERP\ModelView\Customer\shipaddressviewmodel.cs" />
+    <Compile Include="ModelsERP\ModelView\Sms\smscustomerviewmodel.cs" />
+    <Compile Include="ModelsERP\ModelView\Sms\smsstrategyviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Sms\smstemplatemodelview.cs" />
+    <Compile Include="ModelsERP\ModelView\Sms\smstemplatestrategyviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\staffviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Transaction\transactioncustomerviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Transaction\transactionorderproductviewmodel.cs" />

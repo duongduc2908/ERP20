@@ -6,6 +6,7 @@ using ERP.Data.DbContext;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
 using ERP.Data.ModelsERP.ModelView.Customer;
+using ERP.Data.ModelsERP.ModelView.Sms;
 using ERP.Repository.Repositories.IRepositories;
 using System;
 using System.Collections.Generic;
@@ -288,6 +289,124 @@ namespace ERP.Repository.Repositories
             var totalPageCount = (total / pageSize) + (mod == 0 ? 0 : 1);
 
             return new PagedResults<customerviewmodel>
+            {
+                Results = res,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalNumberOfPages = totalPageCount,
+                TotalNumberOfRecords = total
+            };
+
+        }
+
+        public PagedResults<smscustomerviewmodel> GetAllPageSearchSms(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, string name)
+        {
+            if (name != null) name = name.Trim();
+
+            List<smscustomerviewmodel> res = new List<smscustomerviewmodel>();
+            var skipAmount = pageSize * pageNumber;
+
+            var list = _dbContext.customers.OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
+
+            /**24TH**/
+            #region [24 case]
+            int check_source_id = 0;
+            int check_type = 0;
+            int check_group_id = 0;
+            int check_name = 0;
+            if (source_id != null) { check_source_id = 1; }
+            if (cu_type != null) { check_type = 1; }
+            if (customer_group_id != null) { check_group_id = 1; }
+            if (name != null) { check_name = 1; }
+
+
+            if (check_source_id == 0 && check_type == 0 && check_group_id == 0 && check_name == 1)
+            {
+                list = _dbContext.customers.Where(t => (t.cu_fullname.Contains(name) || t.cu_mobile.Contains(name) || t.cu_email.Contains(name) || t.cu_code.Contains(name))).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
+            }
+            if (check_source_id == 0 && check_type == 0 && check_group_id == 1 && check_name == 0)
+            {
+                list = _dbContext.customers.Where(t => t.customer_group_id == customer_group_id).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
+            }
+            if (check_source_id == 0 && check_type == 0 && check_group_id == 1 && check_name == 1)
+            {
+                list = _dbContext.customers.Where(t => (t.cu_fullname.Contains(name) || t.cu_mobile.Contains(name) || t.cu_email.Contains(name) || t.cu_code.Contains(name)) && t.customer_group_id == customer_group_id).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
+            }
+            if (check_source_id == 0 && check_type == 1 && check_group_id == 0 && check_name == 0)
+            {
+                list = _dbContext.customers.Where(t => t.cu_type == cu_type).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
+            }
+            if (check_source_id == 0 && check_type == 1 && check_group_id == 0 && check_name == 1)
+            {
+                list = _dbContext.customers.Where(t => t.cu_type == cu_type).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
+            }
+            if (check_source_id == 0 && check_type == 1 && check_group_id == 1 && check_name == 0)
+            {
+                list = _dbContext.customers.Where(t => t.cu_type == cu_type && t.customer_group_id == customer_group_id).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
+            }
+            if (check_source_id == 0 && check_type == 1 && check_group_id == 1 && check_name == 1)
+            {
+                list = _dbContext.customers.Where(t => t.cu_type == cu_type && t.customer_group_id == customer_group_id && t.cu_fullname.Contains(name)).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
+            }
+            if (check_source_id == 1 && check_type == 0 && check_group_id == 0 && check_name == 0)
+            {
+                list = _dbContext.customers.Where(t => t.source_id == source_id).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
+            }
+            if (check_source_id == 1 && check_type == 0 && check_group_id == 0 && check_name == 1)
+            {
+                list = _dbContext.customers.Where(t => t.source_id == source_id && t.cu_fullname.Contains(name)).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
+            }
+            if (check_source_id == 1 && check_type == 0 && check_group_id == 1 && check_name == 0)
+            {
+                list = _dbContext.customers.Where(t => t.source_id == source_id && t.customer_group_id == customer_group_id).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
+            }
+            if (check_source_id == 1 && check_type == 0 && check_group_id == 1 && check_name == 1)
+            {
+                list = _dbContext.customers.Where(t => t.source_id == source_id && (t.cu_fullname.Contains(name) || t.cu_mobile.Contains(name) || t.cu_email.Contains(name) || t.cu_code.Contains(name)) && t.customer_group_id == customer_group_id).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
+            }
+            if (check_source_id == 1 && check_type == 1 && check_group_id == 0 && check_name == 0)
+            {
+                list = _dbContext.customers.Where(t => t.source_id == source_id && t.cu_type == cu_type).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
+            }
+            if (check_source_id == 1 && check_type == 1 && check_group_id == 0 && check_name == 1)
+            {
+                list = _dbContext.customers.Where(t => t.source_id == source_id && t.cu_type == cu_type).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
+            }
+            if (check_source_id == 1 && check_type == 1 && check_group_id == 1 && check_name == 0)
+            {
+                list = _dbContext.customers.Where(t => t.source_id == source_id && t.cu_type == cu_type && t.customer_group_id == customer_group_id).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
+            }
+            if (check_source_id == 1 && check_type == 1 && check_group_id == 1 && check_name == 1)
+            {
+                list = _dbContext.customers.Where(t => t.source_id == source_id && t.cu_type == cu_type && t.customer_group_id == customer_group_id && t.cu_fullname.Contains(name)).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
+            }
+            #endregion
+            var total = _dbContext.customers.Count();
+
+            var results = list.ToList();
+            foreach (customer i in results)
+            {
+                var customerview = _mapper.Map<smscustomerviewmodel>(i);
+                var sources = _dbContext.sources.FirstOrDefault(x => x.src_id == i.source_id);
+                var customergroup = _dbContext.customer_group.FirstOrDefault(x => x.cg_id == i.customer_group_id);
+                customerview.source_name = sources.src_name;
+                customerview.customer_group_name = customergroup.cg_name;
+                var curator = _dbContext.staffs.Find(i.cu_curator_id);
+                for (int j = 1; j < 3; j++)
+                {
+                    if (j == i.cu_type)
+                    {
+                        customerview.cu_type_name = EnumCustomer.cu_type[j - 1];
+                    }
+                }
+                res.Add(customerview);
+            }
+
+            var mod = total % pageSize;
+
+            var totalPageCount = (total / pageSize) + (mod == 0 ? 0 : 1);
+
+            return new PagedResults<smscustomerviewmodel>
             {
                 Results = res,
                 PageNumber = pageNumber,

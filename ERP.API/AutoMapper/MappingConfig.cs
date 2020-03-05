@@ -34,6 +34,7 @@ namespace ERP.API.AutoMapper
             CreateMap<customer, customerviewmodel>();
             CreateMap<customer, customeraddressviewmodel>();
             CreateMap<customer, transactioncustomerviewmodel>();
+            CreateMap<customer, smscustomerviewmodel>();
 
             CreateMap<CustomerOrderCreateViewModel, customer_order>();
             CreateMap<CustomerOrderUpdateViewModel, customer_order>();
@@ -84,9 +85,11 @@ namespace ERP.API.AutoMapper
             CreateMap<SmsTemplateCreateViewModel, sms_template>();
             CreateMap<SmsTemplateUpdateViewModel, sms_template>();
             CreateMap<sms_template, smstemplatemodelview>();
+            CreateMap<sms_template, smstemplatestrategyviewmodel>();
 
             CreateMap<SmsStrategyCreateViewModel, sms_strategy>();
             CreateMap<SmsStrategyUpdateViewModel, sms_strategy>();
+            CreateMap<sms_strategy, smsstrategyviewmodel>();
 
             CreateMap<EmailCreateViewModel, email>();
             CreateMap<EmailUpdateViewModel, email>();
