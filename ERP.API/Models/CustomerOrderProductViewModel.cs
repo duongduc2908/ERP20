@@ -22,6 +22,7 @@ namespace ERP.API.Models
         public byte? cuo_payment_status { get; set; }
 
         public int? cuo_ship_tax { get; set; }
+        public string cuo_address { get; set; }
         
     }
 }

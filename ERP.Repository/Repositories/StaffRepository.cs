@@ -98,6 +98,11 @@ namespace ERP.Repository.Repositories
         }
         public PagedResults<staffviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? status, string name)
         {
+            if(name != null)
+            {
+                name = name.Trim();
+            }
+            
             List<staffviewmodel> res = new List<staffviewmodel>();
             var skipAmount = pageSize * pageNumber;
             var list = _dbContext.staffs.Where(t => t.sta_status == status && t.sta_fullname.Contains(name) || t.sta_mobile.Contains(name) || t.sta_email.Contains(name) || t.sta_code.Contains(name) || t.sta_username.Contains(name)).OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize);
@@ -220,7 +225,8 @@ namespace ERP.Repository.Repositories
             res.department_name = deparment.de_name;
             var position = _dbContext.positions.FirstOrDefault(x => x.pos_id == staff_cur.position_id);
             res.position_name = position.pos_name;
-            
+
+            res.group_name = _dbContext.group_role.FirstOrDefault(x => x.gr_id == staff_cur.group_role_id).gr_name;
             var list_address = _dbContext.undertaken_location.Where(i => i.staff_id == staff_cur.sta_id).ToList();
             List<undertakenlocationviewmodel> lst = new List<undertakenlocationviewmodel>();
             foreach (undertaken_location i in list_address)

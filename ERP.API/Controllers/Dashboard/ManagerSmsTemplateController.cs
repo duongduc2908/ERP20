@@ -4,6 +4,7 @@ using ERP.Common.Constants;
 using ERP.Common.Models;
 using ERP.Data.Dto;
 using ERP.Data.ModelsERP;
+using ERP.Data.ModelsERP.ModelView.Sms;
 using ERP.Extension.Extensions;
 using ERP.Service.Services.IServices;
 using System;
@@ -56,10 +57,33 @@ namespace ERP.API.Controllers.Dashboard
             return Ok(response);
         }
 
+        //[HttpGet]
+        //[Route("api/sms-templates/get_field")]
+        //public IHttpActionResult GetField()
+        //{
+        //    ResponseDataDTO<IEnumerable<field>> response = new ResponseDataDTO<IEnumerable<sms_template>>();
+        //    try
+        //    {
+        //        response.Code = HttpCode.OK;
+        //        response.Message = MessageResponse.SUCCESS;
+        //        response.Data = _smstemplateservice.GetAll();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+        //        response.Message = ex.Message;
+        //        response.Data = null;
+
+        //        Console.WriteLine(ex.ToString());
+        //    }
+
+        //    return Ok(response);
+        //}
+
         [Route("api/sms-templates/page")]
         public IHttpActionResult Getsms_templatesPaging(int pageSize, int pageNumber)
         {
-            ResponseDataDTO<PagedResults<sms_template>> response = new ResponseDataDTO<PagedResults<sms_template>>();
+            ResponseDataDTO<PagedResults<smstemplatemodelview>> response = new ResponseDataDTO<PagedResults<smstemplatemodelview>>();
             try
             {
                 response.Code = HttpCode.OK;
@@ -100,7 +124,7 @@ namespace ERP.API.Controllers.Dashboard
                 // get data from formdata
                 SmsTemplateCreateViewModel smstemplateCreateViewModel = new SmsTemplateCreateViewModel
                 {
-                    smt_code = Convert.ToString(streamProvider.FormData["smt_code"]),
+                    //smt_code = Convert.ToString(streamProvider.FormData["smt_code"]),
                     smt_title = Convert.ToString(streamProvider.FormData["smt_title"]),
                     smt_content = Convert.ToString(streamProvider.FormData["smt_content"]),
 
@@ -113,7 +137,9 @@ namespace ERP.API.Controllers.Dashboard
                 // mapping view model to entity
                 var createdsms_template = _mapper.Map<sms_template>(smstemplateCreateViewModel);
 
-
+                // create smt_code
+                var x = _smstemplateservice.GetLast();
+                smstemplateCreateViewModel.smt_code = Utilis.CreateCode("SMS", x.smt_id, 7);
                 // save new sms_template
                 _smstemplateservice.Create(createdsms_template);
                 // return response
@@ -133,9 +159,6 @@ namespace ERP.API.Controllers.Dashboard
             }
 
         }
-
-
-
 
         [HttpPut]
         [Route("api/sms-templates/update")]

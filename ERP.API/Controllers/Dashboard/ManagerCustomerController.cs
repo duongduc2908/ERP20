@@ -603,6 +603,304 @@ namespace ERP.API.Controllers.Dashboard
         }
         #endregion
 
+        //#region["Import Excel"]
+        //[HttpPost]
+        //[Route("api/satffs/import")]
+        //public async Task<IHttpActionResult> Import()
+        //{
+        //    ResponseDataDTO<staff> response = new ResponseDataDTO<staff>();
+        //    var exitsData = "";
+        //    try
+        //    {
+        //        var path = Path.GetTempPath();
+
+        //        if (!Request.Content.IsMimeMultipartContent("form-data"))
+        //        {
+        //            throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.UnsupportedMediaType));
+        //        }
+
+        //        MultipartFormDataStreamProvider streamProvider = new MultipartFormDataStreamProvider(path);
+
+        //        await Request.Content.ReadAsMultipartAsync(streamProvider);
+
+        //        // save file
+        //        string fileName = "";
+        //        if (streamProvider.FileData.Count > 0)
+        //        {
+        //            foreach (MultipartFileData fileData in streamProvider.FileData)
+        //            {
+        //                fileName = fileData.Headers.ContentDisposition.FileName;
+        //                //fileName = fileName.Replace(@"","");
+
+        //                string fileFormat = Utilis.GetFileFormat(fileName);
+        //                if (fileFormat.Equals("xlsm") || fileFormat.Equals("xlsx"))
+        //                {
+        //                    fileName = FileExtension.SaveFileOnDisk(fileData);
+        //                }
+        //                else
+        //                {
+        //                    throw new Exception("File excel import không hợp lệ!");
+        //                }
+
+        //            }
+        //        }
+        //        var list = new List<staff>();
+        //        fileName = @"D:\ERP20\ERP.API\" + fileName;
+        //        var dataset = ExcelImport.ImportExcelXLS(fileName, true);
+        //        DataTable table = (DataTable)dataset.Tables[6];
+        //        if (table != null && table.Rows.Count > 0)
+        //        {
+        //            if (table.Columns.Count != 20)
+        //            {
+        //                exitsData = "File excel import không hợp lệ!";
+        //                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+        //                response.Message = exitsData;
+        //                response.Data = null;
+        //                return Ok(response);
+        //            }
+        //            else
+        //            {
+        //                #region["Check null"]
+        //                foreach (DataRow dr in table.Rows)
+        //                {
+        //                    if (dr.IsNull("sta_fullname"))
+        //                    {
+        //                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+        //                        response.Message = "Họ và tên không được để trống";
+        //                        response.Data = null;
+        //                        return Ok(response);
+        //                    }
+        //                    if (dr.IsNull("sta_username"))
+        //                    {
+        //                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+        //                        response.Message = "Tên đăng nhập không được để trống";
+        //                        response.Data = null;
+        //                        return Ok(response);
+        //                    }
+
+        //                    if (dr.IsNull("sta_mobile"))
+        //                    {
+        //                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+        //                        response.Message = "Số điện thoại không được để trống";
+        //                        response.Data = null;
+        //                        return Ok(response);
+        //                    }
+
+        //                    if (dr.IsNull("sta_status"))
+        //                    {
+        //                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+        //                        response.Message = "Trạng thái không được để trống";
+        //                        response.Data = null;
+        //                        return Ok(response);
+        //                    }
+
+        //                    if (dr.IsNull("department_id"))
+        //                    {
+        //                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+        //                        response.Message = "Phòng ban không được để trống";
+        //                        response.Data = null;
+        //                        return Ok(response);
+        //                    }
+        //                    if (dr.IsNull("position_id"))
+        //                    {
+        //                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+        //                        response.Message = "Chức vụ không được để trống";
+        //                        response.Data = null;
+        //                        return Ok(response);
+        //                    }
+        //                }
+        //                #endregion
+
+        //                #region["Check duplicate"]
+        //                for (var i = 0; i < table.Rows.Count; i++)
+        //                {
+        //                    var usernameCur = table.Rows[i]["sta_username"].ToString().Trim();
+        //                    var emailCur = table.Rows[i]["sta_email"].ToString().Trim();
+        //                    for (var j = 0; j < table.Rows.Count; j++)
+        //                    {
+        //                        if (i != j)
+        //                        {
+        //                            var _usernameCur = table.Rows[j]["sta_username"].ToString().Trim();
+        //                            var _emailCur = table.Rows[j]["sta_email"].ToString().Trim();
+        //                            if (usernameCur.Equals(_usernameCur))
+        //                            {
+        //                                exitsData = "Username '" + usernameCur + "' bị lặp trong file excel!";
+        //                                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+        //                                response.Message = exitsData;
+        //                                response.Data = null;
+        //                                return Ok(response);
+        //                            }
+        //                            if (emailCur.Equals(_emailCur))
+        //                            {
+        //                                exitsData = "Email '" + emailCur + "' bị lặp trong file excel!";
+        //                                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+        //                                response.Message = exitsData;
+        //                                response.Data = null;
+        //                                return Ok(response);
+        //                            }
+        //                        }
+        //                    }
+        //                }
+        //                #endregion
+
+        //                #region["Check logic"]
+        //                foreach (DataRow dr in table.Rows)
+        //                {
+        //                    int i = 1;
+        //                    if (i == 2)
+        //                    {
+        //                        if (!check_department(Convert.ToInt32(dr["department_id"])))
+        //                        {
+        //                            exitsData = "Khong co ma phong ban trong csdl!";
+        //                            response.Code = HttpCode.NOT_FOUND;
+        //                            response.Message = exitsData;
+        //                            response.Data = null;
+        //                            return Ok(response);
+        //                        }
+        //                        if (!check_position(Convert.ToInt32(dr["position_id"])))
+        //                        {
+        //                            exitsData = "Khong co ma bo phan trong csdl!";
+        //                            response.Code = HttpCode.NOT_FOUND;
+        //                            response.Message = exitsData;
+        //                            response.Data = null;
+        //                            return Ok(response);
+        //                        }
+        //                        if (!check_grouprole(Convert.ToInt32(dr["group_role_id"])))
+        //                        {
+        //                            exitsData = "Khong co ma nhom quyen trong csdl!";
+        //                            response.Code = HttpCode.NOT_FOUND;
+        //                            response.Message = exitsData;
+        //                            response.Data = null;
+        //                            return Ok(response);
+        //                        }
+        //                    }
+        //                    i++;
+        //                }
+        //                #endregion
+        //            }
+        //            list = DataTableCmUtils.ToListof<staff>(table);
+        //            // Gọi hàm save data
+        //            foreach (staff i in list)
+        //            {
+        //                var x = _staffservice.GetLast().sta_id;
+        //                i.sta_code = Utilis.CreateCode("NV", x, 7);
+        //                _staffservice.Create(i);
+        //            }
+        //            exitsData = "Đã nhập dữ liệu excel thành công!";
+        //            response.Code = HttpCode.OK;
+        //            response.Message = exitsData;
+        //            response.Data = null;
+        //            return Ok(response);
+        //        }
+        //        else
+        //        {
+        //            exitsData = "File excel import không có dữ liệu!";
+        //            response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+        //            response.Message = exitsData;
+        //            response.Data = null;
+        //            return Ok(response);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+        //        response.Message = ex.Message; ;
+        //        response.Data = null;
+        //        Console.WriteLine(ex.ToString());
+
+        //        return Ok(response);
+        //    }
+        //}
+        //#endregion
+
+        //#region["Export Excel"]
+        //[HttpGet]
+        //[Route("api/satffs/export")]
+        //public async Task<IHttpActionResult> Export(int pageSize, int pageNumber)
+        //{
+        //    ResponseDataDTO<staffviewmodel> response = new ResponseDataDTO<staffviewmodel>();
+        //    try
+        //    {
+        //        var listStaff = new List<staffviewmodel>();
+
+        //        //Đưa ra danh sách staff trong trang nào đó 
+        //        var objRT_Mst_Staff = _staffservice.GetAllPage(pageSize: pageSize, pageNumber: pageNumber);
+        //        if (objRT_Mst_Staff != null)
+        //        {
+        //            listStaff.AddRange(objRT_Mst_Staff.Results);
+
+        //            Dictionary<string, string> dicColNames = GetImportDicColums();
+
+        //            string url = "";
+        //            string filePath = GenExcelExportFilePath(string.Format(typeof(department).Name), ref url);
+
+        //            ExcelExport.ExportToExcelFromList(listStaff, dicColNames, filePath, string.Format("Staffs"));
+
+        //            response.Code = HttpCode.NOT_FOUND;
+        //            response.Message = "Đã xuất excel thành công!";
+        //            response.Data = null;
+        //        }
+        //        else
+        //        {
+        //            response.Code = HttpCode.NOT_FOUND;
+        //            response.Message = "File excel import không có dữ liệu!";
+        //            response.Data = null;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+        //        response.Message = ex.Message; ;
+        //        response.Data = null;
+        //        Console.WriteLine(ex.ToString());
+
+        //        return Ok(response);
+        //    }
+        //    return Ok(response);
+        //}
+        //#endregion
+
+        //#region["DicColums"]
+        //private Dictionary<string, string> GetImportDicColums()
+        //{
+        //    return new Dictionary<string, string>()
+        //    {
+        //         {"sta_code","MNV"},
+        //         {"sta_username","Tên đăng nhập"},
+        //         {"sta_mobile","Số điện thoại"},
+        //         {"sta_email","Email"},
+        //         {"position_name","Chức vụ"},
+        //         {"sta_status","Trạng thái"}
+        //    };
+        //}
+        //#endregion
+
+        //#region["Common funtion"]
+        //private bool check_department(int _id)
+        //{
+        //    bool res = _departmentservice.Exist(x => x.de_id == _id);
+        //    return res;
+        //}
+
+        //private bool check_grouprole(int _id)
+        //{
+        //    bool res = _groupRoleservice.Exist(x => x.gr_id == _id);
+        //    return res;
+        //}
+
+        //private bool check_position(int _id)
+        //{
+        //    bool res = _positionService.Exist(x => x.pos_id == _id);
+        //    return res;
+        //}
+
+        //private bool check_username_email(string _username, string _email)
+        //{
+        //    bool res = _staffservice.Exist(x => x.sta_username == _username || x.sta_email == _email);
+        //    return res;
+        //}
+        //#endregion
+
         #region dispose
 
         protected override void Dispose(bool disposing)

@@ -257,27 +257,6 @@ namespace ERP.API.Controllers.Dashboard
                     response.Data = null;
                     return Ok(response);
                 }
-                if (streamProvider.FormData["add_province"] == null)
-                {
-                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                    response.Message = "Tinh/Thanh pho không được để trống";
-                    response.Data = null;
-                    return Ok(response);
-                }
-                if (streamProvider.FormData["add_district"] == null)
-                {
-                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                    response.Message = "Quan/Huyen không được để trống";
-                    response.Data = null;
-                    return Ok(response);
-                }
-                if (streamProvider.FormData["add_ward"] == null)
-                {
-                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                    response.Message = "Xa/Phuong không được để trống";
-                    response.Data = null;
-                    return Ok(response);
-                }
                 #endregion
 
                 #region["Check exits"]
@@ -410,7 +389,6 @@ namespace ERP.API.Controllers.Dashboard
                 var createdstaff = _mapper.Map<staff>(StaffCreateViewModel);
                 createdstaff.sta_thumbnai = fileName;
                 createdstaff.sta_password = StaffCreateViewModel.sta_password;
-
                 // save new staff
                 _staffservice.Create(createdstaff);
                 // return response
@@ -985,6 +963,7 @@ namespace ERP.API.Controllers.Dashboard
                         var x = _staffservice.GetLast().sta_id;
                         i.sta_code = Utilis.CreateCode("NV", x, 7);
                         _staffservice.Create(i);
+                        BaseController.send_mail(i.sta_password, i.sta_email);
                     }
                     exitsData = "Đã nhập dữ liệu excel thành công!";
                     response.Code = HttpCode.OK;
@@ -1104,7 +1083,7 @@ namespace ERP.API.Controllers.Dashboard
 
         private bool check_username_email(string _username, string _email)
         {
-            bool res = _staffservice.Exist(x => x.sta_username == _username || x.sta_email == _email);
+            bool res = _staffservice.Exist(x => x.sta_username == _username || x.sta_email == _email && _email != null);
             return res;
         }
         #endregion

@@ -58,6 +58,7 @@ namespace ERP.Data.ModelsERP.ModelView
 
         [StringLength(120)]
         public string group_name{ get; set; }
+        public int? group_role_id { get; set; }
 
         public int? social_id { get; set; }
 

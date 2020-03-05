@@ -1,6 +1,7 @@
 ﻿using ERP.Common.GenericService;
 using ERP.Common.Models;
 using ERP.Data.ModelsERP;
+using ERP.Data.ModelsERP.ModelView.Sms;
 using ERP.Repository.Repositories.IRepositories;
 using ERP.Service.Services.IServices;
 using System;
@@ -18,7 +19,7 @@ namespace ERP.Service.Services
             this._repository = repository;
         }
 
-        public PagedResults<sms_template> CreatePagedResults(int pageNumber, int pageSize)
+        public PagedResults<smstemplatemodelview> CreatePagedResults(int pageNumber, int pageSize)
         {
             return this._repository.CreatePagedResults(pageNumber, pageSize);
         }

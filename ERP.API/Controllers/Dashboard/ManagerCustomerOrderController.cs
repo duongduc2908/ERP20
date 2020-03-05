@@ -64,6 +64,7 @@ namespace ERP.API.Controllers.Dashboard
 
             return Ok(response);
         }
+
         [HttpGet]
         [Route("api/customer-orders/search")]
         public IHttpActionResult GetAllSearch(int pageNumber, int pageSize, int? payment_type_id, string code)
@@ -135,7 +136,6 @@ namespace ERP.API.Controllers.Dashboard
 
         [HttpPost]
         [Route("api/customer-orders/create")]
-
         public async Task<IHttpActionResult> CreateCustomerOrder([FromBody] CustomerOrderProductViewModel customer_order)
         {
             ResponseDataDTO<customer_order> response = new ResponseDataDTO<customer_order>();
@@ -302,6 +302,8 @@ namespace ERP.API.Controllers.Dashboard
                 customer_orderCreateViewModel.cuo_total_price = c.cuo_total_price;
                 customer_orderCreateViewModel.cuo_discount = c.cuo_discount;
                 customer_orderCreateViewModel.cuo_status = c.cuo_status;
+                customer_orderCreateViewModel.cuo_address = c.cuo_address;
+                
                 var x = _customer_orderservice.GetLast();
 
                 customer_orderCreateViewModel.cuo_code = Utilis.CreateCode("OR", x.cuo_id, 7);
@@ -348,9 +350,9 @@ namespace ERP.API.Controllers.Dashboard
             }
 
         }
+
         [HttpPut]
         [Route("api/customer-orders/update")]
-
         public async Task<IHttpActionResult> UpdateCustomerOder([FromBody] CustomerOrderProductViewModelUpdate customer_order_update)
         {
             ResponseDataDTO<bool> response = new ResponseDataDTO<bool>();
@@ -570,7 +572,6 @@ namespace ERP.API.Controllers.Dashboard
 
         }
 
-
         [HttpDelete]
         [Route("api/customer_orders/delete")]
         public IHttpActionResult Deletecustomer_order(int customer_orderId)
@@ -581,7 +582,16 @@ namespace ERP.API.Controllers.Dashboard
                 var customer_orderDeleted = _customer_orderservice.Find(customer_orderId);
                 if (customer_orderDeleted != null)
                 {
-                    _customer_orderservice.Delete(customer_orderDeleted);
+                    try {
+                        _customer_orderservice.Delete(customer_orderDeleted);
+                    }
+                    catch(Exception ex) {
+                        response.Code = HttpCode.OK;
+                        response.Message = MessageResponse.SUCCESS;
+                        response.Data = null;
+                        return Ok(response);
+                    }
+                    
 
                     // return response
                     response.Code = HttpCode.OK;

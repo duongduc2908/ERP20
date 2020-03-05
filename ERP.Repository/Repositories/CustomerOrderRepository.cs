@@ -141,6 +141,8 @@ namespace ERP.Repository.Repositories
                 var customergroup = _dbContext.customer_group.FirstOrDefault(x => x.cg_id == cu_curr.customer_group_id);
                 customerview.source_name = sources.src_name;
                 customerview.customer_group_name = customergroup.cg_name;
+                var curator = _dbContext.staffs.Find(cu_curr.cu_curator_id);
+                if (curator != null) customerview.cu_curator_name = curator.sta_fullname;
                 for (int j = 1; j < 3; j++)
                 {
                     if (j == cu_curr.cu_type)
@@ -168,9 +170,11 @@ namespace ERP.Repository.Repositories
                 foreach (order_product i in lst_order_product)
                 {
                     var x = _mapper.Map<productorderviewmodel>(i);
-                    x.pu_unit = _dbContext.products.Where(t => t.pu_id == i.product_id).FirstOrDefault().pu_unit;
+                    var product = _dbContext.products.Where(t => t.pu_id == i.product_id).FirstOrDefault();
+                    x.pu_unit = product.pu_unit;
                     x.pu_unit_name = EnumProduct.pu_unit[(int)x.pu_unit - 1];
-                    x.pu_name = _dbContext.products.Where(p => p.pu_id == i.product_id).FirstOrDefault().pu_name;
+                    x.pu_name = product.pu_name;
+                    x.pu_sale_price = product.pu_sale_price;
                    
                     res.list_product.Add(x);
                 }

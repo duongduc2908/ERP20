@@ -4,6 +4,7 @@ using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
 using ERP.Data.ModelsERP.ModelView.Customer;
 using ERP.Data.ModelsERP.ModelView.Product;
+using ERP.Data.ModelsERP.ModelView.Sms;
 using ERP.Data.ModelsERP.ModelView.Transaction;
 using System;
 using System.Collections.Generic;
@@ -82,6 +83,7 @@ namespace ERP.API.AutoMapper
 
             CreateMap<SmsTemplateCreateViewModel, sms_template>();
             CreateMap<SmsTemplateUpdateViewModel, sms_template>();
+            CreateMap<sms_template, smstemplatemodelview>();
 
             CreateMap<SmsStrategyCreateViewModel, sms_strategy>();
             CreateMap<SmsStrategyUpdateViewModel, sms_strategy>();
@@ -96,6 +98,7 @@ namespace ERP.API.AutoMapper
             CreateMap<EmailStrategyUpdateViewModel, email_strategy>();
 
             CreateMap<transaction, transactionviewmodel>();
+            CreateMap<transaction, customertransactionviewmodel>();
             CreateMap<TransactionCreateViewModel, transaction>();
             CreateMap<TransactionUpdateViewModel, transaction>();
         }

@@ -41,6 +41,30 @@ namespace ERP.Common.Constants
 
             return res;
         }
+        public string MakeRandomPassword(int length)
+        {
+            string UpperCase = "QWERTYUIOPASDFGHJKLZXCVBNM";
+            string LowerCase = "qwertyuiopasdfghjklzxcvbnm";
+            string Digits = "1234567890";
+            string ktdb = "~!@#$%^&*()_+";
+            string allCharacters = UpperCase + LowerCase + Digits + ktdb;
+            //Random will give random charactors for given length  
+            Random r = new Random();
+            String password = "";
+            for (int i = 0; i < length; i++)
+            {
+                double rand = r.NextDouble();
+                if (i == 0)
+                {
+                    password += UpperCase.ToCharArray()[(int)Math.Floor(rand * UpperCase.Length)];
+                }
+                else
+                {
+                    password += allCharacters.ToCharArray()[(int)Math.Floor(rand * allCharacters.Length)];
+                }
+            }
+            return password;
+        }
         /// <summary>
         /// Lấy ra ngày đầu tiên trong tháng có chứa 
         /// 1 ngày bất kỳ được truyền vào

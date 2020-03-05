@@ -144,6 +144,8 @@ namespace ERP.Repository.Repositories
         
         public PagedResults<customerviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, string name)
         {
+            if (name != null) name = name.Trim();
+           
             List<customerviewmodel> res = new List<customerviewmodel>();
             var skipAmount = pageSize * pageNumber;
 
@@ -232,6 +234,10 @@ namespace ERP.Repository.Repositories
                 var customergroup = _dbContext.customer_group.FirstOrDefault(x => x.cg_id == i.customer_group_id);
                 customerview.source_name = sources.src_name;
                 customerview.customer_group_name = customergroup.cg_name;
+                var curator = _dbContext.staffs.Find(i.cu_curator_id);
+                if(curator != null) customerview.cu_curator_name = curator.sta_fullname;
+                
+                
                 for (int j = 1; j < 3; j++)
                 {
                     if (j == i.cu_type)
@@ -318,6 +324,8 @@ namespace ERP.Repository.Repositories
             var customergroup = _dbContext.customer_group.FirstOrDefault(x => x.cg_id == customer_cur.customer_group_id);
             res.source_name = sources.src_name;
             res.customer_group_name = customergroup.cg_name;
+            var curator = _dbContext.staffs.Find(customer_cur.cu_curator_id);
+            if (curator != null) customerview.cu_curator_name = curator.sta_fullname;
             for (int j = 1; j < 3; j++)
             {
                 if (j == customer_cur.cu_type)
@@ -325,17 +333,43 @@ namespace ERP.Repository.Repositories
                     res.cu_type_name = EnumCustomer.cu_type[j-1];
                 }
             }
-            var list_address = _dbContext.ship_address.Where(i => i.customer_id == customer_cur.cu_id).ToList();
-            List<shipaddressviewmodel> lst = new List<shipaddressviewmodel>();
-            foreach(ship_address i in list_address)
+            
+            
+            // lay ra dia chi khach hang 
+            var list_address = _dbContext.ship_address.Where(s => s.customer_id == customer_cur.cu_id).ToList();
+            List<shipaddressviewmodel> lst_add = new List<shipaddressviewmodel>();
+            foreach (ship_address s in list_address)
             {
-                shipaddressviewmodel add = _mapper.Map<shipaddressviewmodel>(i);
-                add.ward_id = _dbContext.ward.Where(t => t.Name.Contains(i.sha_ward)).FirstOrDefault().Id;
-                add.district_id = _dbContext.district.Where(t => t.Name.Contains(i.sha_district)).FirstOrDefault().Id;
-                add.province_id = _dbContext.province.Where(t => t.Name.Contains(i.sha_province)).FirstOrDefault().Id;
-                lst.Add(add);
+                shipaddressviewmodel add = _mapper.Map<shipaddressviewmodel>(s);
+                add.ward_id = _dbContext.ward.Where(t => t.Name.Contains(s.sha_ward)).FirstOrDefault().Id;
+                add.district_id = _dbContext.district.Where(t => t.Name.Contains(s.sha_district)).FirstOrDefault().Id;
+                add.province_id = _dbContext.province.Where(t => t.Name.Contains(s.sha_province)).FirstOrDefault().Id;
+                lst_add.Add(add);
             }
-            res.list_address = lst;
+            customerview.list_address = lst_add;
+            //lay ra lich su mua cua khach hang
+            var list_cuo_history = _dbContext.customer_order.Where(s => s.customer_id == customer_cur.cu_id).ToList();
+            List<customerorderhistoryviewmodel> lst_cuo_his = new List<customerorderhistoryviewmodel>();
+            foreach (customer_order s in list_cuo_history)
+            {
+                customerorderhistoryviewmodel add = _mapper.Map<customerorderhistoryviewmodel>(s);
+                add.staff_name = _dbContext.staffs.Where(t => t.sta_id == s.staff_id).FirstOrDefault().sta_fullname;
+                lst_cuo_his.Add(add);
+            }
+
+            customerview.list_customer_order = lst_cuo_his;
+            //lay ra lich su cham soc cua khach hang
+            var list_tran_history = _dbContext.transactions.Where(s => s.customer_id == customer_cur.cu_id).ToList();
+            List<customertransactionviewmodel> lst_tra_his = new List<customertransactionviewmodel>();
+            foreach (transaction s in list_tran_history)
+            {
+                customertransactionviewmodel add = _mapper.Map<customertransactionviewmodel>(s);
+                add.staff_name = _dbContext.staffs.Where(t => t.sta_id == s.staff_id).FirstOrDefault().sta_fullname;
+                lst_tra_his.Add(add);
+            }
+
+            customerview.list_transaction = lst_tra_his;
+            
             return res;
         }
         public List<dropdown> GetAllType()

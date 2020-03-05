@@ -231,6 +231,7 @@
     <Compile Include="Controllers\Dashboard\ManagerAddressController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerCustomerGroupController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerCustomerOrderController.cs" />
+    <Compile Include="Controllers\Dashboard\ManagerFieldController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerStatisticalController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerOrderProductController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerProductCategoryController.cs" />

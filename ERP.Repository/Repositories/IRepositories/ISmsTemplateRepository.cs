@@ -1,6 +1,7 @@
 ﻿using ERP.Common.GenericRepository;
 using ERP.Common.Models;
 using ERP.Data.ModelsERP;
+using ERP.Data.ModelsERP.ModelView.Sms;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,6 @@ namespace ERP.Repository.Repositories.IRepositories
 {
     public interface ISmsTemplateRepository : IGenericRepository<sms_template>
     {
-        PagedResults<sms_template> CreatePagedResults(int pageNumber, int pageSize);
+        PagedResults<smstemplatemodelview> CreatePagedResults(int pageNumber, int pageSize);
     }
 }

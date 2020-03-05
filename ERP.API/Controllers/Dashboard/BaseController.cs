@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Web;
 using System.Web.Http;
@@ -18,7 +20,7 @@ namespace ERP.API.Controllers.Dashboard
         public string Ft_RecordStartExportExcel = "0";
         public string Ft_RecordCount = "123456000";
         public string Ft_WhereClause = "";
-        public static string current_id ;
+        public static int current_id ;
         public string Hethong = "";
         public string FolderUploadTest = "";
         public static string SubPath = "";
@@ -35,11 +37,7 @@ namespace ERP.API.Controllers.Dashboard
         public string FlagInActive = "0";
         private int inext = 0;
         public BaseController() {
-            var lst_claims = ClaimsPrincipal.Current.Identities.First().Claims.ToList();
-            if(lst_claims.Count() == 4)
-            {
-                current_id = lst_claims[3].Value;
-            }
+            
         }
         public string GetNextTId()
         {
@@ -78,5 +76,33 @@ namespace ERP.API.Controllers.Dashboard
             return filePath;
         }
 
+
+        public static void send_mail(string password, string to_MailAddress)
+        {
+
+            MailMessage message = new MailMessage();
+            SmtpClient smtp = new SmtpClient();
+            message.From = new MailAddress("openupmta99@gmail.com");
+            message.To.Add(new MailAddress(to_MailAddress));
+            message.Subject = "Test";
+            message.IsBodyHtml = true; //to make message body as html  
+            message.Body = password;
+            smtp.Port = 587;
+            smtp.Host = "smtp.gmail.com"; //for gmail host  
+            smtp.EnableSsl = true;
+            smtp.UseDefaultCredentials = false;
+            smtp.Credentials = new NetworkCredential("openupmta99@gmail.com", "tienmta99");
+            smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+            smtp.Send(message);
+        }
+        public static int get_id_current()
+        {
+            var lst_claims = ClaimsPrincipal.Current.Identities.First().Claims.ToList();
+            if (lst_claims.Count() == 4)
+            {
+                current_id = int.Parse( lst_claims[3].Value);
+            }
+            return current_id;
+        }
     }
 }

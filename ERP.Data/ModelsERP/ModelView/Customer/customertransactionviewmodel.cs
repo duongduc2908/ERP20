@@ -16,7 +16,7 @@ namespace ERP.Data.ModelsERP.ModelView.Customer
 
         public string tra_content { get; set; }
 
-        public byte? tra_rate { get; set; }
+        public string tra_rate { get; set; }
 
         public byte? tra_type { get; set; }
         public byte? tra_type_name { get; set; }
