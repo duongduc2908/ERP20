@@ -8,7 +8,6 @@ namespace ERP.Data.ModelsERP.ModelView.Sms
 {
     public class smstemplatemodelview
     {
-        public List<field> list_field { get; set; }
         public int smt_id { get; set; }
 
         [StringLength(50)]

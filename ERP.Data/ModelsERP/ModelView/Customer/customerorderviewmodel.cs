@@ -17,7 +17,7 @@ namespace ERP.Data.ModelsERP.ModelView
 
         public int? cuo_total_price { get; set; }
         [StringLength(50)]
-        public string cuo_status { get; set; }
+        public string cuo_status_name { get; set; }
 
         public int? customer_id { get; set; }
 
@@ -29,5 +29,6 @@ namespace ERP.Data.ModelsERP.ModelView
 
         public int? cuo_ship_tax { get; set; }
         public int? staff_id { get; set; }
+        public byte? cuo_status { get; set; }
     }
 }

@@ -14,5 +14,6 @@ namespace ERP.Repository.Repositories.IRepositories
     {
         PagedResults<smstemplatemodelview> CreatePagedResults(int pageNumber, int pageSize, string search_name);
         PagedResults<smstemplatestrategyviewmodel> CreatePagedSmsTrategy(int pageNumber, int pageSize);
+        PagedResults<field> Get_All_Fields(int pageNumber, int pageSize);
     }
 }

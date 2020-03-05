@@ -26,6 +26,10 @@ namespace ERP.Service.Services
         public PagedResults<smstemplatestrategyviewmodel> CreatePagedSmsTrategy(int pageNumber, int pageSize)
         {
             return this._repository.CreatePagedSmsTrategy(pageNumber, pageSize);
+        } 
+        public PagedResults<field> Get_All_Fields(int pageNumber, int pageSize)
+        {
+            return this._repository.Get_All_Fields(pageNumber, pageSize);
         }
     }
 }

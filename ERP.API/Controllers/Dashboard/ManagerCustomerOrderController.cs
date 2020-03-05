@@ -173,8 +173,8 @@ namespace ERP.API.Controllers.Dashboard
             {
                 var c = customer_order;
                 //Id user now
-                new BaseController();
-                var current_id = BaseController.current_id;
+               
+                var current_id = BaseController.get_id_current();
                 if (c.customer.cu_id == 0)
                 {
                     #region[Create Customer]
@@ -334,18 +334,20 @@ namespace ERP.API.Controllers.Dashboard
                 customer_orderCreateViewModel.cuo_status = c.cuo_status;
 
 
-
+                
                 customer_orderCreateViewModel.cuo_date = DateTime.Now;
                 // mapping view model to entity
                 var createdcustomer_order = _mapper.Map<customer_order>(customer_orderCreateViewModel);
-
+                var op_last1 = _customer_orderservice.GetLast();
+                createdcustomer_order.cuo_code = Utilis.CreateCode("OR", op_last1.cuo_id,7) ;
 
                 // save new customer_order
                 _customer_orderservice.Create(createdcustomer_order);
-
+                var op_last = _customer_orderservice.GetLast();
                 //create order product
                 OrderProductCreateViewModel orderCreateViewModel = new OrderProductCreateViewModel { };
-                var op_last = _customer_orderservice.GetLast();
+               
+
                 foreach (productorderviewmodel i in c.list_product)
                 {
                     orderCreateViewModel.customer_order_id = op_last.cuo_id;
@@ -389,7 +391,7 @@ namespace ERP.API.Controllers.Dashboard
 
                 //Id user now
                 new BaseController();
-                var current_id = BaseController.current_id;
+                var current_id = BaseController.get_id_current();
                 if (customer_order_update.customer.cu_id == 0)
                 {
                     #region[Create Customer]
@@ -550,25 +552,20 @@ namespace ERP.API.Controllers.Dashboard
                 existscustomerorder.cuo_status = customer_order_update.cuo_status;
                 existscustomerorder.cuo_address = customer_order_update.cuo_address;
 
-
-
-
-
-
                 // update customer order
                 _customer_orderservice.Update(existscustomerorder, existscustomerorder.cuo_id);
-
+                var list_product_old = _order_productservice.GetAllIncluing(op => op.customer_order_id == existscustomerorder.cuo_id);
+                foreach( order_product i in list_product_old)
+                {
+                    _order_productservice.Delete(i);
+                }
                 //update order product
 
                 OrderProductCreateViewModel orderCreateViewModel = new OrderProductCreateViewModel { };
 
                 foreach (productorderviewmodel i in customer_order_update.list_product)
                 {
-                    var order_product_delete = _order_productservice.Find(i.op_id);
-                    if (order_product_delete != null)
-                    {
-                        _order_productservice.Delete(order_product_delete);
-                    }
+                   
 
                     orderCreateViewModel.customer_order_id = customer_order_update.cuo_id;
                     orderCreateViewModel.op_discount = i.op_discount;

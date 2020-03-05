@@ -37,10 +37,7 @@ namespace ERP.Repository.Repositories
             foreach(sms_template i in list_smstem)
             {
                 var smstem = _mapper.Map<smstemplatemodelview>(i);
-                smstem.list_field = new List<field>();
                 smstem.staff_fullname = _dbContext.staffs.Where(s => s.sta_id == i.staff_id).FirstOrDefault().sta_fullname;
-                var lst_fieldtem = _dbContext.fields.Where(f => f.fie_type == 1).ToList();
-                smstem.list_field = lst_fieldtem;
                 results.Add(smstem);
             }
 
@@ -77,6 +74,26 @@ namespace ERP.Repository.Repositories
             var totalPageCount = (totalNumberOfRecords / pageSize) + (mod == 0 ? 0 : 1);
 
             return new PagedResults<smstemplatestrategyviewmodel>
+            {
+                Results = results,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalNumberOfPages = totalPageCount,
+                TotalNumberOfRecords = totalNumberOfRecords
+            };
+        } 
+        public PagedResults<field> Get_All_Fields(int pageNumber, int pageSize)
+        {
+            List<field> results = new List<field>();
+            var skipAmount = pageSize * pageNumber;
+            results = _dbContext.fields.OrderBy(x => x.fie_id).Skip(skipAmount).Take(pageSize).ToList();            
+            var totalNumberOfRecords = _dbContext.fields.Count();
+
+            var mod = totalNumberOfRecords % pageSize;
+
+            var totalPageCount = (totalNumberOfRecords / pageSize) + (mod == 0 ? 0 : 1);
+
+            return new PagedResults<field>
             {
                 Results = results,
                 PageNumber = pageNumber,

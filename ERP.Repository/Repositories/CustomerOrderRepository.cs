@@ -39,7 +39,7 @@ namespace ERP.Repository.Repositories
                 {
                     if (j == i.cuo_status)
                     {
-                        orderview.cuo_status = EnumCustomerOrder.status[j-1];
+                        orderview.cuo_status_name = EnumCustomerOrder.status[j-1];
                     }
                 }
 
@@ -93,7 +93,7 @@ namespace ERP.Repository.Repositories
                 {
                     if (j == i.cuo_status)
                     {
-                        orderview.cuo_status = EnumCustomerOrder.status[j-1];
+                        orderview.cuo_status_name = EnumCustomerOrder.status[j-1];
                     }
                 }
 
@@ -180,6 +180,7 @@ namespace ERP.Repository.Repositories
                 }
                 res.cuo_ship_tax = cuo.cuo_ship_tax;
                 res.cuo_status = cuo.cuo_status;
+                res.cuo_status_name = EnumCustomerOrder.status[Convert.ToInt32(cuo.cuo_status) - 1];
                 res.cuo_total_price = cuo.cuo_total_price;
                 res.cuo_payment_status = cuo.cuo_payment_status;
                 res.cuo_payment_type = cuo.cuo_payment_type;
@@ -229,7 +230,7 @@ namespace ERP.Repository.Repositories
                 {
                     if (j == i.cuo_status)
                     {
-                        orderview.cuo_status = EnumCustomerOrder.status[j-1];
+                        orderview.cuo_status_name = EnumCustomerOrder.status[j-1];
                     }
                 }
 

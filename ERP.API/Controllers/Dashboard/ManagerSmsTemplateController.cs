@@ -79,6 +79,28 @@ namespace ERP.API.Controllers.Dashboard
             return Ok(response);
         }
         [HttpGet]
+        [Route("api/sms-templates/get_all_fields")]
+        public IHttpActionResult GetAllFieldsPaging(int pageSize, int pageNumber)
+        {
+            ResponseDataDTO<PagedResults<field>> response = new ResponseDataDTO<PagedResults<field>>();
+            try
+            {
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = _smstemplateservice.Get_All_Fields(pageNumber, pageSize);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+
+                Console.WriteLine(ex.ToString());
+            }
+
+            return Ok(response);
+        }
+        [HttpGet]
         [Route("api/smsstrategy-templates/search")]
         public IHttpActionResult Getsmsstrategy_templatesPaging(int pageSize, int pageNumber)
         {

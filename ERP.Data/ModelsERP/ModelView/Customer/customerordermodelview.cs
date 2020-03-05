@@ -13,6 +13,7 @@ namespace ERP.Data.ModelsERP.ModelView
         public int? cuo_total_price { get; set; }
 
         public byte? cuo_status { get; set; }
+        public string cuo_status_name { get; set; }
 
         public int? cuo_discount { get; set; }
         public string cuo_address { get; set; }

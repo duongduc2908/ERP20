@@ -823,7 +823,7 @@ namespace ERP.API.Controllers.Dashboard
                     }
                 }
                 var list = new List<staff>();
-                fileName = @"C:\inetpub\wwwroot\coerp\" + fileName;
+                fileName = "C:/inetpub/wwwroot/coerp" + fileName;
                 var dataset = ExcelImport.ImportExcelXLS(fileName, true);
                 DataTable table = (DataTable)dataset.Tables[6];
                 if (table != null && table.Rows.Count > 0)
