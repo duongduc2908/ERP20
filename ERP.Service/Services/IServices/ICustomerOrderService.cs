@@ -20,5 +20,6 @@ namespace ERP.Service.Services.IServices
         int ResultStatisticsByMonth(int staff_id);
         int ResultStatisticsByWeek(int staff_id);
         int ResultStatisticsByDay(int staff_id);
+        List<dropdown> GetAllStatus();
     }
 }

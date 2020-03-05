@@ -321,5 +321,17 @@ namespace ERP.Repository.Repositories
             }
             return res;
         }
+        public List<dropdown> GetAllStatus()
+        {
+            List<dropdown> res = new List<dropdown>();
+            for (int i = 1; i < 4; i++)
+            {
+                dropdown dr = new dropdown();
+                dr.id = i;
+                dr.name = EnumCustomerOrder.status[i - 1];
+                res.Add(dr);
+            }
+            return res;
+        }
     }
 }

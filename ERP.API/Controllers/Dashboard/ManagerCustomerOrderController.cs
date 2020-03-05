@@ -28,9 +28,9 @@ namespace ERP.API.Controllers.Dashboard
 
         private readonly IMapper _mapper;
 
-        public ManagerCustomerOrderController() 
+        public ManagerCustomerOrderController()
         {
-            
+
         }
         public ManagerCustomerOrderController(ICustomerOrderService customer_orderservice, ICustomerService customerservice, IOrderProductService order_productservice, IMapper mapper)
         {
@@ -64,7 +64,28 @@ namespace ERP.API.Controllers.Dashboard
 
             return Ok(response);
         }
+        [HttpGet]
+        [Route("api/customer-orders/status")]
+        public IHttpActionResult GetllStatus()
+        {
+            ResponseDataDTO<List<dropdown>> response = new ResponseDataDTO<List<dropdown>>();
+            try
+            {
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = _customer_orderservice.GetAllStatus();
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
 
+                Console.WriteLine(ex.ToString());
+            }
+
+            return Ok(response);
+        }
         [HttpGet]
         [Route("api/customer-orders/search")]
         public IHttpActionResult GetAllSearch(int pageNumber, int pageSize, int? payment_type_id, string code)
@@ -74,7 +95,7 @@ namespace ERP.API.Controllers.Dashboard
             {
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _customer_orderservice.GetAllSearch(pageNumber:pageNumber, pageSize:pageSize, payment_type_id:payment_type_id, code);
+                response.Data = _customer_orderservice.GetAllSearch(pageNumber: pageNumber, pageSize: pageSize, payment_type_id: payment_type_id, code);
             }
             catch (Exception ex)
             {
@@ -84,6 +105,15 @@ namespace ERP.API.Controllers.Dashboard
 
                 Console.WriteLine(ex.ToString());
             }
+
+            return Ok(response);
+        }
+        [HttpPost]
+        [Route("api/customer-orders/test")]
+        public IHttpActionResult Test([FromBody] CustomerOrderProductViewModel customer_order)
+        {
+            var c = customer_order;
+            ResponseDataDTO<PagedResults<customerorderviewmodel>> response = new ResponseDataDTO<PagedResults<customerorderviewmodel>>();
 
             return Ok(response);
         }
@@ -110,33 +140,11 @@ namespace ERP.API.Controllers.Dashboard
 
             return Ok(response);
         }
-        
-        [HttpGet]
-        [Route("api/customer-orders/get-all-payment")]
-        public IHttpActionResult GetAllPayment()
-        {
-            ResponseDataDTO<List<dropdown>> response = new ResponseDataDTO<List<dropdown>>();
-            try
-            {
-                response.Code = HttpCode.OK;
-                response.Message = MessageResponse.SUCCESS;
-                response.Data = _customer_orderservice.GetAllPayment();
-            }
-            catch (Exception ex)
-            {
-                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = ex.Message;
-                response.Data = null;
-
-                Console.WriteLine(ex.ToString());
-            }
-
-            return Ok(response);
-        }
 
         [HttpPost]
         [Route("api/customer-orders/create")]
-        public async Task<IHttpActionResult> CreateCustomerOrder([FromBody] CustomerOrderProductViewModel customer_order)
+
+        public async Task<IHttpActionResult> Createcustomer_order([FromBody] CustomerOrderProductViewModel customer_order)
         {
             ResponseDataDTO<customer_order> response = new ResponseDataDTO<customer_order>();
             try
@@ -277,23 +285,23 @@ namespace ERP.API.Controllers.Dashboard
                     {
                         customerCreateViewModel.cu_status = Convert.ToByte(c.customer.cu_status);
                     }
-                    
+
                     customerCreateViewModel.staff_id = Convert.ToInt32(current_id);
                     customerCreateViewModel.cu_create_date = DateTime.Now;
                     var cu = _customerservice.GetLast();
                     customerCreateViewModel.cu_code = Utilis.CreateCode("CU", cu.cu_id, 7);
                     // mapping view model to entity
                     var createdcustomer = _mapper.Map<customer>(customerCreateViewModel);
-                
+
                     // save new customer
                     _customerservice.Create(createdcustomer);
                     var cu_last = _customerservice.GetLast();
                     c.customer.cu_id = cu_last.cu_id;
                     #endregion
                 }
-                
+
                 // get data from formdata
-                CustomerOrderCreateViewModel customer_orderCreateViewModel = new CustomerOrderCreateViewModel{};
+                CustomerOrderCreateViewModel customer_orderCreateViewModel = new CustomerOrderCreateViewModel { };
                 customer_orderCreateViewModel.customer_id = c.customer.cu_id;
                 customer_orderCreateViewModel.staff_id = Convert.ToInt32(current_id);
                 customer_orderCreateViewModel.cuo_payment_status = c.cuo_payment_status;
@@ -302,11 +310,8 @@ namespace ERP.API.Controllers.Dashboard
                 customer_orderCreateViewModel.cuo_total_price = c.cuo_total_price;
                 customer_orderCreateViewModel.cuo_discount = c.cuo_discount;
                 customer_orderCreateViewModel.cuo_status = c.cuo_status;
-                customer_orderCreateViewModel.cuo_address = c.cuo_address;
-                
-                var x = _customer_orderservice.GetLast();
 
-                customer_orderCreateViewModel.cuo_code = Utilis.CreateCode("OR", x.cuo_id, 7);
+
 
                 customer_orderCreateViewModel.cuo_date = DateTime.Now;
                 // mapping view model to entity
@@ -317,7 +322,7 @@ namespace ERP.API.Controllers.Dashboard
                 _customer_orderservice.Create(createdcustomer_order);
 
                 //create order product
-                OrderProductCreateViewModel orderCreateViewModel = new OrderProductCreateViewModel {};
+                OrderProductCreateViewModel orderCreateViewModel = new OrderProductCreateViewModel { };
                 var op_last = _customer_orderservice.GetLast();
                 foreach (productorderviewmodel i in c.list_product)
                 {
@@ -331,8 +336,8 @@ namespace ERP.API.Controllers.Dashboard
 
                     _order_productservice.Create(createdorderproduct);
                 }
-                
-                
+
+
                 // return response
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
@@ -350,16 +355,16 @@ namespace ERP.API.Controllers.Dashboard
             }
 
         }
-
         [HttpPut]
         [Route("api/customer-orders/update")]
+
         public async Task<IHttpActionResult> UpdateCustomerOder([FromBody] CustomerOrderProductViewModelUpdate customer_order_update)
         {
             ResponseDataDTO<bool> response = new ResponseDataDTO<bool>();
-            
+
             try
             {
-                
+
                 //Id user now
                 new BaseController();
                 var current_id = BaseController.current_id;
@@ -512,7 +517,7 @@ namespace ERP.API.Controllers.Dashboard
 
 
                 var existscustomerorder = _customer_orderservice.Find(customer_order_update.cuo_id);
-                
+
                 existscustomerorder.customer_id = customer_order_update.customer.cu_id;
                 existscustomerorder.staff_id = Convert.ToInt32(current_id);
                 existscustomerorder.cuo_payment_status = customer_order_update.cuo_payment_status;
@@ -531,17 +536,17 @@ namespace ERP.API.Controllers.Dashboard
                 _customer_orderservice.Update(existscustomerorder, existscustomerorder.cuo_id);
 
                 //update order product
-               
+
                 OrderProductCreateViewModel orderCreateViewModel = new OrderProductCreateViewModel { };
 
                 foreach (productorderviewmodel i in customer_order_update.list_product)
                 {
                     var order_product_delete = _order_productservice.Find(i.op_id);
-                    if(order_product_delete != null)
+                    if (order_product_delete != null)
                     {
                         _order_productservice.Delete(order_product_delete);
                     }
-                    
+
                     orderCreateViewModel.customer_order_id = customer_order_update.cuo_id;
                     orderCreateViewModel.op_discount = i.op_discount;
                     orderCreateViewModel.op_note = i.op_note;
@@ -572,6 +577,45 @@ namespace ERP.API.Controllers.Dashboard
 
         }
 
+        [HttpPut]
+        [Route("api/customer-orders/update-status")]
+
+        public async Task<IHttpActionResult> UpdateStatusCustomerOrder()
+        {
+            ResponseDataDTO<customer_order> response = new ResponseDataDTO<customer_order>();
+            try
+            {
+                var path = Path.GetTempPath();
+
+                if (!Request.Content.IsMimeMultipartContent("form-data"))
+                {
+                    throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.UnsupportedMediaType));
+                }
+
+                MultipartFormDataStreamProvider streamProvider = new MultipartFormDataStreamProvider(path);
+
+                await Request.Content.ReadAsMultipartAsync(streamProvider);
+                int cuo_id = Convert.ToInt32(streamProvider.FormData["cuo_id"]);
+                var cuo_update = _customer_orderservice.Find(cuo_id);
+                cuo_update.cuo_status = Convert.ToByte(streamProvider.FormData["cuo_status"]);
+                // update address
+                _customer_orderservice.Update(cuo_update, cuo_id);
+                // return response
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = cuo_update;
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+                Console.WriteLine(ex.ToString());
+
+                return Ok(response);
+            }
+        }
         [HttpDelete]
         [Route("api/customer_orders/delete")]
         public IHttpActionResult Deletecustomer_order(int customer_orderId)
@@ -582,16 +626,7 @@ namespace ERP.API.Controllers.Dashboard
                 var customer_orderDeleted = _customer_orderservice.Find(customer_orderId);
                 if (customer_orderDeleted != null)
                 {
-                    try {
-                        _customer_orderservice.Delete(customer_orderDeleted);
-                    }
-                    catch(Exception ex) {
-                        response.Code = HttpCode.OK;
-                        response.Message = MessageResponse.SUCCESS;
-                        response.Data = null;
-                        return Ok(response);
-                    }
-                    
+                    _customer_orderservice.Delete(customer_orderDeleted);
 
                     // return response
                     response.Code = HttpCode.OK;
