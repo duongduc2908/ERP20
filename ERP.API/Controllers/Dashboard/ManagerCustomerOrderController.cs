@@ -87,6 +87,28 @@ namespace ERP.API.Controllers.Dashboard
             return Ok(response);
         }
         [HttpGet]
+        [Route("api/customer-orders/get-all-payment")]
+        public IHttpActionResult GetAllSPayment()
+        {
+            ResponseDataDTO<List<dropdown>> response = new ResponseDataDTO<List<dropdown>>();
+            try
+            {
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = _customer_orderservice.GetAllPayment();
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+
+                Console.WriteLine(ex.ToString());
+            }
+
+            return Ok(response);
+        }
+        [HttpGet]
         [Route("api/customer-orders/search")]
         public IHttpActionResult GetAllSearch(int pageNumber, int pageSize, int? payment_type_id, string code)
         {
@@ -580,7 +602,6 @@ namespace ERP.API.Controllers.Dashboard
 
         [HttpPut]
         [Route("api/customer-orders/update-status")]
-
         public async Task<IHttpActionResult> UpdateStatusCustomerOrder()
         {
             ResponseDataDTO<customer_order> response = new ResponseDataDTO<customer_order>();
@@ -617,6 +638,7 @@ namespace ERP.API.Controllers.Dashboard
                 return Ok(response);
             }
         }
+
         [HttpDelete]
         [Route("api/customer_orders/delete")]
         public IHttpActionResult Deletecustomer_order(int customer_orderId)
