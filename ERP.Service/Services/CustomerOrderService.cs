@@ -49,5 +49,9 @@ namespace ERP.Service.Services
         {
             return this._repository.ResultStatisticsByDay(staff_id);
         }
+        public List<dropdown> GetAllStatus()
+        {
+            return this._repository.GetAllStatus();
+        }
     }
 }
