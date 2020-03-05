@@ -19,9 +19,9 @@ namespace ERP.Service.Services
             this._repository = repository;
         }
 
-        public PagedResults<smstemplatemodelview> CreatePagedResults(int pageNumber, int pageSize)
+        public PagedResults<smstemplatemodelview> CreatePagedResults(int pageNumber, int pageSize, string search_name)
         {
-            return this._repository.CreatePagedResults(pageNumber, pageSize);
+            return this._repository.CreatePagedResults(pageNumber, pageSize, search_name);
         }
     }
 }

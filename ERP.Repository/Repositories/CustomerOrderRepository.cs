@@ -175,7 +175,7 @@ namespace ERP.Repository.Repositories
                     x.pu_unit_name = EnumProduct.pu_unit[(int)x.pu_unit - 1];
                     x.pu_name = product.pu_name;
                     x.pu_sale_price = product.pu_sale_price;
-                   
+                    x.max_quantity = product.pu_quantity;
                     res.list_product.Add(x);
                 }
                 res.cuo_ship_tax = cuo.cuo_ship_tax;

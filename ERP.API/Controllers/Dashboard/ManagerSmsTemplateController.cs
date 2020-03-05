@@ -57,38 +57,15 @@ namespace ERP.API.Controllers.Dashboard
             return Ok(response);
         }
 
-        //[HttpGet]
-        //[Route("api/sms-templates/get_field")]
-        //public IHttpActionResult GetField()
-        //{
-        //    ResponseDataDTO<IEnumerable<field>> response = new ResponseDataDTO<IEnumerable<sms_template>>();
-        //    try
-        //    {
-        //        response.Code = HttpCode.OK;
-        //        response.Message = MessageResponse.SUCCESS;
-        //        response.Data = _smstemplateservice.GetAll();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-        //        response.Message = ex.Message;
-        //        response.Data = null;
-
-        //        Console.WriteLine(ex.ToString());
-        //    }
-
-        //    return Ok(response);
-        //}
-
-        [Route("api/sms-templates/page")]
-        public IHttpActionResult Getsms_templatesPaging(int pageSize, int pageNumber)
+        [Route("api/sms-templates/page-search")]
+        public IHttpActionResult Getsms_templatesPaging(int pageSize, int pageNumber, string search_name)
         {
             ResponseDataDTO<PagedResults<smstemplatemodelview>> response = new ResponseDataDTO<PagedResults<smstemplatemodelview>>();
             try
             {
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _smstemplateservice.CreatePagedResults(pageNumber, pageSize);
+                response.Data = _smstemplateservice.CreatePagedResults(pageNumber, pageSize, search_name);
             }
             catch (Exception ex)
             {
@@ -127,19 +104,16 @@ namespace ERP.API.Controllers.Dashboard
                     //smt_code = Convert.ToString(streamProvider.FormData["smt_code"]),
                     smt_title = Convert.ToString(streamProvider.FormData["smt_title"]),
                     smt_content = Convert.ToString(streamProvider.FormData["smt_content"]),
-
                     staff_id = Convert.ToInt32(streamProvider.FormData["staff_id"]),
-
                     smt_created_date = Convert.ToDateTime(streamProvider.FormData["smt_created_date"]),
                     
                 };
-
                 // mapping view model to entity
                 var createdsms_template = _mapper.Map<sms_template>(smstemplateCreateViewModel);
 
                 // create smt_code
                 var x = _smstemplateservice.GetLast();
-                smstemplateCreateViewModel.smt_code = Utilis.CreateCode("SMS", x.smt_id, 7);
+                createdsms_template.smt_code = Utilis.CreateCode("SMS", x.smt_id, 7);
                 // save new sms_template
                 _smstemplateservice.Create(createdsms_template);
                 // return response
@@ -163,7 +137,7 @@ namespace ERP.API.Controllers.Dashboard
         [HttpPut]
         [Route("api/sms-templates/update")]
 
-        public async Task<IHttpActionResult> Updatesms_template(int? smt_id)
+        public async Task<IHttpActionResult> Updatesms_template()
         {
             ResponseDataDTO<sms_template> response = new ResponseDataDTO<sms_template>();
             try
@@ -193,16 +167,17 @@ namespace ERP.API.Controllers.Dashboard
                     smt_created_date = Convert.ToDateTime(streamProvider.FormData["smt_created_date"]),
 
                 };
-
-
-
+                if( smstemplateUpdateViewModel.smt_id == null)
+                {
+                    response.Code = HttpCode.NOT_FOUND;
+                    response.Message = "Khong tim thay ma sms trong csdl!";
+                    response.Data = null;
+                    return Ok(response);
+                }
                 // mapping view model to entity
                 var updatedsms_template = _mapper.Map<sms_template>(smstemplateUpdateViewModel);
-
-
-
                 // update sms_template
-                _smstemplateservice.Update(updatedsms_template, smt_id);
+                _smstemplateservice.Update(updatedsms_template, updatedsms_template.smt_id);
                 // return response
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;

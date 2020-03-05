@@ -20,6 +20,7 @@ namespace ERP.Data.ModelsERP.ModelView
         public byte? pu_unit { get; set; }
         public string pu_unit_name { get; set; }
         public int? pu_sale_price { get; set; }
+        public int? max_quantity { get; set; }
 
     }
 }

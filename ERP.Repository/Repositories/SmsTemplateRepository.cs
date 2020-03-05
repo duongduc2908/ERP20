@@ -19,30 +19,28 @@ namespace ERP.Repository.Repositories
         {
             _mapper = mapper;
         }
-        public PagedResults<smstemplatemodelview> CreatePagedResults(int pageNumber, int pageSize)
+        public PagedResults<smstemplatemodelview> CreatePagedResults(int pageNumber, int pageSize, string search_name)
         {
             List<smstemplatemodelview> results = new List<smstemplatemodelview>();
             var skipAmount = pageSize * pageNumber;
-
-            var list = _dbContext.sms_template.OrderBy(t => t.smt_id).Skip(skipAmount).Take(pageSize);
-
+            List<sms_template> list = new List<sms_template>();
+            if (search_name == null)
+            {
+                list = _dbContext.sms_template.OrderBy(t => t.smt_id).Skip(skipAmount).Take(pageSize).ToList();
+            }
+            else { 
+                search_name = search_name.Trim(); 
+                list = _dbContext.sms_template.Where(x => x.smt_title.Contains(search_name) || x.smt_content.Contains(search_name)).OrderBy(t => t.smt_id).Skip(skipAmount).Take(pageSize).ToList(); 
+            }
             var totalNumberOfRecords = _dbContext.sms_template.Count();
-
             var list_smstem = list.ToList();
             foreach(sms_template i in list_smstem)
             {
                 var smstem = _mapper.Map<smstemplatemodelview>(i);
                 smstem.list_field = new List<field>();
                 smstem.staff_fullname = _dbContext.staffs.Where(s => s.sta_id == i.staff_id).FirstOrDefault().sta_fullname;
-                var lst_fieldtem = _dbContext.field_template.Where(ft => ft.sms_template_id == i.smt_id);
-                if(lst_fieldtem != null)
-                {
-                    foreach ( field_template f in lst_fieldtem.ToList())
-                    {
-                        field t = (_dbContext.fields.Where(m => m.fie_id == f.field_id).FirstOrDefault());
-                        smstem.list_field.Add(t);
-                    }
-                }
+                var lst_fieldtem = _dbContext.fields.Where(f => f.fie_type == 1).ToList();
+                smstem.list_field = lst_fieldtem;
                 results.Add(smstem);
             }
 

@@ -12,6 +12,6 @@ namespace ERP.Service.Services.IServices
 {
     public interface ISmsTemplateService : IGenericService<sms_template>
     {
-        PagedResults<smstemplatemodelview> CreatePagedResults(int pageNumber, int pageSize);
+        PagedResults<smstemplatemodelview> CreatePagedResults(int pageNumber, int pageSize, string search_name);
     }
 }
