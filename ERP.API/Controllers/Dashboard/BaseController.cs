@@ -104,5 +104,9 @@ namespace ERP.API.Controllers.Dashboard
             }
             return current_id;
         }
+        public static int get_timestamp()
+        {
+            return int.Parse(DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString());
+        }
     }
 }

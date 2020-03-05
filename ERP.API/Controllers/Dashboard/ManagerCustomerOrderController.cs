@@ -526,6 +526,7 @@ namespace ERP.API.Controllers.Dashboard
                 existscustomerorder.cuo_total_price = customer_order_update.cuo_total_price;
                 existscustomerorder.cuo_discount = customer_order_update.cuo_discount;
                 existscustomerorder.cuo_status = customer_order_update.cuo_status;
+                existscustomerorder.cuo_address = customer_order_update.cuo_address;
 
 
 

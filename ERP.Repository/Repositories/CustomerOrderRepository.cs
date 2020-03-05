@@ -184,6 +184,7 @@ namespace ERP.Repository.Repositories
                 res.cuo_payment_status = cuo.cuo_payment_status;
                 res.cuo_payment_type = cuo.cuo_payment_type;
                 res.cuo_discount = cuo.cuo_discount;
+                res.cuo_address = cuo.cuo_address;
 
                 
             }

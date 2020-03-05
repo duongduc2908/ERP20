@@ -813,7 +813,7 @@ namespace ERP.API.Controllers.Dashboard
                         string fileFormat = Utilis.GetFileFormat(fileName);
                         if (fileFormat.Equals("xlsm") || fileFormat.Equals("xlsx"))
                         {
-                            fileName = FileExtension.SaveFileOnDisk(fileData);
+                            fileName = FileExtension.SaveFileOnDiskExcel(fileData, BaseController.get_timestamp());
                         }
                         else
                         {
@@ -823,7 +823,7 @@ namespace ERP.API.Controllers.Dashboard
                     }
                 }
                 var list = new List<staff>();
-                fileName = @"D:\ERP20\ERP.API\" + fileName;
+                fileName = @"C:\inetpub\wwwroot\coerp\" + fileName;
                 var dataset = ExcelImport.ImportExcelXLS(fileName, true);
                 DataTable table = (DataTable)dataset.Tables[6];
                 if (table != null && table.Rows.Count > 0)
