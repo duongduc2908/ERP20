@@ -108,5 +108,19 @@ namespace ERP.API.Controllers.Dashboard
         {
             return int.Parse(DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString());
         }
+
+        public static string get_infor_current(bool email = false, bool role = false , bool fullname = false)
+        {
+            if(email == true)
+            {
+                return ClaimsPrincipal.Current.Identities.First().Claims.ToList()[2].Value.ToString();
+            }
+            if (role == true)
+            {
+                return ClaimsPrincipal.Current.Identities.First().Claims.ToList()[0].Value.ToString();
+            }
+            else return ClaimsPrincipal.Current.Identities.First().Claims.ToList()[1].Value.ToString();
+
+        }
     }
 }
