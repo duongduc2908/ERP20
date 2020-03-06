@@ -165,7 +165,6 @@ namespace ERP.API.Controllers.Dashboard
 
         [HttpPost]
         [Route("api/customer-orders/create")]
-
         public async Task<IHttpActionResult> Createcustomer_order([FromBody] CustomerOrderProductViewModel customer_order)
         {
             ResponseDataDTO<customer_order> response = new ResponseDataDTO<customer_order>();
@@ -381,9 +380,9 @@ namespace ERP.API.Controllers.Dashboard
             }
 
         }
+
         [HttpPut]
         [Route("api/customer-orders/update")]
-
         public async Task<IHttpActionResult> UpdateCustomerOder([FromBody] CustomerOrderProductViewModelUpdate customer_order_update)
         {
             ResponseDataDTO<bool> response = new ResponseDataDTO<bool>();
