@@ -40,5 +40,6 @@ namespace ERP.API.Models
         public int? co_no_of_employees { get; set; }
 
         public int? co_revenue { get; set; }
+        public int? package_id { get; set; }
     }
 }

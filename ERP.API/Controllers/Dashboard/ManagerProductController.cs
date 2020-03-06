@@ -40,9 +40,7 @@ namespace ERP.API.Controllers.Dashboard
         [Route("api/products/all")]
         public IHttpActionResult Getproducts()
         {
-
-            new BaseController();
-            var current_id = BaseController.current_id;
+            var current_id = BaseController.get_id_current();
             ResponseDataDTO<IEnumerable<product>> response = new ResponseDataDTO<IEnumerable<product>>();
             try
             {
@@ -293,7 +291,8 @@ namespace ERP.API.Controllers.Dashboard
                 }
                 //Tạo mã 
                 var x = _productservice.GetLast();
-                productCreateViewModel.pu_code = Utilis.CreateCode("PR", x.pu_id, 7);
+                if(x == null) productCreateViewModel.pu_code = Utilis.CreateCode("PR", 0, 7);
+                else productCreateViewModel.pu_code = Utilis.CreateCode("PR", x.pu_id, 7);
                 //Create date
                 productCreateViewModel.pu_create_date = DateTime.Now;
 

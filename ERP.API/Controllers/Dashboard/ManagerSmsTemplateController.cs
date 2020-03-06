@@ -157,7 +157,8 @@ namespace ERP.API.Controllers.Dashboard
 
                 // create smt_code
                 var x = _smstemplateservice.GetLast();
-                createdsms_template.smt_code = Utilis.CreateCode("SMS", x.smt_id, 7);
+                if(x == null) createdsms_template.smt_code = Utilis.CreateCode("SMS", 0, 7);
+                else createdsms_template.smt_code = Utilis.CreateCode("SMS", x.smt_id, 7);
                 // save new sms_template
                 _smstemplateservice.Create(createdsms_template);
                 // return response

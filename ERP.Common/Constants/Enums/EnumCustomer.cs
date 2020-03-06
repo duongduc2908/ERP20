@@ -9,6 +9,5 @@ namespace ERP.Common.Constants.Enums
     {
         public static string[] cu_type = new string[2] { "Khách sỉ" , "Khách lẻ"};
         
-        
     }
 }

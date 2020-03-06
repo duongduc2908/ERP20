@@ -38,16 +38,10 @@ namespace ERP.Data.ModelsERP
         public string cu_note { get; set; }
 
         public string cu_geocoding { get; set; }
-        
         public int? customer_group_id { get; set; }
-
         public byte? cu_status { get; set; }
-
         public int? source_id { get; set; }
         public DateTime? cu_birthday { get; set; }
-
-       
-
         public int? staff_id { get; set; }
         public int? cu_curator_id { get; set; }
         public int? cu_age { get; set; }

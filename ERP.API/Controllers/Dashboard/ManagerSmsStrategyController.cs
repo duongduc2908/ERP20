@@ -115,7 +115,8 @@ namespace ERP.API.Controllers.Dashboard
                 // mapping view model to entity
                 var createdsms_strategy = _mapper.Map<sms_strategy>(sms_strategyCreateViewModel);
                 var x = _smsstrategyservice.GetLast();
-                createdsms_strategy.smss_code = Utilis.CreateCode("SMSS", x.smss_id, 7);
+                if(x == null) createdsms_strategy.smss_code = Utilis.CreateCode("SMSS", 0, 7);
+                else createdsms_strategy.smss_code = Utilis.CreateCode("SMSS", x.smss_id, 7);
                 createdsms_strategy.smss_created_date = DateTime.Now;
                 createdsms_strategy.staff_id = BaseController.get_id_current();
                 createdsms_strategy.smss_status = 1;

@@ -383,8 +383,8 @@ namespace ERP.API.Controllers.Dashboard
                 }
                 //Lấy ra bản ghi cuối cùng tạo mã code 
                 var x = _staffservice.GetLast();
-
-                StaffCreateViewModel.sta_code = Utilis.CreateCode("NV", x.sta_id, 7);
+                if(x == null) StaffCreateViewModel.sta_code = Utilis.CreateCode("NV", 0, 7);
+                else StaffCreateViewModel.sta_code = Utilis.CreateCode("NV", x.sta_id, 7);
                 // mapping view model to entity
                 var createdstaff = _mapper.Map<staff>(StaffCreateViewModel);
                 createdstaff.sta_thumbnai = fileName;
@@ -659,7 +659,7 @@ namespace ERP.API.Controllers.Dashboard
                 {
                     staffUpdateViewModel.sta_start_work_date = Convert.ToDateTime(streamProvider.FormData["sta_start_work_date"]);
                 }
-
+                staffUpdateViewModel.sta_code = existstaff.sta_code; 
                 staffUpdateViewModel.sta_created_date = existstaff.sta_created_date;
                 // mapping view model to entity
                 var updatedstaff = _mapper.Map<staff>(staffUpdateViewModel);
@@ -960,8 +960,9 @@ namespace ERP.API.Controllers.Dashboard
                     // Gọi hàm save data
                     foreach(staff i in list)
                     {
-                        var x = _staffservice.GetLast().sta_id;
-                        i.sta_code = Utilis.CreateCode("NV", x, 7);
+                        var x = _staffservice.GetLast();
+                        if(x == null) i.sta_code = Utilis.CreateCode("NV", 0, 7);
+                        else i.sta_code = Utilis.CreateCode("NV", x.sta_id, 7);
                         _staffservice.Create(i);
                         BaseController.send_mail(i.sta_password, i.sta_email);
                     }

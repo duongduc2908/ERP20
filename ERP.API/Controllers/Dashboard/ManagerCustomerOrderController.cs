@@ -311,7 +311,8 @@ namespace ERP.API.Controllers.Dashboard
                     customerCreateViewModel.staff_id = Convert.ToInt32(current_id);
                     customerCreateViewModel.cu_create_date = DateTime.Now;
                     var cu = _customerservice.GetLast();
-                    customerCreateViewModel.cu_code = Utilis.CreateCode("CU", cu.cu_id, 7);
+                    if(cu == null) customerCreateViewModel.cu_code = Utilis.CreateCode("CU", 0, 7);
+                    else customerCreateViewModel.cu_code = Utilis.CreateCode("CU", cu.cu_id, 7);
                     // mapping view model to entity
                     var createdcustomer = _mapper.Map<customer>(customerCreateViewModel);
 
@@ -339,7 +340,8 @@ namespace ERP.API.Controllers.Dashboard
                 // mapping view model to entity
                 var createdcustomer_order = _mapper.Map<customer_order>(customer_orderCreateViewModel);
                 var op_last1 = _customer_orderservice.GetLast();
-                createdcustomer_order.cuo_code = Utilis.CreateCode("OR", op_last1.cuo_id,7) ;
+                if(op_last1 == null) createdcustomer_order.cuo_code = Utilis.CreateCode("OR", 0, 7);
+                else createdcustomer_order.cuo_code = Utilis.CreateCode("OR", op_last1.cuo_id,7) ;
 
                 // save new customer_order
                 _customer_orderservice.Create(createdcustomer_order);
@@ -528,7 +530,8 @@ namespace ERP.API.Controllers.Dashboard
                     customerCreateViewModel.staff_id = Convert.ToInt32(current_id);
                     customerCreateViewModel.cu_create_date = DateTime.Now;
                     var cu = _customerservice.GetLast();
-                    customerCreateViewModel.cu_code = Utilis.CreateCode("CU", cu.cu_id, 7);
+                    if(cu == null) customerCreateViewModel.cu_code = Utilis.CreateCode("CU", 0, 7);
+                    else customerCreateViewModel.cu_code = Utilis.CreateCode("CU", cu.cu_id, 7);
                     // mapping view model to entity
                     var createdcustomer = _mapper.Map<customer>(customerCreateViewModel);
 

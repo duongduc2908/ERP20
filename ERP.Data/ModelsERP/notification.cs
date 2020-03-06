@@ -22,5 +22,8 @@ namespace ERP.Data.ModelsERP
         public DateTime? ntf_confim_datetime { get; set; }
 
         public int? staff_id { get; set; }
+        public int? ntf_who_sent { get; set; }
+        public byte? ntf_status { get; set; }
+        public byte? ntf_level { get; set; }
     }
 }

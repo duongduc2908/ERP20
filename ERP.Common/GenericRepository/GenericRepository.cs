@@ -80,6 +80,10 @@ namespace ERP.Common.GenericRepository
         public TEntity GetLast()
         {
             int t = _dbSet.Count();
+            if (t == 0)
+            {
+                return null;
+            }
             var m = _dbSet.ToList()[t-1];
             return m ;
         }

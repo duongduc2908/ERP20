@@ -347,12 +347,12 @@ namespace ERP.API.Controllers.Dashboard
                 {
                     customerCreateViewModel.cu_status = Convert.ToByte(streamProvider.FormData["cu_status"]);
                 }
-                new BaseController();
-                var current_id = BaseController.current_id;
+                var current_id = BaseController.get_id_current();
                 customerCreateViewModel.staff_id = Convert.ToInt32(current_id);
                 customerCreateViewModel.cu_create_date = DateTime.Now;
                 var cu = _customerservice.GetLast();
-                customerCreateViewModel.cu_code = Utilis.CreateCode("CU", cu.cu_id, 7);
+                if(cu == null) customerCreateViewModel.cu_code = Utilis.CreateCode("CU", 0, 7);
+                else customerCreateViewModel.cu_code = Utilis.CreateCode("CU", cu.cu_id, 7);
                 // mapping view model to entity
                 var createdcustomer = _mapper.Map<customer>(customerCreateViewModel);
                 createdcustomer.cu_thumbnail = fileName;
@@ -465,7 +465,8 @@ namespace ERP.API.Controllers.Dashboard
 
 
                 var existcustomer = _customerservice.Find(customerUpdateViewModel.cu_id);
-                
+                customerUpdateViewModel.cu_code = existcustomer.cu_code;
+                customerUpdateViewModel.cu_create_date = existcustomer.cu_create_date;
                 if(streamProvider.FormData["cu_thumbnail"] != null)
                 {
                     if (fileName != "")
@@ -564,7 +565,6 @@ namespace ERP.API.Controllers.Dashboard
 
                 // mapping view model to entity
                 var updatedcustomer = _mapper.Map<customer>(customerUpdateViewModel);
-
 
 
                 // update customer
@@ -810,8 +810,9 @@ namespace ERP.API.Controllers.Dashboard
                     // Gọi hàm save data
                     foreach (customer i in list)
                     {
-                        var x = _customerservice.GetLast().cu_id;
-                        i.cu_code = Utilis.CreateCode("CU", x, 7);
+                        var x = _customerservice.GetLast();
+                        if(x == null) i.cu_code = Utilis.CreateCode("CU", 0, 7);
+                        else i.cu_code = Utilis.CreateCode("CU", x.cu_id, 7);
                         _customerservice.Create(i);
                     }
                     exitsData = "Đã nhập dữ liệu excel thành công!";

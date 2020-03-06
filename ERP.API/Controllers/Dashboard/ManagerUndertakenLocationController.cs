@@ -181,6 +181,30 @@ namespace ERP.API.Controllers.Dashboard
 
                 };
                 undertakenlocationcreateViewModel.staff_id = Convert.ToInt32(streamProvider.FormData["staff_id"]);
+                if (streamProvider.FormData["unl_detail"] == null)
+                {
+                    undertakenlocationcreateViewModel.unl_detail = null;
+                }
+                else
+                {
+                    undertakenlocationcreateViewModel.unl_detail = Convert.ToString(streamProvider.FormData["unl_detail"]);
+                }
+                if (streamProvider.FormData["unl_note"] == null)
+                {
+                    undertakenlocationcreateViewModel.unl_note = null;
+                }
+                else
+                {
+                    undertakenlocationcreateViewModel.unl_note = Convert.ToString(streamProvider.FormData["unl_note"]);
+                }
+                if (streamProvider.FormData["unl_geocoding"] == null)
+                {
+                    undertakenlocationcreateViewModel.unl_geocoding = null;
+                }
+                else
+                {
+                    undertakenlocationcreateViewModel.unl_geocoding = Convert.ToString(streamProvider.FormData["unl_geocoding"]);
+                }
                 var createUndertakenLocation = _mapper.Map<undertaken_location>(undertakenlocationcreateViewModel);
                 _UndertakenLocationservice.Create(createUndertakenLocation);
                 // return response
@@ -259,7 +283,30 @@ namespace ERP.API.Controllers.Dashboard
 
                 };
                 undertakenlocationUpdateViewModel.staff_id = Convert.ToInt32(streamProvider.FormData["staff_id"]);
-                
+                if (streamProvider.FormData["unl_detail"] == null)
+                {
+                    undertakenlocationUpdateViewModel.unl_detail = null;
+                }
+                else
+                {
+                    undertakenlocationUpdateViewModel.unl_detail = Convert.ToString(streamProvider.FormData["unl_detail"]);
+                }
+                if (streamProvider.FormData["unl_note"] == null)
+                {
+                    undertakenlocationUpdateViewModel.unl_note = null;
+                }
+                else
+                {
+                    undertakenlocationUpdateViewModel.unl_note = Convert.ToString(streamProvider.FormData["unl_note"]);
+                }
+                if (streamProvider.FormData["unl_geocoding"] == null)
+                {
+                    undertakenlocationUpdateViewModel.unl_geocoding = null;
+                }
+                else
+                {
+                    undertakenlocationUpdateViewModel.unl_geocoding = Convert.ToString(streamProvider.FormData["unl_geocoding"]);
+                }
                 // mapping view model to entity
                 var updatedUndertakenLocation = _mapper.Map<undertaken_location>(undertakenlocationUpdateViewModel);
 
