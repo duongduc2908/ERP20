@@ -5,6 +5,7 @@ using ERP.Common.Models;
 using ERP.Data.Dto;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
+using ERP.Data.ModelsERP.ModelView.Statistics;
 using ERP.Extension.Extensions;
 using ERP.Service.Services.IServices;
 using System;
@@ -23,11 +24,13 @@ namespace ERP.API.Controllers.Dashboard
     public class ManagerStatisticalController : BaseController
     {
         private readonly ICustomerOrderService _customerorderservice;
+        private readonly IOrderProductService _orderproductservice;
         public ManagerStatisticalController() { }
         private readonly IMapper _mapper;
-        public ManagerStatisticalController(ICustomerOrderService customerorderservice, IMapper mapper)
+        public ManagerStatisticalController(ICustomerOrderService customerorderservice, IOrderProductService orderproductservice, IMapper mapper)
         {
             this._customerorderservice = customerorderservice;
+            this._orderproductservice = orderproductservice;
             this._mapper = mapper;
         }
         #region[Statistics by]
@@ -56,76 +59,51 @@ namespace ERP.API.Controllers.Dashboard
         #endregion
         #region[Statistics by month]
         [HttpGet]
-        [Route("api/dashboards/statistics_by_month")]
+        [Route("api/dashboards/statistics-revenue")]
         public IHttpActionResult Getaddresss(int staff_id)
         {
-            ResponseDataDTO<int> response = new ResponseDataDTO<int>();
+            ResponseDataDTO<statisticsbyrevenueviewmodel> response = new ResponseDataDTO<statisticsbyrevenueviewmodel>();
             try
             {
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
 
-                response.Data = _customerorderservice.ResultStatisticsByMonth(staff_id);
+                response.Data = _customerorderservice.ResultStatisticsByRevenue(staff_id);
             }
             catch (Exception ex)
             {
                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
                 response.Message = ex.Message;
-                response.Data = 0;
+                response.Data = null;
                 Console.WriteLine(ex.ToString());
             }
 
             return Ok(response);
         }
-        #endregion
-       
-        #region[Statistics by week]
         [HttpGet]
-        [Route("api/dashboards/statistics_by_week")]
-        public IHttpActionResult GetWeek(int staff_id)
+        [Route("api/dashboards/statistics-order")]
+        public IHttpActionResult StatisticsOrderProduct(int pageNumber, int pageSize, int staff_id, bool month, bool week, bool day, string search_name)
         {
-            ResponseDataDTO<int> response = new ResponseDataDTO<int>();
+            ResponseDataDTO<PagedResults<statisticsorderviewmodel>> response = new ResponseDataDTO<PagedResults<statisticsorderviewmodel>>();
             try
             {
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
 
-                response.Data = _customerorderservice.ResultStatisticsByWeek(staff_id);
+                response.Data = _orderproductservice.ResultStatisticsOrder(pageNumber,pageSize,staff_id,month,week,day,search_name);
             }
             catch (Exception ex)
             {
                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
                 response.Message = ex.Message;
-                response.Data = 0;
+                response.Data = null;
                 Console.WriteLine(ex.ToString());
             }
 
             return Ok(response);
         }
         #endregion
-        #region[Statistics by day]
-        [HttpGet]
-        [Route("api/dashboards/statistics_by_day")]
-        public IHttpActionResult GetDay(int staff_id)
-        {
-            ResponseDataDTO<int> response = new ResponseDataDTO<int>();
-            try
-            {
-                response.Code = HttpCode.OK;
-                response.Message = MessageResponse.SUCCESS;
 
-                response.Data = _customerorderservice.ResultStatisticsByDay(staff_id);
-            }
-            catch (Exception ex)
-            {
-                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = ex.Message;
-                response.Data = 0;
-                Console.WriteLine(ex.ToString());
-            }
 
-            return Ok(response);
-        }
-        #endregion
     }
 }

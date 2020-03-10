@@ -21,6 +21,7 @@ namespace ERP.Data.ModelsERP.ModelView
         public string pu_unit_name { get; set; }
         public int? pu_sale_price { get; set; }
         public int? max_quantity { get; set; }
+        public float? op_total_value { get; set; }
 
     }
 }

@@ -301,6 +301,8 @@
     <Compile Include="Models\Token.cs" />
     <Compile Include="Models\TransactionCreateViewModel.cs" />
     <Compile Include="Models\TransactionUpdateViewModel.cs" />
+    <Compile Include="Models\TransactionViewModelCreate.cs" />
+    <Compile Include="Models\TransactionViewModelUpdate.cs" />
     <Compile Include="Models\UndertakenLocationCreateViewModel.cs" />
     <Compile Include="Models\UndertakenLocationUpdateViewModel.cs" />
     <Compile Include="Modules\ApplicaitonModule.cs" />

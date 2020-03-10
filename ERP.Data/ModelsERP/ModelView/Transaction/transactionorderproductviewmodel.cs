@@ -20,6 +20,7 @@ namespace ERP.Data.ModelsERP.ModelView.Transaction
         public int? customer_order_id { get; set; }
 
         public int? op_discount { get; set; }
+        
 
         public string pu_name { get; set; }
         public string pu_unit_name { get; set; }
@@ -29,6 +30,7 @@ namespace ERP.Data.ModelsERP.ModelView.Transaction
         public string cuo_status_name { get; set; }
         public string cuo_address { get; set; }
 
+        public float? op_total_value { get; set; }
 
     }
 }

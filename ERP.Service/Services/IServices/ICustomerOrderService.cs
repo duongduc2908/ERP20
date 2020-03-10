@@ -2,6 +2,7 @@
 using ERP.Common.Models;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
+using ERP.Data.ModelsERP.ModelView.Statistics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,9 +18,7 @@ namespace ERP.Service.Services.IServices
         PagedResults<customerorderviewmodel> GetAllSearch(int pageNumber, int pageSize, int? payment_type_id, string name);
         PagedResults<customerorderviewmodel> ResultStatisticsCustomerOrder(int pageNumber, int pageSize, int staff_id, bool month, bool week, bool day);
         List<dropdown> GetAllPayment();
-        int ResultStatisticsByMonth(int staff_id);
-        int ResultStatisticsByWeek(int staff_id);
-        int ResultStatisticsByDay(int staff_id);
+        statisticsbyrevenueviewmodel ResultStatisticsByRevenue(int staff_id);
         List<dropdown> GetAllStatus();
     }
 }

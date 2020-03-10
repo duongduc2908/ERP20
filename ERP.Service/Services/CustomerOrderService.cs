@@ -2,6 +2,7 @@
 using ERP.Common.Models;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
+using ERP.Data.ModelsERP.ModelView.Statistics;
 using ERP.Repository.Repositories.IRepositories;
 using ERP.Service.Services.IServices;
 using System.Collections.Generic;
@@ -37,17 +38,10 @@ namespace ERP.Service.Services
         {
             return this._repository.ResultStatisticsCustomerOrder(pageNumber, pageSize, staff_id,month,  week, day);
         }
-        public int ResultStatisticsByMonth(int staff_id)
+        
+        public statisticsbyrevenueviewmodel ResultStatisticsByRevenue(int staff_id)
         {
-            return this._repository.ResultStatisticsByMonth(staff_id);
-        }
-        public int ResultStatisticsByWeek(int staff_id)
-        {
-            return this._repository.ResultStatisticsByWeek(staff_id);
-        }
-        public int ResultStatisticsByDay(int staff_id)
-        {
-            return this._repository.ResultStatisticsByDay(staff_id);
+            return this._repository.ResultStatisticsByRevenue(staff_id);
         }
         public List<dropdown> GetAllStatus()
         {

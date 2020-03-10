@@ -5,6 +5,7 @@ using ERP.Data.ModelsERP.ModelView;
 using ERP.Data.ModelsERP.ModelView.Customer;
 using ERP.Data.ModelsERP.ModelView.Product;
 using ERP.Data.ModelsERP.ModelView.Sms;
+using ERP.Data.ModelsERP.ModelView.Statistics;
 using ERP.Data.ModelsERP.ModelView.Transaction;
 using System;
 using System.Collections.Generic;
@@ -41,6 +42,7 @@ namespace ERP.API.AutoMapper
 
             CreateMap<customer_order, customerorderviewmodel>();
             CreateMap<customer_order, customerorderhistoryviewmodel>();
+            CreateMap<customer_order, statisticsorderviewmodel>();
             
             CreateMap<customer_group, customergroupviewmodel>();
            
