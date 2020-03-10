@@ -248,7 +248,13 @@ namespace ERP.API.Controllers.Dashboard
                     response.Data = null;
                     return Ok(response);
                 }
-
+                if (streamProvider.FormData["sta_email"] == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Email không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
 
                 if (streamProvider.FormData["position_id"] == null)
                 {
@@ -388,9 +394,10 @@ namespace ERP.API.Controllers.Dashboard
                 // mapping view model to entity
                 var createdstaff = _mapper.Map<staff>(StaffCreateViewModel);
                 createdstaff.sta_thumbnai = fileName;
-                createdstaff.sta_password = StaffCreateViewModel.sta_password;
+                createdstaff.sta_password = HashMd5.convertMD5( StaffCreateViewModel.sta_password);
                 // save new staff
                 _staffservice.Create(createdstaff);
+                BaseController.send_mail("New User In Coerp With Username: " + createdstaff.sta_username + " . Password: " + Convert.ToString(streamProvider.FormData["sta_password"]), createdstaff.sta_email, "New User Created!!!");
                 // return response
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
@@ -661,6 +668,7 @@ namespace ERP.API.Controllers.Dashboard
                 }
                 staffUpdateViewModel.sta_code = existstaff.sta_code; 
                 staffUpdateViewModel.sta_created_date = existstaff.sta_created_date;
+                staffUpdateViewModel.sta_password = staffUpdateViewModel.sta_password;
                 // mapping view model to entity
                 var updatedstaff = _mapper.Map<staff>(staffUpdateViewModel);
 
@@ -725,9 +733,12 @@ namespace ERP.API.Controllers.Dashboard
             }
         }
 
+        #endregion
+
+        #region["Authentication"]
         [HttpPut]
         [Route("api/staffs/ChangePassword")]
-        public async Task<IHttpActionResult> ChangePasswordTest(ERP.Data.ChangePasswordBindingModel model, int id)
+        public async Task<IHttpActionResult> Change_Password(ERP.Data.ChangePasswordBindingModel model, int id)
         {
             ResponseDataDTO<bool> response = new ResponseDataDTO<bool>();
             try
@@ -964,7 +975,7 @@ namespace ERP.API.Controllers.Dashboard
                         if(x == null) i.sta_code = Utilis.CreateCode("NV", 0, 7);
                         else i.sta_code = Utilis.CreateCode("NV", x.sta_id, 7);
                         _staffservice.Create(i);
-                        BaseController.send_mail(i.sta_password, i.sta_email);
+                        BaseController.send_mail(i.sta_password, i.sta_email, "New User Coerp");
                     }
                     exitsData = "Đã nhập dữ liệu excel thành công!";
                     response.Code = HttpCode.OK;

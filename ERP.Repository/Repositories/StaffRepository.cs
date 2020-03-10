@@ -53,9 +53,9 @@ namespace ERP.Repository.Repositories
             var new_user = current_user;
             if (current_user != null)
             {
-                if (current_user.sta_password == model.OldPassword)
+                if (current_user.sta_password.Contains(HashMd5.convertMD5(model.OldPassword)))
                 {
-                    new_user.sta_password = model.NewPassword;
+                    new_user.sta_password = HashMd5.convertMD5(model.NewPassword);
                     _dbContext.Entry(current_user).CurrentValues.SetValues(new_user);
                     _dbContext.SaveChanges();
                 }

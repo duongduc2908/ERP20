@@ -147,9 +147,7 @@ namespace ERP.API.Controllers.Dashboard
                 {
                     //smt_code = Convert.ToString(streamProvider.FormData["smt_code"]),
                     smt_title = Convert.ToString(streamProvider.FormData["smt_title"]),
-                    smt_content = Convert.ToString(streamProvider.FormData["smt_content"]),
-                    staff_id = Convert.ToInt32(streamProvider.FormData["staff_id"]),
-                    smt_created_date = Convert.ToDateTime(streamProvider.FormData["smt_created_date"]),
+                    smt_content = Convert.ToString(streamProvider.FormData["smt_content"])
                     
                 };
                 // mapping view model to entity
@@ -159,6 +157,8 @@ namespace ERP.API.Controllers.Dashboard
                 var x = _smstemplateservice.GetLast();
                 if(x == null) createdsms_template.smt_code = Utilis.CreateCode("SMS", 0, 7);
                 else createdsms_template.smt_code = Utilis.CreateCode("SMS", x.smt_id, 7);
+                createdsms_template.smt_created_date = DateTime.Now;
+                createdsms_template.staff_id = BaseController.get_id_current();
                 // save new sms_template
                 _smstemplateservice.Create(createdsms_template);
                 // return response
@@ -206,11 +206,8 @@ namespace ERP.API.Controllers.Dashboard
                     smt_code = Convert.ToString(streamProvider.FormData["smt_code"]),
                     smt_title = Convert.ToString(streamProvider.FormData["smt_title"]),
                     smt_content = Convert.ToString(streamProvider.FormData["smt_content"]),
-
                     staff_id = Convert.ToInt32(streamProvider.FormData["staff_id"]),
-
                     smt_created_date = Convert.ToDateTime(streamProvider.FormData["smt_created_date"]),
-
                 };
                 if( smstemplateUpdateViewModel.smt_id == null)
                 {

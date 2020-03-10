@@ -77,21 +77,21 @@ namespace ERP.API.Controllers.Dashboard
         }
 
 
-        public static void send_mail(string password, string to_MailAddress)
+        public static void send_mail(string body, string to_MailAddress, string title)
         {
 
             MailMessage message = new MailMessage();
             SmtpClient smtp = new SmtpClient();
-            message.From = new MailAddress("openupmta99@gmail.com");
+            message.From = new MailAddress("coerpsp@gmail.com");
             message.To.Add(new MailAddress(to_MailAddress));
-            message.Subject = "Test";
+            message.Subject = title;
             message.IsBodyHtml = true; //to make message body as html  
-            message.Body = password;
+            message.Body = body;
             smtp.Port = 587;
             smtp.Host = "smtp.gmail.com"; //for gmail host  
             smtp.EnableSsl = true;
             smtp.UseDefaultCredentials = false;
-            smtp.Credentials = new NetworkCredential("openupmta99@gmail.com", "tienmta99");
+            smtp.Credentials = new NetworkCredential("coerpsp@gmail.com", "coerp2020");
             smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
             smtp.Send(message);
         }
