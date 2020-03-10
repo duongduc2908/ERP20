@@ -143,6 +143,7 @@ namespace ERP.Common.Constants
             {
                 firstDayInWeek = firstDayInWeek.AddDays(-1);
             }
+
             return firstDayInWeek;
         }
         /// <summary>

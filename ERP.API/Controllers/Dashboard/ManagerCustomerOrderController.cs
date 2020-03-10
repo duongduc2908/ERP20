@@ -132,16 +132,7 @@ namespace ERP.API.Controllers.Dashboard
 
             return Ok(response);
         }
-        [HttpPost]
-        [Route("api/customer-orders/test")]
-        public IHttpActionResult Test([FromBody] CustomerOrderProductViewModel customer_order)
-        {
-            var c = customer_order;
-            ResponseDataDTO<PagedResults<customerorderviewmodel>> response = new ResponseDataDTO<PagedResults<customerorderviewmodel>>();
-
-            return Ok(response);
-        }
-
+        
         [HttpGet]
         [Route("api/customer-orders/page")]
         public IHttpActionResult Getcustomer_ordersPaging(int pageSize, int pageNumber)
@@ -358,6 +349,7 @@ namespace ERP.API.Controllers.Dashboard
                     orderCreateViewModel.op_note = i.op_note;
                     orderCreateViewModel.op_quantity = i.op_quantity;
                     orderCreateViewModel.product_id = i.product_id;
+                    orderCreateViewModel.op_total_value = i.op_total_value;
 
                     var createdorderproduct = _mapper.Map<order_product>(orderCreateViewModel);
 
@@ -576,6 +568,8 @@ namespace ERP.API.Controllers.Dashboard
                     orderCreateViewModel.op_note = i.op_note;
                     orderCreateViewModel.op_quantity = i.op_quantity;
                     orderCreateViewModel.product_id = i.product_id;
+                    orderCreateViewModel.op_total_value = i.op_total_value;
+
 
                     var createdorderproduct = _mapper.Map<order_product>(orderCreateViewModel);
 

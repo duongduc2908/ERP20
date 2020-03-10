@@ -18,5 +18,6 @@ namespace ERP.API.Models
 
         public int? customer_order_id { get; set; }
         public int? op_discount { get; set; }
+        public float? op_total_value { get; set; }
     }
 }

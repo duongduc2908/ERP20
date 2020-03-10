@@ -12,6 +12,7 @@ using System.Linq;
 using System.Web;
 using ERP.Common.Constants;
 using ERP.Data.ModelsERP.ModelView.Customer;
+using ERP.Data.ModelsERP.ModelView.Statistics;
 
 namespace ERP.Repository.Repositories
 {
@@ -265,50 +266,37 @@ namespace ERP.Repository.Repositories
             };
         }
 
-        public int ResultStatisticsByMonth(int staff_id)
+        public statisticsbyrevenueviewmodel ResultStatisticsByRevenue(int staff_id)
         {
-            int res = 0;
-            DateTime temp = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 1, 0, 0, 0);
-            DateTime firstMonth = Utilis.GetFirstDayOfMonth(temp);
-
+            //Lấy ra ngày hiện tại, ngày đầu tuần , ngày đầu năm 
+            statisticsbyrevenueviewmodel res = new statisticsbyrevenueviewmodel();
+            DateTime curr_day = DateTime.Now;
+            DateTime firstDay = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0, 1);
+            DateTime firstMonth = Utilis.GetFirstDayOfMonth(curr_day);
+            DateTime firstWeek = Utilis.GetFirstDayOfWeek(curr_day);
+            //Kiểm tra admin , user 
             var user = _dbContext.staffs.Find(staff_id);
-            var x = _dbContext.customer_order.Where(i => i.cuo_date <= DateTime.Now && i.cuo_date >= firstMonth).Sum(i => i.cuo_total_price);
-            if (user.group_role_id != 1)
+            if (user == null) { return null; }
+            else
             {
-                x = _dbContext.customer_order.Where(i => i.cuo_date <= DateTime.Now && i.cuo_date >= firstMonth && i.staff_id == staff_id).Sum(i => i.cuo_total_price);
+                if(user.group_role_id == 1)
+                {
+                    res.totalRevenueByMonth = _dbContext.customer_order.Where(i => i.cuo_date <= DateTime.Now && i.cuo_date >= firstMonth).Sum(i => i.cuo_total_price);
+                    res.totalRevenueByWeek = _dbContext.customer_order.Where(i => i.cuo_date <= DateTime.Now && i.cuo_date >= firstWeek).Sum(i => i.cuo_total_price);
+                    res.totalRevenueByDay = _dbContext.customer_order.Where(i => i.cuo_date <= DateTime.Now && i.cuo_date >= firstDay).Sum(i => i.cuo_total_price);
+                    res.totalRevenue = _dbContext.customer_order.Sum(i => i.cuo_total_price);
+                }
+                else
+                {
+                    res.totalRevenueByMonth = _dbContext.customer_order.Where(i => i.cuo_date <= DateTime.Now && i.cuo_date >= firstMonth && i.staff_id == staff_id).Sum(i => i.cuo_total_price);
+                    res.totalRevenueByWeek = _dbContext.customer_order.Where(i => i.cuo_date <= DateTime.Now && i.cuo_date >= firstWeek && i.staff_id == staff_id).Sum(i => i.cuo_total_price);
+                    res.totalRevenueByDay = _dbContext.customer_order.Where(i => i.cuo_date <= DateTime.Now && i.cuo_date >= firstDay && i.staff_id == staff_id).Sum(i => i.cuo_total_price);
+                    res.totalRevenue = _dbContext.customer_order.Where(i => i.staff_id == staff_id).Sum(i => i.cuo_total_price);
+                }
             }
-            if (x != null) { res = (int)x; }
             return res;
         }
-        public int ResultStatisticsByWeek(int staff_id)
-        {
-            int res = 0;
-            DateTime temp = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 1, 0, 0, 0);
-
-            DateTime firstWeek = Utilis.GetFirstDayOfWeek(temp);
-            var user = _dbContext.staffs.Find(staff_id);
-            var x = _dbContext.customer_order.Where(i => i.cuo_date <= DateTime.Now && i.cuo_date >= firstWeek).Sum(i => i.cuo_total_price);
-            if (user.group_role_id != 1)
-            {
-                x = _dbContext.customer_order.Where(i => i.cuo_date <= DateTime.Now && i.cuo_date >= firstWeek && i.staff_id == staff_id).Sum(i => i.cuo_total_price);
-            }
-            if (x != null) { res = (int)x; }
-            return res;
-        }
-        public int ResultStatisticsByDay(int staff_id)
-        {
-
-            int res = 0;
-            DateTime firstDay = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 1, 0, 0, 0);
-            var user = _dbContext.staffs.Find(staff_id);
-            var x = _dbContext.customer_order.Where(i => i.cuo_date <= DateTime.Now && i.cuo_date >= firstDay).Sum(i => i.cuo_total_price);
-            if (user.group_role_id != 1)
-            {
-                x = _dbContext.customer_order.Where(i => i.cuo_date <= DateTime.Now && i.cuo_date >= firstDay && i.staff_id == staff_id).Sum(i => i.cuo_total_price);
-            }
-            if (x != null) { res = (int)x; }
-            return res;
-        }
+       
         public List<dropdown> GetAllPayment()
         {
 

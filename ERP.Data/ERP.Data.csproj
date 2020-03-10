@@ -157,6 +157,8 @@
     <Compile Include="ModelsERP\ModelView\Sms\smstemplatemodelview.cs" />
     <Compile Include="ModelsERP\ModelView\Sms\smstemplatestrategyviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\staffviewmodel.cs" />
+    <Compile Include="ModelsERP\ModelView\Statistics\statisticsbyrevenueviewmodel.cs" />
+    <Compile Include="ModelsERP\ModelView\Statistics\statisticsorderviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Transaction\transactioncustomerviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Transaction\transactionorderproductviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Transaction\transactionviewmodel.cs" />
