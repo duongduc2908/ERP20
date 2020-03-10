@@ -24,11 +24,13 @@ namespace ERP.API.Controllers.Dashboard
     public class ManagerStatisticalController : BaseController
     {
         private readonly ICustomerOrderService _customerorderservice;
+        private readonly IOrderProductService _orderproductservice;
         public ManagerStatisticalController() { }
         private readonly IMapper _mapper;
-        public ManagerStatisticalController(ICustomerOrderService customerorderservice, IMapper mapper)
+        public ManagerStatisticalController(ICustomerOrderService customerorderservice, IOrderProductService orderproductservice, IMapper mapper)
         {
             this._customerorderservice = customerorderservice;
+            this._orderproductservice = orderproductservice;
             this._mapper = mapper;
         }
         #region[Statistics by]
@@ -80,15 +82,15 @@ namespace ERP.API.Controllers.Dashboard
         }
         [HttpGet]
         [Route("api/dashboards/statistics-order")]
-        public IHttpActionResult StatisticsOrder(int pageNumber, int pageSize, int staff_id, bool month, bool week, bool day)
+        public IHttpActionResult StatisticsOrderProduct(int pageNumber, int pageSize, int staff_id, bool month, bool week, bool day, string search_name)
         {
-            ResponseDataDTO<statisticsbyrevenueviewmodel> response = new ResponseDataDTO<statisticsbyrevenueviewmodel>();
+            ResponseDataDTO<PagedResults<statisticsorderviewmodel>> response = new ResponseDataDTO<PagedResults<statisticsorderviewmodel>>();
             try
             {
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
 
-                response.Data = _customerorderservice.ResultStatisticsByRevenue(staff_id);
+                response.Data = _orderproductservice.ResultStatisticsOrder(pageNumber,pageSize,staff_id,month,week,day,search_name);
             }
             catch (Exception ex)
             {
