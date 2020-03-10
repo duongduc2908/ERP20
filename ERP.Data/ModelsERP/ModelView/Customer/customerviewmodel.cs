@@ -51,6 +51,8 @@ namespace ERP.Data.ModelsERP.ModelView
         public byte? cu_status { get; set; }
         public DateTime? cu_birthday { get; set; }
         public int? cu_curator_id { get; set; }
+        public int? staff_id { get; set; }
         public string cu_curator_name { get; set; }
+        public string staff_name { get; set; }
     }
 }

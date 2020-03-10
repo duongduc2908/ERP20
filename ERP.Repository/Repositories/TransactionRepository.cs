@@ -129,6 +129,11 @@ namespace ERP.Repository.Repositories
                 var customergroup = _dbContext.customer_group.FirstOrDefault(x => x.cg_id == cus.customer_group_id);
                 customerview.source_name = sources.src_name;
                 customerview.customer_group_name = customergroup.cg_name;
+                var currator =  _dbContext.staffs.Find(customerview.cu_curator_id);
+                if (currator != null) customerview.cu_curator_name = currator.sta_fullname;
+                var staff_cu = _dbContext.staffs.Find(customerview.staff_id);
+                if (staff_cu != null) customerview.staff_name = staff_cu.sta_fullname;
+
                 for (int j = 1; j < 3; j++)
                 {
                     if (j == cus.cu_type)

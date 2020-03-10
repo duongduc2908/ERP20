@@ -236,9 +236,10 @@ namespace ERP.Repository.Repositories
                 customerview.source_name = sources.src_name;
                 customerview.customer_group_name = customergroup.cg_name;
                 var curator = _dbContext.staffs.Find(i.cu_curator_id);
+                var staff_cu = _dbContext.staffs.Find(i.staff_id);
                 if(curator != null) customerview.cu_curator_name = curator.sta_fullname;
-                
-                
+                if (staff_cu != null) customerview.staff_name = staff_cu.sta_fullname;
+
                 for (int j = 1; j < 3; j++)
                 {
                     if (j == i.cu_type)
@@ -416,22 +417,7 @@ namespace ERP.Repository.Repositories
             };
 
         }
-        public PagedResults<customer> GetInfor(string search_name)
-        {
-
-            var list = _dbContext.customers.Where(c => c.cu_fullname.Contains(search_name) || c.cu_mobile.Contains(search_name)).ToList();
-            var totalNumberOfRecords = list.Count();
-            var results = list.ToList();
-
-            return new PagedResults<customer>
-            {
-                Results = results,
-                PageNumber = 0,
-                PageSize = 0,
-                TotalNumberOfPages = 0,
-                TotalNumberOfRecords = totalNumberOfRecords
-            };
-        }
+     
         public customerviewmodel GetInfor(int cu_id)
         {
 
@@ -445,6 +431,8 @@ namespace ERP.Repository.Repositories
             res.customer_group_name = customergroup.cg_name;
             var curator = _dbContext.staffs.Find(customer_cur.cu_curator_id);
             if (curator != null) customerview.cu_curator_name = curator.sta_fullname;
+            var staff_cu = _dbContext.staffs.Find(customer_cur.staff_id);
+            if (staff_cu != null) customerview.staff_name = staff_cu.sta_fullname;
             for (int j = 1; j < 3; j++)
             {
                 if (j == customer_cur.cu_type)
