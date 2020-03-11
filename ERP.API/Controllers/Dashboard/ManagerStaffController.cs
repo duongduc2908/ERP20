@@ -728,7 +728,6 @@ namespace ERP.API.Controllers.Dashboard
                     response.Data = false;
                     return Ok(response);
                 }
-                _staffservice.ChangePassword(model, id);
                 // return response
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;

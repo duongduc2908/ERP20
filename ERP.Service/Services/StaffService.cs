@@ -29,7 +29,7 @@ namespace ERP.Service.Services
         }
         public bool ChangePassword(ChangePasswordBindingModel model, int id)
         {
-            this._repository.ChangePassword(model, id);
+            return this._repository.ChangePassword(model, id);
         }
         public PagedResults<staffviewmodel> GetAllPage(int pageNumber, int pageSize)
         {
