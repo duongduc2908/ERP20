@@ -2,6 +2,7 @@
 using ERP.Common.Models;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
+using ERP.Data.ModelsERP.ModelView.ExportDB;
 using ERP.Data.ModelsERP.ModelView.Sms;
 using ERP.Repository.Repositories.IRepositories;
 using ERP.Service.Services.IServices;
@@ -44,8 +45,6 @@ namespace ERP.Service.Services
         {
             return this._repository.GetAllPageSearchSms(pageNumber, pageSize, source_id, cu_type, customer_group_id, name);
         }
-        
-
        
         public customerviewmodel GetInfor(int cu_id)
         {
@@ -54,6 +53,10 @@ namespace ERP.Service.Services
         public List<dropdown> GetAllType()
         {
             return this._repository.GetAllType();
+        }
+        public PagedResults<customerview> ExportCustomer(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, string name)
+        {
+            return this._repository.ExportCustomer(pageNumber, pageSize, source_id, cu_type, customer_group_id, name);
         }
 
     }

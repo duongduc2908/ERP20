@@ -6,6 +6,7 @@ using ERP.Common.Models;
 using ERP.Data.Dto;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
+using ERP.Data.ModelsERP.ModelView.ExportDB;
 using ERP.Extension.Extensions;
 using ERP.Service.Services.IServices;
 using System;
@@ -1043,15 +1044,15 @@ namespace ERP.API.Controllers.Dashboard
         #region["Export Excel"]
         [HttpGet]
         [Route("api/satffs/export")]
-        public async Task<IHttpActionResult> Export(int pageSize, int pageNumber)
+        public async Task<IHttpActionResult> Export(int pageSize, int pageNumber, int? status, string name)
         {
-            ResponseDataDTO<staffviewmodel> response = new ResponseDataDTO<staffviewmodel>();
+            ResponseDataDTO<staffview> response = new ResponseDataDTO<staffview>();
             try
             {
-                var listStaff = new List<staffviewmodel>();
+                var listStaff = new List<staffview>();
                 
                 //Đưa ra danh sách staff trong trang nào đó 
-                var objRT_Mst_Staff = _staffservice.GetAllPage(pageSize: pageSize, pageNumber: pageNumber);
+                var objRT_Mst_Staff = _staffservice.ExportStaff(pageNumber, pageSize,status,name);
                 if (objRT_Mst_Staff != null)
                 {
                     listStaff.AddRange(objRT_Mst_Staff.Results);
@@ -1093,11 +1094,24 @@ namespace ERP.API.Controllers.Dashboard
             return new Dictionary<string, string>()
             {
                  {"sta_code","MNV"},
+                 {"sta_fullname","Họ và tên" },
                  {"sta_username","Tên đăng nhập"},
+                 {"department_name","Phòng ban"},
+                 {"position_name","Chức vụ"},
+                 {"sta_sex_name","Giới tính"},
+                 {"sta_address","Địa chỉ"},
+                 {"sta_birthday","Ngày sinh"},
                  {"sta_mobile","Số điện thoại"},
                  {"sta_email","Email"},
-                 {"position_name","Chức vụ"},
-                 {"sta_status","Trạng thái"}
+                 {"sta_identity_card","Thẻ căn cước"},
+                 {"sta_identity_card_date","Ngày cấp"},
+                 {"sta_created_date","Ngày tạo"},
+                 {"sta_start_work_date","Ngày vào làm"},
+                  {"sta_end_work_date","Ngày nghỉ việc"},
+                 {"sta_reason_to_end_work","Lý do nghỉ việc"},
+                 {"sta_aboutme","Về bản thân"},
+                 {"sta_status_name","Trạng thái"},
+                 {"sta_leader_name","Quản lý"}
             };
         }
         private Dictionary<string, string> GetImportDicColumsTemplate()
@@ -1108,7 +1122,7 @@ namespace ERP.API.Controllers.Dashboard
                  {"id","Ma bộ phận phòng ban"}
             };
         }
-        #endregion
+    #endregion
 
         #region["Common funtion"]
         private bool check_department(int _id)
@@ -1134,9 +1148,9 @@ namespace ERP.API.Controllers.Dashboard
             bool res = _staffservice.Exist(x => x.sta_username == _username || x.sta_email == _email && _email != null);
             return res;
         }
-        #endregion
+#endregion
 
-        #region dispose
+    #region dispose
 
         protected override void Dispose(bool disposing)
         {
@@ -1146,6 +1160,6 @@ namespace ERP.API.Controllers.Dashboard
             }
             base.Dispose(disposing);
         }
-        #endregion
+#endregion
     }
 }

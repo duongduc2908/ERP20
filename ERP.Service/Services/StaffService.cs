@@ -4,6 +4,7 @@ using ERP.Common.Models;
 using ERP.Data;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
+using ERP.Data.ModelsERP.ModelView.ExportDB;
 using ERP.Repository.Repositories;
 using ERP.Repository.Repositories.IRepositories;
 using ERP.Service.Services.IServices;
@@ -37,6 +38,10 @@ namespace ERP.Service.Services
         public PagedResults<staffviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? status, string name)
         {
             return this._repository.GetAllPageSearch(pageNumber, pageSize, status, name);
+        }
+        public PagedResults<staffview> ExportStaff(int pageNumber, int pageSize, int? status, string name)
+        {
+            return this._repository.ExportStaff(pageNumber, pageSize, status, name);
         }
         public staffviewmodel GetInforById(int id)
         {

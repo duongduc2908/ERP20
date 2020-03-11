@@ -1,11 +1,13 @@
 using AutoMapper;
 using ERP.Common.Constants;
+using ERP.Common.Constants.Enums;
 using ERP.Common.GenericRepository;
 using ERP.Common.Models;
 using ERP.Data;
 using ERP.Data.DbContext;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
+using ERP.Data.ModelsERP.ModelView.ExportDB;
 using ERP.Repository.Repositories.IRepositories;
 using OfficeOpenXml;
 using Swashbuckle.AspNetCore.Swagger;
@@ -255,6 +257,70 @@ namespace ERP.Repository.Repositories
                 res.Add(dr);
             }
             return res;
+        }
+        public PagedResults<staffview> ExportStaff(int pageNumber, int pageSize, int? status, string name)
+        {
+            if (name != null)
+            {
+                name = name.Trim();
+            }
+
+            List<staffview> res = new List<staffview>();
+            var skipAmount = pageSize * pageNumber;
+            var list = _dbContext.staffs.Where(t => t.sta_status == status && t.sta_fullname.Contains(name) || t.sta_mobile.Contains(name) || t.sta_email.Contains(name) || t.sta_code.Contains(name) || t.sta_username.Contains(name)).OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize);
+            if (status == null)
+            {
+                if (name != null)
+                {
+                    list = _dbContext.staffs.Where(t => t.sta_fullname.Contains(name) || t.sta_mobile.Contains(name) || t.sta_email.Contains(name) || t.sta_code.Contains(name) || t.sta_username.Contains(name)).OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize);
+                }
+                else
+                {
+                    list = _dbContext.staffs.OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize);
+                }
+            }
+            if (name == null)
+            {
+                if (status != null)
+                {
+                    list = _dbContext.staffs.Where(t => t.sta_status == status).OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize);
+                }
+                else
+                {
+                    list = _dbContext.staffs.OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize);
+                }
+            }
+
+            var total = _dbContext.staffs.Count();
+
+
+            var results = list.ToList();
+            foreach (staff i in results)
+            {
+                var staffex = _mapper.Map<staffview>(i);
+                var deparment = _dbContext.departments.FirstOrDefault(x => x.de_id == i.department_id);
+                var position = _dbContext.positions.FirstOrDefault(x => x.pos_id == i.position_id);
+                staffex.department_name = deparment.de_name;
+                staffex.position_name = position.pos_name;
+                staffex.sta_sex_name = EnumsStaff.sta_sex[Convert.ToInt32(staffex.sta_sex)];
+                staffex.sta_status_name = EnumsStaff.sta_status[Convert.ToInt32(staffex.sta_status-1)];
+                if (staffex.sta_leader_flag == 1) staffex.sta_leader_name = "Có";
+                else staffex.sta_leader_name = "Không";
+                res.Add(staffex);
+            }
+
+            var mod = total % pageSize;
+
+            var totalPageCount = (total / pageSize) + (mod == 0 ? 0 : 1);
+
+            return new PagedResults<staffview>
+            {
+                Results = res,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalNumberOfPages = totalPageCount,
+                TotalNumberOfRecords = total
+            };
         }
     }
 }
