@@ -5,12 +5,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
-namespace ERP.Data.ModelsERP.ModelView
+namespace ERP.Data.ModelsERP.ModelView.ExportDB
 {
-    public class staffviewmodel
+    public class staffview
     {
-        public List<undertakenlocationviewmodel> list_address { get; set; }
-        [Key]
         public int sta_id { get; set; }
 
         [StringLength(50)]
@@ -29,6 +27,7 @@ namespace ERP.Data.ModelsERP.ModelView
         public string sta_password { get; set; }
 
         public byte? sta_sex { get; set; }
+        public string sta_sex_name { get; set; }
 
         public DateTime? sta_birthday { get; set; }
 
@@ -36,6 +35,7 @@ namespace ERP.Data.ModelsERP.ModelView
         public string sta_email { get; set; }
 
         public byte? sta_status { get; set; }
+        public string sta_status_name { get; set; }
 
         [StringLength(500)]
         public string sta_aboutme { get; set; }
@@ -57,7 +57,7 @@ namespace ERP.Data.ModelsERP.ModelView
         public int department_id { get; set; }
 
         [StringLength(120)]
-        public string group_name{ get; set; }
+        public string group_role_name { get; set; }
         public int? group_role_id { get; set; }
 
         public int? social_id { get; set; }
@@ -69,6 +69,7 @@ namespace ERP.Data.ModelsERP.ModelView
         public int position_id { get; set; }
 
         public int? sta_leader_flag { get; set; }
+        public string sta_leader_name { get; set; }
 
         public DateTime? sta_end_work_date { get; set; }
         public DateTime? sta_start_work_date { get; set; }

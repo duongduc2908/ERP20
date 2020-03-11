@@ -7,6 +7,7 @@ using ERP.Common.Models;
 using ERP.Data.Dto;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
+using ERP.Data.ModelsERP.ModelView.ExportDB;
 using ERP.Data.ModelsERP.ModelView.Sms;
 using ERP.Extension.Extensions;
 using ERP.Service.Services.IServices;
@@ -24,7 +25,7 @@ using System.Web.Http.Cors;
 namespace ERP.API.Controllers.Dashboard
 {
     [EnableCors("*", "*", "*")]
-    [Authorize]
+    //[Authorize]
     public class ManagerCustomerController : BaseController
     {
         private readonly ICustomerService _customerservice;
@@ -863,6 +864,86 @@ namespace ERP.API.Controllers.Dashboard
             return res;
         }
         #endregion
+        #region["Export Excel"]
+        [HttpGet]
+        [Route("api/customers/export")]
+        public async Task<IHttpActionResult> Export(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, string name)
+        {
+            ResponseDataDTO<customerview> response = new ResponseDataDTO<customerview>();
+            try
+            {
+                var listStaff = new List<customerview>();
+
+                //Đưa ra danh sách staff trong trang nào đó 
+                var objRT_Mst_Staff = _customerservice.ExportCustomer(pageNumber, pageSize, source_id, cu_type, customer_group_id, name);
+                if (objRT_Mst_Staff != null)
+                {
+                    listStaff.AddRange(objRT_Mst_Staff.Results);
+
+                    Dictionary<string, string> dicColNames = GetImportDicColums();
+
+                    string url = "";
+                    string filePath = GenExcelExportFilePath(string.Format(typeof(department).Name), ref url);
+
+                    ExcelExport.ExportToExcelFromList(listStaff, dicColNames, filePath, string.Format("Customers"));
+
+                    response.Code = HttpCode.NOT_FOUND;
+                    response.Message = "Đã xuất excel thành công!";
+                    response.Data = null;
+                }
+                else
+                {
+                    response.Code = HttpCode.NOT_FOUND;
+                    response.Message = "File excel import không có dữ liệu!";
+                    response.Data = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message; ;
+                response.Data = null;
+                Console.WriteLine(ex.ToString());
+
+                return Ok(response);
+            }
+            return Ok(response);
+        }
+        #endregion
+
+        #region["DicColums"]
+        private Dictionary<string, string> GetImportDicColums()
+        {
+            return new Dictionary<string, string>()
+            {
+                 {"cu_code","MKH"},
+                 {"cu_fullname","Họ và tên "},
+                 {"cu_mobile","SĐT" },
+                 {"cu_email","Email"},
+                 {"cu_type_name","Loại khách hàng"},
+                 {"source_name","Nguồn khách hàng"},
+                 {"customer_group_name","Nhóm khách hàng"},
+                 {"cu_address","Địa chỉ"},
+                 {"cu_birthday","Ngày sinh"},
+                 {"cu_curator_name","Người phụ trách"},
+                 {"staff_name","Người tạo"},
+                 {"cu_note","Chú ý"},
+                 {"cu_create_date","Ngày tạo"},
+                 {"cu_status_name","Trạng thái"},
+
+            };
+        }
+        private Dictionary<string, string> GetImportDicColumsTemplate()
+        {
+            return new Dictionary<string, string>()
+            {
+                  {"email","Email phong ban"},
+                 {"id","Ma bộ phận phòng ban"}
+            };
+        }
+        #endregion
+
+       
 
         #region dispose
 

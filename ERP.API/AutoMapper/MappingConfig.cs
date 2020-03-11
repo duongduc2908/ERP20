@@ -3,6 +3,7 @@ using ERP.API.Models;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
 using ERP.Data.ModelsERP.ModelView.Customer;
+using ERP.Data.ModelsERP.ModelView.ExportDB;
 using ERP.Data.ModelsERP.ModelView.Product;
 using ERP.Data.ModelsERP.ModelView.Sms;
 using ERP.Data.ModelsERP.ModelView.Statistics;
@@ -28,11 +29,13 @@ namespace ERP.API.AutoMapper
             CreateMap<StaffCreateViewModel, staff>();
             CreateMap<StaffUpdateViewModel, staff>();
             CreateMap< staff, staffviewmodel>();
+            CreateMap< staff, staffview>();
             
 
             CreateMap<CustomerCreateViewModel, customer>();
             CreateMap<CustomerUpdateViewModel, customer>();
             CreateMap<customer, customerviewmodel>();
+            CreateMap<customer, customerview>();
             CreateMap<customer, customeraddressviewmodel>();
             CreateMap<customer, transactioncustomerviewmodel>();
             CreateMap<customer, smscustomerviewmodel>();

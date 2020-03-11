@@ -98,21 +98,21 @@ namespace ERP.Repository.Repositories
                
                 var transactionview = _mapper.Map<transactionviewmodel>(i);
                 //Bat theo Enums
-                for (int j = 1; j < 5; j++)
+                for (int j = 1; j < EnumTransaction.tra_type.Length+1; j++)
                 {
                     if (j == i.tra_type)
                     {
                         transactionview.tra_type_name = EnumTransaction.tra_type[j-1];
                     }
                 }
-                for (int j = 1; j < 5; j++)
+                for (int j = 1; j < EnumTransaction.tra_priority.Length+1; j++)
                 {
                     if (j == i.tra_priority)
                     {
                         transactionview.tra_priority_name = EnumTransaction.tra_priority[j - 1];
                     }
                 }
-                for (int j = 1; j < 4; j++)
+                for (int j = 1; j < EnumTransaction.tra_status.Length+1; j++)
                 {
                     if (j == i.tra_status)
                     {
@@ -129,7 +129,7 @@ namespace ERP.Repository.Repositories
                 var customergroup = _dbContext.customer_group.FirstOrDefault(x => x.cg_id == cus.customer_group_id);
                 customerview.source_name = sources.src_name;
                 customerview.customer_group_name = customergroup.cg_name;
-                for (int j = 1; j < 3; j++)
+                for (int j = 1; j < EnumCustomer.cu_type.Length+1; j++)
                 {
                     if (j == cus.cu_type)
                     {
@@ -147,7 +147,7 @@ namespace ERP.Repository.Repositories
                         transactionorderproductviewmodel add = _mapper.Map<transactionorderproductviewmodel>(ord);
                         var prodcut_cur = _dbContext.products.Where(pu => pu.pu_id == add.product_id).FirstOrDefault();
                         add.pu_name = prodcut_cur.pu_name;
-                        for (int j = 1; j < 3; j++)
+                        for (int j = 1; j < EnumProduct.pu_unit.Length+1; j++)
                         {
                             if (j == prodcut_cur.pu_unit)
                             {
@@ -155,7 +155,7 @@ namespace ERP.Repository.Repositories
                             }
                         }
                         add.cu_fullname = _dbContext.customers.Where(c => c.cu_id == cus.cu_id).FirstOrDefault().cu_fullname;
-                        for (int j = 1; j < 4; j++)
+                        for (int j = 1; j < EnumCustomerOrder.status.Length+1; j++)
                         {
                             if (j == cuo.cuo_status)
                             {

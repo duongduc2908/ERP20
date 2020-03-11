@@ -75,7 +75,7 @@ namespace ERP.Repository.Repositories
                 productview.product_category_name = product_category.pc_name;
                 productview.provider_name = supplier.su_name;
 
-                for (int j = 1; j < 3; j++)
+                for (int j = 1; j < EnumProduct.pu_unit.Length+1; j++)
                 {
                     if (j == i.pu_unit)
                     {
@@ -141,7 +141,7 @@ namespace ERP.Repository.Repositories
                 productview.product_category_name = product_category.pc_name;
                 productview.provider_name = supplier.su_name;
 
-                for (int j = 1; j < 3; j++)
+                for (int j = 1; j < EnumProduct.pu_unit.Length+1; j++)
                 {
                     if (j == i.pu_unit)
                     {

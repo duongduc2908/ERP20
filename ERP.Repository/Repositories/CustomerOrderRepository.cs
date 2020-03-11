@@ -36,7 +36,7 @@ namespace ERP.Repository.Repositories
             foreach (customer_order i in results)
             {
                 var orderview = _mapper.Map<customerorderviewmodel>(i);
-                for (int j = 1; j < 4; j++)
+                for (int j = 1; j < EnumCustomerOrder.status.Length+1; j++)
                 {
                     if (j == i.cuo_status)
                     {
@@ -44,14 +44,14 @@ namespace ERP.Repository.Repositories
                     }
                 }
 
-                for (int j = 1; j < 4; j++)
+                for (int j = 1; j < EnumCustomerOrder.cuo_payment_type.Length+1; j++)
                 {
                     if (j == i.cuo_payment_type)
                     {
                         orderview.cuo_payment_type = EnumCustomerOrder.cuo_payment_type[j-1];
                     }
                 }
-                for (int j = 1; j < 3; j++)
+                for (int j = 1; j < EnumCustomerOrder.cuo_payment_status.Length+1; j++)
                 {
                     if (j == i.cuo_payment_status)
                     {
@@ -90,7 +90,7 @@ namespace ERP.Repository.Repositories
             foreach (customer_order i in results)
             {
                 var orderview = _mapper.Map<customerorderviewmodel>(i);
-                for (int j = 1; j < 4; j++)
+                for (int j = 1; j < EnumCustomerOrder.status.Length+1; j++)
                 {
                     if (j == i.cuo_status)
                     {
@@ -98,14 +98,14 @@ namespace ERP.Repository.Repositories
                     }
                 }
 
-                for (int j = 1; j < 4; j++)
+                for (int j = 1; j < EnumCustomerOrder.cuo_payment_type.Length+1; j++)
                 {
                     if (j == i.cuo_payment_type)
                     {
                         orderview.cuo_payment_type = EnumCustomerOrder.cuo_payment_type[j-1];
                     }
                 }
-                for (int j = 1; j < 3; j++)
+                for (int j = 1; j < EnumCustomerOrder.cuo_payment_status.Length+1; j++)
                 {
                     if (j == i.cuo_payment_status)
                     {
@@ -146,7 +146,7 @@ namespace ERP.Repository.Repositories
                 if (curator != null) customerview.cu_curator_name = curator.sta_fullname;
                 var staff = _dbContext.staffs.Find(cu_curr.staff_id);
                 if (staff != null) customerview.staff_name = curator.sta_fullname;
-                for (int j = 1; j < 3; j++)
+                for (int j = 1; j < EnumCustomer.cu_type.Length+1; j++)
                 {
                     if (j == cu_curr.cu_type)
                     {
@@ -229,7 +229,7 @@ namespace ERP.Repository.Repositories
             foreach (customer_order i in results)
             {
                 var orderview = _mapper.Map<customerorderviewmodel>(i);
-                for (int j = 1; j < 4; j++)
+                for (int j = 1; j < EnumCustomerOrder.status.Length + 1; j++)
                 {
                     if (j == i.cuo_status)
                     {
@@ -237,14 +237,14 @@ namespace ERP.Repository.Repositories
                     }
                 }
 
-                for (int j = 1; j < 4; j++)
+                for (int j = 1; j < EnumCustomerOrder.cuo_payment_type.Length+1; j++)
                 {
                     if (j == i.cuo_payment_type)
                     {
                         orderview.cuo_payment_type = EnumCustomerOrder.cuo_payment_type[j-1];
                     }
                 }
-                for (int j = 1; j < 3; j++)
+                for (int j = 1; j < EnumCustomerOrder.cuo_payment_status.Length+1; j++)
                 {
                     if (j == i.cuo_payment_status)
                     {

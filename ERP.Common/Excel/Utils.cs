@@ -466,7 +466,6 @@ namespace ERP.Common.Excel
             
             foreach (var col in dicColumnNames.Keys)
             {
-                dtRet.Columns.Add(col, typeof(string));
                 dtRet.Columns.Add(dicColumnNames[col], typeof(string));
             }
 
