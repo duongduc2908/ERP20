@@ -10,6 +10,7 @@ namespace ERP.Extension.Extensions
 {
     public static class FileExtension
     {
+        #region["Mau save file"]
         public static string SaveFileOnDisk(MultipartFileData fileData)
         {
             string fileName = "";
@@ -47,15 +48,14 @@ namespace ERP.Extension.Extensions
 
             return "/Uploads/" + fileName;
         }
-        public static string SaveFileOnDiskExcel(MultipartFileData fileData, int timestamp)
+        #endregion
+        public static string SaveFileStaffOnDisk(MultipartFileData fileData, string staff_code)
         {
-            string fileName = "";
-            if (string.IsNullOrEmpty(fileData.Headers.ContentDisposition.FileName))
-            {
-                fileName = Guid.NewGuid().ToString();
-            }
-            fileName = fileData.Headers.ContentDisposition.FileName;
-            if (fileName.StartsWith("\"") && fileName.EndsWith("\""))
+            string[] chuoi;
+            var fileNametest = fileData.Headers.ContentDisposition.FileName;
+            chuoi = fileNametest.Split('.');
+            string fileName = staff_code+"."+ chuoi[chuoi.Length-1];
+            if (fileName.StartsWith("\"") || fileName.EndsWith("\""))
             {
                 fileName = fileName.Trim('"');
             }
@@ -63,15 +63,98 @@ namespace ERP.Extension.Extensions
             {
                 fileName = Path.GetFileName(fileName);
             }
-
-            var newFileName = Path.Combine(HostingEnvironment.MapPath("/") + @"/Uploads/Excels/"+ timestamp+"/", fileName);
+            var newFileName = Path.Combine(HostingEnvironment.MapPath("/") + @"/Uploads/Images/Staffs", fileName);
+            var fileInfo = new FileInfo(newFileName);
+            if (fileInfo.Exists)
+            {
+                File.Delete(newFileName);
+                newFileName = Path.Combine(HostingEnvironment.MapPath("/") + @"/Uploads/Images/Staffs", fileName);
+            }
+            if (!Directory.Exists(fileInfo.Directory.FullName))
+            {
+                Directory.CreateDirectory(fileInfo.Directory.FullName);
+            }
+            File.Move(fileData.LocalFileName, newFileName);
+            return "/Uploads/Images/Staffs/" + fileName;
+        }
+        public static string SaveFileProductOnDisk(MultipartFileData fileData, string pu_code)
+        {
+            string[] chuoi;
+            var fileNametest = fileData.Headers.ContentDisposition.FileName;
+            chuoi = fileNametest.Split('.');
+            string fileName = pu_code + "." + chuoi[chuoi.Length - 1];
+            if (fileName.StartsWith("\"") || fileName.EndsWith("\""))
+            {
+                fileName = fileName.Trim('"');
+            }
+            if (fileName.Contains(@"/") || fileName.Contains(@"\"))
+            {
+                fileName = Path.GetFileName(fileName);
+            }
+            var newFileName = Path.Combine(HostingEnvironment.MapPath("/") + @"/Uploads/Images/Products", fileName);
+            var fileInfo = new FileInfo(newFileName);
+            if (fileInfo.Exists)
+            {
+                File.Delete(newFileName);
+                newFileName = Path.Combine(HostingEnvironment.MapPath("/") + @"/Uploads/Images/Products", fileName);
+            }
+            if (!Directory.Exists(fileInfo.Directory.FullName))
+            {
+                Directory.CreateDirectory(fileInfo.Directory.FullName);
+            }
+            File.Move(fileData.LocalFileName, newFileName);
+            return "/Uploads/Images/Products/" + fileName;
+        }
+        public static string SaveFileCustomerOnDisk(MultipartFileData fileData, string cu_code)
+        {
+            string[] chuoi;
+            var fileNametest = fileData.Headers.ContentDisposition.FileName;
+            chuoi = fileNametest.Split('.');
+            string fileName = cu_code + "." + chuoi[chuoi.Length - 1];
+            if (fileName.StartsWith("\"") || fileName.EndsWith("\""))
+            {
+                fileName = fileName.Trim('"');
+            }
+            if (fileName.Contains(@"/") || fileName.Contains(@"\"))
+            {
+                fileName = Path.GetFileName(fileName);
+            }
+            var newFileName = Path.Combine(HostingEnvironment.MapPath("/") + @"/Uploads/Images/Customers", fileName);
+            var fileInfo = new FileInfo(newFileName);
+            if (fileInfo.Exists)
+            {
+                File.Delete(newFileName);
+                newFileName = Path.Combine(HostingEnvironment.MapPath("/") + @"/Uploads/Images/Customers", fileName);
+            }
+            if (!Directory.Exists(fileInfo.Directory.FullName))
+            {
+                Directory.CreateDirectory(fileInfo.Directory.FullName);
+            }
+            File.Move(fileData.LocalFileName, newFileName);
+            return "/Uploads/Images/Customers/" + fileName;
+        }
+        public static string SaveFileStaffOnDiskExcel(MultipartFileData fileData,string staff_code, string forder, string time_stamp)
+        {
+            string[] chuoi;
+            var fileNametest = fileData.Headers.ContentDisposition.FileName;
+            chuoi = fileNametest.Split('.');
+            string fileName = staff_code+ time_stamp + "." + chuoi[chuoi.Length - 1];
+            if (fileName.StartsWith("\"") || fileName.EndsWith("\""))
+            {
+                fileName = fileName.Trim('"');
+            }
+            if (fileName.Contains(@"/") || fileName.Contains(@"\"))
+            {
+                fileName = Path.GetFileName(fileName);
+            }
+            var newFileName = Path.Combine(HostingEnvironment.MapPath("/") + @"/Uploads/Excels/Staff/"+ forder + "/", fileName);
             var fileInfo = new FileInfo(newFileName);
             if (fileInfo.Exists)
             {
                 fileName = fileInfo.Name.Replace(fileInfo.Extension, "");
                 fileName = fileName + (new Random().Next(0, 10000)) + fileInfo.Extension;
 
-                newFileName = Path.Combine(HostingEnvironment.MapPath("/") + @"/Uploads/Excels/"+ timestamp + "/", fileName);
+                newFileName = Path.Combine(HostingEnvironment.MapPath("/") + @"/Uploads/Excels/Staff/" + forder + "/", fileName);
             }
 
             if (!Directory.Exists(fileInfo.Directory.FullName))
@@ -82,17 +165,15 @@ namespace ERP.Extension.Extensions
 
             File.Move(fileData.LocalFileName, newFileName);
 
-            return "/Uploads/Excels/" + timestamp + "/" + fileName;
+            return "/Uploads/Excels/Staff/" + forder + "/" + fileName;
         }
-        public static string SaveListFilesOnDisk(MultipartFileData fileData, string productId)
+        public static string SaveFileCustomerOnDiskExcel(MultipartFileData fileData, string staff_code, string forder, string time_stamp)
         {
-            string fileName = "";
-            if (string.IsNullOrEmpty(fileData.Headers.ContentDisposition.FileName))
-            {
-                fileName = Guid.NewGuid().ToString();
-            }
-            fileName = fileData.Headers.ContentDisposition.FileName;
-            if (fileName.StartsWith("\"") && fileName.EndsWith("\""))
+            string[] chuoi;
+            var fileNametest = fileData.Headers.ContentDisposition.FileName;
+            chuoi = fileNametest.Split('.');
+            string fileName = staff_code + time_stamp + "." + chuoi[chuoi.Length - 1];
+            if (fileName.StartsWith("\"") || fileName.EndsWith("\""))
             {
                 fileName = fileName.Trim('"');
             }
@@ -100,15 +181,14 @@ namespace ERP.Extension.Extensions
             {
                 fileName = Path.GetFileName(fileName);
             }
-
-            var newFileName = Path.Combine(HostingEnvironment.MapPath("/") + @"/Uploads/Images/" + productId + "/", fileName);
+            var newFileName = Path.Combine(HostingEnvironment.MapPath("/") + @"/Uploads/Excels/Customer/" + forder + "/", fileName);
             var fileInfo = new FileInfo(newFileName);
             if (fileInfo.Exists)
             {
                 fileName = fileInfo.Name.Replace(fileInfo.Extension, "");
-                fileName = fileName + (new Random().Next(0, 10000000)) + fileInfo.Extension;
+                fileName = fileName + (new Random().Next(0, 10000)) + fileInfo.Extension;
 
-                newFileName = Path.Combine(HostingEnvironment.MapPath("/") + @"/Uploads/Images/" + productId + "/", fileName);
+                newFileName = Path.Combine(HostingEnvironment.MapPath("/") + @"/Uploads/Excels/Customer/" + forder + "/", fileName);
             }
 
             if (!Directory.Exists(fileInfo.Directory.FullName))
@@ -119,7 +199,7 @@ namespace ERP.Extension.Extensions
 
             File.Move(fileData.LocalFileName, newFileName);
 
-            return @"/Uploads/Images/" + productId + "/" + fileName;
+            return "/Uploads/Excels/Customer/" + forder + "/" + fileName;
         }
     }
 }

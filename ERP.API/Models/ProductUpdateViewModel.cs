@@ -48,5 +48,6 @@ namespace ERP.API.Models
         public DateTime? pu_expired_date { get; set; }
 
         public int? pu_weight { get; set; }
+        public string pu_thumbnail { get; set; }
     }
 }

@@ -149,6 +149,7 @@ namespace ERP.API.Controllers.Dashboard
         }
         #endregion
         #endregion
+
         #region [Create]
         [HttpPost]
         [Route("api/products/create")]
@@ -227,7 +228,7 @@ namespace ERP.API.Controllers.Dashboard
                     response.Data = null;
                     return Ok(response);
                 }
-                
+
 
                 // get data from formdata
                 ProductCreateViewModel productCreateViewModel = new ProductCreateViewModel
@@ -298,7 +299,17 @@ namespace ERP.API.Controllers.Dashboard
 
                 // mapping view model to entity
                 var createdproduct = _mapper.Map<product>(productCreateViewModel);
-
+                // save file
+                string fileName = "";
+                foreach (MultipartFileData fileData in streamProvider.FileData)
+                {
+                    fileName = (FileExtension.SaveFileProductOnDisk(fileData, createdproduct.pu_code));
+                }
+                if (fileName == null)
+                {
+                    createdproduct.pu_thumbnail = "/Uploads/Images/default/product.png";
+                }
+                else createdproduct.pu_thumbnail = fileName;
 
                 // save new product
                 _productservice.Create(createdproduct);
@@ -502,6 +513,7 @@ namespace ERP.API.Controllers.Dashboard
             }
         }
         #endregion
+
         #region [Delete]
         [HttpDelete]
         [Route("api/products/delete")]
@@ -544,7 +556,63 @@ namespace ERP.API.Controllers.Dashboard
             }
         }
         #endregion
-        
+
+        #region["Update Avatar"]
+        [HttpPut]
+        [Route("api/products/update_image")]
+        public async Task<IHttpActionResult> UpdateAvatar()
+        {
+            ResponseDataDTO<string> response = new ResponseDataDTO<string>();
+            try
+            {
+                var path = Path.GetTempPath();
+
+                if (!Request.Content.IsMimeMultipartContent("form-data"))
+                {
+                    throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.UnsupportedMediaType));
+                }
+
+                MultipartFormDataStreamProvider streamProvider = new MultipartFormDataStreamProvider(path);
+
+                await Request.Content.ReadAsMultipartAsync(streamProvider);
+                // save file
+                string fileName = "";
+                if (streamProvider.FormData["pu_id"] == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Ma id không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+                var pu_id = int.Parse(streamProvider.FormData["pu_id"]);
+                var product = _productservice.Find(pu_id);
+                if (product == null)
+                {
+                    response.Code = HttpCode.NOT_FOUND;
+                    response.Message = MessageResponse.FAIL;
+                    response.Data = null;
+                    return Ok(response);
+                }
+                foreach (MultipartFileData fileData in streamProvider.FileData)
+                {
+                    fileName = FileExtension.SaveFileProductOnDisk(fileData, product.pu_code);
+                }
+                product.pu_thumbnail = fileName;
+                _productservice.Update(product, pu_id);
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = fileName;
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+                return Ok(response);
+            }
+        }
+        #endregion
 
         #region dispose
 

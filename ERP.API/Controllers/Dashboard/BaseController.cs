@@ -104,11 +104,17 @@ namespace ERP.API.Controllers.Dashboard
             }
             return current_id;
         }
-        public static int get_timestamp()
+        public static string get_timestamp()
         {
-            return int.Parse(DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString());
+            return int.Parse(DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()).ToString();
         }
+        public static string folder()
+        {
+            string date = DateTime.Now.Day.ToString();
+            string month = Convert.ToInt32(DateTime.Today.Month).ToString();
 
+            return month+date;
+        }
         public static string get_infor_current(bool email = false, bool role = false , bool fullname = false)
         {
             if(email == true)

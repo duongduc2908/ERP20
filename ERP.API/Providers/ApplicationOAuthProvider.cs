@@ -37,11 +37,16 @@ namespace ERP.API.Providers
         {
             ClientMaster client = context.OwinContext.Get<ClientMaster>("ta:client");
             var hash_pass = HashMd5.convertMD5(context.Password);
+            var url_thumbnai = "";
             var user = _dbContext.staffs.FirstOrDefault(t => t.sta_username.Contains(context.UserName) && t.sta_password.Contains(hash_pass));
             if (user == null)
             {
                 context.SetError("invalid_grant", "Provided username and password is incorrect");
                 return;
+            }
+            if(user.sta_thumbnai != null)
+            {
+                url_thumbnai = user.sta_thumbnai;
             }
             var role="";
             if (user.group_role_id == 1)
@@ -60,7 +65,10 @@ namespace ERP.API.Providers
                         "client_id", (context.ClientId == null) ? string.Empty : context.ClientId
                     },
                     {
-                        "userName", context.UserName
+                        "userName",user.sta_fullname
+                    },
+                    {
+                        "url_thumbnai", url_thumbnai
                     }
                 });
             var ticket = new AuthenticationTicket(identity, props);

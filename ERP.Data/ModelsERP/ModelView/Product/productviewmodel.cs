@@ -42,6 +42,6 @@ namespace ERP.Data.ModelsERP.ModelView
         public string pu_short_description { get; set; }
         [Column(TypeName = "text")]
         public string pu_description { get; set; }
-
+        public string pu_thumbnail { get; set; }
     }
 }
