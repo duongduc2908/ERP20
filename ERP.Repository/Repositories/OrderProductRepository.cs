@@ -84,10 +84,7 @@ namespace ERP.Repository.Repositories
             if (month) datetimesearch = Utilis.GetFirstDayOfMonth(DateTime.Now);
             if (week) datetimesearch = Utilis.GetFirstDayOfWeek(DateTime.Now);
             if (day) datetimesearch = DateTime.Now;
-
             //Do something 
-            //_dbContext.customer_order.Where(i => i.cuo_date <= DateTime.Now && i.cuo_date >= datetimesearch && i.staff_id == staff_id).OrderBy(t => t.cuo_id).Skip(skipAmount).Take(pageSize);
-            //var list = _dbContext.order_product.OrderBy(t => t.op_id).Skip(skipAmount).Take(pageSize);
             var user_curr = _dbContext.staffs.Find(staff_id);
             if(user_curr == null) { return null; }
             else
@@ -148,7 +145,7 @@ namespace ERP.Repository.Repositories
                     }
                 }
             }
-            var totalNumberOfRecords = lts_or.Count();
+            var totalNumberOfRecords = list.Count();
             var mod = totalNumberOfRecords % pageSize;
             var totalPageCount = (totalNumberOfRecords / pageSize) + (mod == 0 ? 0 : 1);
             return new PagedResults<statisticsorderviewmodel>

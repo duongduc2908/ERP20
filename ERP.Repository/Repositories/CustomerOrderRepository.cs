@@ -144,6 +144,8 @@ namespace ERP.Repository.Repositories
                 customerview.customer_group_name = customergroup.cg_name;
                 var curator = _dbContext.staffs.Find(cu_curr.cu_curator_id);
                 if (curator != null) customerview.cu_curator_name = curator.sta_fullname;
+                var staff = _dbContext.staffs.Find(cu_curr.staff_id);
+                if (staff != null) customerview.staff_name = curator.sta_fullname;
                 for (int j = 1; j < 3; j++)
                 {
                     if (j == cu_curr.cu_type)

@@ -30,7 +30,7 @@ namespace ERP.Data.ModelsERP.ModelView.Transaction
         public string cuo_status_name { get; set; }
         public string cuo_address { get; set; }
 
-        public float? op_total_value { get; set; }
+        public double? op_total_value { get; set; }
 
     }
 }

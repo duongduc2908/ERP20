@@ -136,7 +136,7 @@ namespace ERP.API.Controllers.Dashboard
             {
                 var tra = transaction;
                 var current_id = BaseController.get_id_current();
-                if (tra.customer == null)
+                if (tra.customer.cu_id == 0)
                 {
                     #region[Create Customer]
                     //Cach truong bat buoc 
