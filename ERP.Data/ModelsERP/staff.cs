@@ -66,6 +66,7 @@ namespace ERP.Data.ModelsERP
         public byte? sta_leader_flag { get; set; }
 
         public DateTime? sta_end_work_date { get; set; }
+
         public DateTime? sta_start_work_date { get; set; }
 
         [StringLength(255)]
@@ -73,5 +74,7 @@ namespace ERP.Data.ModelsERP
 
         [Column(TypeName = "text")]
         public string sta_note { get; set; }
+
+        public bool? sta_login { get; set; }
     }
 }

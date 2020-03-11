@@ -48,7 +48,7 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = total
             };
         }
-        public void ChangePassword(ChangePasswordBindingModel model, int id)
+        public bool ChangePassword(ChangePasswordBindingModel model, int id)
         {
 
             var current_user = _dbContext.staffs.FirstOrDefault(x => x.sta_id == id);
@@ -60,8 +60,19 @@ namespace ERP.Repository.Repositories
                     new_user.sta_password = HashMd5.convertMD5(model.NewPassword);
                     _dbContext.Entry(current_user).CurrentValues.SetValues(new_user);
                     _dbContext.SaveChanges();
+                    staff new_users = new staff();
+                    new_users = new_user;
+                    if (new_user.sta_login == true)
+                    {
+                        new_users.sta_login = false;
+                        _dbContext.Entry(new_user).CurrentValues.SetValues(new_users);
+                        _dbContext.SaveChanges();
+                    }
+                    return true;
                 }
+                return false;
             }
+            return false;
         }
         
         public PagedResults<staffviewmodel> GetAllPage(int pageNumber, int pageSize)

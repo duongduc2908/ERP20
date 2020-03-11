@@ -397,6 +397,7 @@ namespace ERP.API.Controllers.Dashboard
                 }
                 else createdstaff.sta_thumbnai = fileName;
                 createdstaff.sta_password = HashMd5.convertMD5( StaffCreateViewModel.sta_password);
+                createdstaff.sta_login = true;
                 // save new staff
                 _staffservice.Create(createdstaff);
                 BaseController.send_mail("New User In Coerp With Username: " + createdstaff.sta_username + " . Password: " + Convert.ToString(streamProvider.FormData["sta_password"]), createdstaff.sta_email, "New User Created!!!");
@@ -731,7 +732,7 @@ namespace ERP.API.Controllers.Dashboard
                 // return response
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = true;
+                response.Data = _staffservice.ChangePassword(model, id);
                 return Ok(response);
             }
             catch (Exception ex)

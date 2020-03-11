@@ -27,7 +27,7 @@ namespace ERP.Service.Services
         {
             return this._repository.CreatePagedResults(pageNumber, pageSize);
         }
-        public void ChangePassword(ChangePasswordBindingModel model, int id)
+        public bool ChangePassword(ChangePasswordBindingModel model, int id)
         {
             this._repository.ChangePassword(model, id);
         }

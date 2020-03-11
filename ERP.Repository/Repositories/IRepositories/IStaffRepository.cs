@@ -15,7 +15,7 @@ namespace ERP.Repository.Repositories.IRepositories
     public interface IStaffRepository : IGenericRepository<staff>
     {
         PagedResults<staff> CreatePagedResults(int pageNumber, int pageSize);
-        void ChangePassword(ChangePasswordBindingModel model, int id);
+        bool ChangePassword(ChangePasswordBindingModel model, int id);
         
         PagedResults<staffviewmodel> GetAllPage(int pageNumber, int pageSize);
         PagedResults<staffviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? status, string name);

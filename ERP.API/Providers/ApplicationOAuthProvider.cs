@@ -69,6 +69,9 @@ namespace ERP.API.Providers
                     },
                     {
                         "url_thumbnai", url_thumbnai
+                    },
+                    {
+                        "sta_login",  user.sta_login.ToString()
                     }
                 });
             var ticket = new AuthenticationTicket(identity, props);
