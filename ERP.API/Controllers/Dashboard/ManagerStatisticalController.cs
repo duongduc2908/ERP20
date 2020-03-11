@@ -82,11 +82,12 @@ namespace ERP.API.Controllers.Dashboard
         }
         [HttpGet]
         [Route("api/dashboards/statistics-order")]
-        public IHttpActionResult StatisticsOrderProduct(int pageNumber, int pageSize, int staff_id, bool month, bool week, bool day, string search_name)
+        public IHttpActionResult StatisticsOrderProduct(int pageNumber, int pageSize,  bool month, bool week, bool day, string search_name)
         {
             ResponseDataDTO<PagedResults<statisticsorderviewmodel>> response = new ResponseDataDTO<PagedResults<statisticsorderviewmodel>>();
             try
             {
+                int staff_id = BaseController.get_id_current();
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
                 response.Data = _orderproductservice.ResultStatisticsOrder(pageNumber,pageSize,staff_id,month,week,day,search_name);

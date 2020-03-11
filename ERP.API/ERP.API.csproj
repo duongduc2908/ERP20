@@ -227,6 +227,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="AutoMapper\MappingConfig.cs" />
+    <Compile Include="Controllers\Authentication\ManagerAuthenticationController.cs" />
     <Compile Include="Controllers\Dashboard\BaseController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerAddressController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerCustomerGroupController.cs" />
@@ -379,7 +380,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Controllers\Authentication\" />
     <Folder Include="Controllers\Home\" />
     <Folder Include="Uploads\Excels\" />
     <Folder Include="Uploads\Images\Customers\" />
