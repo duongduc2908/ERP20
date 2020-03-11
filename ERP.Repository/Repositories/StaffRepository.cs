@@ -58,16 +58,14 @@ namespace ERP.Repository.Repositories
                 if (current_user.sta_password.Contains(HashMd5.convertMD5(model.OldPassword)))
                 {
                     new_user.sta_password = HashMd5.convertMD5(model.NewPassword);
-                    _dbContext.Entry(current_user).CurrentValues.SetValues(new_user);
-                    _dbContext.SaveChanges();
-                    staff new_users = new staff();
-                    new_users = new_user;
                     if (new_user.sta_login == true)
                     {
-                        new_users.sta_login = false;
-                        _dbContext.Entry(new_user).CurrentValues.SetValues(new_users);
-                        _dbContext.SaveChanges();
+                        new_user.sta_login = false;
+                        
                     }
+                    else new_user.sta_login = true;
+                    _dbContext.Entry(current_user).CurrentValues.SetValues(new_user);
+                    _dbContext.SaveChanges();
                     return true;
                 }
                 return false;
