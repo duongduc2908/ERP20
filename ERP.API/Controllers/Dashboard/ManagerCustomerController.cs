@@ -213,12 +213,6 @@ namespace ERP.API.Controllers.Dashboard
                 MultipartFormDataStreamProvider streamProvider = new MultipartFormDataStreamProvider(path);
 
                 await Request.Content.ReadAsMultipartAsync(streamProvider);
-                // save file
-                string fileName = "";
-                foreach (MultipartFileData fileData in streamProvider.FileData)
-                {
-                    fileName = (FileExtension.SaveFileOnDisk(fileData));
-                }
                 //Cach truong bat buoc 
                 if (streamProvider.FormData["cu_fullname"] == null)
                 {
@@ -356,7 +350,17 @@ namespace ERP.API.Controllers.Dashboard
                 else customerCreateViewModel.cu_code = Utilis.CreateCode("CU", cu.cu_id, 7);
                 // mapping view model to entity
                 var createdcustomer = _mapper.Map<customer>(customerCreateViewModel);
-                createdcustomer.cu_thumbnail = fileName;
+                // save file
+                string fileName = "";
+                foreach (MultipartFileData fileData in streamProvider.FileData)
+                {
+                    fileName = (FileExtension.SaveFileCustomerOnDisk(fileData, createdcustomer.cu_code));
+                }
+                if (fileName == null)
+                {
+                    createdcustomer.cu_thumbnail = "/Uploads/Images/default/customer.png";
+                }
+                else createdcustomer.cu_thumbnail = fileName;
                 // save new customer
                 _customerservice.Create(createdcustomer);
                 // return response
@@ -398,15 +402,6 @@ namespace ERP.API.Controllers.Dashboard
                 MultipartFormDataStreamProvider streamProvider = new MultipartFormDataStreamProvider(path);
 
                 await Request.Content.ReadAsMultipartAsync(streamProvider);
-                // save file
-                string fileName = "";
-                if (streamProvider.FileData.Count > 0)
-                {
-                    foreach (MultipartFileData fileData in streamProvider.FileData)
-                    {
-                        fileName = FileExtension.SaveFileOnDisk(fileData);
-                    }
-                }
                 //Cach truong bat buoc 
                 if (streamProvider.FormData["cu_fullname"] == null)
                 {
@@ -470,15 +465,7 @@ namespace ERP.API.Controllers.Dashboard
                 customerUpdateViewModel.cu_create_date = existcustomer.cu_create_date;
                 if(streamProvider.FormData["cu_thumbnail"] != null)
                 {
-                    if (fileName != "")
-                    {
-                        customerUpdateViewModel.cu_thumbnail = fileName;
-                    }
-                    else
-                    {
-
-                        customerUpdateViewModel.cu_thumbnail = existcustomer.cu_thumbnail;
-                    }
+                    customerUpdateViewModel.cu_thumbnail = existcustomer.cu_thumbnail;
                 }
                 
                 //md5
@@ -664,7 +651,7 @@ namespace ERP.API.Controllers.Dashboard
                         string fileFormat = Utilis.GetFileFormat(fileName);
                         if (fileFormat.Equals("xlsm") || fileFormat.Equals("xlsx"))
                         {
-                            fileName = FileExtension.SaveFileOnDiskExcel(fileData,BaseController.get_timestamp());
+                            fileName = FileExtension.SaveFileCustomerOnDiskExcel(fileData,"Test",BaseController.folder(),BaseController.get_timestamp());
                         }
                         else
                         {
@@ -675,6 +662,7 @@ namespace ERP.API.Controllers.Dashboard
                 }
                 var list = new List<customer>();
                 fileName = "C:/inetpub/wwwroot/coerp" + fileName;
+                //fileName = "D:/ERP20/ERP.API" + fileName;
                 var dataset = ExcelImport.ImportExcelXLS(fileName, true);
                 DataTable table = (DataTable)dataset.Tables[7];
                 if (table != null && table.Rows.Count > 0)
@@ -814,6 +802,7 @@ namespace ERP.API.Controllers.Dashboard
                         var x = _customerservice.GetLast();
                         if(x == null) i.cu_code = Utilis.CreateCode("CU", 0, 7);
                         else i.cu_code = Utilis.CreateCode("CU", x.cu_id, 7);
+                        i.cu_thumbnail = "/Uploads/Images/default/customer.png";
                         _customerservice.Create(i);
                     }
                     exitsData = "Đã nhập dữ liệu excel thành công!";
@@ -842,6 +831,7 @@ namespace ERP.API.Controllers.Dashboard
             }
         }
         #endregion
+
         #region["Common funtion"]
         private bool check_type(int _id)
         {
@@ -944,6 +934,63 @@ namespace ERP.API.Controllers.Dashboard
         #endregion
 
        
+
+        #region["Update Avatar"]
+        [HttpPut]
+        [Route("api/customers/update_avatar")]
+        public async Task<IHttpActionResult> UpdateAvatar()
+        {
+            ResponseDataDTO<string> response = new ResponseDataDTO<string>();
+            try
+            {
+                var path = Path.GetTempPath();
+
+                if (!Request.Content.IsMimeMultipartContent("form-data"))
+                {
+                    throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.UnsupportedMediaType));
+                }
+
+                MultipartFormDataStreamProvider streamProvider = new MultipartFormDataStreamProvider(path);
+
+                await Request.Content.ReadAsMultipartAsync(streamProvider);
+                // save file
+                string fileName = "";
+                if (streamProvider.FormData["cu_id"] == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Ma id không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+                var cu_id = int.Parse(streamProvider.FormData["cu_id"]);
+                var customer = _customerservice.Find(cu_id);
+                if (customer == null)
+                {
+                    response.Code = HttpCode.NOT_FOUND;
+                    response.Message = MessageResponse.FAIL;
+                    response.Data = null;
+                    return Ok(response);
+                }
+                foreach (MultipartFileData fileData in streamProvider.FileData)
+                {
+                    fileName = FileExtension.SaveFileCustomerOnDisk(fileData, customer.cu_code);
+                }
+                customer.cu_thumbnail = fileName;
+                _customerservice.Update(customer, cu_id);
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = fileName;
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+                return Ok(response);
+            }
+        }
+        #endregion
 
         #region dispose
 

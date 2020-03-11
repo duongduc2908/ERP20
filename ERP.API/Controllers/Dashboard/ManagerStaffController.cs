@@ -196,12 +196,6 @@ namespace ERP.API.Controllers.Dashboard
                 MultipartFormDataStreamProvider streamProvider = new MultipartFormDataStreamProvider(path);
 
                 await Request.Content.ReadAsMultipartAsync(streamProvider);
-                // save file
-                string fileName = "";
-                foreach (MultipartFileData fileData in streamProvider.FileData)
-                {
-                    fileName = (FileExtension.SaveFileOnDisk(fileData));
-                }
                 #region["Check null"]
 
                 if (streamProvider.FormData["sta_fullname"] == null)
@@ -393,8 +387,22 @@ namespace ERP.API.Controllers.Dashboard
                 if(x == null) StaffCreateViewModel.sta_code = Utilis.CreateCode("NV", 0, 7);
                 else StaffCreateViewModel.sta_code = Utilis.CreateCode("NV", x.sta_id, 7);
                 // mapping view model to entity
+                // save file
+                string fileName = "";
+                foreach (MultipartFileData fileData in streamProvider.FileData)
+                {
+                    fileName = (FileExtension.SaveFileStaffOnDisk(fileData, StaffCreateViewModel.sta_code));
+                }
                 var createdstaff = _mapper.Map<staff>(StaffCreateViewModel);
-                createdstaff.sta_thumbnai = fileName;
+                if(fileName == null && createdstaff.sta_sex == 1)
+                {
+                    createdstaff.sta_thumbnai = "/Uploads/Images/default/girl.png";
+                }
+                else if (fileName == null && createdstaff.sta_sex == 0)
+                {
+                    createdstaff.sta_thumbnai = "/Uploads/Images/default/man.png";
+                }
+                else createdstaff.sta_thumbnai = fileName;
                 createdstaff.sta_password = HashMd5.convertMD5( StaffCreateViewModel.sta_password);
                 // save new staff
                 _staffservice.Create(createdstaff);
@@ -433,15 +441,6 @@ namespace ERP.API.Controllers.Dashboard
                 MultipartFormDataStreamProvider streamProvider = new MultipartFormDataStreamProvider(path);
 
                 await Request.Content.ReadAsMultipartAsync(streamProvider);
-                // save file
-                string fileName = "";
-                if (streamProvider.FileData.Count > 0)
-                {
-                    foreach (MultipartFileData fileData in streamProvider.FileData)
-                    {
-                        fileName = FileExtension.SaveFileOnDisk(fileData);
-                    }
-                }
                 if (streamProvider.FormData["sta_fullname"] == null)
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
@@ -536,15 +535,7 @@ namespace ERP.API.Controllers.Dashboard
 
                 if (streamProvider.FormData["cu_thumbnail"] != null)
                 {
-                    if (fileName != "")
-                    {
-                        staffUpdateViewModel.sta_thumbnai = fileName;
-                    }
-                    else
-                    {
-
-                        staffUpdateViewModel.sta_thumbnai = existstaff.sta_thumbnai;
-                    }
+                  staffUpdateViewModel.sta_thumbnai = existstaff.sta_thumbnai;
                 }
 
 
@@ -793,6 +784,56 @@ namespace ERP.API.Controllers.Dashboard
         }
         #endregion
 
+        #region["Update Avatar"]
+        [HttpPut]
+        [Route("api/staffs/update_avatar")]
+        public async Task<IHttpActionResult> UpdateAvatar()
+        {
+            ResponseDataDTO<string> response = new ResponseDataDTO<string>();
+            try
+            {
+                var path = Path.GetTempPath();
+
+                if (!Request.Content.IsMimeMultipartContent("form-data"))
+                {
+                    throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.UnsupportedMediaType));
+                }
+
+                MultipartFormDataStreamProvider streamProvider = new MultipartFormDataStreamProvider(path);
+
+                await Request.Content.ReadAsMultipartAsync(streamProvider);
+                // save file
+                string fileName = "";
+                int staid = BaseController.get_id_current();
+                var staff = _staffservice.Find(staid);
+                if(staff == null)
+                {
+                    response.Code = HttpCode.NOT_FOUND;
+                    response.Message = MessageResponse.FAIL;
+                    response.Data = null;
+                    return Ok(response);
+                }
+                foreach (MultipartFileData fileData in streamProvider.FileData)
+                {
+                    fileName = FileExtension.SaveFileStaffOnDisk(fileData, staff.sta_code);
+                }
+                staff.sta_thumbnai = fileName;
+                _staffservice.Update(staff, staid);
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = fileName;
+                return Ok(response);
+            }
+            catch(Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+                return Ok(response);
+            }
+        }
+        #endregion
+
         #region["Import Excel"]
         [HttpPost]
         [Route("api/satffs/import")]
@@ -825,7 +866,7 @@ namespace ERP.API.Controllers.Dashboard
                         string fileFormat = Utilis.GetFileFormat(fileName);
                         if (fileFormat.Equals("xlsm") || fileFormat.Equals("xlsx"))
                         {
-                            fileName = FileExtension.SaveFileOnDiskExcel(fileData, BaseController.get_timestamp());
+                            fileName = FileExtension.SaveFileStaffOnDiskExcel(fileData, "test",BaseController.folder(),BaseController.get_timestamp());
                         }
                         else
                         {
@@ -836,6 +877,7 @@ namespace ERP.API.Controllers.Dashboard
                 }
                 var list = new List<staff>();
                 fileName = "C:/inetpub/wwwroot/coerp" + fileName;
+                //fileName = "D:/ERP20/ERP.API" + fileName;
                 var dataset = ExcelImport.ImportExcelXLS(fileName, true);
                 DataTable table = (DataTable)dataset.Tables[6];
                 if (table != null && table.Rows.Count > 0)
@@ -975,6 +1017,14 @@ namespace ERP.API.Controllers.Dashboard
                         var x = _staffservice.GetLast();
                         if(x == null) i.sta_code = Utilis.CreateCode("NV", 0, 7);
                         else i.sta_code = Utilis.CreateCode("NV", x.sta_id, 7);
+                        if (i.sta_sex == 1)
+                        {
+                            i.sta_thumbnai = "/Uploads/Images/default/girl.png";
+                        }
+                        else
+                        {
+                            i.sta_thumbnai = "/Uploads/Images/default/man.png";
+                        }
                         _staffservice.Create(i);
                         BaseController.send_mail(i.sta_password, i.sta_email, "New User Coerp");
                     }

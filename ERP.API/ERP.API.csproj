@@ -358,6 +358,10 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Uploads\Images\default\customer.png" />
+    <Content Include="Uploads\Images\default\girl.png" />
+    <Content Include="Uploads\Images\default\man.png" />
+    <Content Include="Uploads\Images\default\product.png" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -377,6 +381,9 @@
     <Folder Include="App_Data\" />
     <Folder Include="Controllers\Authentication\" />
     <Folder Include="Controllers\Home\" />
+    <Folder Include="Uploads\Excels\" />
+    <Folder Include="Uploads\Images\Customers\" />
+    <Folder Include="Uploads\Images\Staffs\" />
     <Folder Include="Views\Base\" />
     <Folder Include="Views\Default\" />
     <Folder Include="Views\ManagerAddress\" />

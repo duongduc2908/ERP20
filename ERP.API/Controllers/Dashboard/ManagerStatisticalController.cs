@@ -89,7 +89,6 @@ namespace ERP.API.Controllers.Dashboard
             {
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-
                 response.Data = _orderproductservice.ResultStatisticsOrder(pageNumber,pageSize,staff_id,month,week,day,search_name);
             }
             catch (Exception ex)

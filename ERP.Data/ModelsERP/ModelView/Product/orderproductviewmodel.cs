@@ -20,5 +20,6 @@ namespace ERP.Data.ModelsERP.ModelView
 
         public int? customer_order_id { get; set; }
         public int? pu_buy_price { get; set; }
+        public string pu_thumbnail { get; set; }
     }
 }
