@@ -854,6 +854,7 @@ namespace ERP.API.Controllers.Dashboard
             return res;
         }
         #endregion
+
         #region["Export Excel"]
         [HttpGet]
         [Route("api/customers/export")]
@@ -932,8 +933,6 @@ namespace ERP.API.Controllers.Dashboard
             };
         }
         #endregion
-
-       
 
         #region["Update Avatar"]
         [HttpPut]
