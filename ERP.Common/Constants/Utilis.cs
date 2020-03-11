@@ -41,7 +41,7 @@ namespace ERP.Common.Constants
 
             return res;
         }
-        public string MakeRandomPassword(int length)
+        public static string MakeRandomPassword(int length)
         {
             string UpperCase = "QWERTYUIOPASDFGHJKLZXCVBNM";
             string LowerCase = "qwertyuiopasdfghjklzxcvbnm";

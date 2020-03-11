@@ -211,13 +211,6 @@ namespace ERP.API.Controllers.Dashboard
                     response.Data = null;
                     return Ok(response);
                 }
-                if (streamProvider.FormData["sta_password"] == null)
-                {
-                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                    response.Message = "Mật khẩu không được để trống";
-                    response.Data = null;
-                    return Ok(response);
-                }
 
                 if (streamProvider.FormData["sta_mobile"] == null)
                 {
@@ -289,7 +282,6 @@ namespace ERP.API.Controllers.Dashboard
                     sta_fullname = Convert.ToString(streamProvider.FormData["sta_fullname"]),
                     //sta_code = Convert.ToString(streamProvider.FormData["sta_code"]),
                     sta_username = Convert.ToString(streamProvider.FormData["sta_username"]),
-                    sta_password = Convert.ToString(streamProvider.FormData["sta_password"]),
                     sta_email = Convert.ToString(streamProvider.FormData["sta_email"]),
 
                     sta_aboutme = Convert.ToString(streamProvider.FormData["sta_aboutme"]),
@@ -385,6 +377,7 @@ namespace ERP.API.Controllers.Dashboard
                 var x = _staffservice.GetLast();
                 if(x == null) StaffCreateViewModel.sta_code = Utilis.CreateCode("NV", 0, 7);
                 else StaffCreateViewModel.sta_code = Utilis.CreateCode("NV", x.sta_id, 7);
+                StaffCreateViewModel.sta_password = Utilis.MakeRandomPassword(8);
                 // mapping view model to entity
                 // save file
                 string fileName = "";
@@ -454,13 +447,6 @@ namespace ERP.API.Controllers.Dashboard
                     response.Data = null;
                     return Ok(response);
                 }
-                if (streamProvider.FormData["sta_password"] == null)
-                {
-                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                    response.Message = "Mật khẩu không được để trống";
-                    response.Data = null;
-                    return Ok(response);
-                }
 
                 if (streamProvider.FormData["sta_mobile"] == null)
                 {
@@ -504,7 +490,6 @@ namespace ERP.API.Controllers.Dashboard
                     sta_fullname = Convert.ToString(streamProvider.FormData["sta_fullname"]),
                     sta_code = Convert.ToString(streamProvider.FormData["sta_code"]),
                     sta_username = Convert.ToString(streamProvider.FormData["sta_username"]),
-                    sta_password = Convert.ToString(streamProvider.FormData["sta_password"]),
                     sta_email = Convert.ToString(streamProvider.FormData["sta_email"]),
 
                     sta_aboutme = Convert.ToString(streamProvider.FormData["sta_aboutme"]),
@@ -659,7 +644,7 @@ namespace ERP.API.Controllers.Dashboard
                 }
                 staffUpdateViewModel.sta_code = existstaff.sta_code; 
                 staffUpdateViewModel.sta_created_date = existstaff.sta_created_date;
-                staffUpdateViewModel.sta_password = staffUpdateViewModel.sta_password;
+                staffUpdateViewModel.sta_password = existstaff.sta_password;
                 // mapping view model to entity
                 var updatedstaff = _mapper.Map<staff>(staffUpdateViewModel);
 
@@ -1016,6 +1001,7 @@ namespace ERP.API.Controllers.Dashboard
                         var x = _staffservice.GetLast();
                         if(x == null) i.sta_code = Utilis.CreateCode("NV", 0, 7);
                         else i.sta_code = Utilis.CreateCode("NV", x.sta_id, 7);
+                        i.sta_password = Utilis.MakeRandomPassword(8);
                         if (i.sta_sex == 1)
                         {
                             i.sta_thumbnai = "/Uploads/Images/default/girl.png";
