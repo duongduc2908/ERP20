@@ -68,7 +68,6 @@ namespace ERP.Repository.Repositories
                     _dbContext.SaveChanges();
                     return true;
                 }
-                return false;
             }
             return false;
         }

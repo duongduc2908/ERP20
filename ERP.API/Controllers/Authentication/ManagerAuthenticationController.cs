@@ -27,7 +27,7 @@ namespace ERP.API.Controllers.Authentication
             this._mapper = mapper;
         }
         [HttpPut]
-        [Route("api/auth/ForgotPassword")]
+        [Route("api/authentication/forgotpassword")]
         public async Task<IHttpActionResult> ForgotPassword(string email)
         {
             ResponseDataDTO<bool> response = new ResponseDataDTO<bool>();
