@@ -883,7 +883,7 @@ namespace ERP.API.Controllers.Dashboard
         [Route("api/customers/export")]
         public async Task<IHttpActionResult> Export(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, string name)
         {
-            ResponseDataDTO<customerview> response = new ResponseDataDTO<customerview>();
+            ResponseDataDTO<string> response = new ResponseDataDTO<string>();
             try
             {
                 var listStaff = new List<customerview>();
@@ -897,13 +897,16 @@ namespace ERP.API.Controllers.Dashboard
                     Dictionary<string, string> dicColNames = GetImportDicColums();
 
                     string url = "";
-                    string filePath = GenExcelExportFilePath(string.Format(typeof(department).Name), ref url);
+                    string filePath = GenExcelExportFilePath(string.Format(typeof(customer).Name), ref url);
 
-                    ExcelExport.ExportToExcelFromList(listStaff, dicColNames, filePath, string.Format("Customers"));
-
-                    response.Code = HttpCode.NOT_FOUND;
+                    ExcelExport.ExportToExcelFromList(listStaff, dicColNames, filePath, string.Format("Khách hàng"));
+                    //Tach chuoi
+                    filePath = filePath.Replace("\\", "/");
+                    int index = filePath.IndexOf("TempFiles");
+                    filePath = filePath.Substring(index);
+                    response.Code = HttpCode.OK;
                     response.Message = "Đã xuất excel thành công!";
-                    response.Data = null;
+                    response.Data = filePath;
                 }
                 else
                 {

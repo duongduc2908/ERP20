@@ -9,6 +9,7 @@ using ERP.Data.ModelsERP;
 using ERP.Service.Services.IServices;
 using ERP.Data.ModelsERP.ModelView.Transaction;
 using ERP.Data.ModelsERP.ModelView;
+using ERP.Data.ModelsERP.ModelView.ExportDB;
 
 namespace ERP.Service.Services
 {
@@ -40,6 +41,10 @@ namespace ERP.Service.Services
         public List<dropdown> GetTransactionStatus()
         {
             return this._repository.GetTransactionStatus();
+        }
+        public PagedResults<transactionview> ExportTransaction(int pageNumber, int pageSize, string search_name)
+        {
+            return this._repository.ExportTransaction(pageNumber: pageNumber, pageSize: pageSize, search_name);
         }
     }
 }

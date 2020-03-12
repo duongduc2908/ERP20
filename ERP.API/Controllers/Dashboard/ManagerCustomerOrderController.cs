@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using ERP.API.Models;
 using ERP.Common.Constants;
+using ERP.Common.Excel;
 using ERP.Common.Models;
 using ERP.Data.Dto;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
+using ERP.Data.ModelsERP.ModelView.ExportDB;
 using ERP.Extension.Extensions;
 using ERP.Service.Services.IServices;
 using System;
@@ -21,8 +23,8 @@ using System.Web.Http.Cors;
 namespace ERP.API.Controllers.Dashboard
 {
     [EnableCors("*", "*", "*")]
-    [Authorize]
-    public class ManagerCustomerOrderController : ApiController
+    //[Authorize]
+    public class ManagerCustomerOrderController : BaseController
     {
         private readonly ICustomerOrderService _customer_orderservice;
         private readonly ICustomerService _customerservice;
@@ -675,7 +677,88 @@ namespace ERP.API.Controllers.Dashboard
             }
         }
         #endregion
+        #region["Export Excel"]
+        [HttpGet]
+        [Route("api/customer-order/export")]
+        public async Task<IHttpActionResult> ExportCustomerOrder(int pageNumber, int pageSize, int? payment_type_id, string name)
+        {
+            ResponseDataDTO<string> response = new ResponseDataDTO<string>();
+            try
+            {
+                var list_customer_order = new List<customerorderview>();
 
+                //Đưa ra danh sách staff trong trang nào đó 
+                var objRT_Mst_Customer_Order = _customer_orderservice.ExportCustomerOrder(pageNumber, pageSize, payment_type_id, name);
+                if (objRT_Mst_Customer_Order != null)
+                {
+                    list_customer_order.AddRange(objRT_Mst_Customer_Order.Results);
+
+                    Dictionary<string, string> dicColNames = GetImportDicColums();
+
+                    string url = "";
+                    string filePath = GenExcelExportFilePath(string.Format(typeof(customer_order).Name), ref url);
+
+                    ExcelExport.ExportToExcelFromList(list_customer_order, dicColNames, filePath, string.Format("Đặt hàng"));
+                    //Input: http://27.72.147.222:1230/TempFiles/2020-03-11/department_200311210940.xlsx
+                    //"D:\\BootAi\\ERP20\\ERP.API\\TempFiles\\2020-03-12\\department_200312092643.xlsx"
+
+                    filePath = filePath.Replace("\\", "/");
+                    int index = filePath.IndexOf("TempFiles");
+                    filePath = filePath.Substring(index);
+                    response.Code = HttpCode.OK;
+                    response.Message = "Đã xuất excel thành công!";
+                    response.Data = filePath;
+                }
+                else
+                {
+                    response.Code = HttpCode.NOT_FOUND;
+                    response.Message = "File excel import không có dữ liệu!";
+                    response.Data = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message; ;
+                response.Data = null;
+                Console.WriteLine(ex.ToString());
+
+                return Ok(response);
+            }
+            return Ok(response);
+        }
+        #endregion
+
+        #region["DicColums"]
+        private Dictionary<string, string> GetImportDicColums()
+        {
+            return new Dictionary<string, string>()
+            {
+
+                 {"cuo_code","MDH" },
+                 {"cuo_date","Ngày tạo"},
+                 {"cuo_total_price","Tổng tiền"},
+                 {"cuo_status_name","Trạng thái đơn hàng"},
+                 {"customer_name","Khách hàng"},
+                 {"cuo_payment_type_name","Loại thanh toán"},
+                 {"cuo_payment_status_name","Trạng thái thanh toán"},
+                 {"cuo_ship_tax","Phí vận chuyển"},
+                 {"staff_name","Người tạo đơn"},
+                 {"cuo_address","Địa chỉ"},
+                 {"cuo_note","Chú ý"}
+                 
+                 
+            };
+        }
+        private Dictionary<string, string> GetImportDicColumsTemplate()
+        {
+            return new Dictionary<string, string>()
+            {
+                  {"email","Email phong ban"},
+                 {"id","Ma bộ phận phòng ban"}
+            };
+        }
+        #endregion
         #region dispose
 
         protected override void Dispose(bool disposing)

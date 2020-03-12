@@ -1046,7 +1046,7 @@ namespace ERP.API.Controllers.Dashboard
         [Route("api/satffs/export")]
         public async Task<IHttpActionResult> Export(int pageSize, int pageNumber, int? status, string name)
         {
-            ResponseDataDTO<staffview> response = new ResponseDataDTO<staffview>();
+            ResponseDataDTO<string> response = new ResponseDataDTO<string>();
             try
             {
                 var listStaff = new List<staffview>();
@@ -1060,13 +1060,18 @@ namespace ERP.API.Controllers.Dashboard
                     Dictionary<string, string> dicColNames = GetImportDicColums();
 
                     string url = "";
-                    string filePath = GenExcelExportFilePath(string.Format(typeof(department).Name), ref url);
+                    string filePath = GenExcelExportFilePath(string.Format(typeof(staff).Name), ref url);
 
-                    ExcelExport.ExportToExcelFromList(listStaff, dicColNames, filePath, string.Format("Staffs"));
-
-                    response.Code = HttpCode.NOT_FOUND;
+                    ExcelExport.ExportToExcelFromList(listStaff, dicColNames, filePath, string.Format("Nhân sự"));
+                    //Input: http://27.72.147.222:1230/TempFiles/2020-03-11/department_200311210940.xlsx
+                    //"D:\\BootAi\\ERP20\\ERP.API\\TempFiles\\2020-03-12\\department_200312092643.xlsx"
+                    
+                    filePath = filePath.Replace("\\", "/");
+                    int index = filePath.IndexOf("TempFiles");
+                    filePath = filePath.Substring(index);
+                    response.Code = HttpCode.OK;
                     response.Message = "Đã xuất excel thành công!";
-                    response.Data = null;
+                    response.Data = filePath;
                 }
                 else
                 {

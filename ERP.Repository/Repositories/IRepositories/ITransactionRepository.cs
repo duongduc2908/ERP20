@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ERP.Data.ModelsERP.ModelView.Transaction;
 using ERP.Data.ModelsERP.ModelView;
+using ERP.Data.ModelsERP.ModelView.ExportDB;
 
 namespace ERP.Repository.Repositories.IRepositories
 {
@@ -15,6 +16,7 @@ namespace ERP.Repository.Repositories.IRepositories
     {
         PagedResults<transaction> CreatePagedResults(int pageNumber, int pageSize);
         PagedResults<transactionviewmodel> GetAllPageSearch(int pageNumber, int pageSize, string search_name);
+        PagedResults<transactionview> ExportTransaction(int pageNumber, int pageSize, string search_name);
         List<dropdown> GetTransactionType();
         List<dropdown> GetTransactionPriority();
         List<dropdown> GetTransactionStatus();

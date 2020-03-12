@@ -2,6 +2,7 @@
 using ERP.Common.Models;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
+using ERP.Data.ModelsERP.ModelView.ExportDB;
 using ERP.Data.ModelsERP.ModelView.Transaction;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace ERP.Service.Services.IServices
     {
         PagedResults<transaction> CreatePagedResults(int pageNumber, int pageSize);
         PagedResults<transactionviewmodel> GetAllPageSearch(int pageNumber, int pageSize, string search_name);
+        PagedResults<transactionview> ExportTransaction(int pageNumber, int pageSize, string search_name);
         List<dropdown> GetTransactionType();
         List<dropdown> GetTransactionPriority();
         List<dropdown> GetTransactionStatus();

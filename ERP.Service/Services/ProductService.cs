@@ -2,6 +2,7 @@
 using ERP.Common.Models;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
+using ERP.Data.ModelsERP.ModelView.ExportDB;
 using ERP.Repository.Repositories.IRepositories;
 using ERP.Service.Services.IServices;
 using System;
@@ -26,10 +27,13 @@ namespace ERP.Service.Services
         {
             return this._repository.GetAllPageById(id);
         }
-        
         public PagedResults<productviewmodel> GetProducts(int pageNumber, int pageSize, string search_name, int? category_id)
         {
             return this._repository.GetProducts(pageNumber,pageSize, search_name,category_id);
+        }
+        public PagedResults<productview> ExportProduct(int pageNumber, int pageSize, string search_name, int? category_id)
+        {
+            return this._repository.ExportProduct(pageNumber,pageSize, search_name,category_id);
         }
         public List<dropdown> GetUnit()
         {
