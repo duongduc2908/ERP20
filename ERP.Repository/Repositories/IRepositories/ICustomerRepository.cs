@@ -4,6 +4,7 @@ using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
 using ERP.Data.ModelsERP.ModelView.ExportDB;
 using ERP.Data.ModelsERP.ModelView.Sms;
+using ERP.Data.ModelsERP.ModelView.Transaction;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,8 @@ namespace ERP.Repository.Repositories.IRepositories
         
         customerviewmodel GetInfor(int cu_id);
         List<dropdown> GetAllType();
+        transactioncustomerviewmodel GetInforCustomerTransaction(int cu_id);
+
 
     }
 }

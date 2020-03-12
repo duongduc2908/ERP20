@@ -378,7 +378,8 @@ namespace ERP.API.Controllers.Dashboard
                 var x = _staffservice.GetLast();
                 if(x == null) StaffCreateViewModel.sta_code = Utilis.CreateCode("NV", 0, 7);
                 else StaffCreateViewModel.sta_code = Utilis.CreateCode("NV", x.sta_id, 7);
-                StaffCreateViewModel.sta_password = Utilis.MakeRandomPassword(8);
+                var pass_new = Utilis.MakeRandomPassword(8);
+                StaffCreateViewModel.sta_password = HashMd5.convertMD5(pass_new);
                 // mapping view model to entity
                 // save file
                 string fileName = "";
@@ -400,7 +401,7 @@ namespace ERP.API.Controllers.Dashboard
                 createdstaff.sta_login = true;
                 // save new staff
                 _staffservice.Create(createdstaff);
-                BaseController.send_mail("New User In Coerp With Username: " + createdstaff.sta_username + " . Password: " + Convert.ToString(streamProvider.FormData["sta_password"]), createdstaff.sta_email, "New User Created!!!");
+                BaseController.send_mail("New User In Coerp With Username: " + createdstaff.sta_username + " . Password: " + pass_new, createdstaff.sta_email, "New User Created!!!");
                 // return response
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;

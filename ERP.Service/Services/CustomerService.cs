@@ -4,6 +4,7 @@ using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
 using ERP.Data.ModelsERP.ModelView.ExportDB;
 using ERP.Data.ModelsERP.ModelView.Sms;
+using ERP.Data.ModelsERP.ModelView.Transaction;
 using ERP.Repository.Repositories.IRepositories;
 using ERP.Service.Services.IServices;
 using System;
@@ -49,6 +50,10 @@ namespace ERP.Service.Services
         public customerviewmodel GetInfor(int cu_id)
         {
             return this._repository.GetInfor(cu_id);
+        }
+        public transactioncustomerviewmodel GetInforCustomerTransaction(int cu_id)
+        {
+            return this._repository.GetInforCustomerTransaction(cu_id);
         }
         public List<dropdown> GetAllType()
         {

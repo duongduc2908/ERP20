@@ -9,6 +9,7 @@ using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
 using ERP.Data.ModelsERP.ModelView.ExportDB;
 using ERP.Data.ModelsERP.ModelView.Sms;
+using ERP.Data.ModelsERP.ModelView.Transaction;
 using ERP.Extension.Extensions;
 using ERP.Service.Services.IServices;
 using System;
@@ -107,6 +108,28 @@ namespace ERP.API.Controllers.Dashboard
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
                 response.Data = _customerservice.GetInfor(cu_id);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+
+                Console.WriteLine(ex.ToString());
+            }
+
+            return Ok(response);
+        }
+        [HttpGet]
+        [Route("api/transaction-customers/infor")]
+        public IHttpActionResult GetInforCustomerTransaction(int cu_id)
+        {
+            ResponseDataDTO<transactioncustomerviewmodel> response = new ResponseDataDTO<transactioncustomerviewmodel>();
+            try
+            {
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = _customerservice.GetInforCustomerTransaction(cu_id);
             }
             catch (Exception ex)
             {

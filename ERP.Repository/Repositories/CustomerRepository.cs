@@ -8,6 +8,7 @@ using ERP.Data.ModelsERP.ModelView;
 using ERP.Data.ModelsERP.ModelView.Customer;
 using ERP.Data.ModelsERP.ModelView.ExportDB;
 using ERP.Data.ModelsERP.ModelView.Sms;
+using ERP.Data.ModelsERP.ModelView.Transaction;
 using ERP.Repository.Repositories.IRepositories;
 using System;
 using System.Collections.Generic;
@@ -619,6 +620,63 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = total
             };
 
+        }
+        //transactioncustomerviewmodel GetInforCustomerTransaction(int cu_id);
+        public transactioncustomerviewmodel GetInforCustomerTransaction(int cu_id)
+        {
+            transactioncustomerviewmodel res = new transactioncustomerviewmodel();
+            
+            //lay ra thong tin khach hang 
+            var cus = _dbContext.customers.Where(c => c.cu_id == cu_id).FirstOrDefault();
+            var customerview = _mapper.Map<transactioncustomerviewmodel>(cus);
+            var sources = _dbContext.sources.FirstOrDefault(x => x.src_id == cus.source_id);
+            var customergroup = _dbContext.customer_group.FirstOrDefault(x => x.cg_id == cus.customer_group_id);
+            customerview.source_name = sources.src_name;
+            customerview.customer_group_name = customergroup.cg_name;
+            for (int j = 1; j < EnumCustomer.cu_type.Length + 1; j++)
+            {
+                if (j == cus.cu_type)
+                {
+                    customerview.cu_type_name = EnumCustomer.cu_type[j - 1];
+                }
+            }
+            //Lay ra lich su mua 
+            List<transactionorderproductviewmodel> list_add_order_product = new List<transactionorderproductviewmodel>();
+            var list_customer_order = _dbContext.customer_order.Where(cuo => cuo.customer_id == cu_id).ToList();
+            foreach (customer_order cuo in list_customer_order)
+            {
+                var list_order_product = _dbContext.order_product.Where(o => o.customer_order_id == cuo.cuo_id).ToList();
+                foreach (order_product ord in list_order_product)
+                {
+                    transactionorderproductviewmodel add = _mapper.Map<transactionorderproductviewmodel>(ord);
+                    var prodcut_cur = _dbContext.products.Where(pu => pu.pu_id == add.product_id).FirstOrDefault();
+                    add.pu_name = prodcut_cur.pu_name;
+                    for (int j = 1; j < EnumProduct.pu_unit.Length + 1; j++)
+                    {
+                        if (j == prodcut_cur.pu_unit)
+                        {
+                            add.pu_unit_name = EnumProduct.pu_unit[j - 1];
+                        }
+                    }
+                    add.cu_fullname = _dbContext.customers.Where(c => c.cu_id == cus.cu_id).FirstOrDefault().cu_fullname;
+                    for (int j = 1; j < EnumCustomerOrder.status.Length + 1; j++)
+                    {
+                        if (j == cuo.cuo_status)
+                        {
+                            add.cuo_status_name = EnumCustomerOrder.status[j - 1];
+                        }
+                    }
+                    add.cuo_address = cuo.cuo_address;
+                    add.cuo_date = cuo.cuo_date;
+                    add.op_total_value = ord.op_total_value;
+                    list_add_order_product.Add(add);
+                }
+
+            }
+            customerview.list_order_product = list_add_order_product;
+            res = customerview;
+            
+            return res;
         }
 
     }

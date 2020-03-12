@@ -60,11 +60,12 @@ namespace ERP.API.Controllers.Dashboard
         #region[Statistics by month]
         [HttpGet]
         [Route("api/dashboards/statistics-revenue")]
-        public IHttpActionResult Getaddresss(int staff_id)
+        public IHttpActionResult Getaddresss()
         {
             ResponseDataDTO<statisticsbyrevenueviewmodel> response = new ResponseDataDTO<statisticsbyrevenueviewmodel>();
             try
             {
+                int staff_id = BaseController.get_id_current();
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
 
