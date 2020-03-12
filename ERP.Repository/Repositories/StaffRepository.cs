@@ -52,7 +52,8 @@ namespace ERP.Repository.Repositories
         {
 
             var current_user = _dbContext.staffs.FirstOrDefault(x => x.sta_id == id);
-            var new_user = current_user;
+            staff new_user = new staff();
+            new_user = current_user;
             if (current_user != null)
             {
                 if (current_user.sta_password.Contains(HashMd5.convertMD5(model.OldPassword)))
