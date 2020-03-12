@@ -11,6 +11,7 @@ namespace ERP.API.Models
     {
 
         
+        public int cg_id { get; set; }
 
         [StringLength(50)]
         public string cg_name { get; set; }
@@ -18,7 +19,6 @@ namespace ERP.API.Models
         [StringLength(120)]
         public string cg_thumbnail { get; set; }
 
-        [Column(TypeName = "text")]
         public string cg_description { get; set; }
 
         public DateTime? cg_created_date { get; set; }

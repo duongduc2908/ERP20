@@ -18,7 +18,6 @@ namespace ERP.Data.ModelsERP
         [StringLength(120)]
         public string cg_thumbnail { get; set; }
 
-        [StringLength(500)]
         public string cg_description { get; set; }
 
         public DateTime? cg_created_date { get; set; }

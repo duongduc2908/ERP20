@@ -5,10 +5,10 @@ namespace ERP.Data.ModelsERP
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Linq;
 
-    public partial class Model3 : DbContext
+    public partial class Model1 : DbContext
     {
-        public Model3()
-            : base("name=Model3")
+        public Model1()
+            : base("name=Model1")
         {
         }
 

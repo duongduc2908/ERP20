@@ -113,10 +113,6 @@ namespace ERP.API.Controllers.Dashboard
                     response.Data = null;
                     return Ok(response);
                 }
-
-
-
-
                 // get data from formdata
                 CustomerGroupCreateViewModel customerGroupCreateViewModel = new CustomerGroupCreateViewModel
                 {
