@@ -1,15 +1,15 @@
-namespace ERP.Data.ModelsERP
-{
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Web;
 
-    public partial class customer_group
+namespace ERP.API.Models
+{
+    public class CustomerGroupUpdateViewModel
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+       
         public int cg_id { get; set; }
 
         [StringLength(50)]
