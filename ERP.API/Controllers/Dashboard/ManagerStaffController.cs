@@ -282,7 +282,7 @@ namespace ERP.API.Controllers.Dashboard
                 {
                     sta_fullname = Convert.ToString(streamProvider.FormData["sta_fullname"]),
                     //sta_code = Convert.ToString(streamProvider.FormData["sta_code"]),
-                    sta_username = Convert.ToString(streamProvider.FormData["sta_username"]),
+                    sta_username = Convert.ToString(streamProvider.FormData["sta_username"]).Trim(),
                     sta_email = Convert.ToString(streamProvider.FormData["sta_email"]),
 
                     sta_aboutme = Convert.ToString(streamProvider.FormData["sta_aboutme"]),
@@ -392,12 +392,11 @@ namespace ERP.API.Controllers.Dashboard
                 {
                     createdstaff.sta_thumbnai = "/Uploads/Images/default/girl.png";
                 }
-                else if (fileName == null && createdstaff.sta_sex == 0)
+                else if ((fileName == null && createdstaff.sta_sex == 0) || (fileName == null && createdstaff.sta_sex == null))
                 {
                     createdstaff.sta_thumbnai = "/Uploads/Images/default/man.png";
                 }
                 else createdstaff.sta_thumbnai = fileName;
-                createdstaff.sta_password = HashMd5.convertMD5( StaffCreateViewModel.sta_password);
                 createdstaff.sta_login = true;
                 // save new staff
                 _staffservice.Create(createdstaff);
@@ -492,7 +491,7 @@ namespace ERP.API.Controllers.Dashboard
 
                     sta_fullname = Convert.ToString(streamProvider.FormData["sta_fullname"]),
                     sta_code = Convert.ToString(streamProvider.FormData["sta_code"]),
-                    sta_username = Convert.ToString(streamProvider.FormData["sta_username"]),
+                    sta_username = Convert.ToString(streamProvider.FormData["sta_username"]).Trim(),
                     sta_email = Convert.ToString(streamProvider.FormData["sta_email"]),
 
                     sta_aboutme = Convert.ToString(streamProvider.FormData["sta_aboutme"]),
