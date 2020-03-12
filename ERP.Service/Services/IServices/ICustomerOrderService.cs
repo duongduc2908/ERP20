@@ -2,6 +2,7 @@
 using ERP.Common.Models;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
+using ERP.Data.ModelsERP.ModelView.ExportDB;
 using ERP.Data.ModelsERP.ModelView.Statistics;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ namespace ERP.Service.Services.IServices
         PagedResults<customerorderviewmodel> CreatePagedResults(int pageNumber, int pageSize);
         customerordermodelview GetAllOrderById(int id);
         PagedResults<customerorderviewmodel> GetAllSearch(int pageNumber, int pageSize, int? payment_type_id, string name);
+        PagedResults<customerorderview> ExportCustomerOrder(int pageNumber, int pageSize, int? payment_type_id, string name);
         PagedResults<customerorderviewmodel> ResultStatisticsCustomerOrder(int pageNumber, int pageSize, int staff_id, bool month, bool week, bool day);
         List<dropdown> GetAllPayment();
         statisticsbyrevenueviewmodel ResultStatisticsByRevenue(int staff_id);

@@ -621,7 +621,6 @@ namespace ERP.Repository.Repositories
             };
 
         }
-        //transactioncustomerviewmodel GetInforCustomerTransaction(int cu_id);
         public transactioncustomerviewmodel GetInforCustomerTransaction(int cu_id)
         {
             transactioncustomerviewmodel res = new transactioncustomerviewmodel();

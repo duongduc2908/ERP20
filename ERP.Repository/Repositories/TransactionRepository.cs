@@ -12,6 +12,7 @@ using AutoMapper;
 using ERP.Common.Constants.Enums;
 using ERP.Data.ModelsERP.ModelView.Customer;
 using ERP.Data.ModelsERP.ModelView;
+using ERP.Data.ModelsERP.ModelView.ExportDB;
 
 namespace ERP.Repository.Repositories
 {
@@ -85,10 +86,12 @@ namespace ERP.Repository.Repositories
         public PagedResults<transactionviewmodel> GetAllPageSearch(int pageNumber, int pageSize, string search_name)
         {
             List<transactionviewmodel> res = new List<transactionviewmodel>();
+            List<transaction> list = new List<transaction>();
 
             var skipAmount = pageSize * pageNumber;
-
-            var list = _dbContext.transactions.OrderBy(t => t.tra_id).Skip(skipAmount).Take(pageSize);
+            
+            if(search_name == null) list = _dbContext.transactions.OrderBy(t => t.tra_id).Skip(skipAmount).Take(pageSize).ToList();
+            else list = _dbContext.transactions.Where(i => i.tra_title.Contains(search_name) || i.tra_rate.Contains(search_name) || i.tra_result.Contains(search_name)).OrderBy(t => t.tra_id).Skip(skipAmount).Take(pageSize).ToList();
 
             var totalNumberOfRecords = _dbContext.transactions.Count();
 
@@ -180,6 +183,60 @@ namespace ERP.Repository.Repositories
             var totalPageCount = (totalNumberOfRecords / pageSize) + (mod == 0 ? 0 : 1);
 
             return new PagedResults<transactionviewmodel>
+            {
+                Results = res,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalNumberOfPages = totalPageCount,
+                TotalNumberOfRecords = totalNumberOfRecords
+            };
+        }
+        public PagedResults<transactionview> ExportTransaction(int pageNumber, int pageSize, string search_name)
+        {
+            List<transactionview> res = new List<transactionview>();
+            List<transaction> list = new List<transaction>();
+
+            var skipAmount = pageSize * pageNumber;
+
+            if (search_name == null) list = _dbContext.transactions.OrderBy(t => t.tra_id).Skip(skipAmount).Take(pageSize).ToList();
+            else list = _dbContext.transactions.Where(i => i.tra_title.Contains(search_name) || i.tra_rate.Contains(search_name) || i.tra_result.Contains(search_name)).OrderBy(t => t.tra_id).Skip(skipAmount).Take(pageSize).ToList();
+            var totalNumberOfRecords = _dbContext.transactions.Count();
+            var results = list.ToList();
+            foreach (transaction i in results)
+            {
+                var transactionview = _mapper.Map<transactionview>(i);
+                //Bat theo Enums
+                for (int j = 1; j < EnumTransaction.tra_type.Length + 1; j++)
+                {
+                    if (j == i.tra_type)
+                    {
+                        transactionview.tra_type_name = EnumTransaction.tra_type[j - 1];
+                    }
+                }
+                for (int j = 1; j < EnumTransaction.tra_priority.Length + 1; j++)
+                {
+                    if (j == i.tra_priority)
+                    {
+                        transactionview.tra_priority_name = EnumTransaction.tra_priority[j - 1];
+                    }
+                }
+                for (int j = 1; j < EnumTransaction.tra_status.Length + 1; j++)
+                {
+                    if (j == i.tra_status)
+                    {
+                        transactionview.tra_status_name = EnumTransaction.tra_status[j - 1];
+                    }
+                }
+                //Bat cac truong tra ve id 
+                transactionview.staff_name = _dbContext.staffs.Where(s => s.sta_id == i.staff_id).FirstOrDefault().sta_fullname;
+                transactionview.customer_name = _dbContext.customers.Where(s => s.cu_id == i.customer_id).FirstOrDefault().cu_fullname;
+               
+                res.Add(transactionview);
+            }
+            var mod = totalNumberOfRecords % pageSize;
+
+            var totalPageCount = (totalNumberOfRecords / pageSize) + (mod == 0 ? 0 : 1);
+            return new PagedResults<transactionview>
             {
                 Results = res,
                 PageNumber = pageNumber,

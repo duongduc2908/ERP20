@@ -147,8 +147,11 @@
     <Compile Include="ModelsERP\ModelView\Customer\customerorderviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Customer\customerviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Customer\customertransactionviewmodel.cs" />
+    <Compile Include="ModelsERP\ModelView\ExportDB\customerorderview.cs" />
     <Compile Include="ModelsERP\ModelView\ExportDB\customerview.cs" />
+    <Compile Include="ModelsERP\ModelView\ExportDB\productview.cs" />
     <Compile Include="ModelsERP\ModelView\ExportDB\staffview.cs" />
+    <Compile Include="ModelsERP\ModelView\ExportDB\transactionview.cs" />
     <Compile Include="ModelsERP\ModelView\Product\orderproducthistoryviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Product\orderproductviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Product\productorderviewmodel.cs" />

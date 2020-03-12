@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using ERP.API.Models;
 using ERP.Common.Constants;
+using ERP.Common.Excel;
 using ERP.Common.Models;
 using ERP.Data.Dto;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
+using ERP.Data.ModelsERP.ModelView.ExportDB;
 using ERP.Extension.Extensions;
 using ERP.Service.Services.IServices;
 using System;
@@ -614,6 +616,83 @@ namespace ERP.API.Controllers.Dashboard
         }
         #endregion
 
+        #region["Export Excel"]
+        [HttpGet]
+        [Route("api/product/export")]
+        public async Task<IHttpActionResult> ExportProduct(int pageNumber, int pageSize, string search_name, int? category_id)
+        {
+            ResponseDataDTO<string> response = new ResponseDataDTO<string>();
+            try
+            {
+                var listProduct = new List<productview>();
+
+                //Đưa ra danh sách staff trong trang nào đó 
+                var objRT_Mst_Product = _productservice.ExportProduct(pageNumber, pageSize, search_name, category_id);
+                if (objRT_Mst_Product != null)
+                {
+                    listProduct.AddRange(objRT_Mst_Product.Results);
+
+                    Dictionary<string, string> dicColNames = GetImportDicColums();
+
+                    string url = "";
+                    string filePath = GenExcelExportFilePath(string.Format(typeof(product).Name), ref url);
+
+                    ExcelExport.ExportToExcelFromList(listProduct, dicColNames, filePath, string.Format("Products"));
+                    //Input: http://27.72.147.222:1230/TempFiles/2020-03-11/department_200311210940.xlsx
+                    //"D:\\BootAi\\ERP20\\ERP.API\\TempFiles\\2020-03-12\\department_200312092643.xlsx"
+
+                    filePath = filePath.Replace("\\", "/");
+                    int index = filePath.IndexOf("TempFiles");
+                    filePath = filePath.Substring(index);
+                    response.Code = HttpCode.OK;
+                    response.Message = "Đã xuất excel thành công!";
+                    response.Data = filePath;
+                }
+                else
+                {
+                    response.Code = HttpCode.NOT_FOUND;
+                    response.Message = "File excel import không có dữ liệu!";
+                    response.Data = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message; ;
+                response.Data = null;
+                Console.WriteLine(ex.ToString());
+
+                return Ok(response);
+            }
+            return Ok(response);
+        }
+        #endregion
+
+        #region["DicColums"]
+        private Dictionary<string, string> GetImportDicColums()
+        {
+            return new Dictionary<string, string>()
+            {
+                 {"pu_code","MSP" },
+                 {"pu_name","Tên sản phẩm"},
+                 {"pu_quantity","Số lượng"},
+                 {"pu_buy_price","Giá mua"},
+                 {"pu_sale_price","Giá bán"},
+                 {"product_category_name","Thể loại"},
+                 {"provider_name","Nhà cung cấp"},
+                 {"pu_unit_name","Đơn vị"},
+                 {"pu_saleoff","Khuyễn mãi"},
+                 {"pu_short_description","Mô tả ngắn"},
+                 {"pu_create_date","Ngày tạo"},
+                 {"pu_update_date","Ngày cập nhập"},
+                 {"pu_description","Mô tả chi tiết"},
+                 {"pu_tax","Thuế"},
+                 {"pu_expired_date","Ngày hết hạn"},
+                 {"pu_weight","Cân nặng"}
+
+            };
+        }
+        #endregion
         #region dispose
 
         protected override void Dispose(bool disposing)

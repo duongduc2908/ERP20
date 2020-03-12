@@ -13,6 +13,7 @@ using System.Web;
 using ERP.Common.Constants;
 using ERP.Data.ModelsERP.ModelView.Customer;
 using ERP.Data.ModelsERP.ModelView.Statistics;
+using ERP.Data.ModelsERP.ModelView.ExportDB;
 
 namespace ERP.Repository.Repositories
 {
@@ -324,6 +325,61 @@ namespace ERP.Repository.Repositories
                 res.Add(dr);
             }
             return res;
+        }
+        public PagedResults<customerorderview> ExportCustomerOrder(int pageNumber, int pageSize, int? payment_type_id, string name)
+        {
+            List<customerorderview> res = new List<customerorderview>();
+            var skipAmount = pageSize * pageNumber;
+
+            var list = _dbContext.customer_order.OrderBy(t => t.cuo_id).Skip(skipAmount).Take(pageSize);
+
+            var totalNumberOfRecords = _dbContext.customer_order.Count();
+
+            var results = list.ToList();
+            foreach (customer_order i in results)
+            {
+                var orderview = _mapper.Map<customerorderview>(i);
+                var customer = _dbContext.customers.Find(i.customer_id);
+                if (customer != null) orderview.customer_name = customer.cu_fullname;
+                var staff = _dbContext.staffs.Find(i.staff_id);
+                if (staff != null) orderview.staff_name = staff.sta_fullname;
+                for (int j = 1; j < EnumCustomerOrder.status.Length + 1; j++)
+                {
+                    if (j == i.cuo_status)
+                    {
+                        orderview.cuo_status_name = EnumCustomerOrder.status[j - 1];
+                    }
+                }
+
+                for (int j = 1; j < EnumCustomerOrder.cuo_payment_type.Length + 1; j++)
+                {
+                    if (j == i.cuo_payment_type)
+                    {
+                        orderview.cuo_payment_type_name = EnumCustomerOrder.cuo_payment_type[j - 1];
+                    }
+                }
+                for (int j = 1; j < EnumCustomerOrder.cuo_payment_status.Length + 1; j++)
+                {
+                    if (j == i.cuo_payment_status)
+                    {
+                        orderview.cuo_payment_status_name = EnumCustomerOrder.cuo_payment_status[j - 1];
+                    }
+                }
+                res.Add(orderview);
+            }
+
+            var mod = totalNumberOfRecords % pageSize;
+
+            var totalPageCount = (totalNumberOfRecords / pageSize) + (mod == 0 ? 0 : 1);
+
+            return new PagedResults<customerorderview>
+            {
+                Results = res,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalNumberOfPages = totalPageCount,
+                TotalNumberOfRecords = totalNumberOfRecords
+            };
         }
     }
 }

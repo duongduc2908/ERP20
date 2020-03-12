@@ -2,6 +2,7 @@
 using ERP.Common.Models;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
+using ERP.Data.ModelsERP.ModelView.ExportDB;
 using ERP.Data.ModelsERP.ModelView.Statistics;
 using ERP.Repository.Repositories.IRepositories;
 using ERP.Service.Services.IServices;
@@ -25,9 +26,14 @@ namespace ERP.Service.Services
         {
             return this._repository.GetAllOrderById(id);
         }
+       
         public PagedResults<customerorderviewmodel> GetAllSearch(int pageNumber, int pageSize, int? payment_type_id, string name)
         {
             return this._repository.GetAllSearch(pageNumber, pageSize,  payment_type_id, name);
+        }
+        public PagedResults<customerorderview> ExportCustomerOrder(int pageNumber, int pageSize, int? payment_type_id, string name)
+        {
+            return this._repository.ExportCustomerOrder(pageNumber, pageSize,  payment_type_id, name);
         }
         public List<dropdown> GetAllPayment()
         {
