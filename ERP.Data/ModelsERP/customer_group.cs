@@ -9,7 +9,6 @@ namespace ERP.Data.ModelsERP
     public partial class customer_group
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int cg_id { get; set; }
 
         [StringLength(50)]

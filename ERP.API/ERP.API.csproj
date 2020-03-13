@@ -365,6 +365,7 @@
     <Content Include="Uploads\Images\default\girl.png" />
     <Content Include="Uploads\Images\default\man.png" />
     <Content Include="Uploads\Images\default\product.png" />
+    <Content Include="Uploads\Images\default\customergroup.png" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

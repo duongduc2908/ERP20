@@ -33,6 +33,7 @@ namespace ERP.API.Controllers.Dashboard
         private readonly IPositionService _positionService;
         private readonly IUndertakenLocationService _undertakenlocationService;
         private readonly IMapper _mapper;
+        private string pass_word;
 
         public ManagerstaffsController() { }
         public ManagerstaffsController(IStaffService staffservice, IMapper mapper, IDepartmentService departmentService, IGroupRoleService groupRoleService, IPositionService positionService, IUndertakenLocationService undertakenlocationService)
@@ -378,8 +379,8 @@ namespace ERP.API.Controllers.Dashboard
                 var x = _staffservice.GetLast();
                 if(x == null) StaffCreateViewModel.sta_code = Utilis.CreateCode("NV", 0, 7);
                 else StaffCreateViewModel.sta_code = Utilis.CreateCode("NV", x.sta_id, 7);
-                var pass_new = Utilis.MakeRandomPassword(8);
-                StaffCreateViewModel.sta_password = HashMd5.convertMD5(pass_new);
+                pass_word = Utilis.MakeRandomPassword(8);
+                StaffCreateViewModel.sta_password = HashMd5.convertMD5(pass_word);
                 // mapping view model to entity
                 // save file
                 string fileName = "";
@@ -388,19 +389,16 @@ namespace ERP.API.Controllers.Dashboard
                     fileName = (FileExtension.SaveFileStaffOnDisk(fileData, StaffCreateViewModel.sta_code));
                 }
                 var createdstaff = _mapper.Map<staff>(StaffCreateViewModel);
-                if(fileName == null && createdstaff.sta_sex == 1)
+                if(createdstaff.sta_sex == 1)
                 {
                     createdstaff.sta_thumbnai = "/Uploads/Images/default/girl.png";
                 }
-                else if ((fileName == null && createdstaff.sta_sex == 0) || (fileName == null && createdstaff.sta_sex == null))
+                else
                 {
                     createdstaff.sta_thumbnai = "/Uploads/Images/default/man.png";
                 }
-                else createdstaff.sta_thumbnai = fileName;
-                createdstaff.sta_login = true;
                 // save new staff
                 _staffservice.Create(createdstaff);
-                BaseController.send_mail("New User In Coerp With Username: " + createdstaff.sta_username + " . Password: " + pass_new, createdstaff.sta_email, "New User Created!!!");
                 // return response
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
@@ -416,6 +414,30 @@ namespace ERP.API.Controllers.Dashboard
                 return Ok(response);
             }
 
+        }
+
+        [HttpPost]
+        [Route("api/staffs/sendmail_created")]
+        public IHttpActionResult send_mail_created(string sta_username, string sta_email)
+        {
+            ResponseDataDTO<staff> response = new ResponseDataDTO<staff>();
+            try
+            {
+                BaseController.send_mail("New User In Coerp With Username: " + sta_username + " . Password: " + pass_word, sta_email, "New User Created!!!");
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = null;
+                return Ok(response);
+            }
+            catch(Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+
+                return Ok(response);
+            }
+           
         }
 
         [HttpPut]
@@ -716,7 +738,7 @@ namespace ERP.API.Controllers.Dashboard
         #region["Authentication"]
         [HttpPut]
         [Route("api/staffs/ChangePassword")]
-        public async Task<IHttpActionResult> Change_Password(ERP.Data.ChangePasswordBindingModel model, int id)
+        public async Task<IHttpActionResult> Change_Password(ERP.Data.ChangePasswordBindingModel model, int id, string email)
         {
             ResponseDataDTO<bool> response = new ResponseDataDTO<bool>();
             try
@@ -728,11 +750,22 @@ namespace ERP.API.Controllers.Dashboard
                     response.Data = false;
                     return Ok(response);
                 }
-                // return response
-                response.Code = HttpCode.OK;
-                response.Message = MessageResponse.SUCCESS;
-                response.Data = _staffservice.ChangePassword(model, id);
-                return Ok(response);
+                if(id != 0 && email == null)
+                {
+                    // return response
+                    response.Code = HttpCode.OK;
+                    response.Message = MessageResponse.SUCCESS;
+                    response.Data = _staffservice.ChangePassword(model, id);
+                    return Ok(response);
+                }
+                else
+                {
+                    // return response
+                    response.Code = HttpCode.OK;
+                    response.Message = MessageResponse.SUCCESS;
+                    response.Data = _staffservice.ChangePasswordForgot(model, email);
+                    return Ok(response);
+                }
             }
             catch (Exception ex)
             {

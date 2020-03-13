@@ -105,6 +105,34 @@ namespace ERP.Extension.Extensions
             File.Move(fileData.LocalFileName, newFileName);
             return "/Uploads/Images/Products/" + fileName;
         }
+        public static string SaveFileCustomerGroupOnDisk(MultipartFileData fileData, string pu_code)
+        {
+            string[] chuoi;
+            var fileNametest = fileData.Headers.ContentDisposition.FileName;
+            chuoi = fileNametest.Split('.');
+            string fileName = pu_code + "." + chuoi[chuoi.Length - 1];
+            if (fileName.StartsWith("\"") || fileName.EndsWith("\""))
+            {
+                fileName = fileName.Trim('"');
+            }
+            if (fileName.Contains(@"/") || fileName.Contains(@"\"))
+            {
+                fileName = Path.GetFileName(fileName);
+            }
+            var newFileName = Path.Combine(HostingEnvironment.MapPath("/") + @"/Uploads/Images/Customer-Group", fileName);
+            var fileInfo = new FileInfo(newFileName);
+            if (fileInfo.Exists)
+            {
+                File.Delete(newFileName);
+                newFileName = Path.Combine(HostingEnvironment.MapPath("/") + @"/Uploads/Images/Customer-Group", fileName);
+            }
+            if (!Directory.Exists(fileInfo.Directory.FullName))
+            {
+                Directory.CreateDirectory(fileInfo.Directory.FullName);
+            }
+            File.Move(fileData.LocalFileName, newFileName);
+            return "/Uploads/Images/Customer-Group/" + fileName;
+        }
         public static string SaveFileCustomerOnDisk(MultipartFileData fileData, string cu_code)
         {
             string[] chuoi;

@@ -23,7 +23,7 @@ using System.Web.Http.Cors;
 namespace ERP.API.Controllers.Dashboard
 {
     [EnableCors("*", "*", "*")]
-    //[Authorize]
+    [Authorize]
     public class ManagerCustomerOrderController : BaseController
     {
         private readonly ICustomerOrderService _customer_orderservice;

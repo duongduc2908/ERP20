@@ -19,6 +19,7 @@ namespace ERP.API.Controllers.Authentication
     {
         private readonly IStaffService _staffservice;
         private readonly IMapper _mapper;
+        private string new_pass;
 
         public ManagerAuthenticationController() { }
         public ManagerAuthenticationController(IStaffService staffservice, IMapper mapper)
@@ -41,10 +42,9 @@ namespace ERP.API.Controllers.Authentication
                     response.Data = false;
                     return Ok(response);
                 }
-                var new_pass = Utilis.MakeRandomPassword(8);
+                new_pass = Utilis.MakeRandomPassword(8);
                 staff.sta_password = HashMd5.convertMD5(new_pass);
                 staff.sta_login = true;
-                BaseController.send_mail("Mat khau cua ban duoc update " + new_pass, email, "Update PassWord");
                 _staffservice.Update(staff, staff.sta_id);
                 // return response
                 response.Code = HttpCode.OK;
@@ -61,6 +61,29 @@ namespace ERP.API.Controllers.Authentication
 
                 return Ok(response);
             }
+        }
+        [HttpPost]
+        [Route("api/authentication/sendmail_forgot")]
+        public IHttpActionResult send_mail_created(string email)
+        {
+            ResponseDataDTO<string> response = new ResponseDataDTO<string>();
+            try
+            {
+                BaseController.send_mail("Mat khau cua ban duoc update " + new_pass, email, "Update PassWord");
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = null;
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+
+                return Ok(response);
+            }
+
         }
     }
 }

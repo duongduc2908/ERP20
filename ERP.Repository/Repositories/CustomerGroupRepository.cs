@@ -4,6 +4,7 @@ using ERP.Common.Models;
 using ERP.Data.DbContext;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
+using ERP.Data.ModelsERP.ModelView.CustomerGroup;
 using ERP.Repository.Repositories.IRepositories;
 using System;
 using System.Collections.Generic;
@@ -73,6 +74,32 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfPages = totalPageCount,
                 TotalNumberOfRecords = total
             };
+        } 
+        public List<piechartview> GetPieChart()
+        {
+            List<piechartview> res = new List<piechartview>();
+            var lts_cg = _dbContext.customer_group.OrderBy(i => i.cg_id).ToList();
+            foreach(customer_group cg in lts_cg)
+            {
+                piechartview view = new piechartview();
+                view.cg_name = cg.cg_name;
+                view.number = _dbContext.customers.Where(i => i.customer_group_id == cg.cg_id).Count();
+                res.Add(view);
+            }
+            return res;
+        }
+        public bool CheckUniqueName(string name,int id)
+        {
+            if(name != null)
+            {
+                name = name.Trim();
+            }
+            var lts_cg = _dbContext.customer_group.ToList();
+            foreach(customer_group cg in lts_cg)
+            {
+                if(String.Compare(name, cg.cg_name, true) == 0 && cg.cg_id != id) return false;
+            }
+            return true;
         }
     }
 }

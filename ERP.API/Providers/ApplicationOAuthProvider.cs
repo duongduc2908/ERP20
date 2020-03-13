@@ -3,23 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
 using ERP.Data.DbContext;
-using System.Text;
-using ERP.Service.Services.IServices;
 using ERP.Common.Constants;
-using ERP.Data.Identity;
-using System.Web;
 using ERP.Data.ModelsERP;
 using ERP.Repository.Repositories;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using Newtonsoft.Json;
 
 namespace ERP.API.Providers
 {
@@ -135,6 +124,5 @@ namespace ERP.API.Providers
             context.Validated(newTicket);
             return Task.FromResult<object>(null);
         }
-
     }
 }
