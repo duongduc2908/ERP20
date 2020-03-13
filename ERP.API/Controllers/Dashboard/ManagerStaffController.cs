@@ -738,7 +738,7 @@ namespace ERP.API.Controllers.Dashboard
         #region["Authentication"]
         [HttpPut]
         [Route("api/staffs/ChangePassword")]
-        public async Task<IHttpActionResult> Change_Password(ERP.Data.ChangePasswordBindingModel model, int id, string email)
+        public async Task<IHttpActionResult> Change_Password(ERP.Data.ChangePasswordBindingModel model, int id)
         {
             ResponseDataDTO<bool> response = new ResponseDataDTO<bool>();
             try
@@ -750,20 +750,12 @@ namespace ERP.API.Controllers.Dashboard
                     response.Data = false;
                     return Ok(response);
                 }
-                if(id != 0 && email == null)
-                {
-                    // return response
-                    response.Code = HttpCode.OK;
-                    response.Message = MessageResponse.SUCCESS;
-                    response.Data = _staffservice.ChangePassword(model, id);
-                    return Ok(response);
-                }
                 else
                 {
                     // return response
                     response.Code = HttpCode.OK;
                     response.Message = MessageResponse.SUCCESS;
-                    response.Data = _staffservice.ChangePasswordForgot(model, email);
+                    response.Data = _staffservice.ChangePassword(model, id);
                     return Ok(response);
                 }
             }

@@ -1,0 +1,206 @@
+﻿ please contact us here</multiline>
+                  </td>
+                </tr>
+                <!--end content-->
+                <tr>
+                  <td height="25"></td>
+                </tr>
+                <!--button-->
+                <tr>
+                  <td align="center">
+                    <table data-bgcolor="Button 2" data-border-bottom-color="Button Shadow 2" style="border-radius:5px;border-bottom:2px solid #E2E2E2;" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#ffffff">
+                      <tbody><tr>
+                        <td data-link-style="text-decoration:none; color:#3597D4;" data-link-color="CTA Button Link" data-color="CTA Button" data-size="CTA Button" mc:edit="main-6-42" height="45" align="center" style="font-family:Century Gothic, Arial, Sans-serif; font-size:16px; color:#4a4a4a;padding-left:25px;padding-right:25px;">
+                          <a href="http://27.72.147.222:8686/" style="text-decoration:none;color:#3597D4;" data-color="CTA Button Link">
+                            <singleline label="button">RESET PASSWORD</singleline>
+                          </a>
+                        </td>
+                      </tr>
+                    </tbody></table>
+                  </td>
+                </tr>
+                <tr>
+                  <td height="25"></td>
+                </tr>
+                <tr>
+                  <td data-link-style="text-decoration:none; color:#3597D4;" data-link-color="CTA content Link" data-color="CTA content" data-size="CTA content" mc:edit="main-6-41" align="left" style="font-family:Century gothic, Arial, Sans-serif; font-size:14px; color:#ffffff;line-height:28px;">
+                    <multiline label="content">For any further information please do not hesitate to contact us.</multiline><br>
+                    <singleline label="button">Have a nice day,</singleline><br><br>
+
+                    <singleline style="font-style: italic;">CoERP Team</singleline>
+                  </td>
+                </tr>
+                <!--end button-->
+                <tr>
+                  <td height="45"></td>
+                </tr>
+              </tbody></table>
+            </td>
+          </tr>
+        </tbody></table>
+      </td>
+    </tr>
+  </tbody></table>
+
+  <table data-module="catalog_footer" data-thumb="catalog_footer.png" bgcolor="EEEEEE" width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+    <tr>
+      <!-- <td height="25"></td> -->
+    </tr>
+    <tr>
+      <td data-bgcolor="footer" align="center" bgcolor="#34495e">
+        <table border="0" align="center" cellpadding="0" cellspacing="0" style="margin-left:20px; margin-right:20px;">
+          <tr>
+            <td height="20"></td>
+          </tr>
+          <tr>
+            <td align="center" width="600">
+              <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td align="center" style="text-align:center;vertical-align:top;font-size:0;">
+                    <div style="display:inline-block;vertical-align:top;">
+                      <!--left-->
+                      <table border="0" align="center" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td width="400" align="center">
+                            <table class="table-inner" align="center" width="90%" border="0" cellspacing="0" cellpadding="0">
+                              <tr>
+                                <!--title-->
+                                <td data-link-style="text-decoration:none; color:#ffffff;" data-link-color="Footer Title" data-size="Footer Title" data-color="Footer Title" mc:edit="catalog-35" style="font-family: 'Open Sans', Arial, sans-serif; font-size:16px; color:#ffffff; font-weight: bold;">
+                                  <singleline label="title">Follow us</singleline>
+                                </td>
+                                <!--end title-->
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td height="15"></td>
+                        </tr>
+                      </table>
+                      <!--end left-->
+                    </div>
+                    <!--[if mso]>
+                    </td>
+                    <td align="center" style="text-align:center;vertical-align:top;font-size:0;">
+                    <![endif]-->
+                    <div style="display:inline-block;vertical-align:top;">
+                      <!--right-->
+                      <table border="0" align="center" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td width="200" align="center">
+                            <table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-full">
+                              <tr>
+                                <td align="center" style="line-height: 0px;">
+                                  <a href="#"> <img src=cid:idFB alt="img" width="16" style="display:block; line-height:0px; font-size:0px; border:0px;" editable label="social-1" data-crop="false" mc:edit="catalog-36" /> </a>
+                                </td>
+                                <td width="15"></td>
+                                <td align="center" style="line-height: 0px;">
+                                  <a href="#"> <img src=cid:idTW alt="img" width="16" style="display:block; line-height:0px; font-size:0px; border:0px;" editable label="social-2" data-crop="false" mc:edit="catalog-37" /> </a>
+                                </td>
+                                <td width="15"></td>
+                                <td align="center" style="line-height: 0px;">
+                                  <a href="#"> <img src=cid:idGG alt="img" width="16" style="display:block; line-height:0px; font-size:0px; border:0px;" editable label="social-3" data-crop="false" mc:edit="catalog-38" /> </a>
+                                </td>
+                                <td width="15"></td>
+                                <td align="center" style="line-height: 0px;">
+                                  <a href="#"> <img src=cid:idBH alt="img" width="16" style="display:block; line-height:0px; font-size:0px; border:0px;" editable label="social-4" data-crop="false" mc:edit="catalog-39" /> </a>
+                                </td>
+                                <td width="15"></td>
+                                <td align="center" style="line-height: 0px;">
+                                  <a href="#"> <img src=cid:idIN alt="img" width="16" style="display:block; line-height:0px; font-size:0px; border:0px;" editable label="social-5" data-crop="false" mc:edit="catalog-40" /> </a>
+                                </td>
+                                <td width="15"></td>
+                                <td align="center" style="line-height: 0px;">
+                                  <a href="#"> <img src=cid:idDB alt="img" width="16" style="display:block; line-height:0px; font-size:0px; border:0px;" editable label="social-6" data-crop="false" mc:edit="catalog-41" /> </a>
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td height="20"></td>
+                        </tr>
+                      </table>
+                      <!--end right-->
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td data-bgcolor="footer bar" bgcolor="#f95759" align="center">
+        <table border="0" align="center" cellpadding="0" cellspacing="0" style="margin-left:20px; margin-right:20px;">
+          <tr>
+            <td height="15"></td>
+          </tr>
+          <tr>
+            <td align="center" width="600">
+              <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td align="center" style="text-align:center;vertical-align:top;font-size:0;">
+                    <div style="display:inline-block;vertical-align:top;">
+                      <!--left-->
+                      <table border="0" align="center" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td width="400" align="center">
+                            <table class="table-inner" align="center" width="90%" border="0" cellspacing="0" cellpadding="0">
+                              <tr>
+                                <!--copyright-->
+                                <td data-link-style="text-decoration:none; color:#ffffff;" data-link-color="Footer Link" data-color="Footer Text" data-size="Footer Text" mc:edit="catalog-42" style="font-family: 'Open Sans', Arial, sans-serif; font-size:13px; color:#ffffff; font-weight:normal;">
+                                  <singleline label="copyright">Copyright © CoERP 2019-2020, All rights reserved.</singleline>
+                                </td>
+                                <!--end copyright-->
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td height="15"></td>
+                        </tr>
+                      </table>
+                      <!--end left-->
+                    </div>
+                    <!--[if mso]>
+                    </td>
+                    <td align="center" style="text-align:center;vertical-align:top;font-size:0;">
+                    <![endif]-->
+                    <div style="display:inline-block;vertical-align:top;">
+                      <!--right-->
+                      <table border="0" align="center" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td width="200" align="center">
+                            <table class="table-inner" align="center" width="90%" border="0" cellspacing="0" cellpadding="0">
+                              <tr>
+                                <!--preference-->
+                                <td data-link-style="text-decoration:none; color:#ffffff;" data-link-color="Footer Link" data-color="Footer Text" data-size="Footer Text" mc:edit="catalog-43" align="center" style="font-family: 'Open Sans', Arial, sans-serif; font-size:13px; color:#ffffff; font-weight:normal;">
+                                  <webversion>coerp.vn</webversion> <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+                                  <unsubscribe>unsubscribe</unsubscribe>
+                                </td>
+                                <!--end preference-->
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td height="15"></td>
+                        </tr>
+                      </table>
+                      <!--end right-->
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+  <!--end footer 10-->
+</body>
+
+</html>

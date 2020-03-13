@@ -5,6 +5,7 @@ using ERP.Data.Dto;
 using ERP.Service.Services.IServices;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -19,13 +20,14 @@ namespace ERP.API.Controllers.Authentication
     {
         private readonly IStaffService _staffservice;
         private readonly IMapper _mapper;
-        private string new_pass;
+        private string new_pass { get; set; }
 
         public ManagerAuthenticationController() { }
-        public ManagerAuthenticationController(IStaffService staffservice, IMapper mapper)
+        public ManagerAuthenticationController(IStaffService staffservice, IMapper mapper, string pass)
         {
             this._staffservice = staffservice;
             this._mapper = mapper;
+            new_pass = pass;
         }
         [HttpPut]
         [Route("api/authentication/forgotpassword")]
@@ -42,7 +44,7 @@ namespace ERP.API.Controllers.Authentication
                     response.Data = false;
                     return Ok(response);
                 }
-                new_pass = Utilis.MakeRandomPassword(8);
+                this.new_pass = Utilis.MakeRandomPassword(8);
                 staff.sta_password = HashMd5.convertMD5(new_pass);
                 staff.sta_login = true;
                 _staffservice.Update(staff, staff.sta_id);
@@ -69,7 +71,11 @@ namespace ERP.API.Controllers.Authentication
             ResponseDataDTO<string> response = new ResponseDataDTO<string>();
             try
             {
-                BaseController.send_mail("Mat khau cua ban duoc update " + new_pass, email, "Update PassWord");
+                string text1 = File.ReadAllText("D:/ERP20/ERP.Common/TemplateMail/ResetPassWord/Reset1.txt");
+                string text2 = File.ReadAllText("D:/ERP20/ERP.Common/TemplateMail/ResetPassWord/Reset2.txt");
+                string text3 = File.ReadAllText("D:/ERP20/ERP.Common/TemplateMail/ResetPassWord/Reset3.txt");
+                var text_send = text1 + text2 + this.new_pass + text3;
+                BaseController.send_mail(text_send, email, "Update PassWord");
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
                 response.Data = null;

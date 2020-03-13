@@ -72,31 +72,6 @@ namespace ERP.Repository.Repositories
             }
             return false;
         }
-        public bool ChangePasswordForgot(ChangePasswordBindingModel model, string email)
-        {
-
-            var current_user = _dbContext.staffs.FirstOrDefault(x => x.sta_email == email);
-            staff new_user = new staff();
-            new_user = current_user;
-            if (current_user != null)
-            {
-                if (current_user.sta_password.Contains(HashMd5.convertMD5(model.OldPassword)))
-                {
-                    new_user.sta_password = HashMd5.convertMD5(model.NewPassword);
-                    if (new_user.sta_login == true)
-                    {
-                        new_user.sta_login = false;
-                        
-                    }
-                    else new_user.sta_login = true;
-                    _dbContext.Entry(current_user).CurrentValues.SetValues(new_user);
-                    _dbContext.SaveChanges();
-                    return true;
-                }
-            }
-            return false;
-        }
-        
         public PagedResults<staffviewmodel> GetAllPage(int pageNumber, int pageSize)
         {
             List<staffviewmodel> res = new List<staffviewmodel>();

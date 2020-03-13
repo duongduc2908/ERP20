@@ -16,7 +16,6 @@ namespace ERP.Repository.Repositories.IRepositories
     {
         PagedResults<staff> CreatePagedResults(int pageNumber, int pageSize);
         bool ChangePassword(ChangePasswordBindingModel model, int id);
-        bool ChangePasswordForgot(ChangePasswordBindingModel model, string email);
         
         PagedResults<staffviewmodel> GetAllPage(int pageNumber, int pageSize);
         PagedResults<staffviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? status, string name);

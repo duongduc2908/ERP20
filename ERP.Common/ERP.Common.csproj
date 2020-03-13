@@ -85,6 +85,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="TemplateMail\ResetPassWord\Reset1.txt" />
+    <Content Include="TemplateMail\ResetPassWord\Reset2.txt" />
+    <Content Include="TemplateMail\ResetPassWord\Reset3.txt" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -126,6 +129,12 @@
       <Project>{9e772e0a-c17a-43a4-b48e-82bb22a00cf5}</Project>
       <Name>ERP.Data</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="TemplateMail\SetPassWord\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -31,10 +31,6 @@ namespace ERP.Service.Services
         {
             return this._repository.ChangePassword(model, id);
         }
-        public bool ChangePasswordForgot(ChangePasswordBindingModel model, string email)
-        {
-            return this._repository.ChangePasswordForgot(model, email);
-        }
         public PagedResults<staffviewmodel> GetAllPage(int pageNumber, int pageSize)
         {
             return this._repository.GetAllPage(pageNumber, pageSize);

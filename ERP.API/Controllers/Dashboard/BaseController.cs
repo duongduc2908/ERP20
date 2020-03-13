@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Net.Mime;
 using System.Security.Claims;
 using System.Web;
 using System.Web.Http;
@@ -79,18 +80,56 @@ namespace ERP.API.Controllers.Dashboard
 
         public static void send_mail(string body, string to_MailAddress, string title)
         {
-
             MailMessage message = new MailMessage();
+            AlternateView htmlView = AlternateView.CreateAlternateViewFromString(body, null, MediaTypeNames.Text.Html);
+            //Add Image
+            LinkedResource theEmailImageBG = new LinkedResource("D:/ERP20/ERP.API/Uploads/Images/default/header-bg-1.png");
+            theEmailImageBG.ContentId = "idBG";
+            //Add the Image to the Alternate view
+            htmlView.LinkedResources.Add(theEmailImageBG);
+
+            LinkedResource theEmailImageFB = new LinkedResource("D:/ERP20/ERP.API/Uploads/Images/default/fb-6.png");
+            theEmailImageFB.ContentId = "idFB";
+            //Add the Image to the Alternate view
+            htmlView.LinkedResources.Add(theEmailImageFB);
+
+            LinkedResource theEmailImageTW = new LinkedResource("D:/ERP20/ERP.API/Uploads/Images/default/tw-6.png");
+            theEmailImageTW.ContentId = "idTW";
+            //Add the Image to the Alternate view
+            htmlView.LinkedResources.Add(theEmailImageTW);
+
+            LinkedResource theEmailImageGG = new LinkedResource("D:/ERP20/ERP.API/Uploads/Images/default/gg-6.png");
+            theEmailImageGG.ContentId = "idGG";
+            //Add the Image to the Alternate view
+            htmlView.LinkedResources.Add(theEmailImageGG);
+
+            LinkedResource theEmailImageBH = new LinkedResource("D:/ERP20/ERP.API/Uploads/Images/default/bh-6.png");
+            theEmailImageBH.ContentId = "idBH";
+            //Add the Image to the Alternate view
+            htmlView.LinkedResources.Add(theEmailImageBH);
+
+            LinkedResource theEmailImageIN = new LinkedResource("D:/ERP20/ERP.API/Uploads/Images/default/in-6.png");
+            theEmailImageIN.ContentId = "idIN";
+            //Add the Image to the Alternate view
+            htmlView.LinkedResources.Add(theEmailImageIN);
+
+            LinkedResource theEmailImageDB = new LinkedResource("D:/ERP20/ERP.API/Uploads/Images/default/db-6.png");
+            theEmailImageDB.ContentId = "idDB";
+            //Add the Image to the Alternate view
+            htmlView.LinkedResources.Add(theEmailImageDB);
+
+            //Add view to the Email Message
+            message.AlternateViews.Add(htmlView);
+
             SmtpClient smtp = new SmtpClient();
             message.From = new MailAddress("coerpsp@gmail.com");
             message.To.Add(new MailAddress(to_MailAddress));
             message.Subject = title;
             message.IsBodyHtml = true; //to make message body as html  
-            message.Body = body;
             smtp.Port = 587;
             smtp.Host = "smtp.gmail.com"; //for gmail host  
             smtp.EnableSsl = true;
-            smtp.UseDefaultCredentials = false;
+            smtp.UseDefaultCredentials = true;
             smtp.Credentials = new NetworkCredential("coerpsp@gmail.com", "coerp2020");
             smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
             smtp.Send(message);

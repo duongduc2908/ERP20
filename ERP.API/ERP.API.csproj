@@ -361,11 +361,19 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Uploads\Images\default\bh-6.png" />
+    <Content Include="Uploads\Images\default\db-6.png" />
+    <Content Include="Uploads\Images\default\fb-6.png" />
+    <Content Include="Uploads\Images\default\gg-6.png" />
+    <Content Include="Uploads\Images\default\header-bg-1.png" />
+    <Content Include="Uploads\Images\default\image_template.jpg" />
     <Content Include="Uploads\Images\default\customer.png" />
     <Content Include="Uploads\Images\default\girl.png" />
+    <Content Include="Uploads\Images\default\in-6.png" />
     <Content Include="Uploads\Images\default\man.png" />
     <Content Include="Uploads\Images\default\product.png" />
     <Content Include="Uploads\Images\default\customergroup.png" />
+    <Content Include="Uploads\Images\default\tw-6.png" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
