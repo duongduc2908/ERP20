@@ -88,6 +88,9 @@
     <Content Include="TemplateMail\ResetPassWord\Reset1.txt" />
     <Content Include="TemplateMail\ResetPassWord\Reset2.txt" />
     <Content Include="TemplateMail\ResetPassWord\Reset3.txt" />
+    <Content Include="TemplateMail\SetPassWord\Set1.txt" />
+    <Content Include="TemplateMail\SetPassWord\Set2.txt" />
+    <Content Include="TemplateMail\SetPassWord\Set3.txt" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -133,9 +136,7 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="TemplateMail\SetPassWord\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

@@ -20,14 +20,13 @@ namespace ERP.API.Controllers.Authentication
     {
         private readonly IStaffService _staffservice;
         private readonly IMapper _mapper;
-        private string new_pass { get; set; }
+        private static string new_pass { get; set; }
 
         public ManagerAuthenticationController() { }
-        public ManagerAuthenticationController(IStaffService staffservice, IMapper mapper, string pass)
+        public ManagerAuthenticationController(IStaffService staffservice, IMapper mapper)
         {
             this._staffservice = staffservice;
             this._mapper = mapper;
-            new_pass = pass;
         }
         [HttpPut]
         [Route("api/authentication/forgotpassword")]
@@ -44,7 +43,7 @@ namespace ERP.API.Controllers.Authentication
                     response.Data = false;
                     return Ok(response);
                 }
-                this.new_pass = Utilis.MakeRandomPassword(8);
+                new_pass = Utilis.MakeRandomPassword(8);
                 staff.sta_password = HashMd5.convertMD5(new_pass);
                 staff.sta_login = true;
                 _staffservice.Update(staff, staff.sta_id);
@@ -74,7 +73,7 @@ namespace ERP.API.Controllers.Authentication
                 string text1 = File.ReadAllText("D:/ERP20/ERP.Common/TemplateMail/ResetPassWord/Reset1.txt");
                 string text2 = File.ReadAllText("D:/ERP20/ERP.Common/TemplateMail/ResetPassWord/Reset2.txt");
                 string text3 = File.ReadAllText("D:/ERP20/ERP.Common/TemplateMail/ResetPassWord/Reset3.txt");
-                var text_send = text1 + text2 + this.new_pass + text3;
+                var text_send = text1 + text2 + new_pass + text3;
                 BaseController.send_mail(text_send, email, "Update PassWord");
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;

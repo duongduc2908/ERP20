@@ -33,7 +33,7 @@ namespace ERP.API.Controllers.Dashboard
         private readonly IPositionService _positionService;
         private readonly IUndertakenLocationService _undertakenlocationService;
         private readonly IMapper _mapper;
-        private string pass_word;
+        private static string pass_word;
 
         public ManagerstaffsController() { }
         public ManagerstaffsController(IStaffService staffservice, IMapper mapper, IDepartmentService departmentService, IGroupRoleService groupRoleService, IPositionService positionService, IUndertakenLocationService undertakenlocationService)
@@ -423,7 +423,11 @@ namespace ERP.API.Controllers.Dashboard
             ResponseDataDTO<staff> response = new ResponseDataDTO<staff>();
             try
             {
-                BaseController.send_mail("New User In Coerp With Username: " + sta_username + " . Password: " + pass_word, sta_email, "New User Created!!!");
+                string text1 = File.ReadAllText("D:/ERP20/ERP.Common/TemplateMail/ResetPassWord/Set1.txt");
+                string text2 = File.ReadAllText("D:/ERP20/ERP.Common/TemplateMail/ResetPassWord/Set2.txt");
+                string text3 = File.ReadAllText("D:/ERP20/ERP.Common/TemplateMail/ResetPassWord/Set3.txt");
+                var text_send = text1+ sta_username + text2 + pass_word + text3;
+                BaseController.send_mail(text_send, sta_email, "New User Created!!!");
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
                 response.Data = null;
@@ -745,7 +749,7 @@ namespace ERP.API.Controllers.Dashboard
             {
                 if (model.NewPassword != model.ConfirmPassword)
                 {
-                    response.Code = HttpCode.OK;
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
                     response.Message = "ConfirmPassword not true";
                     response.Data = false;
                     return Ok(response);

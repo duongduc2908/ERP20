@@ -64,7 +64,6 @@ namespace ERP.Repository.Repositories
                         new_user.sta_login = false;
                         
                     }
-                    else new_user.sta_login = true;
                     _dbContext.Entry(current_user).CurrentValues.SetValues(new_user);
                     _dbContext.SaveChanges();
                     return true;
