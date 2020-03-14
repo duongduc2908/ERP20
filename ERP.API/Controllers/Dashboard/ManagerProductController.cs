@@ -539,7 +539,7 @@ namespace ERP.API.Controllers.Dashboard
                 {
                     // return response
                     response.Code = HttpCode.NOT_FOUND;
-                    response.Message = "Không thấy được sản phẩm";
+                    response.Message = "Không tìm thấy sản phẩm trong hệ thống.";
                     response.Data = null;
 
                     return Ok(response);
@@ -582,7 +582,7 @@ namespace ERP.API.Controllers.Dashboard
                 if (streamProvider.FormData["pu_id"] == null)
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                    response.Message = "Ma id không được để trống";
+                    response.Message = "Mã sản phẩm không được để trống.";
                     response.Data = null;
                     return Ok(response);
                 }

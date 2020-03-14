@@ -2,6 +2,7 @@
 using ERP.Data.ModelsERP;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -10,7 +11,11 @@ namespace ERP.Repository.Repositories
 {
     public class AuthenticationRepository : IDisposable
     {
-        ERPDbContext context = new ERPDbContext();
+        protected readonly ERPDbContext context;
+        public AuthenticationRepository(ERPDbContext dbContext)
+        {
+            context = dbContext;
+        }
         //Add the Refresh token
         public async Task<bool> AddRefreshToken(RefreshToken token)
         {

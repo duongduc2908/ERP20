@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ERP.API.Models;
+using ERP.API.Providers;
 using ERP.Common.Constants;
 using ERP.Common.Excel;
 using ERP.Common.Models;
@@ -9,6 +10,7 @@ using ERP.Data.ModelsERP.ModelView;
 using ERP.Data.ModelsERP.ModelView.ExportDB;
 using ERP.Extension.Extensions;
 using ERP.Service.Services.IServices;
+using Microsoft.Owin.Security.OAuth;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -34,7 +36,9 @@ namespace ERP.API.Controllers.Dashboard
         private readonly IUndertakenLocationService _undertakenlocationService;
         private readonly IMapper _mapper;
         private static string pass_word;
-
+        private static List<string> list_email;
+        private static List<string> list_pass;
+        private static List<string> list_username;
         public ManagerstaffsController() { }
         public ManagerstaffsController(IStaffService staffservice, IMapper mapper, IDepartmentService departmentService, IGroupRoleService groupRoleService, IPositionService positionService, IUndertakenLocationService undertakenlocationService)
         {
@@ -258,21 +262,21 @@ namespace ERP.API.Controllers.Dashboard
                 if (!check_department(Convert.ToInt32(streamProvider.FormData["department_id"])))
                 {
                     response.Code = HttpCode.NOT_FOUND;
-                    response.Message = "Khong co ma phong ban trong csdl!";
+                    response.Message = "Không có mã phòng ban "+ streamProvider.FormData["department_id"]+" trong hệ thống.";
                     response.Data = null;
                     return Ok(response);
                 }
                 if (!check_position(Convert.ToInt32(Convert.ToInt32(streamProvider.FormData["position_id"]))))
                 {
                     response.Code = HttpCode.NOT_FOUND;
-                    response.Message = "Khong co ma bo phan trong csdl!";
+                    response.Message = "Không có mã bộ phận " + streamProvider.FormData["position_id"] + " trong hệ thống.";
                     response.Data = null;
                     return Ok(response);
                 }
                 if (!check_grouprole(Convert.ToInt32(streamProvider.FormData["group_role_id"])))
                 {
                     response.Code = HttpCode.NOT_FOUND;
-                    response.Message = "Khong co ma nhom quyen trong csdl!";
+                    response.Message = "Không có mã nhóm quyền "+ streamProvider.FormData["group_role_id"]+" trong hệ thống.";
                     response.Data = null;
                     return Ok(response);
                 }
@@ -307,10 +311,24 @@ namespace ERP.API.Controllers.Dashboard
                     sta_sex = Convert.ToByte(streamProvider.FormData["sta_sex"]),
                 };
                 //Kiểm tra các trường rằng buộc
-                if (check_username_email(StaffCreateViewModel.sta_username, StaffCreateViewModel.sta_email))
+                if (check_username(StaffCreateViewModel.sta_username))
                 {
                     response.Code = HttpCode.NOT_FOUND;
-                    response.Message = "Da co username '" + StaffCreateViewModel.sta_username+"' hoac email '"+ StaffCreateViewModel.sta_email+"' trong csdl";
+                    response.Message = "Đã có người dùng '" + StaffCreateViewModel.sta_username+" ' trong hệ thống.";
+                    response.Data = null;
+                    return Ok(response);
+                }
+                if (check_email(StaffCreateViewModel.sta_email))
+                {
+                    response.Code = HttpCode.NOT_FOUND;
+                    response.Message = "Đã có người dùng '" + StaffCreateViewModel.sta_email + " ' trong hệ thống.";
+                    response.Data = null;
+                    return Ok(response);
+                }
+                if (check_username(StaffCreateViewModel.sta_mobile))
+                {
+                    response.Code = HttpCode.NOT_FOUND;
+                    response.Message = "Đã có số điện thoại người dùng '" + StaffCreateViewModel.sta_mobile + " ' trong hệ thống.";
                     response.Data = null;
                     return Ok(response);
                 }
@@ -319,6 +337,7 @@ namespace ERP.API.Controllers.Dashboard
                 {
                     if (CheckEmail.IsValidEmail(StaffCreateViewModel.sta_email) == false)
                     {
+                        response.Code = HttpCode.NOT_FOUND;
                         response.Message = "Định dạng email không hợp lệ !";
                         response.Data = null;
                         return Ok(response);
@@ -328,8 +347,9 @@ namespace ERP.API.Controllers.Dashboard
                 //check_phone_number
                 
                if (CheckNumber.IsPhoneNumber(StaffCreateViewModel.sta_mobile) == false)
-               {
-                   response.Message = "Số điện thoại không hợp lệ";
+                {
+                    response.Code = HttpCode.NOT_FOUND;
+                    response.Message = "Số điện thoại không hợp lệ";
                    response.Data = null;
                    return Ok(response);
                }
@@ -428,6 +448,7 @@ namespace ERP.API.Controllers.Dashboard
                 string text3 = File.ReadAllText("D:/ERP20/ERP.Common/TemplateMail/ResetPassWord/Set3.txt");
                 var text_send = text1+ sta_username + text2 + pass_word + text3;
                 BaseController.send_mail(text_send, sta_email, "New User Created!!!");
+                pass_word = "";
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
                 response.Data = null;
@@ -519,7 +540,7 @@ namespace ERP.API.Controllers.Dashboard
                     sta_code = Convert.ToString(streamProvider.FormData["sta_code"]),
                     sta_username = Convert.ToString(streamProvider.FormData["sta_username"]).Trim(),
                     sta_email = Convert.ToString(streamProvider.FormData["sta_email"]),
-
+                    sta_thumbnai = Convert.ToString(streamProvider.FormData["cu_thumbnail"]),
                     sta_aboutme = Convert.ToString(streamProvider.FormData["sta_aboutme"]),
                     sta_mobile = Convert.ToString(streamProvider.FormData["sta_mobile"]),
                     sta_identity_card = Convert.ToString(streamProvider.FormData["sta_identity_card"]),
@@ -556,6 +577,7 @@ namespace ERP.API.Controllers.Dashboard
                 {
                     if (CheckEmail.IsValidEmail(staffUpdateViewModel.sta_email) == false)
                     {
+                        response.Code = HttpCode.NOT_FOUND;
                         response.Message = "Định dạng email không hợp lệ !";
                         response.Data = null;
                         return Ok(response);
@@ -569,6 +591,7 @@ namespace ERP.API.Controllers.Dashboard
 
                 if (CheckNumber.IsPhoneNumber(staffUpdateViewModel.sta_mobile) == false)
                 {
+                    response.Code = HttpCode.NOT_FOUND;
                     response.Message = "Số điện thoại không hợp lệ";
                     response.Data = null;
                     return Ok(response);
@@ -750,18 +773,30 @@ namespace ERP.API.Controllers.Dashboard
                 if (model.NewPassword != model.ConfirmPassword)
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                    response.Message = "ConfirmPassword not true";
+                    response.Message = "Nhập đúng mật khẩu mới.";
                     response.Data = false;
                     return Ok(response);
                 }
-                else
-                {
-                    // return response
-                    response.Code = HttpCode.OK;
-                    response.Message = MessageResponse.SUCCESS;
-                    response.Data = _staffservice.ChangePassword(model, id);
-                    return Ok(response);
+                else {
+                    bool check = _staffservice.ChangePassword(model, id);
+                    if (check == false)
+                    {
+                        // return response
+                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                        response.Message = "Mật khẩu cũ không đúng.";
+                        response.Data = false;
+                        return Ok(response);
+                    }
+                    else
+                    {
+                        // return response
+                        response.Code = HttpCode.OK;
+                        response.Message = MessageResponse.SUCCESS;
+                        response.Data = true;
+                        return Ok(response);
+                    }
                 }
+                
             }
             catch (Exception ex)
             {
@@ -997,7 +1032,7 @@ namespace ERP.API.Controllers.Dashboard
                             {
                                 if (!check_department(Convert.ToInt32(dr["department_id"])))
                                 {
-                                    exitsData = "Khong co ma phong ban trong csdl!";
+                                    exitsData = "Không có mã phòng ban "+ dr["department_id"].ToString() + " trong hệ thống.";
                                     response.Code = HttpCode.NOT_FOUND;
                                     response.Message = exitsData;
                                     response.Data = null;
@@ -1005,7 +1040,7 @@ namespace ERP.API.Controllers.Dashboard
                                 }
                                 if (!check_position(Convert.ToInt32(dr["position_id"])))
                                 {
-                                    exitsData = "Khong co ma bo phan trong csdl!";
+                                    exitsData = "Không có mã bộ phận "+ dr["position_id"].ToString()+" trong hệ thống.";
                                     response.Code = HttpCode.NOT_FOUND;
                                     response.Message = exitsData;
                                     response.Data = null;
@@ -1013,9 +1048,30 @@ namespace ERP.API.Controllers.Dashboard
                                 }
                                 if (!check_grouprole(Convert.ToInt32(dr["group_role_id"])))
                                 {
-                                    exitsData = "Khong co ma nhom quyen trong csdl!";
+                                    exitsData = "Không có mã nhóm quyền "+ dr["group_role_id"].ToString()+" trong hệ thống.";
                                     response.Code = HttpCode.NOT_FOUND;
                                     response.Message = exitsData;
+                                    response.Data = null;
+                                    return Ok(response);
+                                }
+                                if (check_username(dr["sta_username"].ToString()))
+                                {
+                                    response.Code = HttpCode.NOT_FOUND;
+                                    response.Message = "Đã có người dùng '" + dr["sta_username"].ToString() + " ' trong hệ thống.";
+                                    response.Data = null;
+                                    return Ok(response);
+                                }
+                                if (check_email(dr["sta_email"].ToString()))
+                                {
+                                    response.Code = HttpCode.NOT_FOUND;
+                                    response.Message = "Đã có người dùng '" + dr["sta_email"].ToString() + " ' trong hệ thống.";
+                                    response.Data = null;
+                                    return Ok(response);
+                                }
+                                if (check_username(dr["sta_mobile"].ToString()))
+                                {
+                                    response.Code = HttpCode.NOT_FOUND;
+                                    response.Message = "Đã có số điện thoại người dùng '" + dr["sta_mobile"].ToString() + " ' trong hệ thống.";
                                     response.Data = null;
                                     return Ok(response);
                                 }
@@ -1031,7 +1087,11 @@ namespace ERP.API.Controllers.Dashboard
                         var x = _staffservice.GetLast();
                         if(x == null) i.sta_code = Utilis.CreateCode("NV", 0, 7);
                         else i.sta_code = Utilis.CreateCode("NV", x.sta_id, 7);
-                        i.sta_password = Utilis.MakeRandomPassword(8);
+                        var pass = Utilis.MakeRandomPassword(8);
+                        list_username.Add(i.sta_username);
+                        list_email.Add(i.sta_email);
+                        list_pass.Add(pass);
+                        i.sta_password = HashMd5.convertMD5(pass);
                         if (i.sta_sex == 1)
                         {
                             i.sta_thumbnai = "/Uploads/Images/default/girl.png";
@@ -1041,7 +1101,6 @@ namespace ERP.API.Controllers.Dashboard
                             i.sta_thumbnai = "/Uploads/Images/default/man.png";
                         }
                         _staffservice.Create(i);
-                        BaseController.send_mail(i.sta_password, i.sta_email, "New User Coerp");
                     }
                     exitsData = "Đã nhập dữ liệu excel thành công!";
                     response.Code = HttpCode.OK;
@@ -1068,8 +1127,41 @@ namespace ERP.API.Controllers.Dashboard
                 return Ok(response);
             }
         }
-        #endregion
 
+        [HttpPost]
+        [Route("api/staffs/sendmail_import")]
+        public IHttpActionResult send_mail_imported()
+        {
+            ResponseDataDTO<staff> response = new ResponseDataDTO<staff>();
+            try
+            {
+                string text1 = File.ReadAllText("D:/ERP20/ERP.Common/TemplateMail/ResetPassWord/Set1.txt");
+                string text2 = File.ReadAllText("D:/ERP20/ERP.Common/TemplateMail/ResetPassWord/Set2.txt");
+                string text3 = File.ReadAllText("D:/ERP20/ERP.Common/TemplateMail/ResetPassWord/Set3.txt");
+                for(int i=0;i< list_email.Count-1;i++)
+                {
+                    var text_send = text1 + list_username[i] + text2 + list_pass[i] + text3;
+                    BaseController.send_mail(text_send, list_email[i], "New User Created!!!");
+                }
+                list_username.Clear();
+                list_email.Clear();
+                list_pass.Clear();
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = null;
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+
+                return Ok(response);
+            }
+
+        }
+        #endregion
         #region["Export Excel"]
         [HttpGet]
         [Route("api/satffs/export")]
@@ -1176,15 +1268,24 @@ namespace ERP.API.Controllers.Dashboard
             bool res = _positionService.Exist(x => x.pos_id == _id);
             return res;
         }
-
-        private bool check_username_email(string _username, string _email)
+        private bool check_username(string _username)
         {
-            bool res = _staffservice.Exist(x => x.sta_username == _username || x.sta_email == _email && _email != null);
+            bool res = _staffservice.Exist(x => x.sta_username == _username );
             return res;
         }
-#endregion
+        private bool check_email(string _email)
+        {
+            bool res = _staffservice.Exist(x => x.sta_email == _email && _email != null);
+            return res;
+        }
+        private bool check_phone(string _phone)
+        {
+            bool res = _staffservice.Exist(x => x.sta_mobile == _phone && _phone != null);
+            return res;
+        }
+        #endregion
 
-    #region dispose
+        #region dispose
 
         protected override void Dispose(bool disposing)
         {

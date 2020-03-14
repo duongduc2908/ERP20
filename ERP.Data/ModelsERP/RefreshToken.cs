@@ -22,7 +22,6 @@ namespace ERP.Data.ModelsERP
 
         public DateTime? ExpiredTime { get; set; }
 
-        [StringLength(500)]
         public string ProtectedTicket { get; set; }
     }
 }

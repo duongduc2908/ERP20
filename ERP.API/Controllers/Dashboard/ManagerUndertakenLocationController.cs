@@ -154,14 +154,14 @@ namespace ERP.API.Controllers.Dashboard
                 if (streamProvider.FormData["unl_district"] == null)
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                    response.Message = "Quan/Huyen phố không được để trống";
+                    response.Message = "Quận/Huyện không được để trống";
                     response.Data = null;
                     return Ok(response);
                 }
                 if (streamProvider.FormData["unl_ward"] == null)
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                    response.Message = "Phuong/Xa phố không được để trống";
+                    response.Message = "Phường/Xã không được để trống";
                     response.Data = null;
                     return Ok(response);
                 }
@@ -256,14 +256,14 @@ namespace ERP.API.Controllers.Dashboard
                 if (streamProvider.FormData["unl_district"] == null)
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                    response.Message = "Quan/Huyen phố không được để trống";
+                    response.Message = "Quận/Huyện không được để trống";
                     response.Data = null;
                     return Ok(response);
                 }
                 if (streamProvider.FormData["unl_ward"] == null)
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                    response.Message = "Phuong/Xa phố không được để trống";
+                    response.Message = "Phường/Xã không được để trống";
                     response.Data = null;
                     return Ok(response);
                 }

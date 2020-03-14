@@ -9,61 +9,63 @@ using ERP.Data.DbContext;
 using ERP.Common.Constants;
 using ERP.Data.ModelsERP;
 using ERP.Repository.Repositories;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace ERP.API.Providers
 {
     public class ApplicationOAuthProvider : OAuthAuthorizationServerProvider
     {
-        private readonly ERPDbContext _dbContext = new ERPDbContext();
-        private static string _clientId = "DOTNET";
-        private static string _clientSecret = "EEF47D9A-DBA9-4D02-B7B0-04F4279A6D20";
-        private static string Username = "";
-        private static string Password = "";
+        private ERPDbContext _dbContext { get; set; }
         //Store the base address of the web api
         //You need to change the PORT number where your WEB API service is running
-        private static string baseAddress = "http://localhost:44334/";
+        public ApplicationOAuthProvider()
+        {
+            _dbContext = ERPDbContext.Create();
+        }
         public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
         {
+            _dbContext = new ERPDbContext();
             ClientMaster client = context.OwinContext.Get<ClientMaster>("ta:client");
             var hash_pass = HashMd5.convertMD5(context.Password.Trim());
             var url_thumbnai = "";
-            var user = _dbContext.staffs.FirstOrDefault(t => t.sta_username.Contains(context.UserName.Trim()) && t.sta_password.Contains(hash_pass));
-            if (user == null)
+            staff staff_user = new staff();
+            staff_user = _dbContext.staffs.FirstOrDefault(t => t.sta_username.Contains(context.UserName.Trim()) && t.sta_password.Contains(hash_pass));
+            if (staff_user == null)
             {
-                context.SetError("invalid_grant", "Provided username and password is incorrect");
+                context.SetError("invalid_grant", "Provided staff_username and password is incorrect");
                 return;
             }
-            if(user.sta_thumbnai != null)
+            if(staff_user.sta_thumbnai != null)
             {
-                url_thumbnai = user.sta_thumbnai;
+                url_thumbnai = staff_user.sta_thumbnai;
             }
             var role="";
-            if (user.group_role_id == 1)
+            if (staff_user.group_role_id == 1)
             {
                 role = Roles.ADMIN;
             }
             else role = Roles.USER;
             var identity = new ClaimsIdentity(context.Options.AuthenticationType);
             identity.AddClaim(new Claim(ClaimTypes.Role, role));
-            identity.AddClaim(new Claim(ClaimTypes.Name, user.sta_fullname));
-            identity.AddClaim(new Claim(ClaimTypes.Email, user.sta_email));
-            identity.AddClaim(new Claim("Id", user.sta_id.ToString()));
+            identity.AddClaim(new Claim(ClaimTypes.Name, staff_user.sta_fullname));
+            identity.AddClaim(new Claim(ClaimTypes.Email, staff_user.sta_email));
+            identity.AddClaim(new Claim("Id", staff_user.sta_id.ToString()));
             var props = new AuthenticationProperties(new Dictionary<string, string>
                 {
                     {
                         "client_id", (context.ClientId == null) ? string.Empty : context.ClientId
                     },
                     {
-                        "userName",user.sta_fullname
+                        "staff_Name",staff_user.sta_fullname
                     },
                     {
                         "url_thumbnai", url_thumbnai
                     },
                     {
-                        "sta_login",  user.sta_login.ToString()
+                        "sta_login",  staff_user.sta_login.ToString()
                     },
                     {
-                        "sta_id",user.sta_id.ToString()
+                        "sta_id",staff_user.sta_id.ToString()
                     }
                 });
             var ticket = new AuthenticationTicket(identity, props);

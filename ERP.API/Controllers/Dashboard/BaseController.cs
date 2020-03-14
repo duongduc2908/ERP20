@@ -83,37 +83,37 @@ namespace ERP.API.Controllers.Dashboard
             MailMessage message = new MailMessage();
             AlternateView htmlView = AlternateView.CreateAlternateViewFromString(body, null, MediaTypeNames.Text.Html);
             //Add Image
-            LinkedResource theEmailImageBG = new LinkedResource("C:/inetpub/wwwroot/coerp/Uploads/Images/default/header-bg-1.png");
+            LinkedResource theEmailImageBG = new LinkedResource("C:/inetpub/wwwroot/coerp/Uploads/Images/default/header-bg-1.png", "image/png");
             theEmailImageBG.ContentId = "idBG";
             //Add the Image to the Alternate view
             htmlView.LinkedResources.Add(theEmailImageBG);
 
-            LinkedResource theEmailImageFB = new LinkedResource("C:/inetpub/wwwroot/coerp/Uploads/Images/default/fb-6.png");
+            LinkedResource theEmailImageFB = new LinkedResource("C:/inetpub/wwwroot/coerp/Uploads/Images/default/fb-6.png", "image/png");
             theEmailImageFB.ContentId = "idFB";
             //Add the Image to the Alternate view
             htmlView.LinkedResources.Add(theEmailImageFB);
 
-            LinkedResource theEmailImageTW = new LinkedResource("C:/inetpub/wwwroot/coerp/Uploads/Images/default/tw-6.png");
+            LinkedResource theEmailImageTW = new LinkedResource("C:/inetpub/wwwroot/coerp/Uploads/Images/default/tw-6.png", "image/png");
             theEmailImageTW.ContentId = "idTW";
             //Add the Image to the Alternate view
             htmlView.LinkedResources.Add(theEmailImageTW);
 
-            LinkedResource theEmailImageGG = new LinkedResource("C:/inetpub/wwwroot/coerp/Uploads/Images/default/gg-6.png");
+            LinkedResource theEmailImageGG = new LinkedResource("C:/inetpub/wwwroot/coerp/Uploads/Images/default/gg-6.png", "image/png");
             theEmailImageGG.ContentId = "idGG";
             //Add the Image to the Alternate view
             htmlView.LinkedResources.Add(theEmailImageGG);
 
-            LinkedResource theEmailImageBH = new LinkedResource("C:/inetpub/wwwroot/coerp/Uploads/Images/default/bh-6.png");
+            LinkedResource theEmailImageBH = new LinkedResource("C:/inetpub/wwwroot/coerp/Uploads/Images/default/bh-6.png", "image/png");
             theEmailImageBH.ContentId = "idBH";
             //Add the Image to the Alternate view
             htmlView.LinkedResources.Add(theEmailImageBH);
 
-            LinkedResource theEmailImageIN = new LinkedResource("C:/inetpub/wwwroot/coerp/Uploads/Images/default/in-6.png");
+            LinkedResource theEmailImageIN = new LinkedResource("C:/inetpub/wwwroot/coerp/Uploads/Images/default/in-6.png", "image/png");
             theEmailImageIN.ContentId = "idIN";
             //Add the Image to the Alternate view
             htmlView.LinkedResources.Add(theEmailImageIN);
 
-            LinkedResource theEmailImageDB = new LinkedResource("C:/inetpub/wwwroot/coerp/Uploads/Images/default/db-6.png");
+            LinkedResource theEmailImageDB = new LinkedResource("C:/inetpub/wwwroot/coerp/Uploads/Images/default/db-6.png", "image/png");
             theEmailImageDB.ContentId = "idDB";
             //Add the Image to the Alternate view
             htmlView.LinkedResources.Add(theEmailImageDB);

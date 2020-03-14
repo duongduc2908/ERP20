@@ -231,6 +231,7 @@ namespace ERP.API.Controllers.Dashboard
                     //Bat cac dieu kien rang buoc
                     if (CheckEmail.IsValidEmail(customerCreateViewModel.cu_email) == false && customerCreateViewModel.cu_email == "")
                     {
+                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
                         response.Message = "Định dạng email không hợp lệ !";
                         response.Data = null;
                         return Ok(response);
@@ -238,6 +239,7 @@ namespace ERP.API.Controllers.Dashboard
 
                     if (CheckNumber.IsPhoneNumber(customerCreateViewModel.cu_mobile) == false && customerCreateViewModel.cu_mobile == "")
                     {
+                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
                         response.Message = "Số điện thoại không hợp lệ";
                         response.Data = null;
                         return Ok(response);
@@ -451,6 +453,7 @@ namespace ERP.API.Controllers.Dashboard
                     //Bat cac dieu kien rang buoc
                     if (CheckEmail.IsValidEmail(customerCreateViewModel.cu_email) == false && customerCreateViewModel.cu_email == "")
                     {
+                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
                         response.Message = "Định dạng email không hợp lệ !";
                         response.Data = false;
                         return Ok(response);
@@ -458,6 +461,7 @@ namespace ERP.API.Controllers.Dashboard
 
                     if (CheckNumber.IsPhoneNumber(customerCreateViewModel.cu_mobile) == false && customerCreateViewModel.cu_mobile == "")
                     {
+                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
                         response.Message = "Số điện thoại không hợp lệ";
                         response.Data = false;
                         return Ok(response);
@@ -658,7 +662,7 @@ namespace ERP.API.Controllers.Dashboard
                 {
                     // return response
                     response.Code = HttpCode.NOT_FOUND;
-                    response.Message = MessageResponse.FAIL;
+                    response.Message = "Không tìm thấy mã khách hàng order trong hệ thống.";
                     response.Data = null;
 
                     return Ok(response);
@@ -759,6 +763,7 @@ namespace ERP.API.Controllers.Dashboard
             };
         }
         #endregion
+
         #region dispose
 
         protected override void Dispose(bool disposing)

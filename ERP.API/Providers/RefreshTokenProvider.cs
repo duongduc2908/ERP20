@@ -1,5 +1,6 @@
 ﻿
 using ERP.Common.Constants;
+using ERP.Data.DbContext;
 using ERP.Data.ModelsERP;
 using ERP.Repository.Repositories;
 using Microsoft.Owin.Security.Infrastructure;
@@ -23,7 +24,7 @@ namespace ERP.API.Providers
             //Generating a Uniqure Refresh Token ID
             var refreshTokenId = Guid.NewGuid().ToString("n");
 
-            using (AuthenticationRepository _repo = new AuthenticationRepository())
+            using (AuthenticationRepository _repo = new AuthenticationRepository(new ERPDbContext()))
             {
                 // Getting the Refesh Token Life Time From the Owin Context
                 var refreshTokenLifeTime = context.OwinContext.Get<string>("ta:clientRefreshTokenLifeTime");
@@ -57,7 +58,7 @@ namespace ERP.API.Providers
             var allowedOrigin = context.OwinContext.Get<string>("ta:clientAllowedOrigin");
             //context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { allowedOrigin });
             string hashedTokenId = HashMd5.GetHash(context.Token);
-            using (AuthenticationRepository _repo = new AuthenticationRepository())
+            using (AuthenticationRepository _repo = new AuthenticationRepository(new ERPDbContext()))
             {
                 var refreshToken = await _repo.FindRefreshToken(hashedTokenId);
                 if (refreshToken != null)

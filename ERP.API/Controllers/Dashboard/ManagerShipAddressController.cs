@@ -150,28 +150,28 @@ namespace ERP.API.Controllers.Dashboard
                 if (streamProvider.FormData["sha_province"] == null)
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                    response.Message = "Tinh/Thành phố không được để trống";
+                    response.Message = "Tinh/Thành phố không được để trống.";
                     response.Data = null;
                     return Ok(response);
                 }
                 if (streamProvider.FormData["sha_district"] == null)
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                    response.Message = "Quan/Huyen phố không được để trống";
+                    response.Message = "QUận/Huyện không được để trống.";
                     response.Data = null;
                     return Ok(response);
                 }
                 if (streamProvider.FormData["sha_ward"] == null)
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                    response.Message = "Phuong/Xa phố không được để trống";
+                    response.Message = "Phường/Xã không được để trống.";
                     response.Data = null;
                     return Ok(response);
                 }
                 if (streamProvider.FormData["customer_id"] == null)
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                    response.Message = "Mã khách hàng không được để trống";
+                    response.Message = "Mã khách hàng không được để trống.";
                     response.Data = null;
                     return Ok(response);
                 }
@@ -265,14 +265,14 @@ namespace ERP.API.Controllers.Dashboard
                 if (streamProvider.FormData["sha_district"] == null)
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                    response.Message = "Quan/Huyen phố không được để trống";
+                    response.Message = "Quận/Huyện không được để trống";
                     response.Data = null;
                     return Ok(response);
                 }
                 if (streamProvider.FormData["sha_ward"] == null)
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                    response.Message = "Phuong/Xa phố không được để trống";
+                    response.Message = "Phường/Xã không được để trống";
                     response.Data = null;
                     return Ok(response);
                 }
@@ -363,7 +363,7 @@ namespace ERP.API.Controllers.Dashboard
                 {
                     // return response
                     response.Code = HttpCode.NOT_FOUND;
-                    response.Message = "Không thấy được địa chỉ";
+                    response.Message = "Không tìm thấy địa chỉ trong hệ thống.";
                     response.Data = null;
 
                     return Ok(response);

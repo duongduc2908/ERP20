@@ -49,7 +49,7 @@ namespace ERP.API.Controllers.Authentication
                 _staffservice.Update(staff, staff.sta_id);
                 // return response
                 response.Code = HttpCode.OK;
-                response.Message = MessageResponse.SUCCESS;
+                response.Message = "Yêu cầu thay đổi mật khẩu của bạn đã được thực hiện, voi lòng kiểm tra email.";
                 response.Data = true;
                 return Ok(response);
             }
@@ -75,6 +75,7 @@ namespace ERP.API.Controllers.Authentication
                 string text3 = File.ReadAllText("D:/ERP20/ERP.Common/TemplateMail/ResetPassWord/Reset3.txt");
                 var text_send = text1 + text2 + new_pass + text3;
                 BaseController.send_mail(text_send, email, "Update PassWord");
+                new_pass = "";
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
                 response.Data = null;

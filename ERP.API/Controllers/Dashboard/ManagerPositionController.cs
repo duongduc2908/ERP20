@@ -231,7 +231,7 @@ namespace ERP.API.Controllers.Dashboard
                 {
                     // return response
                     response.Code = HttpCode.NOT_FOUND;
-                    response.Message = MessageResponse.FAIL;
+                    response.Message = "Không có mã trong hệ thống.";
                     response.Data = null;
 
                     return Ok(response);

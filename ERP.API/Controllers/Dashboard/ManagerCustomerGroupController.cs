@@ -151,7 +151,7 @@ namespace ERP.API.Controllers.Dashboard
                 if(_customer_groupservice.CheckUniqueName(streamProvider.FormData["cg_name"], 0) == false)
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                    response.Message = "Tên nhóm bị trùng";
+                    response.Message = "Tên nhóm "+ Convert.ToString(streamProvider.FormData["cg_name"])+" đã có trong hệ thống.";
                     response.Data = null;
                     return Ok(response);
                 }
@@ -262,7 +262,7 @@ namespace ERP.API.Controllers.Dashboard
                 if (_customer_groupservice.CheckUniqueName(streamProvider.FormData["cg_name"], customerGroupUpdateViewModel.cg_id) == false)
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                    response.Message = "Tên nhóm bị trùng";
+                    response.Message = "Tên nhóm "+Convert.ToString(streamProvider.FormData["cg_name"])+" đã có trong hệ thống.";
                     response.Data = null;
                     return Ok(response);
                 }
@@ -315,7 +315,7 @@ namespace ERP.API.Controllers.Dashboard
                 {
                     // return response
                     response.Code = HttpCode.NOT_FOUND;
-                    response.Message = MessageResponse.FAIL;
+                    response.Message = "Không có mã nhóm khách hàng "+cg_id.ToString()+" trong hệ thống.";
                     response.Data = null;
 
                     return Ok(response);

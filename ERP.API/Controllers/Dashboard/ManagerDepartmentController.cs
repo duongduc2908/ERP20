@@ -159,8 +159,6 @@ namespace ERP.API.Controllers.Dashboard
                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
                 response.Message = ex.Message;;
                 response.Data = null;
-                Console.WriteLine(ex.ToString());
-
                 return Ok(response);
             }
 
@@ -284,7 +282,7 @@ namespace ERP.API.Controllers.Dashboard
                 {
                     // return response
                     response.Code = HttpCode.NOT_FOUND;
-                    response.Message = MessageResponse.FAIL;
+                    response.Message = "Không tìm thấy mã phòng ban "+departmentId.ToString()+" trong hệ thống.";
                     response.Data = null;
 
                     return Ok(response);
@@ -474,7 +472,7 @@ namespace ERP.API.Controllers.Dashboard
 
                     ExcelExport.ExportToExcelFromList(listDepartment, dicColNames, filePath, string.Format("Department"));
 
-                    response.Code = HttpCode.NOT_FOUND;
+                    response.Code = HttpCode.OK;
                     response.Message = "Đã xuất excel thành công!";
                     response.Data = null;
                 }
@@ -510,7 +508,7 @@ namespace ERP.API.Controllers.Dashboard
                 string filePath = GenExcelExportFilePath(string.Format(typeof(department).Name), ref url);
                 ExcelExport.ExportToExcelFromList(list, dicColNames, filePath, string.Format("Department"));
 
-                response.Code = HttpCode.NOT_FOUND;
+                response.Code = HttpCode.OK;
                 response.Message = "Đã xuất excel thành công!";
                 response.Data = null;
 
