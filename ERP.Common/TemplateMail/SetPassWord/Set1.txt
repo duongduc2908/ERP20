@@ -47,7 +47,7 @@ font-family: Arial, sans-serif;
       <!-- <td height="20"></td> -->
     </tr>
     <tr>
-      <td data-bgcolor="CTA BG" data-bg="CTA BG" align="center" bgcolor="#3597D4" background="images/header-bg-1.png" style="background-size:cover; background-position:bottom;">
+      <td data-bgcolor="CTA BG" data-bg="CTA BG" align="center" bgcolor="#3597D4" background="cid:idBG" style="background-size:cover; background-position:bottom;">
         <table align="center" border="0" cellpadding="0" cellspacing="0">
           <tbody>
           <tr>

@@ -296,6 +296,8 @@
     <Compile Include="Models\SmsCreateViewModel.cs" />
     <Compile Include="Models\SmsStrategyCreateViewModel.cs" />
     <Compile Include="Models\SmsStrategyUpdateViewModel.cs" />
+    <Compile Include="Models\SmsStrategyViewModelCreate.cs" />
+    <Compile Include="Models\SmsStrategyViewModelUpdate.cs" />
     <Compile Include="Models\SmsTemplateCreateViewModel.cs" />
     <Compile Include="Models\SmsTemplateUpdateViewModel.cs" />
     <Compile Include="Models\SmsUpdateViewModel.cs" />

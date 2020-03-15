@@ -417,6 +417,7 @@ namespace ERP.API.Controllers.Dashboard
                 {
                     createdstaff.sta_thumbnai = "/Uploads/Images/default/man.png";
                 }
+                createdstaff.sta_login = true;
                 // save new staff
                 _staffservice.Create(createdstaff);
                 // return response
@@ -443,9 +444,9 @@ namespace ERP.API.Controllers.Dashboard
             ResponseDataDTO<staff> response = new ResponseDataDTO<staff>();
             try
             {
-                string text1 = File.ReadAllText("D:/ERP20/ERP.Common/TemplateMail/ResetPassWord/Set1.txt");
-                string text2 = File.ReadAllText("D:/ERP20/ERP.Common/TemplateMail/ResetPassWord/Set2.txt");
-                string text3 = File.ReadAllText("D:/ERP20/ERP.Common/TemplateMail/ResetPassWord/Set3.txt");
+                string text1 = File.ReadAllText("D:/ERP20/ERP.Common/TemplateMail/SetPassWord/Set1.txt");
+                string text2 = File.ReadAllText("D:/ERP20/ERP.Common/TemplateMail/SetPassWord/Set2.txt");
+                string text3 = File.ReadAllText("D:/ERP20/ERP.Common/TemplateMail/SetPassWord/Set3.txt");
                 var text_send = text1+ sta_username + text2 + pass_word + text3;
                 BaseController.send_mail(text_send, sta_email, "New User Created!!!");
                 pass_word = "";
@@ -696,6 +697,7 @@ namespace ERP.API.Controllers.Dashboard
                 staffUpdateViewModel.sta_code = existstaff.sta_code; 
                 staffUpdateViewModel.sta_created_date = existstaff.sta_created_date;
                 staffUpdateViewModel.sta_password = existstaff.sta_password;
+                staffUpdateViewModel.sta_thumbnai = existstaff.sta_thumbnai;
                 // mapping view model to entity
                 var updatedstaff = _mapper.Map<staff>(staffUpdateViewModel);
 

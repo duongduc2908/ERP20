@@ -14,6 +14,8 @@ namespace ERP.Data.ModelsERP.ModelView.Sms
         public DateTime? smt_created_date { get; set; }
         public int? staff_id { get; set; }
         public string staff_name { get; set; }
-
+        public DateTime? smt_modify_time { get; set; }
+        public int? smt_modifier { get; set; }
+        public string smt_modify_name { get; set; }
     }
 }

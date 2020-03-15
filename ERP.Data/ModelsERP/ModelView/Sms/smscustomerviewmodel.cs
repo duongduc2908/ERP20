@@ -11,6 +11,7 @@ namespace ERP.Data.ModelsERP.ModelView.Sms
         public int cu_id { get; set; }
         [StringLength(45)]
         public string cu_fullname { get; set; }
+        public string cu_mobile { get; set; }
 
         [StringLength(40)]
         public string cu_email { get; set; }

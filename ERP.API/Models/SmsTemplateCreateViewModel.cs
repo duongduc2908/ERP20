@@ -9,7 +9,6 @@ namespace ERP.API.Models
     public class SmsTemplateCreateViewModel
     {
         public SmsTemplateCreateViewModel() { }
-        
 
         [StringLength(50)]
         public string smt_code { get; set; }
@@ -18,9 +17,11 @@ namespace ERP.API.Models
         public string smt_title { get; set; }
 
         public DateTime? smt_created_date { get; set; }
+        public DateTime? smt_modify_time { get; set; }
 
         public string smt_content { get; set; }
 
         public int? staff_id { get; set; }
+        public int? smt_modifier { get; set; }
     }
 }

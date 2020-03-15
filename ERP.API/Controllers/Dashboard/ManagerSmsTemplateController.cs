@@ -206,8 +206,6 @@ namespace ERP.API.Controllers.Dashboard
                     smt_code = Convert.ToString(streamProvider.FormData["smt_code"]),
                     smt_title = Convert.ToString(streamProvider.FormData["smt_title"]),
                     smt_content = Convert.ToString(streamProvider.FormData["smt_content"]),
-                    staff_id = Convert.ToInt32(streamProvider.FormData["staff_id"]),
-                    smt_created_date = Convert.ToDateTime(streamProvider.FormData["smt_created_date"]),
                 };
                 if( smstemplateUpdateViewModel.smt_id == null)
                 {
@@ -216,8 +214,20 @@ namespace ERP.API.Controllers.Dashboard
                     response.Data = null;
                     return Ok(response);
                 }
+                
                 // mapping view model to entity
                 var updatedsms_template = _mapper.Map<sms_template>(smstemplateUpdateViewModel);
+                var sms_strategy_old = _smstemplateservice.Find(updatedsms_template.smt_id);
+                updatedsms_template.smt_modify_time = DateTime.Now;
+                updatedsms_template.smt_modifier = BaseController.get_id_current();
+                if(sms_strategy_old != null)
+                {
+                    updatedsms_template.staff_id = sms_strategy_old.staff_id;
+                    updatedsms_template.smt_created_date = sms_strategy_old.smt_created_date;
+                }
+               
+                
+
                 // update sms_template
                 _smstemplateservice.Update(updatedsms_template, updatedsms_template.smt_id);
                 // return response

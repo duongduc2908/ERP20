@@ -82,52 +82,40 @@ namespace ERP.API.Controllers.Dashboard
         [HttpPost]
         [Route("api/sms-strategys/create")]
 
-        public async Task<IHttpActionResult> Createsms_strategy()
+        public async Task<IHttpActionResult> Createsms_strategy([FromBody] SmsStrategyViewModelCreate smsstrategy)
         {
-            ResponseDataDTO<sms_strategy> response = new ResponseDataDTO<sms_strategy>();
+            ResponseDataDTO<List<sms_strategy>> response = new ResponseDataDTO<List<sms_strategy>>();
             try
             {
-                var path = Path.GetTempPath();
-
-                if (!Request.Content.IsMimeMultipartContent("form-data"))
+                List<sms_strategy> data = new List<sms_strategy>();
+                var smsstr = smsstrategy;
+                for(int i = 0;  i< smsstr.customer_group_id.Length ; i++)
                 {
-                    throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.UnsupportedMediaType));
+                    SmsStrategyCreateViewModel sms_strategyCreateViewModel = new SmsStrategyCreateViewModel();
+                    sms_strategyCreateViewModel.customer_group_id = smsstr.customer_group_id[i];
+                    sms_strategyCreateViewModel.sms_template_id = smsstr.sms_template_id;
+                    sms_strategyCreateViewModel.smss_title = smsstr.smss_title;
+
+                    // mapping view model to entity
+                    var createdsms_strategy = _mapper.Map<sms_strategy>(sms_strategyCreateViewModel);
+                    var x = _smsstrategyservice.GetLast();
+                    if (x == null) createdsms_strategy.smss_code = Utilis.CreateCode("SMSS", 0, 7);
+                    else createdsms_strategy.smss_code = Utilis.CreateCode("SMSS", x.smss_id, 7);
+                    createdsms_strategy.smss_created_date = DateTime.Now;
+                    createdsms_strategy.staff_id = BaseController.get_id_current();
+                    createdsms_strategy.smss_status = 1;
+
+
+                    // save new sms_strategy
+                    _smsstrategyservice.Create(createdsms_strategy);
+                    data.Add(createdsms_strategy);
                 }
-
-                MultipartFormDataStreamProvider streamProvider = new MultipartFormDataStreamProvider(path);
-
-                await Request.Content.ReadAsMultipartAsync(streamProvider);
-
                 // get data from formdata
-                SmsStrategyCreateViewModel sms_strategyCreateViewModel = new SmsStrategyCreateViewModel
-                {
-                    smss_title = Convert.ToString(streamProvider.FormData["smss_title"]),
-
-                    smss_send_count = Convert.ToInt32(streamProvider.FormData["smss_send_count"]),
-                    sms_id = Convert.ToInt32(streamProvider.FormData["sms_id"]),
-                    sms_template_id = Convert.ToInt32(streamProvider.FormData["sms_template_id"]),
-                    customer_group_id = Convert.ToInt32(streamProvider.FormData["customer_group_id"]),
-                    smss_send_date = Convert.ToDateTime(streamProvider.FormData["smss_send_date"]),
-                    smss_cost = Convert.ToDouble(streamProvider.FormData["smss_cost"]),
-
-                };
-
-                // mapping view model to entity
-                var createdsms_strategy = _mapper.Map<sms_strategy>(sms_strategyCreateViewModel);
-                var x = _smsstrategyservice.GetLast();
-                if(x == null) createdsms_strategy.smss_code = Utilis.CreateCode("SMSS", 0, 7);
-                else createdsms_strategy.smss_code = Utilis.CreateCode("SMSS", x.smss_id, 7);
-                createdsms_strategy.smss_created_date = DateTime.Now;
-                createdsms_strategy.staff_id = BaseController.get_id_current();
-                createdsms_strategy.smss_status = 1;
-
-
-                // save new sms_strategy
-                _smsstrategyservice.Create(createdsms_strategy);
+                
                 // return response
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = createdsms_strategy;
+                response.Data = data;
                 return Ok(response);
             }
             catch (Exception ex)
@@ -141,57 +129,46 @@ namespace ERP.API.Controllers.Dashboard
             }
 
         }
-
-
-
-
         [HttpPut]
         [Route("api/sms-strategys/update")]
 
-        public async Task<IHttpActionResult> Updatesms_strategy(int? smss_id)
+        public async Task<IHttpActionResult> Updatesms_strategy([FromBody] SmsStrategyViewModelUpdate smsstrategy)
         {
-            ResponseDataDTO<sms_strategy> response = new ResponseDataDTO<sms_strategy>();
+            ResponseDataDTO<List<sms_strategy>> response = new ResponseDataDTO<List<sms_strategy>>();
             try
             {
-                var path = Path.GetTempPath();
-
-                if (!Request.Content.IsMimeMultipartContent("form-data"))
+                List<sms_strategy> data = new List<sms_strategy>();
+                var smsstr = smsstrategy;
+                //Delete sms_staragety old 
+                var sms_strategy_old = _smsstrategyservice.Find(smsstr.smss_id);
+                _smsstrategyservice.Delete(sms_strategy_old);
+                for (int i = 0; i < smsstr.customer_group_id.Length; i++)
                 {
-                    throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.UnsupportedMediaType));
+                    SmsStrategyCreateViewModel sms_strategyCreateViewModel = new SmsStrategyCreateViewModel();
+                    sms_strategyCreateViewModel.customer_group_id = smsstr.customer_group_id[i];
+                    sms_strategyCreateViewModel.sms_template_id = smsstr.sms_template_id;
+                    sms_strategyCreateViewModel.smss_title = smsstr.smss_title;
+
+                    // mapping view model to entity
+                    var createdsms_strategy = _mapper.Map<sms_strategy>(sms_strategyCreateViewModel);
+                    var x = _smsstrategyservice.GetLast();
+                    if (x == null) createdsms_strategy.smss_code = Utilis.CreateCode("SMSS", 0, 7);
+                    else createdsms_strategy.smss_code = Utilis.CreateCode("SMSS", x.smss_id, 7);
+                    createdsms_strategy.smss_created_date = DateTime.Now;
+                    createdsms_strategy.staff_id = BaseController.get_id_current();
+                    createdsms_strategy.smss_status = 1;
+
+
+                    // save new sms_strategy
+                    _smsstrategyservice.Create(createdsms_strategy);
+                    data.Add(createdsms_strategy);
                 }
-
-                MultipartFormDataStreamProvider streamProvider = new MultipartFormDataStreamProvider(path);
-
-                await Request.Content.ReadAsMultipartAsync(streamProvider);
-
-
                 // get data from formdata
-                SmsStrategyUpdateViewModel sms_strategyUpdateViewModel = new SmsStrategyUpdateViewModel
-                {
-                    smss_id = Convert.ToInt32(streamProvider.FormData["smss_id"]),
-                    smss_title = Convert.ToString(streamProvider.FormData["smss_title"]),
 
-                    smss_send_count = Convert.ToInt32(streamProvider.FormData["smss_send_count"]),
-                    sms_id = Convert.ToInt32(streamProvider.FormData["sms_id"]),
-                    sms_template_id = Convert.ToInt32(streamProvider.FormData["sms_template_id"]),
-                    customer_group_id = Convert.ToInt32(streamProvider.FormData["customer_group_id"]),
-                    smss_cost = Convert.ToDouble(streamProvider.FormData["smss_cost"]),
-
-                };
-
-
-
-                // mapping view model to entity
-                var updatedsms_strategy = _mapper.Map<sms_strategy>(sms_strategyUpdateViewModel);
-
-
-
-                // update sms_strategy
-                _smsstrategyservice.Update(updatedsms_strategy, smss_id);
                 // return response
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = updatedsms_strategy;
+                response.Data = data;
                 return Ok(response);
             }
             catch (Exception ex)

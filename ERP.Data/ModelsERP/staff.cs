@@ -31,7 +31,7 @@ namespace ERP.Data.ModelsERP
 
         public DateTime? sta_birthday { get; set; }
 
-        [StringLength(30)]
+        [StringLength(100)]
         public string sta_email { get; set; }
 
         public byte? sta_status { get; set; }

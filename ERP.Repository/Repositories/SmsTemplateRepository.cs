@@ -37,7 +37,10 @@ namespace ERP.Repository.Repositories
             foreach(sms_template i in list_smstem)
             {
                 var smstem = _mapper.Map<smstemplatemodelview>(i);
-                smstem.staff_fullname = _dbContext.staffs.Where(s => s.sta_id == i.staff_id).FirstOrDefault().sta_fullname;
+                var staff = _dbContext.staffs.Where(s => s.sta_id == i.staff_id).FirstOrDefault();
+                if (staff != null) smstem.staff_fullname = staff.sta_fullname;
+                var modifier = _dbContext.staffs.Where(s => s.sta_id == i.smt_modifier).FirstOrDefault();
+                if (modifier != null) smstem.smt_modify_name = modifier.sta_fullname;
                 results.Add(smstem);
             }
 
@@ -65,7 +68,11 @@ namespace ERP.Repository.Repositories
             foreach (sms_template i in list)
             {
                 var smstem = _mapper.Map<smstemplatestrategyviewmodel>(i);
-                smstem.staff_name= _dbContext.staffs.Where(s => s.sta_id == i.staff_id).FirstOrDefault().sta_fullname;
+                var staff = _dbContext.staffs.Where(s => s.sta_id == i.staff_id).FirstOrDefault();
+                if(staff != null) smstem.staff_name = staff.sta_fullname;
+                var modifier = _dbContext.staffs.Where(s => s.sta_id == i.smt_modifier).FirstOrDefault();
+                if(modifier != null ) smstem.smt_modify_name = modifier.sta_fullname;
+                
                 results.Add(smstem);
             }
 

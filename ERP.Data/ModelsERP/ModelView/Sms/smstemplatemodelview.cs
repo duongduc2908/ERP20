@@ -22,5 +22,9 @@ namespace ERP.Data.ModelsERP.ModelView.Sms
 
         public int? staff_id { get; set; }
         public string staff_fullname { get; set; }
+        public int? smt_modifier { get; set; }
+        public string smt_modify_name { get; set; }
+        public DateTime? smt_modify_time { get; set; }
+
     }
 }
