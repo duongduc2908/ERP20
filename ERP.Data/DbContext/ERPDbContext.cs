@@ -65,5 +65,6 @@ namespace ERP.Data.DbContext
         public virtual DbSet<ship_address> ship_address { get; set; }
         public virtual DbSet<undertaken_location> undertaken_location { get; set; }
         public virtual DbSet<transaction> transactions { get; set; }
+        public virtual DbSet<social> socials { get; set; }
     }
 }
