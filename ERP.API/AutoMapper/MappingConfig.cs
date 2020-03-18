@@ -7,6 +7,7 @@ using ERP.Data.ModelsERP.ModelView.ExportDB;
 using ERP.Data.ModelsERP.ModelView.Product;
 using ERP.Data.ModelsERP.ModelView.Sms;
 using ERP.Data.ModelsERP.ModelView.Statistics;
+using ERP.Data.ModelsERP.ModelView.StatisticStaff;
 using ERP.Data.ModelsERP.ModelView.Transaction;
 using System;
 using System.Collections.Generic;
@@ -29,6 +30,7 @@ namespace ERP.API.AutoMapper
             CreateMap<StaffCreateViewModel, staff>();
             CreateMap<StaffUpdateViewModel, staff>();
             CreateMap< staff, staffviewmodel>();
+            CreateMap< staff, statisticstaffviewmodel>();
             CreateMap< staff, staffview>();
             
 

@@ -3,6 +3,7 @@ using ERP.Common.Models;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
 using ERP.Data.ModelsERP.ModelView.CustomerGroup;
+using ERP.Data.ModelsERP.ModelView.Statistics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,5 +18,6 @@ namespace ERP.Repository.Repositories.IRepositories
         List<piechartview> GetPieChart();
         bool CheckUniqueName(string name,int id);
 
+        List<statisticrevenuecustomergroupviewmodel> GetRevenueCustomerGroup();
     }
 }

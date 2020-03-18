@@ -83,7 +83,7 @@ namespace ERP.Repository.Repositories
             DateTime datetimesearch = new DateTime();
             if (month) datetimesearch = Utilis.GetFirstDayOfMonth(DateTime.Now);
             if (week) datetimesearch = Utilis.GetFirstDayOfWeek(DateTime.Now);
-            if (day) datetimesearch = DateTime.Now;
+            if (day) { datetimesearch = Utilis.ChangeTime(DateTime.Now, 0, 0, 0, 0); }
             //Do something 
             var user_curr = _dbContext.staffs.Find(staff_id);
             if(user_curr == null) { return null; }
@@ -92,7 +92,7 @@ namespace ERP.Repository.Repositories
                 if(user_curr.group_role_id == 1)
                 {
                     
-                    lts_or = _dbContext.customer_order.Where(t => t.staff_id == staff_id && t.cuo_date >= datetimesearch && t.cuo_date <= DateTime.Now).OrderByDescending(i => i.cuo_date).ToList();
+                    lts_or = _dbContext.customer_order.Where(t =>  t.cuo_date >= datetimesearch && t.cuo_date <= DateTime.Now).OrderByDescending(i => i.cuo_date).ToList();
                     foreach(customer_order cuo in lts_or )
                     {
                         //Lay ra danh sach san phan dat hang 
@@ -119,7 +119,7 @@ namespace ERP.Repository.Repositories
                 }
                 else
                 {
-                    lts_or = _dbContext.customer_order.Where(t => t.cuo_date >= datetimesearch && t.cuo_date <= DateTime.Now).OrderByDescending(i => i.cuo_date).ToList();
+                    lts_or = _dbContext.customer_order.Where(t => t.staff_id == staff_id && t.cuo_date >= datetimesearch && t.cuo_date <= DateTime.Now).OrderByDescending(i => i.cuo_date).ToList();
                     foreach (customer_order cuo in lts_or)
                     {
                         //Lay ra danh sach san phan dat hang 

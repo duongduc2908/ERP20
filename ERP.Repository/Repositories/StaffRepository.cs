@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using ERP.Common.Constants;
 using ERP.Common.Constants.Enums;
 using ERP.Common.GenericRepository;
@@ -8,6 +8,7 @@ using ERP.Data.DbContext;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
 using ERP.Data.ModelsERP.ModelView.ExportDB;
+using ERP.Data.ModelsERP.ModelView.StatisticStaff;
 using ERP.Repository.Repositories.IRepositories;
 using OfficeOpenXml;
 using Swashbuckle.AspNetCore.Swagger;
@@ -265,6 +266,58 @@ namespace ERP.Repository.Repositories
             }
             return res;
         }
+        public statisticstaffviewmodel GetInfor(int staff_id)
+        {
+            statisticstaffviewmodel res = new statisticstaffviewmodel();
+           
+            var staff_cur = _dbContext.staffs.Find(staff_id);
+            if(staff_cur != null)
+            {
+                //Lay ra thong tin nhan su 
+                var satffview = _mapper.Map<statisticstaffviewmodel>(staff_cur);
+                res = satffview;
+                var deparment = _dbContext.departments.FirstOrDefault(x => x.de_id == staff_cur.department_id);
+                res.department_name = deparment.de_name;
+                for (int j = 1; j < EnumsStaff.sta_status.Length + 1; j++)
+                {
+                    if (j == satffview.sta_status)
+                    {
+                        res.sta_status_name = EnumsStaff.sta_status[j - 1];
+                    }
+                }
+                //Lấy ra thông tin mạng xã hội
+                var social = _dbContext.socials.Where(t => t.staff_id == staff_id).FirstOrDefault();
+                if(social != null)
+                {
+                    res.social = social;
+                }
+                //Lấy ra thông tin thống kê 
+                statisticviemodel statistic = new statisticviemodel();
+                DateTime curr_day = DateTime.Now;
+                DateTime firstDay = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0, 1);
+                DateTime firstMonth = Utilis.GetFirstDayOfMonth(curr_day);
+                DateTime firstWeek = Utilis.GetFirstDayOfWeek(curr_day);
+                //Admin // user 
+                if (staff_cur.group_role_id == 1)
+                {
+                    statistic.totalRevenueByMonth = _dbContext.customer_order.Where(i => i.cuo_date <= DateTime.Now && i.cuo_date >= firstMonth).Sum(i => i.cuo_total_price);
+                    statistic.totalRevenueByWeek = _dbContext.customer_order.Where(i => i.cuo_date <= DateTime.Now && i.cuo_date >= firstWeek).Sum(i => i.cuo_total_price);
+                    statistic.totalRevenueByDay = _dbContext.customer_order.Where(i => i.cuo_date <= DateTime.Now && i.cuo_date >= firstDay).Sum(i => i.cuo_total_price);
+                    statistic.totalRevenue = _dbContext.customer_order.Sum(i => i.cuo_total_price);
+                }
+                else
+                {
+                    statistic.totalRevenueByMonth = _dbContext.customer_order.Where(i => i.cuo_date <= DateTime.Now && i.cuo_date >= firstMonth && i.staff_id == staff_id).Sum(i => i.cuo_total_price);
+                    statistic.totalRevenueByWeek = _dbContext.customer_order.Where(i => i.cuo_date <= DateTime.Now && i.cuo_date >= firstWeek && i.staff_id == staff_id).Sum(i => i.cuo_total_price);
+                    statistic.totalRevenueByDay = _dbContext.customer_order.Where(i => i.cuo_date <= DateTime.Now && i.cuo_date >= firstDay && i.staff_id == staff_id).Sum(i => i.cuo_total_price);
+                    statistic.totalRevenue = _dbContext.customer_order.Where(i => i.staff_id == staff_id).Sum(i => i.cuo_total_price);
+                }
+                res.statistic = statistic;
+
+            }
+            
+            return res;
+        }
         public PagedResults<staffview> ExportStaff(int pageNumber, int pageSize, int? status, string name)
         {
             if (name != null)
@@ -310,9 +363,9 @@ namespace ERP.Repository.Repositories
                 staffex.department_name = deparment.de_name;
                 staffex.position_name = position.pos_name;
                 staffex.sta_sex_name = EnumsStaff.sta_sex[Convert.ToInt32(staffex.sta_sex)];
-                staffex.sta_status_name = EnumsStaff.sta_status[Convert.ToInt32(staffex.sta_status-1)];
-                if (staffex.sta_leader_flag == 1) staffex.sta_leader_name = "C�";
-                else staffex.sta_leader_name = "Kh�ng";
+                staffex.sta_status_name = EnumsStaff.sta_status[Convert.ToInt32(staffex.sta_status)];
+                if (staffex.sta_leader_flag == 1) staffex.sta_leader_name = "Có";
+                else staffex.sta_leader_name = "Không";
                 res.Add(staffex);
             }
 
@@ -329,5 +382,6 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = total
             };
         }
+
     }
 }

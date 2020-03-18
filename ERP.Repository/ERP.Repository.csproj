@@ -514,6 +514,7 @@
     <Compile Include="Repositories\IRepositories\ISmsRepository.cs" />
     <Compile Include="Repositories\IRepositories\ISmsStrategyRepository.cs" />
     <Compile Include="Repositories\IRepositories\ISmsTemplateRepository.cs" />
+    <Compile Include="Repositories\IRepositories\ISocialRepository.cs" />
     <Compile Include="Repositories\IRepositories\ISourceRepository.cs" />
     <Compile Include="Repositories\IRepositories\IStaffRepository.cs" />
     <Compile Include="Repositories\IRepositories\ISupplierRepository.cs" />
@@ -535,6 +536,7 @@
     <Compile Include="Repositories\SmsRepository.cs" />
     <Compile Include="Repositories\SmsStrategyRepository.cs" />
     <Compile Include="Repositories\SmsTemplateRepository.cs" />
+    <Compile Include="Repositories\SocialRepository.cs" />
     <Compile Include="Repositories\SourceRepository.cs" />
     <Compile Include="Repositories\StaffRepository.cs" />
     <Compile Include="Repositories\SupplierRepository.cs" />

@@ -8,6 +8,7 @@ using ERP.Data.Dto;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
 using ERP.Data.ModelsERP.ModelView.ExportDB;
+using ERP.Data.ModelsERP.ModelView.StatisticStaff;
 using ERP.Extension.Extensions;
 using ERP.Service.Services.IServices;
 using Microsoft.Owin.Security.OAuth;
@@ -15,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -33,6 +35,7 @@ namespace ERP.API.Controllers.Dashboard
         private readonly IDepartmentService _departmentservice;
         private readonly IGroupRoleService _groupRoleservice;
         private readonly IPositionService _positionService;
+        private readonly ISocialService _socialService;
         private readonly IUndertakenLocationService _undertakenlocationService;
         private readonly IMapper _mapper;
         private static string pass_word;
@@ -40,7 +43,7 @@ namespace ERP.API.Controllers.Dashboard
         private static List<string> list_pass;
         private static List<string> list_username;
         public ManagerstaffsController() { }
-        public ManagerstaffsController(IStaffService staffservice, IMapper mapper, IDepartmentService departmentService, IGroupRoleService groupRoleService, IPositionService positionService, IUndertakenLocationService undertakenlocationService)
+        public ManagerstaffsController(IStaffService staffservice, IMapper mapper, IDepartmentService departmentService, IGroupRoleService groupRoleService, IPositionService positionService, IUndertakenLocationService undertakenlocationService, ISocialService socialService)
         {
             this._staffservice = staffservice;
             this._mapper = mapper;
@@ -48,6 +51,7 @@ namespace ERP.API.Controllers.Dashboard
             this._groupRoleservice = groupRoleService;
             this._positionService = positionService;
             this._undertakenlocationService = undertakenlocationService;
+            this._socialService = socialService;
         }
 
         #region methods
@@ -1173,7 +1177,6 @@ namespace ERP.API.Controllers.Dashboard
             try
             {
                 var listStaff = new List<staffview>();
-                
                 //Đưa ra danh sách staff trong trang nào đó 
                 var objRT_Mst_Staff = _staffservice.ExportStaff(pageNumber, pageSize,status,name);
                 if (objRT_Mst_Staff != null)
@@ -1286,7 +1289,116 @@ namespace ERP.API.Controllers.Dashboard
             return res;
         }
         #endregion
+        #region profile-staff
+        [HttpGet]
+        [Route("api/staff/profile")]
+        public IHttpActionResult GetInfor()
+        {
+            ResponseDataDTO<statisticstaffviewmodel> response = new ResponseDataDTO<statisticstaffviewmodel>();
+            try
+            {
+                int staff_id = BaseController.get_id_current();
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = _staffservice.GetInfor(staff_id);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
 
+                Console.WriteLine(ex.ToString());
+            }
+
+            return Ok(response);
+        }
+
+        #endregion
+        #region Update Profile 
+        [HttpPut]
+        [Route("api/profile/update")]
+        public async Task<IHttpActionResult> UpdateProfile()
+        {
+            ResponseDataDTO<staff> response = new ResponseDataDTO<staff>();
+            try
+            {
+                var path = Path.GetTempPath();
+
+                if (!Request.Content.IsMimeMultipartContent("form-data"))
+                {
+                    throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.UnsupportedMediaType));
+                }
+
+                MultipartFormDataStreamProvider streamProvider = new MultipartFormDataStreamProvider(path);
+
+                await Request.Content.ReadAsMultipartAsync(streamProvider);
+                if (streamProvider.FormData["sta_fullname"] == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Họ và tên không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+                if (streamProvider.FormData["sta_email"] == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Email không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+                if (streamProvider.FormData["sta_password"] == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Mật khẩu không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+                //Cập nhập thông tin nhân sự 
+                int staff_id = BaseController.get_id_current();
+                var existstaff = _staffservice.Find(staff_id);
+                existstaff.sta_fullname = Convert.ToString(streamProvider.FormData["sta_fullname"]);
+                existstaff.sta_email = Convert.ToString(streamProvider.FormData["sta_email"]);
+                existstaff.sta_password = HashMd5.convertMD5(Convert.ToString(streamProvider.FormData["sta_password"]));
+                existstaff.sta_mobile = Convert.ToString(streamProvider.FormData["sta_mobile"]);
+                existstaff.sta_aboutme = Convert.ToString(streamProvider.FormData["sta_aboutme"]);
+                //Cập nhập thông tin mạng xã hội 
+                
+                var existSocial = _socialService.GetAllIncluing(t => t.staff_id == staff_id).FirstOrDefault();
+                if(existSocial != null)
+                {
+                    existSocial.soc_facebook = Convert.ToString(streamProvider.FormData["soc_facebook"]);
+                    existSocial.soc_instagram = Convert.ToString(streamProvider.FormData["soc_instagram"]);
+                    existSocial.soc_twitter = Convert.ToString(streamProvider.FormData["soc_twitter"]);
+                    existSocial.soc_skype = Convert.ToString(streamProvider.FormData["soc_skype"]);
+                    existSocial.soc_linkedin = Convert.ToString(streamProvider.FormData["soc_linkedin"]);
+                    existSocial.soc_github = Convert.ToString(streamProvider.FormData["soc_github"]);
+                }
+                
+                //update social
+                _socialService.Update(existSocial, existSocial.soc_id);
+
+                // update staff
+                _staffservice.Update(existstaff, staff_id);
+                
+
+                // return response
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = existstaff;
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+                Console.WriteLine(ex.ToString());
+
+                return Ok(response);
+            }
+        }
+        #endregion
         #region dispose
 
         protected override void Dispose(bool disposing)

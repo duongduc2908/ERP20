@@ -5,6 +5,7 @@ using ERP.Data;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
 using ERP.Data.ModelsERP.ModelView.ExportDB;
+using ERP.Data.ModelsERP.ModelView.StatisticStaff;
 using ERP.Repository.Repositories;
 using ERP.Repository.Repositories.IRepositories;
 using ERP.Service.Services.IServices;
@@ -56,6 +57,11 @@ namespace ERP.Service.Services
         public List<dropdown> GetInforManager()
         {
             return this._repository.GetInforManager();
+        }
+        
+        public statisticstaffviewmodel GetInfor(int staff_id)
+        {
+            return this._repository.GetInfor(staff_id);
         }
 
         

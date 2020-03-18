@@ -112,6 +112,7 @@
     <Compile Include="Services\IServices\ISmsService.cs" />
     <Compile Include="Services\IServices\ISmsStrategyService.cs" />
     <Compile Include="Services\IServices\ISmsTemplateService.cs" />
+    <Compile Include="Services\IServices\ISocialService.cs" />
     <Compile Include="Services\IServices\ISourceService.cs" />
     <Compile Include="Services\IServices\IStaffService.cs" />
     <Compile Include="Services\IServices\ISupplierService.cs" />
@@ -133,6 +134,7 @@
     <Compile Include="Services\SmsService.cs" />
     <Compile Include="Services\SmsStrategyService.cs" />
     <Compile Include="Services\SmsTemplateService.cs" />
+    <Compile Include="Services\SocialService.cs" />
     <Compile Include="Services\SourceService.cs" />
     <Compile Include="Services\StaffService.cs" />
     <Compile Include="Services\SupplierService.cs" />

@@ -3,6 +3,7 @@ using ERP.Common.Models;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
 using ERP.Data.ModelsERP.ModelView.CustomerGroup;
+using ERP.Data.ModelsERP.ModelView.Statistics;
 using ERP.Repository.Repositories.IRepositories;
 using ERP.Service.Services.IServices;
 using System;
@@ -31,6 +32,11 @@ namespace ERP.Service.Services
         public bool CheckUniqueName(string name,int id)
         {
             return this._repository.CheckUniqueName(name,id);
+        }
+
+        public List<statisticrevenuecustomergroupviewmodel> GetRevenueCustomerGroup()
+        {
+            return this._repository.GetRevenueCustomerGroup();
         }
         
     }

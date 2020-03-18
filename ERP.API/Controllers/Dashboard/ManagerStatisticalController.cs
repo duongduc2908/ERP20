@@ -25,12 +25,14 @@ namespace ERP.API.Controllers.Dashboard
     {
         private readonly ICustomerOrderService _customerorderservice;
         private readonly IOrderProductService _orderproductservice;
+        private readonly ICustomerGroupService _customergroupservice;
         public ManagerStatisticalController() { }
         private readonly IMapper _mapper;
-        public ManagerStatisticalController(ICustomerOrderService customerorderservice, IOrderProductService orderproductservice, IMapper mapper)
+        public ManagerStatisticalController(ICustomerOrderService customerorderservice, IOrderProductService orderproductservice, ICustomerGroupService customergroupservice, IMapper mapper)
         {
             this._customerorderservice = customerorderservice;
             this._orderproductservice = orderproductservice;
+            this._customergroupservice = customergroupservice;
             this._mapper = mapper;
         }
         #region[Statistics by]
@@ -103,6 +105,27 @@ namespace ERP.API.Controllers.Dashboard
 
             return Ok(response);
         }
+        [HttpGet]
+        [Route("api/dashboards/statistics-customer-group")]
+        public IHttpActionResult GetRevenueCustomerGroup()
+        {
+            ResponseDataDTO<List<statisticrevenuecustomergroupviewmodel>> response = new ResponseDataDTO<List<statisticrevenuecustomergroupviewmodel>>();
+            try
+            {
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = _customergroupservice.GetRevenueCustomerGroup();
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+            }
+
+            return Ok(response);
+        }
+
         #endregion
 
 

@@ -163,5 +163,17 @@ namespace ERP.Common.Constants
             }
             return firstDayInWeek;
         }
+        public static DateTime ChangeTime( DateTime dateTime, int hours, int minutes, int seconds, int milliseconds)
+        {
+            return new DateTime(
+                dateTime.Year,
+                dateTime.Month,
+                dateTime.Day,
+                hours,
+                minutes,
+                seconds,
+                milliseconds,
+                dateTime.Kind);
+        }
     }
 }

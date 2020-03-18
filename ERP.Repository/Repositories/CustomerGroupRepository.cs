@@ -5,6 +5,7 @@ using ERP.Data.DbContext;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
 using ERP.Data.ModelsERP.ModelView.CustomerGroup;
+using ERP.Data.ModelsERP.ModelView.Statistics;
 using ERP.Repository.Repositories.IRepositories;
 using System;
 using System.Collections.Generic;
@@ -101,5 +102,29 @@ namespace ERP.Repository.Repositories
             }
             return true;
         }
+
+        public List<statisticrevenuecustomergroupviewmodel> GetRevenueCustomerGroup()
+        {
+            List<statisticrevenuecustomergroupviewmodel> res = new List<statisticrevenuecustomergroupviewmodel>();
+            var lts_cg = (from cg in _dbContext.customer_group
+                          join c in _dbContext.customers on cg.cg_id equals c.customer_group_id
+                          join co in _dbContext.customer_order on c.cu_id equals co.customer_id
+                          group co by cg.cg_name into t
+                          select new
+                          {
+                              name = t.Key,
+                              total = t.Sum(i => i.cuo_total_price),
+                          }).ToList();
+           
+            foreach(var i in lts_cg)
+            {
+                statisticrevenuecustomergroupviewmodel add = new statisticrevenuecustomergroupviewmodel();
+                add.cg_name = i.name;
+                add.total_revenue = i.total;
+                res.Add(add);
+            }
+            return res;
+        }
+
     }
 }

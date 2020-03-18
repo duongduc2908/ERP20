@@ -4,6 +4,7 @@ using ERP.Data;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
 using ERP.Data.ModelsERP.ModelView.ExportDB;
+using ERP.Data.ModelsERP.ModelView.StatisticStaff;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,5 +24,6 @@ namespace ERP.Service.Services.IServices
         PagedResults<staffviewmodel> GetAllActive(int pageNumber, int pageSize, int status);
        
         List<dropdown> GetInforManager();
+        statisticstaffviewmodel GetInfor(int staff_id);
     }
 }
