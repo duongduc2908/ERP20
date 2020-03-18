@@ -4,6 +4,8 @@ using ERP.Common.Constants;
 using ERP.Common.Models;
 using ERP.Data.Dto;
 using ERP.Data.ModelsERP;
+using ERP.Data.ModelsERP.ModelView;
+using ERP.Data.ModelsERP.ModelView.Service;
 using ERP.Extension.Extensions;
 using ERP.Service.Services.IServices;
 using System;
@@ -18,7 +20,7 @@ using System.Web.Http.Cors;
 namespace ERP.API.Controllers.Dashboard
 {
     [EnableCors("*", "*", "*")]
-    [Authorize]
+    //[Authorize]
     public class ManagerServiceController : ApiController
     {
         private readonly IServiceService _serviceservice;
@@ -80,9 +82,52 @@ namespace ERP.API.Controllers.Dashboard
 
             return Ok(response);
         }
+        [HttpGet]
+        [Route("api/service/get-all-search")]
+        public IHttpActionResult GetAllPageSearch(int pageSize, int pageNumber,string search_name)
+        {
+            ResponseDataDTO<PagedResults<serviceviewmodel>> response = new ResponseDataDTO<PagedResults<serviceviewmodel>>();
+            try
+            {
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = _serviceservice.GetAllPageSearch(pageNumber, pageSize,search_name);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+
+                Console.WriteLine(ex.ToString());
+            }
+
+            return Ok(response);
+        }
+        [Route("api/service/get-type")]
+        public IHttpActionResult GetType()
+        {
+            ResponseDataDTO<List<dropdown>> response = new ResponseDataDTO<List<dropdown>>();
+            try
+            {
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = _serviceservice.GetType();
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+
+                Console.WriteLine(ex.ToString());
+            }
+
+            return Ok(response);
+        }
 
         [HttpPost]
-        [Route("api/services/create")]
+        [Route("api/service/create")]
 
         public async Task<IHttpActionResult> Createservice()
         {
@@ -99,37 +144,35 @@ namespace ERP.API.Controllers.Dashboard
                 MultipartFormDataStreamProvider streamProvider = new MultipartFormDataStreamProvider(path);
 
                 await Request.Content.ReadAsMultipartAsync(streamProvider);
-                // save file
-                string fileName = "";
-                foreach (MultipartFileData fileData in streamProvider.FileData)
-                {
-                    fileName = (FileExtension.SaveFileOnDisk(fileData));
-                }
+               
                 // get data from formdata
                 ServiceCreateViewModel serviceCreateViewModel = new ServiceCreateViewModel
                 {
-                    se_code = Convert.ToString(streamProvider.FormData["se_code"]),
                     se_name = Convert.ToString(streamProvider.FormData["se_name"]),
                     se_description = Convert.ToString(streamProvider.FormData["se_description"]),
-                    
-
-
-
                     service_category_id = Convert.ToInt32(streamProvider.FormData["service_category_id"]),
                     se_price = Convert.ToInt32(streamProvider.FormData["se_price"]),
                     se_saleoff = Convert.ToInt32(streamProvider.FormData["se_saleoff"]),
-
                     se_type = Convert.ToByte(streamProvider.FormData["se_type"]),
-                   
-                    
-
-
                 };
                
                 // mapping view model to entity
                 var createdservice = _mapper.Map<service>(serviceCreateViewModel);
-                createdservice.se_thumbnai = fileName;
-
+                //Tạo mã 
+                var x = _serviceservice.GetLast();
+                if (x == null) createdservice.se_code = Utilis.CreateCode("DV", 0, 7);
+                else createdservice.se_code = Utilis.CreateCode("DV", x.se_id, 7);
+                //save file 
+                string fileName = "";
+                foreach (MultipartFileData fileData in streamProvider.FileData)
+                {
+                    fileName = (FileExtension.SaveFileServiceOnDisk(fileData, createdservice.se_code));
+                }
+                if (fileName == "")
+                {
+                    createdservice.se_thumbnai = "/Uploads/Images/default/service.png";
+                }
+                else createdservice.se_thumbnai = fileName;
                 // save new service
                 _serviceservice.Create(createdservice);
 
@@ -152,12 +195,10 @@ namespace ERP.API.Controllers.Dashboard
         }
 
 
-
-
         [HttpPut]
-        [Route("api/services/update/")]
+        [Route("api/service/update/")]
 
-        public async Task<IHttpActionResult> Updateservice(int? se_id)
+        public async Task<IHttpActionResult> Updateservice()
         {
             ResponseDataDTO<service> response = new ResponseDataDTO<service>();
             try
@@ -172,60 +213,34 @@ namespace ERP.API.Controllers.Dashboard
                 MultipartFormDataStreamProvider streamProvider = new MultipartFormDataStreamProvider(path);
 
                 await Request.Content.ReadAsMultipartAsync(streamProvider);
+
+                
+                int se_id  = Convert.ToInt32(streamProvider.FormData["se_id"]);
+                var existservice = _serviceservice.Find(se_id);
+                existservice.se_name = Convert.ToString(streamProvider.FormData["se_name"]);
+                existservice.se_description = Convert.ToString(streamProvider.FormData["se_description"]);
+                existservice.service_category_id = Convert.ToInt32(streamProvider.FormData["service_category_id"]);
+                existservice.se_price = Convert.ToInt32(streamProvider.FormData["se_price"]);
+                existservice.se_saleoff = Convert.ToInt32(streamProvider.FormData["se_saleoff"]);
+                existservice.se_type = Convert.ToByte(streamProvider.FormData["se_type"]);
+
                 // save file
                 string fileName = "";
                 if (streamProvider.FileData.Count > 0)
                 {
                     foreach (MultipartFileData fileData in streamProvider.FileData)
                     {
-                        fileName = FileExtension.SaveFileOnDisk(fileData);
+                        fileName = FileExtension.SaveFileServiceOnDisk(fileData, existservice.se_code);
                     }
                 }
-
-                // get data from formdata
-                ServiceUpdateViewModel serviceUpdateViewModel = new ServiceUpdateViewModel
-                {
-                    se_id = Convert.ToInt32(streamProvider.FormData["se_id"]),
-                    se_code = Convert.ToString(streamProvider.FormData["se_code"]),
-                    se_name = Convert.ToString(streamProvider.FormData["se_name"]),
-                    se_description = Convert.ToString(streamProvider.FormData["se_description"]),
-
-
-
-
-                    service_category_id = Convert.ToInt32(streamProvider.FormData["service_category_id"]),
-                    se_price = Convert.ToInt32(streamProvider.FormData["se_price"]),
-                    se_saleoff = Convert.ToInt32(streamProvider.FormData["se_saleoff"]),
-
-                    se_type = Convert.ToByte(streamProvider.FormData["se_type"]),
-
-                };
-
-
-                var existservice = _serviceservice.Find(se_id);
-
-                if (fileName != "")
-                {
-                    serviceUpdateViewModel.se_thumbnai = fileName;
-                }
-                else
-                {
-
-                    serviceUpdateViewModel.se_thumbnai = existservice.se_thumbnai;
-                }
-
-                // mapping view model to entity
-                var updatedservice = _mapper.Map<service>(serviceUpdateViewModel);
-
-
-
+                existservice.se_thumbnai = fileName;
                 // update service
-                _serviceservice.Update(updatedservice, se_id);
+                _serviceservice.Update(existservice, existservice.se_id);
 
                 // return response
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = updatedservice;
+                response.Data = existservice;
                 return Ok(response);
             }
             catch (Exception ex)
@@ -240,7 +255,7 @@ namespace ERP.API.Controllers.Dashboard
         }
 
         [HttpDelete]
-        [Route("api/services/delete")]
+        [Route("api/service/delete")]
         public IHttpActionResult Deleteservice(int serviceId)
         {
             ResponseDataDTO<service> response = new ResponseDataDTO<service>();

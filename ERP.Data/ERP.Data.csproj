@@ -158,6 +158,7 @@
     <Compile Include="ModelsERP\ModelView\Product\productviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\dropdown.cs" />
     <Compile Include="ModelsERP\ModelView\Customer\shipaddressviewmodel.cs" />
+    <Compile Include="ModelsERP\ModelView\Service\serviceviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Sms\smscustomerviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Sms\smsstrategyviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Sms\smstemplatemodelview.cs" />
@@ -185,6 +186,7 @@
     <Compile Include="ModelsERP\Province.cs" />
     <Compile Include="ModelsERP\RefreshToken.cs" />
     <Compile Include="ModelsERP\service.cs" />
+    <Compile Include="ModelsERP\service_category.cs" />
     <Compile Include="ModelsERP\service_time.cs" />
     <Compile Include="ModelsERP\ship_address.cs" />
     <Compile Include="ModelsERP\sms.cs" />

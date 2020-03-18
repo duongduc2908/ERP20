@@ -5,6 +5,7 @@ using ERP.Data.ModelsERP.ModelView;
 using ERP.Data.ModelsERP.ModelView.Customer;
 using ERP.Data.ModelsERP.ModelView.ExportDB;
 using ERP.Data.ModelsERP.ModelView.Product;
+using ERP.Data.ModelsERP.ModelView.Service;
 using ERP.Data.ModelsERP.ModelView.Sms;
 using ERP.Data.ModelsERP.ModelView.Statistics;
 using ERP.Data.ModelsERP.ModelView.StatisticStaff;
@@ -74,9 +75,9 @@ namespace ERP.API.AutoMapper
             CreateMap<order_product,orderproducthistoryviewmodel >();
             CreateMap<order_product,transactionorderproductviewmodel >();
             
-
             CreateMap<ServiceCreateViewModel, service>();
             CreateMap<ServiceUpdateViewModel, service>();
+            CreateMap<service, serviceviewmodel>();
 
             CreateMap<GroupRoleCreateViewModel, group_role>();
             CreateMap<GroupRoleUpdateViewModel, group_role>();

@@ -255,7 +255,7 @@ namespace ERP.Repository.Repositories
         {
 
             List<dropdown> res = new List<dropdown>();
-            for(int i = 1; i < 3; i++)
+            for(int i = 1; i < EnumProduct.pu_unit.Length+1; i++)
             {
                 dropdown pu = new dropdown();
                 pu.id = i;
