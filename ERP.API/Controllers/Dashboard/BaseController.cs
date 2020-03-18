@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -122,7 +123,9 @@ namespace ERP.API.Controllers.Dashboard
             message.AlternateViews.Add(htmlView);
 
             SmtpClient smtp = new SmtpClient();
-            message.From = new MailAddress("coerpsp@gmail.com");
+            var email_send = ConfigurationManager.AppSettings["emailsend"];
+            var emailsendpass = ConfigurationManager.AppSettings["emailsendpass"];
+            message.From = new MailAddress(email_send, "Coerp quản trị doanh nghiệp tinh gọn", System.Text.Encoding.UTF8);
             message.To.Add(new MailAddress(to_MailAddress));
             message.Subject = title;
             message.IsBodyHtml = true; //to make message body as html  
@@ -130,7 +133,7 @@ namespace ERP.API.Controllers.Dashboard
             smtp.Host = "smtp.gmail.com"; //for gmail host  
             smtp.EnableSsl = true;
             smtp.UseDefaultCredentials = true;
-            smtp.Credentials = new NetworkCredential("coerpsp@gmail.com", "coerp2020");
+            smtp.Credentials = new NetworkCredential(email_send, emailsendpass);
             smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
             smtp.Send(message);
         }
