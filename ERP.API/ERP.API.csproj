@@ -241,6 +241,7 @@
     <Compile Include="Controllers\Dashboard\ManagerSupplierController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerTransactionController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerUndertakenLocationController.cs" />
+    <Compile Include="Controllers\Dashboard\ManagerServiceCategoryController.cs" />
     <Compile Include="Models\ChangePasswordBindingModel.cs" />
     <Compile Include="Controllers\Dashboard\ManagerCompanyController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerCustomerController.cs" />
@@ -423,6 +424,7 @@
     <Folder Include="Views\ManagerSource\" />
     <Folder Include="Views\ManagerSupplier\" />
     <Folder Include="Views\ManagerTransaction\" />
+    <Folder Include="Views\ServiceCategory\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

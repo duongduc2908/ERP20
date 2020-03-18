@@ -509,6 +509,7 @@
     <Compile Include="Repositories\IRepositories\IProductOrderRepository.cs" />
     <Compile Include="Repositories\IRepositories\IProductRepository.cs" />
     <Compile Include="Repositories\IRepositories\IProjectRepository.cs" />
+    <Compile Include="Repositories\IRepositories\IServiceCategoryRepository.cs" />
     <Compile Include="Repositories\IRepositories\IServiceRepository.cs" />
     <Compile Include="Repositories\IRepositories\IShipAddressRepository.cs" />
     <Compile Include="Repositories\IRepositories\ISmsRepository.cs" />
@@ -531,6 +532,7 @@
     <Compile Include="Repositories\ProductOrderRepository.cs" />
     <Compile Include="Repositories\ProductRepository.cs" />
     <Compile Include="Repositories\ProjectRepository.cs" />
+    <Compile Include="Repositories\ServiceCategoryRepository.cs" />
     <Compile Include="Repositories\ServiceRepository.cs" />
     <Compile Include="Repositories\ShipAddressRepository.cs" />
     <Compile Include="Repositories\SmsRepository.cs" />

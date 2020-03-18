@@ -44,6 +44,7 @@ namespace ERP.Data.DbContext
         public virtual DbSet<staff> staffs { get; set; }
         public virtual DbSet<task> tasks { get; set; }
         public virtual DbSet<service_time> service_time { get; set; }
+        public virtual DbSet<service_category> service_category { get; set; }
         public virtual DbSet<email> emails { get; set; }
         public virtual DbSet<email_strategy> email_strategy { get; set; }
         public virtual DbSet<email_template> email_template { get; set; }
