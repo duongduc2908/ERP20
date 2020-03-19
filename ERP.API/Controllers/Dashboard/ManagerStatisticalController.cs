@@ -6,6 +6,7 @@ using ERP.Data.Dto;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
 using ERP.Data.ModelsERP.ModelView.Statistics;
+using ERP.Data.ModelsERP.ModelView.Transaction;
 using ERP.Extension.Extensions;
 using ERP.Service.Services.IServices;
 using System;
@@ -29,13 +30,15 @@ namespace ERP.API.Controllers.Dashboard
         private readonly ICustomerOrderService _customerorderservice;
         private readonly IOrderProductService _orderproductservice;
         private readonly ICustomerGroupService _customergroupservice;
+        private readonly ITransactionService _transactionservice;
         public ManagerStatisticalController() { }
         private readonly IMapper _mapper;
-        public ManagerStatisticalController(ICustomerOrderService customerorderservice, IOrderProductService orderproductservice, ICustomerGroupService customergroupservice, IMapper mapper)
+        public ManagerStatisticalController(ITransactionService transactionservice,ICustomerOrderService customerorderservice, IOrderProductService orderproductservice, ICustomerGroupService customergroupservice, IMapper mapper)
         {
             this._customerorderservice = customerorderservice;
             this._orderproductservice = orderproductservice;
             this._customergroupservice = customergroupservice;
+            this._transactionservice = transactionservice;
             this._mapper = mapper;
         }
         #region[Statistics by]
@@ -118,6 +121,26 @@ namespace ERP.API.Controllers.Dashboard
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
                 response.Data = _customergroupservice.GetRevenueCustomerGroup();
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+            }
+
+            return Ok(response);
+        }
+        [HttpGet]
+        [Route("api/dashboard/statistic-transaction-rate")]
+        public IHttpActionResult GetTransactionRate()
+        {
+            ResponseDataDTO<List<transactionstatisticrateviewmodel>> response = new ResponseDataDTO<List<transactionstatisticrateviewmodel>>();
+            try
+            {
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = _transactionservice.GetTransactionStatisticRate();
             }
             catch (Exception ex)
             {

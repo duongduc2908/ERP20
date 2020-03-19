@@ -271,5 +271,17 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = totalNumberOfRecords
             };
         }
+        public List<transactionstatisticrateviewmodel> GetTransactionStatisticRate()
+        {
+            List<transactionstatisticrateviewmodel> res = new List<transactionstatisticrateviewmodel>();
+            for(int i = 1; i< EnumTransaction.tra_rate.Length+1; i++)
+            {
+                transactionstatisticrateviewmodel add = new transactionstatisticrateviewmodel();
+                add.cg_name = EnumTransaction.tra_rate[i - 1];
+                add.number = _dbContext.transactions.Where(t => t.tra_rate == i).Count();
+                res.Add(add);
+            }
+            return res;
+        }
     }
 }
