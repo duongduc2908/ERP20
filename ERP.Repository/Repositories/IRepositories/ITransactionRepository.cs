@@ -20,5 +20,6 @@ namespace ERP.Repository.Repositories.IRepositories
         List<dropdown> GetTransactionType();
         List<dropdown> GetTransactionPriority();
         List<dropdown> GetTransactionStatus();
+        List<dropdown> GetTransactionRate();
     }
 }

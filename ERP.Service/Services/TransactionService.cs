@@ -42,6 +42,10 @@ namespace ERP.Service.Services
         {
             return this._repository.GetTransactionStatus();
         }
+        public List<dropdown> GetTransactionRate()
+        {
+            return this._repository.GetTransactionRate();
+        }
         public PagedResults<transactionview> ExportTransaction(int pageNumber, int pageSize, string search_name)
         {
             return this._repository.ExportTransaction(pageNumber: pageNumber, pageSize: pageSize, search_name);

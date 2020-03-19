@@ -126,6 +126,28 @@ namespace ERP.API.Controllers.Dashboard
 
             return Ok(response);
         }
+        [HttpGet]
+        [Route("api/transaction/get_transaction_rate")]
+        public IHttpActionResult GetTransactionRate()
+        {
+            ResponseDataDTO<List<dropdown>> response = new ResponseDataDTO<List<dropdown>>();
+            try
+            {
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = _transactionservice.GetTransactionRate();
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+
+                Console.WriteLine(ex.ToString());
+            }
+
+            return Ok(response);
+        }
 
         #region [Create]
         [HttpPost]
@@ -660,7 +682,7 @@ namespace ERP.API.Controllers.Dashboard
             {
                  {"tra_title","Tiêu đề" },
                  {"tra_content","Nội dung"},
-                 {"tra_rate","Đánh giá"},
+                 {"tra_rate_name","Đánh giá"},
                  {"tra_type_name","Loại giao dịch"},
                  {"tra_datetime","Thời gian"},
                  {"tra_result","Kết quả"},

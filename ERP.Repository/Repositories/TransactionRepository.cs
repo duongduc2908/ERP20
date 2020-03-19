@@ -50,7 +50,7 @@ namespace ERP.Repository.Repositories
         public List<dropdown> GetTransactionType()
         {
             List<dropdown> res = new List<dropdown>();
-            for( int i = 1; i< 5; i++)
+            for( int i = 1; i< EnumTransaction.tra_type.Length + 1; i++)
             {
                 dropdown dr = new dropdown();
                 dr.id = i;
@@ -62,7 +62,7 @@ namespace ERP.Repository.Repositories
         public List<dropdown> GetTransactionPriority()
         {
             List<dropdown> res = new List<dropdown>();
-            for (int i = 1; i < 5; i++)
+            for (int i = 1; i < EnumTransaction.tra_priority.Length+1; i++)
             {
                 dropdown dr = new dropdown();
                 dr.id = i;
@@ -74,11 +74,23 @@ namespace ERP.Repository.Repositories
         public  List<dropdown> GetTransactionStatus()
         {
             List<dropdown> res = new List<dropdown>();
-            for (int i = 1; i < 4; i++)
+            for (int i = 1; i < EnumTransaction.tra_status.Length+1; i++)
             {
                 dropdown dr = new dropdown();
                 dr.id = i;
                 dr.name = EnumTransaction.tra_status[i - 1];
+                res.Add(dr);
+            }
+            return res;
+        }
+        public  List<dropdown> GetTransactionRate()
+        {
+            List<dropdown> res = new List<dropdown>();
+            for (int i = 1; i < EnumTransaction.tra_rate.Length+1; i++)
+            {
+                dropdown dr = new dropdown();
+                dr.id = i;
+                dr.name = EnumTransaction.tra_rate[i - 1];
                 res.Add(dr);
             }
             return res;

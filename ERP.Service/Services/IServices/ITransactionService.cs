@@ -20,5 +20,6 @@ namespace ERP.Service.Services.IServices
         List<dropdown> GetTransactionType();
         List<dropdown> GetTransactionPriority();
         List<dropdown> GetTransactionStatus();
+        List<dropdown> GetTransactionRate();
     }
 }
