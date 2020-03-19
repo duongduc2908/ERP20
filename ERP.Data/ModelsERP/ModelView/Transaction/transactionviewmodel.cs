@@ -17,7 +17,8 @@ namespace ERP.Data.ModelsERP.ModelView.Transaction
 
         public string tra_content { get; set; }
 
-        public string tra_rate { get; set; }
+        public int tra_rate { get; set; }
+        public string tra_rate_name { get; set; }
         public byte? tra_type { get; set; }
         public string tra_type_name { get; set; }
 

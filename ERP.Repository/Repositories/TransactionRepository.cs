@@ -91,7 +91,7 @@ namespace ERP.Repository.Repositories
             var skipAmount = pageSize * pageNumber;
             
             if(search_name == null) list = _dbContext.transactions.OrderBy(t => t.tra_id).Skip(skipAmount).Take(pageSize).ToList();
-            else list = _dbContext.transactions.Where(i => i.tra_title.Contains(search_name) || i.tra_rate.Contains(search_name) || i.tra_result.Contains(search_name)).OrderBy(t => t.tra_id).Skip(skipAmount).Take(pageSize).ToList();
+            else list = _dbContext.transactions.Where(i => i.tra_title.Contains(search_name) || i.tra_result.Contains(search_name)).OrderBy(t => t.tra_id).Skip(skipAmount).Take(pageSize).ToList();
 
             var totalNumberOfRecords = _dbContext.transactions.Count();
 
@@ -120,6 +120,13 @@ namespace ERP.Repository.Repositories
                     if (j == i.tra_status)
                     {
                         transactionview.tra_status_name = EnumTransaction.tra_status[j - 1];
+                    }
+                }
+                for (int j = 1; j < EnumTransaction.tra_rate.Length + 1; j++)
+                {
+                    if (j == i.tra_rate)
+                    {
+                        transactionview.tra_rate_name = EnumTransaction.tra_rate[j - 1];
                     }
                 }
                 //Bat cac truong tra ve id 
@@ -199,7 +206,7 @@ namespace ERP.Repository.Repositories
             var skipAmount = pageSize * pageNumber;
 
             if (search_name == null) list = _dbContext.transactions.OrderBy(t => t.tra_id).Skip(skipAmount).Take(pageSize).ToList();
-            else list = _dbContext.transactions.Where(i => i.tra_title.Contains(search_name) || i.tra_rate.Contains(search_name) || i.tra_result.Contains(search_name)).OrderBy(t => t.tra_id).Skip(skipAmount).Take(pageSize).ToList();
+            else list = _dbContext.transactions.Where(i => i.tra_title.Contains(search_name) ||  i.tra_result.Contains(search_name)).OrderBy(t => t.tra_id).Skip(skipAmount).Take(pageSize).ToList();
             var totalNumberOfRecords = _dbContext.transactions.Count();
             var results = list.ToList();
             foreach (transaction i in results)
@@ -225,6 +232,13 @@ namespace ERP.Repository.Repositories
                     if (j == i.tra_status)
                     {
                         transactionview.tra_status_name = EnumTransaction.tra_status[j - 1];
+                    }
+                }
+                for (int j = 1; j < EnumTransaction.tra_rate.Length + 1; j++)
+                {
+                    if (j == i.tra_rate)
+                    {
+                        transactionview.tra_rate_name = EnumTransaction.tra_rate[j - 1];
                     }
                 }
                 //Bat cac truong tra ve id 
