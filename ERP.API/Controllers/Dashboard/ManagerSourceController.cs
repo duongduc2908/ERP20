@@ -18,6 +18,8 @@ using System.Web.Http.Cors;
 
 namespace ERP.API.Controllers.Dashboard
 {
+    [EnableCors("*", "*", "*")]
+    [Authorize]
     public class ManagerSourceController : ApiController
     {
         private readonly ISourceService _sourceservice;
