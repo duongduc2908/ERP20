@@ -20,7 +20,7 @@ using System.Web.Http.Cors;
 namespace ERP.API.Controllers.Dashboard
 {
     [EnableCors("*", "*", "*")]
-    //[Authorize]
+    [Authorize]
     public class ManagerServiceController : ApiController
     {
         private readonly IServiceService _serviceservice;
@@ -233,7 +233,11 @@ namespace ERP.API.Controllers.Dashboard
                         fileName = FileExtension.SaveFileServiceOnDisk(fileData, existservice.se_code);
                     }
                 }
-                existservice.se_thumbnai = fileName;
+                if (fileName == "")
+                {
+                    existservice.se_thumbnai = "/Uploads/Images/default/service.png";
+                }
+                else existservice.se_thumbnai = fileName;
                 // update service
                 _serviceservice.Update(existservice, existservice.se_id);
 

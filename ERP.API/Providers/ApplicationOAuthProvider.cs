@@ -66,6 +66,9 @@ namespace ERP.API.Providers
                     },
                     {
                         "sta_id",staff_user.sta_id.ToString()
+                    },
+                    {
+                        "Role", role
                     }
                 });
             var ticket = new AuthenticationTicket(identity, props);
