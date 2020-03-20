@@ -25,9 +25,9 @@ namespace ERP.Service.Services
         {
             return this._repository.CreatePagedResults(pageNumber, pageSize);
         }
-        public PagedResults<transactionviewmodel> GetAllPageSearch(int pageNumber, int pageSize, string search_name)
+        public PagedResults<transactionviewmodel> GetAllPageSearch(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name)
         {
-            return this._repository.GetAllPageSearch(pageNumber:pageNumber, pageSize:pageSize, search_name);
+            return this._repository.GetAllPageSearch(pageNumber:pageNumber, pageSize:pageSize,start_date, end_date, search_name);
         }
       
         public List<dropdown> GetTransactionType()
@@ -50,9 +50,9 @@ namespace ERP.Service.Services
         {
             return this._repository.GetTransactionStatisticRate();
         }
-        public PagedResults<transactionview> ExportTransaction(int pageNumber, int pageSize, string search_name)
+        public PagedResults<transactionview> ExportTransaction(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name)
         {
-            return this._repository.ExportTransaction(pageNumber: pageNumber, pageSize: pageSize, search_name);
+            return this._repository.ExportTransaction(pageNumber: pageNumber, pageSize: pageSize,start_date, end_date, search_name);
         }
     }
 }

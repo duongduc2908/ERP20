@@ -15,8 +15,8 @@ namespace ERP.Repository.Repositories.IRepositories
     {
         PagedResults<productviewmodel> GetAllPage(int pageNumber, int pageSize);
         PagedResults<productviewmodel> GetAllPageById(int id);
-        PagedResults<productviewmodel> GetProducts(int pageNumber, int pageSize, string search_name, int? category_id);
-        PagedResults<productview> ExportProduct(int pageNumber, int pageSize, string search_name, int? category_id);
+        PagedResults<productviewmodel> GetProducts(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name, int? category_id);
+        PagedResults<productview> ExportProduct(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name, int? category_id);
         List<dropdown> GetUnit();
     }
 }

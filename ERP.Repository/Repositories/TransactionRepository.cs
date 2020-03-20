@@ -95,19 +95,26 @@ namespace ERP.Repository.Repositories
             }
             return res;
         }
-        public PagedResults<transactionviewmodel> GetAllPageSearch(int pageNumber, int pageSize, string search_name)
+        public PagedResults<transactionviewmodel> GetAllPageSearch(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name)
         {
             List<transactionviewmodel> res = new List<transactionviewmodel>();
             List<transaction> list = new List<transaction>();
 
             var skipAmount = pageSize * pageNumber;
-            
-            if(search_name == null) list = _dbContext.transactions.OrderBy(t => t.tra_id).Skip(skipAmount).Take(pageSize).ToList();
-            else list = _dbContext.transactions.Where(i => i.tra_title.Contains(search_name) || i.tra_result.Contains(search_name)).OrderBy(t => t.tra_id).Skip(skipAmount).Take(pageSize).ToList();
+
+            if (search_name == null) list = _dbContext.transactions.ToList();
+            else list = _dbContext.transactions.Where(i => i.tra_title.Contains(search_name) || i.tra_result.Contains(search_name)).ToList();
+            if (start_date != null)
+            {
+                list = list.Where(x => x.tra_datetime >= start_date).ToList();
+            }
+            if (end_date != null)
+            {
+                list = list.Where(x => x.tra_datetime <= end_date).ToList();
+            }
+            var results = list.OrderBy(t => t.tra_id).Skip(skipAmount).Take(pageSize);
 
             var totalNumberOfRecords = _dbContext.transactions.Count();
-
-            var results = list.ToList();
             foreach (transaction i in results)
             {
                
@@ -210,17 +217,25 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = totalNumberOfRecords
             };
         }
-        public PagedResults<transactionview> ExportTransaction(int pageNumber, int pageSize, string search_name)
+        public PagedResults<transactionview> ExportTransaction(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name)
         {
             List<transactionview> res = new List<transactionview>();
             List<transaction> list = new List<transaction>();
 
             var skipAmount = pageSize * pageNumber;
 
-            if (search_name == null) list = _dbContext.transactions.OrderBy(t => t.tra_id).Skip(skipAmount).Take(pageSize).ToList();
-            else list = _dbContext.transactions.Where(i => i.tra_title.Contains(search_name) ||  i.tra_result.Contains(search_name)).OrderBy(t => t.tra_id).Skip(skipAmount).Take(pageSize).ToList();
+            if (search_name == null) list = _dbContext.transactions.ToList();
+            else list = _dbContext.transactions.Where(i => i.tra_title.Contains(search_name) ||  i.tra_result.Contains(search_name)).ToList();
+            if (start_date != null)
+            {
+                list = list.Where(x => x.tra_datetime >= start_date).ToList();
+            }
+            if (end_date != null)
+            {
+                list = list.Where(x => x.tra_datetime <= end_date).ToList();
+            }
             var totalNumberOfRecords = _dbContext.transactions.Count();
-            var results = list.ToList();
+            var results = list.OrderBy(t => t.tra_id).Skip(skipAmount).Take(pageSize);
             foreach (transaction i in results)
             {
                 var transactionview = _mapper.Map<transactionview>(i);

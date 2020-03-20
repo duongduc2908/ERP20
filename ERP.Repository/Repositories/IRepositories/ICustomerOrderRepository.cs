@@ -15,8 +15,8 @@ namespace ERP.Repository.Repositories.IRepositories
     {
         PagedResults<customerorderviewmodel> CreatePagedResults(int pageNumber, int pageSize);
         customerordermodelview GetAllOrderById(int id);
-        PagedResults<customerorderviewmodel> GetAllSearch(int pageNumber, int pageSize, int? payment_type_id, string name);
-        PagedResults<customerorderview> ExportCustomerOrder(int pageNumber, int pageSize, int? payment_type_id, string name);
+        PagedResults<customerorderviewmodel> GetAllSearch(int pageNumber, int pageSize, int? payment_type_id, DateTime? start_date, DateTime? end_date, string name);
+        PagedResults<customerorderview> ExportCustomerOrder(int pageNumber, int pageSize, int? payment_type_id, DateTime? start_date, DateTime? end_date, string name);
         PagedResults<customerorderviewmodel> ResultStatisticsCustomerOrder(int pageNumber, int pageSize, int staff_id, bool month, bool week, bool day);
         List<dropdown> GetAllPayment();
         statisticsbyrevenueviewmodel ResultStatisticsByRevenue(int staff_id);

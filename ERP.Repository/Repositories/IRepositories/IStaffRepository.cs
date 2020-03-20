@@ -19,8 +19,8 @@ namespace ERP.Repository.Repositories.IRepositories
         bool ChangePassword(ChangePasswordBindingModel model, int id);
         
         PagedResults<staffviewmodel> GetAllPage(int pageNumber, int pageSize);
-        PagedResults<staffviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? status, string name);
-        PagedResults<staffview> ExportStaff(int pageNumber, int pageSize, int? status, string name);
+        PagedResults<staffviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? status, DateTime? start_date, DateTime? end_date, string name);
+        PagedResults<staffview> ExportStaff(int pageNumber, int pageSize, int? status, DateTime? start_date, DateTime? end_date,string name);
         staffviewmodel GetInforById(int id);
         PagedResults<staffviewmodel> GetAllActive(int pageNumber, int pageSize, int status);
 

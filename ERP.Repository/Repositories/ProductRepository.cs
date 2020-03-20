@@ -99,40 +99,32 @@ namespace ERP.Repository.Repositories
             };
         }
        
-        public PagedResults<productviewmodel> GetProducts(int pageNumber, int pageSize, string search_name, int? category_id)
+        public PagedResults<productviewmodel> GetProducts(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name, int? category_id)
         {
 
             List<productviewmodel> res = new List<productviewmodel>();
-
+            List<product> list = new List<product>();
             var skipAmount = pageSize * pageNumber;
-
-            var list = _dbContext.products.Where(t => t.product_category_id == category_id && t.pu_name.Contains(search_name)).OrderBy(t => t.pu_id).Skip(skipAmount).Take(pageSize);
-            if (category_id == null)
+            if(search_name == null)
             {
-                if (search_name != null)
-                {
-                    list = _dbContext.products.Where(t => t.pu_name.Contains(search_name)).OrderBy(t => t.pu_id).Skip(skipAmount).Take(pageSize);
-                }
-                else
-                {
-                    list = _dbContext.products.OrderBy(t => t.pu_id).Skip(skipAmount).Take(pageSize);
-                }
-
+                list = _dbContext.products.ToList();
             }
-            if (search_name == null)
+            else list = _dbContext.products.Where(t => t.pu_name.Contains(search_name)).ToList();
+            if (category_id != null)
             {
-                if (category_id != null)
-                {
-                    list = _dbContext.products.Where(t => t.product_category_id == category_id).OrderBy(t => t.pu_id).Skip(skipAmount).Take(pageSize);
-                }
-                else
-                {
-                    list = _dbContext.products.OrderBy(t => t.pu_id).Skip(skipAmount).Take(pageSize);
-                }
+                list = list.Where(x => x.product_category_id == category_id).ToList();
+            }
+            if (start_date != null)
+            {
+                list = list.Where(x => x.pu_create_date >= start_date).ToList();
+            }
+            if (end_date != null)
+            {
+                list = list.Where(x => x.pu_create_date <= end_date).ToList();
             }
             var total = _dbContext.products.Count();
             
-            var results = list.ToList();
+            var results = list.OrderBy(t => t.pu_id).Skip(skipAmount).Take(pageSize);
             foreach (product i in results)
             {
                 var productview = _mapper.Map<productviewmodel>(i);
@@ -186,39 +178,33 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = total
             };
         }
-        public PagedResults<productview> ExportProduct(int pageNumber, int pageSize, string search_name, int? category_id)
+        public PagedResults<productview> ExportProduct(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name, int? category_id)
         {
 
             List<productview> res = new List<productview>();
             List<product> list = new List<product>();
 
             var skipAmount = pageSize * pageNumber;
-            if (category_id == null)
-            {
-                if (search_name != null)
-                {
-                    list = _dbContext.products.Where(t => t.pu_name.Contains(search_name)).OrderBy(t => t.pu_id).Skip(skipAmount).Take(pageSize).ToList();
-                }
-                else
-                {
-                    list = _dbContext.products.OrderBy(t => t.pu_id).Skip(skipAmount).Take(pageSize).ToList();
-                }
-
-            }
             if (search_name == null)
             {
-                if (category_id != null)
-                {
-                    list = _dbContext.products.Where(t => t.product_category_id == category_id).OrderBy(t => t.pu_id).Skip(skipAmount).Take(pageSize).ToList();
-                }
-                else
-                {
-                    list = _dbContext.products.OrderBy(t => t.pu_id).Skip(skipAmount).Take(pageSize).ToList();
-                }
+                list = _dbContext.products.ToList();
+            }
+            else list = _dbContext.products.Where(t => t.pu_name.Contains(search_name)).ToList();
+            if (category_id != null)
+            {
+                list = list.Where(x => x.product_category_id == category_id).ToList();
+            }
+            if (start_date != null)
+            {
+                list = list.Where(x => x.pu_create_date >= start_date).ToList();
+            }
+            if (end_date != null)
+            {
+                list = list.Where(x => x.pu_create_date <= end_date).ToList();
             }
             var total = _dbContext.products.Count();
 
-            var results = list.ToList();
+            var results = list.OrderBy(t => t.pu_id).Skip(skipAmount).Take(pageSize);
             foreach (product i in results)
             {
                 var productview = _mapper.Map<productview>(i);

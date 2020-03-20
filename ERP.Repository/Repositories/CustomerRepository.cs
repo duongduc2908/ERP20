@@ -145,91 +145,40 @@ namespace ERP.Repository.Repositories
 
         }
         
-        public PagedResults<customerviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, string name)
+        public PagedResults<customerviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, DateTime? start_date, DateTime? end_date, string name)
         {
             if (name != null) name = name.Trim();
-           
+            List<customer> list;
             List<customerviewmodel> res = new List<customerviewmodel>();
             var skipAmount = pageSize * pageNumber;
-
-            var list = _dbContext.customers.OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-
-            /**24TH**/
-            #region [24 case]
-            int check_source_id = 0;
-            int check_type = 0;
-            int check_group_id = 0;
-            int check_name = 0;
-            if(source_id != null) { check_source_id = 1; }
-            if(cu_type != null) { check_type = 1; }
-            if(customer_group_id != null) { check_group_id = 1; }
-            if(name != null) { check_name = 1; }
-
-                    
-            if(check_source_id == 0 && check_type == 0 && check_group_id == 0 && check_name ==1) 
+            if (name == null)
             {
-                list = _dbContext.customers.Where(t => (t.cu_fullname.Contains(name) || t.cu_mobile.Contains(name) || t.cu_email.Contains(name) || t.cu_code.Contains(name))).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }            
-            if(check_source_id == 0 && check_type == 0 && check_group_id == 1 && check_name ==0) 
-            {
-                list = _dbContext.customers.Where(t => t.customer_group_id == customer_group_id).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }            
-            if(check_source_id == 0 && check_type == 0 && check_group_id == 1 && check_name ==1) 
-            {
-                list = _dbContext.customers.Where(t => (t.cu_fullname.Contains(name) || t.cu_mobile.Contains(name) || t.cu_email.Contains(name) || t.cu_code.Contains(name))&& t.customer_group_id == customer_group_id).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }            
-            if(check_source_id == 0 && check_type == 1 && check_group_id == 0 && check_name ==0) 
-            {
-                list = _dbContext.customers.Where(t => t.cu_type == cu_type).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }            
-            if(check_source_id == 0 && check_type == 1 && check_group_id == 0 && check_name ==1) 
-            {
-                list = _dbContext.customers.Where(t => t.cu_type == cu_type).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }            
-            if(check_source_id == 0 && check_type == 1 && check_group_id == 1 && check_name ==0) 
-            {
-                list = _dbContext.customers.Where(t => t.cu_type == cu_type && t.customer_group_id == customer_group_id).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }            
-            if(check_source_id == 0 && check_type == 1 && check_group_id == 1 && check_name ==1) 
-            {
-                list = _dbContext.customers.Where(t => t.cu_type == cu_type && t.customer_group_id == customer_group_id && t.cu_fullname.Contains(name)).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }            
-            if(check_source_id == 1 && check_type == 0 && check_group_id == 0 && check_name ==0) 
-            {
-                list = _dbContext.customers.Where(t => t.source_id == source_id).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }            
-            if(check_source_id == 1 && check_type == 0 && check_group_id == 0 && check_name ==1) 
-            {
-                list = _dbContext.customers.Where(t => t.source_id == source_id && t.cu_fullname.Contains(name)).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }            
-            if(check_source_id == 1 && check_type == 0 && check_group_id == 1 && check_name ==0) 
-            {
-                list = _dbContext.customers.Where(t => t.source_id == source_id && t.customer_group_id == customer_group_id).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }            
-            if(check_source_id == 1 && check_type == 0 && check_group_id == 1 && check_name ==1) 
-            {
-                list = _dbContext.customers.Where(t => t.source_id == source_id && (t.cu_fullname.Contains(name) || t.cu_mobile.Contains(name) || t.cu_email.Contains(name) || t.cu_code.Contains(name))&& t.customer_group_id == customer_group_id).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }            
-            if(check_source_id == 1 && check_type == 1 && check_group_id == 0 && check_name ==0) 
-            {
-                list = _dbContext.customers.Where(t => t.source_id == source_id && t.cu_type == cu_type).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }            
-            if(check_source_id == 1 && check_type == 1 && check_group_id == 0 && check_name ==1) 
-            {
-                list = _dbContext.customers.Where(t => t.source_id == source_id && t.cu_type == cu_type).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }            
-            if(check_source_id == 1 && check_type == 1 && check_group_id == 1 && check_name ==0)
-            {
-                list = _dbContext.customers.Where(t => t.source_id == source_id && t.cu_type == cu_type && t.customer_group_id == customer_group_id).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }            
-            if(check_source_id == 1 && check_type == 1 && check_group_id == 1 && check_name ==1)
-            {
-                list = _dbContext.customers.Where(t => t.source_id == source_id && t.cu_type == cu_type && t.customer_group_id == customer_group_id && t.cu_fullname.Contains(name)).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
+                list = _dbContext.customers.ToList();
             }
-            #endregion
+            else list = _dbContext.customers.Where(x => x.cu_fullname.Contains(name)).ToList();
+            if (source_id != null)
+            {
+                list = list.Where(x => x.source_id == source_id).ToList();
+            }
+            if (cu_type != null)
+            {
+                list = list.Where(x => x.cu_type == cu_type).ToList();
+            }
+            if(customer_group_id != null)
+            {
+                list = list.Where(x => x.customer_group_id == customer_group_id).ToList();
+            }
+            if (start_date != null)
+            {
+                list = list.Where(x => x.cu_create_date >= start_date).ToList();
+            }
+            if (end_date != null)
+            {
+                list = list.Where(x => x.cu_create_date <= end_date).ToList();
+            }
             var total = _dbContext.customers.Count();
 
-            var results = list.ToList();
+            var results = list.OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
             foreach(customer i in results)
             {
                 var customerview = _mapper.Map<customerviewmodel>(i);
@@ -497,91 +446,42 @@ namespace ERP.Repository.Repositories
             return res;
 
         }
-        public PagedResults<customerview> ExportCustomer(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, string name)
+        public PagedResults<customerview> ExportCustomer(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, DateTime? start_date, DateTime? end_date, string name)
         {
             if (name != null) name = name.Trim();
-
+            List<customer> list = new List<customer>();
             List<customerview> res = new List<customerview>();
             var skipAmount = pageSize * pageNumber;
 
-            var list = _dbContext.customers.OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
+            if (name == null)
+            {
+                list = _dbContext.customers.ToList();
+            }
+            else list = _dbContext.customers.Where(x => x.cu_fullname.Contains(name)).ToList();
+            if (source_id != null)
+            {
+                list = list.Where(x => x.source_id == source_id).ToList();
+            }
+            if (cu_type != null)
+            {
+                list = list.Where(x => x.cu_type == cu_type).ToList();
+            }
+            if (customer_group_id != null)
+            {
+                list = list.Where(x => x.customer_group_id == customer_group_id).ToList();
+            }
+            if (start_date != null)
+            {
+                list = list.Where(x => x.cu_create_date >= start_date).ToList();
+            }
+            if (end_date != null)
+            {
+                list = list.Where(x => x.cu_create_date <= end_date).ToList();
+            }
 
-            /**24TH**/
-            #region [24 case]
-            int check_source_id = 0;
-            int check_type = 0;
-            int check_group_id = 0;
-            int check_name = 0;
-            if (source_id != null) { check_source_id = 1; }
-            if (cu_type != null) { check_type = 1; }
-            if (customer_group_id != null) { check_group_id = 1; }
-            if (name != null) { check_name = 1; }
-
-
-            if (check_source_id == 0 && check_type == 0 && check_group_id == 0 && check_name == 1)
-            {
-                list = _dbContext.customers.Where(t => (t.cu_fullname.Contains(name) || t.cu_mobile.Contains(name) || t.cu_email.Contains(name) || t.cu_code.Contains(name))).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }
-            if (check_source_id == 0 && check_type == 0 && check_group_id == 1 && check_name == 0)
-            {
-                list = _dbContext.customers.Where(t => t.customer_group_id == customer_group_id).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }
-            if (check_source_id == 0 && check_type == 0 && check_group_id == 1 && check_name == 1)
-            {
-                list = _dbContext.customers.Where(t => (t.cu_fullname.Contains(name) || t.cu_mobile.Contains(name) || t.cu_email.Contains(name) || t.cu_code.Contains(name)) && t.customer_group_id == customer_group_id).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }
-            if (check_source_id == 0 && check_type == 1 && check_group_id == 0 && check_name == 0)
-            {
-                list = _dbContext.customers.Where(t => t.cu_type == cu_type).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }
-            if (check_source_id == 0 && check_type == 1 && check_group_id == 0 && check_name == 1)
-            {
-                list = _dbContext.customers.Where(t => t.cu_type == cu_type).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }
-            if (check_source_id == 0 && check_type == 1 && check_group_id == 1 && check_name == 0)
-            {
-                list = _dbContext.customers.Where(t => t.cu_type == cu_type && t.customer_group_id == customer_group_id).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }
-            if (check_source_id == 0 && check_type == 1 && check_group_id == 1 && check_name == 1)
-            {
-                list = _dbContext.customers.Where(t => t.cu_type == cu_type && t.customer_group_id == customer_group_id && t.cu_fullname.Contains(name)).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }
-            if (check_source_id == 1 && check_type == 0 && check_group_id == 0 && check_name == 0)
-            {
-                list = _dbContext.customers.Where(t => t.source_id == source_id).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }
-            if (check_source_id == 1 && check_type == 0 && check_group_id == 0 && check_name == 1)
-            {
-                list = _dbContext.customers.Where(t => t.source_id == source_id && t.cu_fullname.Contains(name)).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }
-            if (check_source_id == 1 && check_type == 0 && check_group_id == 1 && check_name == 0)
-            {
-                list = _dbContext.customers.Where(t => t.source_id == source_id && t.customer_group_id == customer_group_id).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }
-            if (check_source_id == 1 && check_type == 0 && check_group_id == 1 && check_name == 1)
-            {
-                list = _dbContext.customers.Where(t => t.source_id == source_id && (t.cu_fullname.Contains(name) || t.cu_mobile.Contains(name) || t.cu_email.Contains(name) || t.cu_code.Contains(name)) && t.customer_group_id == customer_group_id).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }
-            if (check_source_id == 1 && check_type == 1 && check_group_id == 0 && check_name == 0)
-            {
-                list = _dbContext.customers.Where(t => t.source_id == source_id && t.cu_type == cu_type).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }
-            if (check_source_id == 1 && check_type == 1 && check_group_id == 0 && check_name == 1)
-            {
-                list = _dbContext.customers.Where(t => t.source_id == source_id && t.cu_type == cu_type).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }
-            if (check_source_id == 1 && check_type == 1 && check_group_id == 1 && check_name == 0)
-            {
-                list = _dbContext.customers.Where(t => t.source_id == source_id && t.cu_type == cu_type && t.customer_group_id == customer_group_id).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }
-            if (check_source_id == 1 && check_type == 1 && check_group_id == 1 && check_name == 1)
-            {
-                list = _dbContext.customers.Where(t => t.source_id == source_id && t.cu_type == cu_type && t.customer_group_id == customer_group_id && t.cu_fullname.Contains(name)).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }
-            #endregion
             var total = _dbContext.customers.Count();
 
-            var results = list.ToList();
+            var results = list.OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
             foreach (customer i in results)
             {
                 var customerex = _mapper.Map<customerview>(i);

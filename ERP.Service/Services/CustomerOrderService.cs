@@ -6,6 +6,7 @@ using ERP.Data.ModelsERP.ModelView.ExportDB;
 using ERP.Data.ModelsERP.ModelView.Statistics;
 using ERP.Repository.Repositories.IRepositories;
 using ERP.Service.Services.IServices;
+using System;
 using System.Collections.Generic;
 
 namespace ERP.Service.Services
@@ -27,13 +28,13 @@ namespace ERP.Service.Services
             return this._repository.GetAllOrderById(id);
         }
        
-        public PagedResults<customerorderviewmodel> GetAllSearch(int pageNumber, int pageSize, int? payment_type_id, string name)
+        public PagedResults<customerorderviewmodel> GetAllSearch(int pageNumber, int pageSize, int? payment_type_id, DateTime? start_date, DateTime? end_date, string name)
         {
-            return this._repository.GetAllSearch(pageNumber, pageSize,  payment_type_id, name);
+            return this._repository.GetAllSearch(pageNumber, pageSize,  payment_type_id,start_date,end_date, name);
         }
-        public PagedResults<customerorderview> ExportCustomerOrder(int pageNumber, int pageSize, int? payment_type_id, string name)
+        public PagedResults<customerorderview> ExportCustomerOrder(int pageNumber, int pageSize, int? payment_type_id, DateTime? start_date, DateTime? end_date, string name)
         {
-            return this._repository.ExportCustomerOrder(pageNumber, pageSize,  payment_type_id, name);
+            return this._repository.ExportCustomerOrder(pageNumber, pageSize,  payment_type_id,start_date, end_date, name);
         }
         public List<dropdown> GetAllPayment()
         {

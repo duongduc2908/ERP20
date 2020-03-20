@@ -147,14 +147,14 @@ namespace ERP.API.Controllers.Dashboard
         #region [Search source, type, group, name Page]
         [HttpGet]
         [Route("api/customers/search")]
-        public IHttpActionResult GetInforByName(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, string name)
+        public IHttpActionResult GetInforByName(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, DateTime? start_date, DateTime? end_date, string name)
         {
             ResponseDataDTO<PagedResults<customerviewmodel>> response = new ResponseDataDTO<PagedResults<customerviewmodel>>();
             try
             {
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _customerservice.GetAllPageSearch(pageNumber, pageSize, source_id, cu_type, customer_group_id, name);
+                response.Data = _customerservice.GetAllPageSearch(pageNumber, pageSize, source_id, cu_type, customer_group_id,start_date,end_date, name);
             }
             catch (Exception ex)
             {
@@ -883,7 +883,7 @@ namespace ERP.API.Controllers.Dashboard
         #region["Export Excel"]
         [HttpGet]
         [Route("api/customers/export")]
-        public async Task<IHttpActionResult> Export(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, string name)
+        public async Task<IHttpActionResult> Export(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, DateTime? start_date, DateTime? end_date, string name)
         {
             ResponseDataDTO<string> response = new ResponseDataDTO<string>();
             try
@@ -891,7 +891,7 @@ namespace ERP.API.Controllers.Dashboard
                 var listStaff = new List<customerview>();
 
                 //Đưa ra danh sách staff trong trang nào đó 
-                var objRT_Mst_Staff = _customerservice.ExportCustomer(pageNumber, pageSize, source_id, cu_type, customer_group_id, name);
+                var objRT_Mst_Staff = _customerservice.ExportCustomer(pageNumber, pageSize, source_id, cu_type, customer_group_id,start_date,end_date, name);
                 if (objRT_Mst_Staff != null)
                 {
                     listStaff.AddRange(objRT_Mst_Staff.Results);

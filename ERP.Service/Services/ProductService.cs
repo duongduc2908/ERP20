@@ -27,13 +27,13 @@ namespace ERP.Service.Services
         {
             return this._repository.GetAllPageById(id);
         }
-        public PagedResults<productviewmodel> GetProducts(int pageNumber, int pageSize, string search_name, int? category_id)
+        public PagedResults<productviewmodel> GetProducts(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name, int? category_id)
         {
-            return this._repository.GetProducts(pageNumber,pageSize, search_name,category_id);
+            return this._repository.GetProducts(pageNumber,pageSize,start_date,end_date, search_name,category_id);
         }
-        public PagedResults<productview> ExportProduct(int pageNumber, int pageSize, string search_name, int? category_id)
+        public PagedResults<productview> ExportProduct(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name, int? category_id)
         {
-            return this._repository.ExportProduct(pageNumber,pageSize, search_name,category_id);
+            return this._repository.ExportProduct(pageNumber,pageSize,start_date,end_date, search_name,category_id);
         }
         public List<dropdown> GetUnit()
         {

@@ -172,6 +172,7 @@
     <Compile Include="ModelsERP\ModelView\Transaction\transactioncustomerorderviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Transaction\transactioncustomerviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Transaction\transactionorderproductviewmodel.cs" />
+    <Compile Include="ModelsERP\ModelView\Transaction\transactionstatisticrateviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Transaction\transactionviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\undertakenlocationviewmodel.cs" />
     <Compile Include="ModelsERP\notification.cs" />

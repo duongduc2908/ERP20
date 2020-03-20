@@ -114,14 +114,14 @@ namespace ERP.API.Controllers.Dashboard
         }
         [HttpGet]
         [Route("api/customer-orders/search")]
-        public IHttpActionResult GetAllSearch(int pageNumber, int pageSize, int? payment_type_id, string code)
+        public IHttpActionResult GetAllSearch(int pageNumber, int pageSize, int? payment_type_id, DateTime? start_date, DateTime? end_date, string code)
         {
             ResponseDataDTO<PagedResults<customerorderviewmodel>> response = new ResponseDataDTO<PagedResults<customerorderviewmodel>>();
             try
             {
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _customer_orderservice.GetAllSearch(pageNumber: pageNumber, pageSize: pageSize, payment_type_id: payment_type_id, code);
+                response.Data = _customer_orderservice.GetAllSearch(pageNumber: pageNumber, pageSize: pageSize, payment_type_id: payment_type_id,start_date,end_date, code);
             }
             catch (Exception ex)
             {
@@ -684,7 +684,7 @@ namespace ERP.API.Controllers.Dashboard
         #region["Export Excel"]
         [HttpGet]
         [Route("api/customer-order/export")]
-        public async Task<IHttpActionResult> ExportCustomerOrder(int pageNumber, int pageSize, int? payment_type_id, string name)
+        public async Task<IHttpActionResult> ExportCustomerOrder(int pageNumber, int pageSize, int? payment_type_id, DateTime? start_date, DateTime? end_date, string name)
         {
             ResponseDataDTO<string> response = new ResponseDataDTO<string>();
             try
@@ -692,7 +692,7 @@ namespace ERP.API.Controllers.Dashboard
                 var list_customer_order = new List<customerorderview>();
 
                 //Đưa ra danh sách staff trong trang nào đó 
-                var objRT_Mst_Customer_Order = _customer_orderservice.ExportCustomerOrder(pageNumber, pageSize, payment_type_id, name);
+                var objRT_Mst_Customer_Order = _customer_orderservice.ExportCustomerOrder(pageNumber, pageSize, payment_type_id,start_date,end_date, name);
                 if (objRT_Mst_Customer_Order != null)
                 {
                     list_customer_order.AddRange(objRT_Mst_Customer_Order.Results);

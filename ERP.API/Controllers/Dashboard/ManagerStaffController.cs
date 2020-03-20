@@ -102,14 +102,14 @@ namespace ERP.API.Controllers.Dashboard
         }
 
         [Route("api/staffs/search-active-name")]
-        public IHttpActionResult GetstaffsPaging(int pageSize, int pageNumber, int? status, string name)
+        public IHttpActionResult GetstaffsPaging(int pageSize, int pageNumber, int? status, DateTime? start_date, DateTime? end_date, string name)
         {
             ResponseDataDTO<PagedResults<staffviewmodel>> response = new ResponseDataDTO<PagedResults<staffviewmodel>>();
             try
             {
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _staffservice.GetAllPageSearch(  pageNumber, pageSize, status,name);
+                response.Data = _staffservice.GetAllPageSearch(  pageNumber, pageSize, status, start_date, end_date, name);
             }
             catch (Exception ex)
             {
@@ -1171,14 +1171,14 @@ namespace ERP.API.Controllers.Dashboard
         #region["Export Excel"]
         [HttpGet]
         [Route("api/satffs/export")]
-        public async Task<IHttpActionResult> Export(int pageSize, int pageNumber, int? status, string name)
+        public async Task<IHttpActionResult> Export(int pageSize, int pageNumber, int? status, DateTime? start_date, DateTime? end_date, string name)
         {
             ResponseDataDTO<string> response = new ResponseDataDTO<string>();
             try
             {
                 var listStaff = new List<staffview>();
                 //Đưa ra danh sách staff trong trang nào đó 
-                var objRT_Mst_Staff = _staffservice.ExportStaff(pageNumber, pageSize,status,name);
+                var objRT_Mst_Staff = _staffservice.ExportStaff(pageNumber, pageSize,status, start_date,end_date, name);
                 if (objRT_Mst_Staff != null)
                 {
                     listStaff.AddRange(objRT_Mst_Staff.Results);

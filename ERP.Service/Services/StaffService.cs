@@ -36,13 +36,13 @@ namespace ERP.Service.Services
         {
             return this._repository.GetAllPage(pageNumber, pageSize);
         }
-        public PagedResults<staffviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? status, string name)
+        public PagedResults<staffviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? status, DateTime? start_date, DateTime? end_date, string name)
         {
-            return this._repository.GetAllPageSearch(pageNumber, pageSize, status, name);
+            return this._repository.GetAllPageSearch(pageNumber, pageSize, status, start_date, end_date, name);
         }
-        public PagedResults<staffview> ExportStaff(int pageNumber, int pageSize, int? status, string name)
+        public PagedResults<staffview> ExportStaff(int pageNumber, int pageSize, int? status, DateTime? start_date, DateTime? end_date, string name)
         {
-            return this._repository.ExportStaff(pageNumber, pageSize, status, name);
+            return this._repository.ExportStaff(pageNumber, pageSize, status, start_date, end_date, name);
         }
         public staffviewmodel GetInforById(int id)
         {

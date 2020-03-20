@@ -106,39 +106,34 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = total
             };
         }
-        public PagedResults<staffviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? status, string name)
+        public PagedResults<staffviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? status, DateTime? start_date, DateTime? end_date, string name)
         {
             if(name != null)
             {
                 name = name.Trim();
             }
-            
+            List<staff> list_res;
+            List<staff> list;
             List<staffviewmodel> res = new List<staffviewmodel>();
             var skipAmount = pageSize * pageNumber;
-            var list = _dbContext.staffs.Where(t => t.sta_status == status && t.sta_fullname.Contains(name) || t.sta_mobile.Contains(name) || t.sta_email.Contains(name) || t.sta_code.Contains(name) || t.sta_username.Contains(name)).OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize);
-            if (status == null)
+            if(status == null)
             {
-                if (name != null)
-                {
-                    list = _dbContext.staffs.Where(t => t.sta_fullname.Contains(name) || t.sta_mobile.Contains(name) || t.sta_email.Contains(name) || t.sta_code.Contains(name) || t.sta_username.Contains(name)).OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize);
-                }
-                else
-                {
-                    list = _dbContext.staffs.OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize);
-                }
+                list_res = _dbContext.staffs.ToList();
             }
-            if(name == null)
+            else list_res = _dbContext.staffs.Where(x => x.sta_status == status).ToList();
+            if (start_date != null)
             {
-                if (status != null)
-                {
-                    list = _dbContext.staffs.Where(t => t.sta_status == status).OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize);
-                }
-                else
-                {
-                    list = _dbContext.staffs.OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize);
-                }
+                list_res = list_res.Where(x => x.sta_created_date >= start_date).ToList();
             }
-
+            if (end_date != null)
+            {
+                list_res = list_res.Where(x => x.sta_created_date <= end_date).ToList();
+            }
+            if (name != null)
+            {
+                list_res = list_res.Where(t => t.sta_fullname.Contains(name) || t.sta_mobile.Contains(name) || t.sta_email.Contains(name) || t.sta_code.Contains(name) || t.sta_username.Contains(name)).ToList();
+            }
+            list = list_res.OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize).ToList();
             var total = _dbContext.staffs.Count();
             
 
@@ -318,7 +313,7 @@ namespace ERP.Repository.Repositories
             
             return res;
         }
-        public PagedResults<staffview> ExportStaff(int pageNumber, int pageSize, int? status, string name)
+        public PagedResults<staffview> ExportStaff(int pageNumber, int pageSize, int? status, DateTime? start_date, DateTime? end_date, string name)
         {
             if (name != null)
             {
@@ -326,30 +321,28 @@ namespace ERP.Repository.Repositories
             }
 
             List<staffview> res = new List<staffview>();
+            List<staff> list_res;
+            List<staff> list;
             var skipAmount = pageSize * pageNumber;
-            var list = _dbContext.staffs.Where(t => t.sta_status == status && t.sta_fullname.Contains(name) || t.sta_mobile.Contains(name) || t.sta_email.Contains(name) || t.sta_code.Contains(name) || t.sta_username.Contains(name)).OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize);
             if (status == null)
             {
-                if (name != null)
-                {
-                    list = _dbContext.staffs.Where(t => t.sta_fullname.Contains(name) || t.sta_mobile.Contains(name) || t.sta_email.Contains(name) || t.sta_code.Contains(name) || t.sta_username.Contains(name)).OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize);
-                }
-                else
-                {
-                    list = _dbContext.staffs.OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize);
-                }
+                list_res = _dbContext.staffs.ToList();
             }
-            if (name == null)
+            else list_res = _dbContext.staffs.Where(x => x.sta_status == status).ToList();
+            if (start_date != null)
             {
-                if (status != null)
-                {
-                    list = _dbContext.staffs.Where(t => t.sta_status == status).OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize);
-                }
-                else
-                {
-                    list = _dbContext.staffs.OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize);
-                }
+                list_res = list_res.Where(x => x.sta_created_date >= start_date).ToList();
             }
+            if (end_date != null)
+            {
+                list_res = list_res.Where(x => x.sta_created_date <= end_date).ToList();
+            }
+            if (name != null)
+            {
+                list_res = list_res.Where(t => t.sta_fullname.Contains(name) || t.sta_mobile.Contains(name) || t.sta_email.Contains(name) || t.sta_code.Contains(name) || t.sta_username.Contains(name)).ToList();
+            }
+            list = list_res.OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize).ToList();
+
 
             var total = _dbContext.staffs.Count();
 

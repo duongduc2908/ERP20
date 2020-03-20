@@ -40,14 +40,14 @@ namespace ERP.API.Controllers.Dashboard
         #region[method]
         [HttpGet]
         [Route("api/transactions/search")]
-        public IHttpActionResult GetAllPageSearch(int pageNumber, int pageSize, string search_name)
+        public IHttpActionResult GetAllPageSearch(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name)
         {
             ResponseDataDTO<PagedResults<transactionviewmodel>> response = new ResponseDataDTO<PagedResults<transactionviewmodel>>();
             try
             {
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _transactionservice.GetAllPageSearch(pageNumber: pageNumber, pageSize: pageSize, search_name: search_name);
+                response.Data = _transactionservice.GetAllPageSearch(pageNumber: pageNumber, pageSize: pageSize,start_date,end_date, search_name: search_name);
             }
             catch (Exception ex)
             {
@@ -626,7 +626,7 @@ namespace ERP.API.Controllers.Dashboard
         #region["Export Excel"]
         [HttpGet]
         [Route("api/transaction/export")]
-        public async Task<IHttpActionResult> ExportTransaction(int pageNumber, int pageSize, string search_name)
+        public async Task<IHttpActionResult> ExportTransaction(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name)
         {
             ResponseDataDTO<string> response = new ResponseDataDTO<string>();
             try
@@ -634,7 +634,7 @@ namespace ERP.API.Controllers.Dashboard
                 var listTransaction = new List<transactionview>();
 
                 //Đưa ra danh sách staff trong trang nào đó 
-                var objRT_Mst_Transaction = _transactionservice.ExportTransaction(pageNumber: pageNumber, pageSize: pageSize, search_name);
+                var objRT_Mst_Transaction = _transactionservice.ExportTransaction(pageNumber: pageNumber, pageSize: pageSize,start_date,end_date, search_name);
                 if (objRT_Mst_Transaction != null)
                 {
                     listTransaction.AddRange(objRT_Mst_Transaction.Results);

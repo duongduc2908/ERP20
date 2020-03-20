@@ -129,14 +129,14 @@ namespace ERP.API.Controllers.Dashboard
         #endregion
         #region[Search]
         [Route("api/products/search")]
-        public IHttpActionResult GetProducts(int pageNumber, int pageSize, string search_name, int? category_id)
+        public IHttpActionResult GetProducts(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name, int? category_id)
         {
             ResponseDataDTO<PagedResults<productviewmodel>> response = new ResponseDataDTO<PagedResults<productviewmodel>>();
             try
             {
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _productservice.GetProducts(pageNumber:pageNumber, pageSize:pageSize, search_name:search_name, category_id:category_id);
+                response.Data = _productservice.GetProducts(pageNumber:pageNumber, pageSize:pageSize, search_name:search_name, category_id:category_id,start_date: start_date, end_date:end_date);
             }
             catch (Exception ex)
             {
@@ -619,7 +619,7 @@ namespace ERP.API.Controllers.Dashboard
         #region["Export Excel"]
         [HttpGet]
         [Route("api/product/export")]
-        public async Task<IHttpActionResult> ExportProduct(int pageNumber, int pageSize, string search_name, int? category_id)
+        public async Task<IHttpActionResult> ExportProduct(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name, int? category_id)
         {
             ResponseDataDTO<string> response = new ResponseDataDTO<string>();
             try
@@ -627,7 +627,7 @@ namespace ERP.API.Controllers.Dashboard
                 var listProduct = new List<productview>();
 
                 //Đưa ra danh sách staff trong trang nào đó 
-                var objRT_Mst_Product = _productservice.ExportProduct(pageNumber, pageSize, search_name, category_id);
+                var objRT_Mst_Product = _productservice.ExportProduct(pageNumber, pageSize, start_date,end_date, search_name, category_id);
                 if (objRT_Mst_Product != null)
                 {
                     listProduct.AddRange(objRT_Mst_Product.Results);

@@ -195,38 +195,35 @@ namespace ERP.Repository.Repositories
             }
             return res;
         }
-        public PagedResults<customerorderviewmodel> GetAllSearch(int pageNumber, int pageSize, int? payment_type_id, string code)
+        public PagedResults<customerorderviewmodel> GetAllSearch(int pageNumber, int pageSize, int? payment_type_id, DateTime? start_date, DateTime? end_date, string code)
         {
             List<customerorderviewmodel> res = new List<customerorderviewmodel>();
 
             var skipAmount = pageSize * pageNumber;
 
-            var list = _dbContext.customer_order.Where(t => t.cuo_payment_type == payment_type_id && t.cuo_code.Contains(code)).OrderBy(t => t.cuo_id).Skip(skipAmount).Take(pageSize);
-            if (payment_type_id == null)
+            List<customer_order> list = new List<customer_order>();
+            if(code == null)
             {
-                if (code != null)
-                {
-                    list = _dbContext.customer_order.Where(t => t.cuo_code.Contains(code)).OrderBy(t => t.cuo_id).Skip(skipAmount).Take(pageSize);
-                }
-                else
-                {
-                    list = _dbContext.customer_order.OrderBy(t => t.cuo_id).Skip(skipAmount).Take(pageSize);
-                }
-
+                list = _dbContext.customer_order.ToList();
             }
-            if (code == null)
+            else
             {
-                if (payment_type_id != null)
-                {
-                    list = _dbContext.customer_order.Where(t => t.cuo_payment_type == payment_type_id).OrderBy(t => t.cuo_id).Skip(skipAmount).Take(pageSize);
-                }
-                else
-                {
-                    list = _dbContext.customer_order.OrderBy(t => t.cuo_id).Skip(skipAmount).Take(pageSize);
-                }
+                list = _dbContext.customer_order.Where(x => x.cuo_code.Contains(code)).ToList();
+            }
+            if(payment_type_id !=null)
+            {
+                list = list.Where(x => x.cuo_payment_type == payment_type_id).ToList();
+            }
+            if (start_date != null)
+            {
+                list = list.Where(x => x.cuo_date >= start_date).ToList();
+            }
+            if (end_date != null)
+            {
+                list = list.Where(x => x.cuo_date <= end_date).ToList();
             }
             var total = _dbContext.customer_order.Count();
-            var results = list.ToList();
+            var results = list.OrderBy(t => t.cuo_id).Skip(skipAmount).Take(pageSize);
             foreach (customer_order i in results)
             {
                 var orderview = _mapper.Map<customerorderviewmodel>(i);
@@ -326,16 +323,35 @@ namespace ERP.Repository.Repositories
             }
             return res;
         }
-        public PagedResults<customerorderview> ExportCustomerOrder(int pageNumber, int pageSize, int? payment_type_id, string name)
+        public PagedResults<customerorderview> ExportCustomerOrder(int pageNumber, int pageSize, int? payment_type_id, DateTime? start_date, DateTime? end_date, string name)
         {
             List<customerorderview> res = new List<customerorderview>();
             var skipAmount = pageSize * pageNumber;
 
-            var list = _dbContext.customer_order.OrderBy(t => t.cuo_id).Skip(skipAmount).Take(pageSize);
+            List<customer_order> list = new List<customer_order>();
+            if (name == null)
+            {
+                list = _dbContext.customer_order.ToList();
+            }
+            else
+            {
+                list = _dbContext.customer_order.Where(x => x.cuo_code.Contains(name)).ToList();
+            }
+            if (payment_type_id != null)
+            {
+                list = list.Where(x => x.cuo_payment_type == payment_type_id).ToList();
+            }
+            if (start_date != null)
+            {
+                list = list.Where(x => x.cuo_date >= start_date).ToList();
+            }
+            if (end_date != null)
+            {
+                list = list.Where(x => x.cuo_date <= end_date).ToList();
+            }
+            var results = list.OrderBy(t => t.cuo_id).Skip(skipAmount).Take(pageSize);
 
             var totalNumberOfRecords = _dbContext.customer_order.Count();
-
-            var results = list.ToList();
             foreach (customer_order i in results)
             {
                 var orderview = _mapper.Map<customerorderview>(i);
