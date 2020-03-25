@@ -174,6 +174,7 @@ namespace ERP.Repository.Repositories
             }
             if (end_date != null)
             {
+                end_date = end_date.Value.AddDays(1);
                 list = list.Where(x => x.cu_create_date <= end_date).ToList();
             }
             var total = _dbContext.customers.Count();
@@ -476,6 +477,7 @@ namespace ERP.Repository.Repositories
             }
             if (end_date != null)
             {
+                end_date = end_date.Value.AddDays(1);
                 list = list.Where(x => x.cu_create_date <= end_date).ToList();
             }
 

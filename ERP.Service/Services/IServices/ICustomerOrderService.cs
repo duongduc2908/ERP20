@@ -21,6 +21,8 @@ namespace ERP.Service.Services.IServices
         PagedResults<customerorderviewmodel> ResultStatisticsCustomerOrder(int pageNumber, int pageSize, int staff_id, bool month, bool week, bool day);
         List<dropdown> GetAllPayment();
         statisticsbyrevenueviewmodel ResultStatisticsByRevenue(int staff_id);
+        List<revenue> ResultStatisticByMonth(int staff_id);
+
         List<dropdown> GetAllStatus();
     }
 }

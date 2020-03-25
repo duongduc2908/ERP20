@@ -18,6 +18,6 @@ namespace ERP.Service.Services.IServices
         List<piechartview> GetPieChart();
 
         bool CheckUniqueName(string name,int id);
-        List<statisticrevenuecustomergroupviewmodel> GetRevenueCustomerGroup();
+        List<statisticrevenueviewmodel> GetRevenueCustomerGroup(int staff_id);
     }
 }

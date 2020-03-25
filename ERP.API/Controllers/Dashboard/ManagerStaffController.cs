@@ -1347,7 +1347,7 @@ namespace ERP.API.Controllers.Dashboard
                     response.Data = null;
                     return Ok(response);
                 }
-                if (streamProvider.FormData["sta_password"] == null)
+                if (streamProvider.FormData["sta_address"] == null)
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
                     response.Message = "Mật khẩu không được để trống";
@@ -1359,7 +1359,7 @@ namespace ERP.API.Controllers.Dashboard
                 var existstaff = _staffservice.Find(staff_id);
                 existstaff.sta_fullname = Convert.ToString(streamProvider.FormData["sta_fullname"]);
                 existstaff.sta_email = Convert.ToString(streamProvider.FormData["sta_email"]);
-                existstaff.sta_password = HashMd5.convertMD5(Convert.ToString(streamProvider.FormData["sta_password"]));
+                existstaff.sta_address = Convert.ToString(streamProvider.FormData["sta_address"]);
                 existstaff.sta_mobile = Convert.ToString(streamProvider.FormData["sta_mobile"]);
                 existstaff.sta_aboutme = Convert.ToString(streamProvider.FormData["sta_aboutme"]);
                 //Cập nhập thông tin mạng xã hội 

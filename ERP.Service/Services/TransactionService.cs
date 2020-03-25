@@ -46,9 +46,9 @@ namespace ERP.Service.Services
         {
             return this._repository.GetTransactionRate();
         }
-        public List<transactionstatisticrateviewmodel> GetTransactionStatisticRate()
+        public List<transactionstatisticrateviewmodel> GetTransactionStatisticRate(int staff_id)
         {
-            return this._repository.GetTransactionStatisticRate();
+            return this._repository.GetTransactionStatisticRate(staff_id);
         }
         public PagedResults<transactionview> ExportTransaction(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name)
         {

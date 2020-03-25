@@ -110,6 +110,7 @@ namespace ERP.Repository.Repositories
             }
             if (end_date != null)
             {
+                end_date = end_date.Value.AddDays(1);
                 list = list.Where(x => x.tra_datetime <= end_date).ToList();
             }
             var results = list.OrderBy(t => t.tra_id).Skip(skipAmount).Take(pageSize);
@@ -158,6 +159,10 @@ namespace ERP.Repository.Repositories
                 var customergroup = _dbContext.customer_group.FirstOrDefault(x => x.cg_id == cus.customer_group_id);
                 customerview.source_name = sources.src_name;
                 customerview.customer_group_name = customergroup.cg_name;
+                var curator = _dbContext.staffs.Find(customerview.cu_curator_id);
+                if (curator != null) customerview.cu_curator_name = curator.sta_fullname;
+                var staff_cu = _dbContext.staffs.Find(customerview.staff_id);
+                if (staff_cu != null) customerview.staff_name = staff_cu.sta_fullname;
                 for (int j = 1; j < EnumCustomer.cu_type.Length+1; j++)
                 {
                     if (j == cus.cu_type)
@@ -232,6 +237,7 @@ namespace ERP.Repository.Repositories
             }
             if (end_date != null)
             {
+                end_date = end_date.Value.AddDays(1);
                 list = list.Where(x => x.tra_datetime <= end_date).ToList();
             }
             var totalNumberOfRecords = _dbContext.transactions.Count();
@@ -286,16 +292,36 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = totalNumberOfRecords
             };
         }
-        public List<transactionstatisticrateviewmodel> GetTransactionStatisticRate()
+        public List<transactionstatisticrateviewmodel> GetTransactionStatisticRate(int staff_id)
         {
             List<transactionstatisticrateviewmodel> res = new List<transactionstatisticrateviewmodel>();
-            for(int i = 1; i< EnumTransaction.tra_rate.Length+1; i++)
+            //Kiểm tra admin , user 
+            var user = _dbContext.staffs.Find(staff_id);
+            if (user == null) { return null; }
+            else
             {
-                transactionstatisticrateviewmodel add = new transactionstatisticrateviewmodel();
-                add.cg_name = EnumTransaction.tra_rate[i - 1];
-                add.number = _dbContext.transactions.Where(t => t.tra_rate == i).Count();
-                res.Add(add);
+                if (user.group_role_id == 1)
+                {
+                    for (int i = 1; i < EnumTransaction.tra_rate.Length + 1; i++)
+                    {
+                        transactionstatisticrateviewmodel add = new transactionstatisticrateviewmodel();
+                        add.cg_name = EnumTransaction.tra_rate[i - 1];
+                        add.number = _dbContext.transactions.Where(t => t.tra_rate == i).Count();
+                        res.Add(add);
+                    }
+                }
+                else
+                {
+                    for (int i = 1; i < EnumTransaction.tra_rate.Length + 1; i++)
+                    {
+                        transactionstatisticrateviewmodel add = new transactionstatisticrateviewmodel();
+                        add.cg_name = EnumTransaction.tra_rate[i - 1];
+                        add.number = _dbContext.transactions.Where(t => t.tra_rate == i && t.staff_id == user.sta_id).Count();
+                        res.Add(add);
+                    }
+                }
             }
+                    
             return res;
         }
     }

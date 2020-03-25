@@ -41,7 +41,7 @@ namespace ERP.API
                 //The Path For generating the Toekn
                 TokenEndpointPath = new PathString("/token"),
                 //Setting the Token Expired Time (24 hours)
-                AccessTokenExpireTimeSpan = TimeSpan.FromDays(1),
+                AccessTokenExpireTimeSpan = TimeSpan.FromHours(3),
                 //MyAuthorizationServerProvider class will validate the user credentials
                 Provider = new ApplicationOAuthProvider(),
                 RefreshTokenProvider = new RefreshTokenProvider()

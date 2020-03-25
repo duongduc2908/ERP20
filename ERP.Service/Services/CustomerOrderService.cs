@@ -50,6 +50,11 @@ namespace ERP.Service.Services
         {
             return this._repository.ResultStatisticsByRevenue(staff_id);
         }
+        public List<revenue> ResultStatisticByMonth(int staff_id)
+        {
+            return this._repository.ResultStatisticByMonth(staff_id);
+        }
+        
         public List<dropdown> GetAllStatus()
         {
             return this._repository.GetAllStatus();

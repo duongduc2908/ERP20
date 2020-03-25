@@ -103,26 +103,57 @@ namespace ERP.Repository.Repositories
             return true;
         }
 
-        public List<statisticrevenuecustomergroupviewmodel> GetRevenueCustomerGroup()
+        public List<statisticrevenueviewmodel> GetRevenueCustomerGroup(int staff_id)
         {
-            List<statisticrevenuecustomergroupviewmodel> res = new List<statisticrevenuecustomergroupviewmodel>();
-            var lts_cg = (from cg in _dbContext.customer_group
-                          join c in _dbContext.customers on cg.cg_id equals c.customer_group_id
-                          join co in _dbContext.customer_order on c.cu_id equals co.customer_id
-                          group co by cg.cg_name into t
-                          select new
-                          {
-                              name = t.Key,
-                              total = t.Sum(i => i.cuo_total_price),
-                          }).ToList();
-           
-            foreach(var i in lts_cg)
+            List<statisticrevenueviewmodel> res = new List<statisticrevenueviewmodel>();
+            //Kiểm tra admin , user 
+            var user = _dbContext.staffs.Find(staff_id);
+            if (user == null) { return null; }
+            else
             {
-                statisticrevenuecustomergroupviewmodel add = new statisticrevenuecustomergroupviewmodel();
-                add.cg_name = i.name;
-                add.total_revenue = i.total;
-                res.Add(add);
+                if (user.group_role_id == 1)
+                {
+                    var lts_cg = (from cg in _dbContext.customer_group
+                                  join c in _dbContext.customers on cg.cg_id equals c.customer_group_id
+                                  join co in _dbContext.customer_order on c.cu_id equals co.customer_id
+                                  group co by cg.cg_name into t
+                                  select new
+                                  {
+                                      name = t.Key,
+                                      total = t.Sum(i => i.cuo_total_price),
+                                  }).ToList();
+
+                    foreach (var i in lts_cg)
+                    {
+                        statisticrevenueviewmodel add = new statisticrevenueviewmodel();
+                        add.cg_name = i.name;
+                        add.total_revenue = i.total;
+                        res.Add(add);
+                    }
+                }
+                else
+                {
+                    var lts_cg = (from cg in _dbContext.customer_group
+                                  join c in _dbContext.customers on cg.cg_id equals c.customer_group_id
+                                  join co in _dbContext.customer_order on c.cu_id equals co.customer_id
+                                  where co.staff_id == user.sta_id
+                                  group co by cg.cg_name into t
+                                  select new
+                                  {
+                                      name = t.Key,
+                                      total = t.Sum(i => i.cuo_total_price),
+                                  }).ToList();
+
+                    foreach (var i in lts_cg)
+                    {
+                        statisticrevenueviewmodel add = new statisticrevenueviewmodel();
+                        add.cg_name = i.name;
+                        add.total_revenue = i.total;
+                        res.Add(add);
+                    }
+                }
             }
+            
             return res;
         }
 

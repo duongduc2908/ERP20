@@ -3,6 +3,7 @@ using ERP.Common.GenericRepository;
 using ERP.Common.Models;
 using ERP.Data.DbContext;
 using ERP.Data.ModelsERP;
+using ERP.Data.ModelsERP.ModelView.Statistics;
 using ERP.Repository.Repositories.IRepositories;
 using System;
 using System.Collections.Generic;
@@ -77,6 +78,59 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfPages = 0,
                 TotalNumberOfRecords = totalNumberOfRecords
             };
+        }
+        public List<statisticrevenueviewmodel> GetRevenueSource(int staff_id)
+        {
+            List<statisticrevenueviewmodel> res = new List<statisticrevenueviewmodel>();
+            //Kiểm tra admin , user 
+            var user = _dbContext.staffs.Find(staff_id);
+            if (user == null) { return null; }
+            else
+            {
+                if (user.group_role_id == 1)
+                {
+                    var lts_cg = (from s in _dbContext.sources
+                                  join c in _dbContext.customers on s.src_id equals c.source_id
+                                  join co in _dbContext.customer_order on c.cu_id equals co.customer_id
+                                  group co by s.src_name into t
+                                  select new
+                                  {
+                                      name = t.Key,
+                                      total = t.Sum(i => i.cuo_total_price),
+                                  }).ToList();
+
+                    foreach (var i in lts_cg)
+                    {
+                        statisticrevenueviewmodel add = new statisticrevenueviewmodel();
+                        add.cg_name = i.name;
+                        add.total_revenue = i.total;
+                        res.Add(add);
+                    }
+                }
+                else
+                {
+                    var lts_cg = (from s in _dbContext.sources
+                                  join c in _dbContext.customers on s.src_id equals c.source_id
+                                  join co in _dbContext.customer_order on c.cu_id equals co.customer_id
+                                  where co.staff_id == user.sta_id
+                                  group co by s.src_name into t
+                                  select new
+                                  {
+                                      name = t.Key,
+                                      total = t.Sum(i => i.cuo_total_price),
+                                  }).ToList();
+
+                    foreach (var i in lts_cg)
+                    {
+                        statisticrevenueviewmodel add = new statisticrevenueviewmodel();
+                        add.cg_name = i.name;
+                        add.total_revenue = i.total;
+                        res.Add(add);
+                    }
+                }
+            }
+
+            return res;
         }
     }
 }

@@ -127,6 +127,7 @@ namespace ERP.Repository.Repositories
             }
             if (end_date != null)
             {
+                end_date = end_date.Value.AddDays(1);
                 list_res = list_res.Where(x => x.sta_created_date <= end_date).ToList();
             }
             if (name != null)
@@ -335,6 +336,7 @@ namespace ERP.Repository.Repositories
             }
             if (end_date != null)
             {
+                end_date = end_date.Value.AddDays(1);
                 list_res = list_res.Where(x => x.sta_created_date <= end_date).ToList();
             }
             if (name != null)

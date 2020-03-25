@@ -31,7 +31,7 @@ namespace ERP.Data.ModelsERP.ModelView.StatisticStaff
 
         //public byte? sta_sex { get; set; }
 
-        //public DateTime? sta_birthday { get; set; }
+        public DateTime? sta_birthday { get; set; }
 
         [StringLength(100)]
         public string sta_email { get; set; }

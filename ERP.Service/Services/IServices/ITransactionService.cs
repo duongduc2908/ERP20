@@ -21,6 +21,6 @@ namespace ERP.Service.Services.IServices
         List<dropdown> GetTransactionPriority();
         List<dropdown> GetTransactionStatus();
         List<dropdown> GetTransactionRate();
-        List<transactionstatisticrateviewmodel> GetTransactionStatisticRate();
+        List<transactionstatisticrateviewmodel> GetTransactionStatisticRate(int staff_id);
     }
 }

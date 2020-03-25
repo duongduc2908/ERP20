@@ -31,14 +31,16 @@ namespace ERP.API.Controllers.Dashboard
         private readonly IOrderProductService _orderproductservice;
         private readonly ICustomerGroupService _customergroupservice;
         private readonly ITransactionService _transactionservice;
+        private readonly ISourceService _sourceservice;
         public ManagerStatisticalController() { }
         private readonly IMapper _mapper;
-        public ManagerStatisticalController(ITransactionService transactionservice,ICustomerOrderService customerorderservice, IOrderProductService orderproductservice, ICustomerGroupService customergroupservice, IMapper mapper)
+        public ManagerStatisticalController(ISourceService sourceservice,ITransactionService transactionservice,ICustomerOrderService customerorderservice, IOrderProductService orderproductservice, ICustomerGroupService customergroupservice, IMapper mapper)
         {
             this._customerorderservice = customerorderservice;
             this._orderproductservice = orderproductservice;
             this._customergroupservice = customergroupservice;
             this._transactionservice = transactionservice;
+            this._sourceservice = sourceservice;
             this._mapper = mapper;
         }
         #region[Statistics by]
@@ -90,6 +92,29 @@ namespace ERP.API.Controllers.Dashboard
             return Ok(response);
         }
         [HttpGet]
+        [Route("api/dashboards/statistic-revenue-by-month")]
+        public IHttpActionResult ResultStatisticByMonth()
+        {
+            ResponseDataDTO<List<revenue>> response = new ResponseDataDTO<List<revenue>>();
+            try
+            {
+                int staff_id = BaseController.get_id_current();
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+
+                response.Data = _customerorderservice.ResultStatisticByMonth(staff_id);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+                Console.WriteLine(ex.ToString());
+            }
+
+            return Ok(response);
+        }
+        [HttpGet]
         [Route("api/dashboards/statistics-order")]
         public IHttpActionResult StatisticsOrderProduct(int pageNumber, int pageSize,  bool month, bool week, bool day, string search_name)
         {
@@ -115,12 +140,34 @@ namespace ERP.API.Controllers.Dashboard
         [Route("api/dashboard/statistic-customer-group")]
         public IHttpActionResult GetRevenueCustomerGroup()
         {
-            ResponseDataDTO<List<statisticrevenuecustomergroupviewmodel>> response = new ResponseDataDTO<List<statisticrevenuecustomergroupviewmodel>>();
+            ResponseDataDTO<List<statisticrevenueviewmodel>> response = new ResponseDataDTO<List<statisticrevenueviewmodel>>();
             try
             {
+                int staff_id = BaseController.get_id_current();
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _customergroupservice.GetRevenueCustomerGroup();
+                response.Data = _customergroupservice.GetRevenueCustomerGroup(staff_id);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+            }
+
+            return Ok(response);
+        }
+        [HttpGet]
+        [Route("api/dashboard/statistic-source")]
+        public IHttpActionResult GetRevenueSource()
+        {
+            ResponseDataDTO<List<statisticrevenueviewmodel>> response = new ResponseDataDTO<List<statisticrevenueviewmodel>>();
+            try
+            {
+                int staff_id = BaseController.get_id_current();
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = _sourceservice.GetRevenueSource(staff_id);
             }
             catch (Exception ex)
             {
@@ -138,9 +185,10 @@ namespace ERP.API.Controllers.Dashboard
             ResponseDataDTO<List<transactionstatisticrateviewmodel>> response = new ResponseDataDTO<List<transactionstatisticrateviewmodel>>();
             try
             {
+                int staff_id = BaseController.get_id_current();
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _transactionservice.GetTransactionStatisticRate();
+                response.Data = _transactionservice.GetTransactionStatisticRate(staff_id);
             }
             catch (Exception ex)
             {

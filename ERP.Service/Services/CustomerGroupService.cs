@@ -34,9 +34,9 @@ namespace ERP.Service.Services
             return this._repository.CheckUniqueName(name,id);
         }
 
-        public List<statisticrevenuecustomergroupviewmodel> GetRevenueCustomerGroup()
+        public List<statisticrevenueviewmodel> GetRevenueCustomerGroup(int staff_id)
         {
-            return this._repository.GetRevenueCustomerGroup();
+            return this._repository.GetRevenueCustomerGroup(staff_id);
         }
         
     }

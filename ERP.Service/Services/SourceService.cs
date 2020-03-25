@@ -1,6 +1,7 @@
 ﻿using ERP.Common.GenericService;
 using ERP.Common.Models;
 using ERP.Data.ModelsERP;
+using ERP.Data.ModelsERP.ModelView.Statistics;
 using ERP.Repository.Repositories.IRepositories;
 using ERP.Service.Services.IServices;
 using System;
@@ -29,6 +30,10 @@ namespace ERP.Service.Services
         public PagedResults<source> GetSources(string search_name)
         {
             return this._repository.GetSources(search_name);
+        } 
+        public List<statisticrevenueviewmodel> GetRevenueSource(int staff_id)
+        {
+            return this._repository.GetRevenueSource(staff_id);
         }
     }
 }

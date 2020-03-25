@@ -220,6 +220,7 @@ namespace ERP.Repository.Repositories
             }
             if (end_date != null)
             {
+                end_date = end_date.Value.AddDays(1);
                 list = list.Where(x => x.cuo_date <= end_date).ToList();
             }
             var total = _dbContext.customer_order.Count();
@@ -296,6 +297,40 @@ namespace ERP.Repository.Repositories
             }
             return res;
         }
+        public List<revenue> ResultStatisticByMonth(int staff_id)
+        {
+            //Lấy ra ngày hiện tại, ngày đầu tuần , ngày đầu năm 
+            List<revenue> res = new List<revenue>();
+            int month = DateTime.Now.Month;
+            var user = _dbContext.staffs.Find(staff_id);
+            if (user == null) { return null; }
+            else
+            {
+                if(user.group_role_id == 1)
+                {
+                   for(int i = 1; i < month+1; i++)
+                   {
+                        revenue add = new revenue();
+                        add.name = String.Concat("Tháng", Convert.ToString(i));
+                        add.total = _dbContext.customer_order.Where(t => t.cuo_date.Value.Month == i).Sum(t => t.cuo_total_price);
+                        res.Add(add);
+                   }
+                }
+                else
+                {
+                    for (int i = 0; i < month + 1; i++)
+                    {
+                        revenue add = new revenue();
+                        add.name = String.Concat("Tháng", Convert.ToString(i));
+                        add.total = _dbContext.customer_order.Where(t => t.cuo_date.Value.Month == i && t.staff_id == user.sta_id).Sum(t => t.cuo_total_price);
+                        res.Add(add);
+                    }
+                }
+            }
+            return res;
+        }
+
+       
        
         public List<dropdown> GetAllPayment()
         {
@@ -347,6 +382,7 @@ namespace ERP.Repository.Repositories
             }
             if (end_date != null)
             {
+                end_date = end_date.Value.AddDays(1);
                 list = list.Where(x => x.cuo_date <= end_date).ToList();
             }
             var results = list.OrderBy(t => t.cuo_id).Skip(skipAmount).Take(pageSize);
