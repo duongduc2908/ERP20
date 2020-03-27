@@ -123,9 +123,9 @@ namespace ERP.Repository.Repositories
                 end_date = end_date.Value.AddDays(1);
                 list = list.Where(x => x.pu_create_date <= end_date).ToList();
             }
-            var total = _dbContext.products.Count();
+            var total = list.Count();
             
-            var results = list.OrderBy(t => t.pu_id).Skip(skipAmount).Take(pageSize);
+            var results = list.OrderByDescending(t => t.pu_id).Skip(skipAmount).Take(pageSize);
             foreach (product i in results)
             {
                 var productview = _mapper.Map<productviewmodel>(i);

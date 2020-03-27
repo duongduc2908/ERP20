@@ -177,9 +177,9 @@ namespace ERP.Repository.Repositories
                 end_date = end_date.Value.AddDays(1);
                 list = list.Where(x => x.cu_create_date <= end_date).ToList();
             }
-            var total = _dbContext.customers.Count();
+            var total = list.Count();
 
-            var results = list.OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
+            var results = list.OrderByDescending(t => t.cu_id).Skip(skipAmount).Take(pageSize);
             foreach(customer i in results)
             {
                 var customerview = _mapper.Map<customerviewmodel>(i);

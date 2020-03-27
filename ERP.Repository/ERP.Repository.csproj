@@ -481,6 +481,7 @@
     <Compile Include="Repositories\EmailRepository.cs" />
     <Compile Include="Repositories\EmailStrategyRepository.cs" />
     <Compile Include="Repositories\EmailTemplateRepository.cs" />
+    <Compile Include="Repositories\ExecutorRepository.cs" />
     <Compile Include="Repositories\FieldRepository.cs" />
     <Compile Include="Repositories\FieldTemplateRepository.cs" />
     <Compile Include="Repositories\FunctionRepository.cs" />
@@ -495,6 +496,7 @@
     <Compile Include="Repositories\IRepositories\IEmailRepository.cs" />
     <Compile Include="Repositories\IRepositories\IEmailStrategyRepository.cs" />
     <Compile Include="Repositories\IRepositories\IEmailTemplateRepository.cs" />
+    <Compile Include="Repositories\IRepositories\IExecutorRepository.cs" />
     <Compile Include="Repositories\IRepositories\IFieldRepository.cs" />
     <Compile Include="Repositories\IRepositories\IFieldTemplateRepository.cs" />
     <Compile Include="Repositories\IRepositories\IFunctionRepository.cs" />
@@ -511,6 +513,7 @@
     <Compile Include="Repositories\IRepositories\IProjectRepository.cs" />
     <Compile Include="Repositories\IRepositories\IServiceCategoryRepository.cs" />
     <Compile Include="Repositories\IRepositories\IServiceRepository.cs" />
+    <Compile Include="Repositories\IRepositories\IServiceTimeRepository.cs" />
     <Compile Include="Repositories\IRepositories\IShipAddressRepository.cs" />
     <Compile Include="Repositories\IRepositories\ISmsRepository.cs" />
     <Compile Include="Repositories\IRepositories\ISmsStrategyRepository.cs" />
@@ -534,6 +537,7 @@
     <Compile Include="Repositories\ProjectRepository.cs" />
     <Compile Include="Repositories\ServiceCategoryRepository.cs" />
     <Compile Include="Repositories\ServiceRepository.cs" />
+    <Compile Include="Repositories\ServiceTimeRepository.cs" />
     <Compile Include="Repositories\ShipAddressRepository.cs" />
     <Compile Include="Repositories\SmsRepository.cs" />
     <Compile Include="Repositories\SmsStrategyRepository.cs" />

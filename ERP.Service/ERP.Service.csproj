@@ -80,6 +80,7 @@
     <Compile Include="Services\EmailService.cs" />
     <Compile Include="Services\EmailStrategyService.cs" />
     <Compile Include="Services\EmailTemplateService.cs" />
+    <Compile Include="Services\ExecutorService.cs" />
     <Compile Include="Services\FieldService.cs" />
     <Compile Include="Services\FieldTemplateService.cs" />
     <Compile Include="Services\FunctionService.cs" />
@@ -93,6 +94,7 @@
     <Compile Include="Services\IServices\IEmailService.cs" />
     <Compile Include="Services\IServices\IEmailStrategyService.cs" />
     <Compile Include="Services\IServices\IEmailTemplateService.cs" />
+    <Compile Include="Services\IServices\IExecutorService.cs" />
     <Compile Include="Services\IServices\IFieldService.cs" />
     <Compile Include="Services\IServices\IFieldTemplateService.cs" />
     <Compile Include="Services\IServices\IFunctionService.cs" />
@@ -109,6 +111,7 @@
     <Compile Include="Services\IServices\IProjectService.cs" />
     <Compile Include="Services\IServices\IServiceCategoryService.cs" />
     <Compile Include="Services\IServices\IServiceService.cs" />
+    <Compile Include="Services\IServices\IServiceTimeService.cs" />
     <Compile Include="Services\IServices\IShipAddressService.cs" />
     <Compile Include="Services\IServices\ISmsService.cs" />
     <Compile Include="Services\IServices\ISmsStrategyService.cs" />
@@ -132,6 +135,7 @@
     <Compile Include="Services\ProjectService.cs" />
     <Compile Include="Services\ServiceCategoryService.cs" />
     <Compile Include="Services\ServiceService.cs" />
+    <Compile Include="Services\ServiceTimeService.cs" />
     <Compile Include="Services\ShipAddressService.cs" />
     <Compile Include="Services\SmsService.cs" />
     <Compile Include="Services\SmsStrategyService.cs" />

@@ -26,13 +26,15 @@ namespace ERP.Repository.Repositories
             List<sms_template> list = new List<sms_template>();
             if (search_name == null)
             {
-                list = _dbContext.sms_template.OrderBy(t => t.smt_id).Skip(skipAmount).Take(pageSize).ToList();
+                list = _dbContext.sms_template.ToList();
             }
             else { 
                 search_name = search_name.Trim(); 
-                list = _dbContext.sms_template.Where(x => x.smt_title.Contains(search_name) || x.smt_content.Contains(search_name)).OrderBy(t => t.smt_id).Skip(skipAmount).Take(pageSize).ToList(); 
+                list = _dbContext.sms_template.Where(x => x.smt_title.Contains(search_name) || x.smt_content.Contains(search_name)).ToList(); 
             }
-            var totalNumberOfRecords = _dbContext.sms_template.Count();
+
+            var totalNumberOfRecords = list.Count();
+            list = list.OrderByDescending(t => t.smt_id).Skip(skipAmount).Take(pageSize).ToList();
             var list_smstem = list.ToList();
             foreach(sms_template i in list_smstem)
             {

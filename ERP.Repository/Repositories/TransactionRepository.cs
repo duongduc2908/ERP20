@@ -113,9 +113,10 @@ namespace ERP.Repository.Repositories
                 end_date = end_date.Value.AddDays(1);
                 list = list.Where(x => x.tra_datetime <= end_date).ToList();
             }
+            var totalNumberOfRecords = list.Count();
             var results = list.OrderBy(t => t.tra_id).Skip(skipAmount).Take(pageSize);
 
-            var totalNumberOfRecords = _dbContext.transactions.Count();
+            
             foreach (transaction i in results)
             {
                

@@ -67,5 +67,6 @@ namespace ERP.Data.DbContext
         public virtual DbSet<undertaken_location> undertaken_location { get; set; }
         public virtual DbSet<transaction> transactions { get; set; }
         public virtual DbSet<social> socials { get; set; }
+        public virtual DbSet<executor> executors { get; set; }
     }
 }

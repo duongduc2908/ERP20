@@ -223,8 +223,8 @@ namespace ERP.Repository.Repositories
                 end_date = end_date.Value.AddDays(1);
                 list = list.Where(x => x.cuo_date <= end_date).ToList();
             }
-            var total = _dbContext.customer_order.Count();
-            var results = list.OrderBy(t => t.cuo_id).Skip(skipAmount).Take(pageSize);
+            var total = list.Count();
+            var results = list.OrderByDescending(t => t.cuo_id).Skip(skipAmount).Take(pageSize);
             foreach (customer_order i in results)
             {
                 var orderview = _mapper.Map<customerorderviewmodel>(i);

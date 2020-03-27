@@ -130,6 +130,7 @@
     <Compile Include="ModelsERP\customer_group.cs" />
     <Compile Include="ModelsERP\customer_order.cs" />
     <Compile Include="ModelsERP\District.cs" />
+    <Compile Include="ModelsERP\executor.cs" />
     <Compile Include="ModelsERP\ModelView\CustomerGroup\piechartview.cs" />
     <Compile Include="ModelsERP\ModelView\Customer\customeraddressviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Customer\customerorderhistoryviewmodel.cs" />

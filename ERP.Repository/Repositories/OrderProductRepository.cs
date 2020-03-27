@@ -110,11 +110,11 @@ namespace ERP.Repository.Repositories
                     }
                     if(search_name != null)
                     {
-                        res = list.Where(t => t.cuo_code.Contains(search_name) || t.pu_name.Contains(search_name)).OrderByDescending(t => t.pu_id).Skip(skipAmount).Take(pageSize).ToList();
+                        res = list.Where(t => t.cuo_code.Contains(search_name) || t.pu_name.Contains(search_name)).ToList();
                     }
                     else
                     {
-                        res = list.OrderByDescending(t => t.pu_id).Skip(skipAmount).Take(pageSize).ToList();
+                        res = list.ToList();
                     }
                 }
                 else
@@ -137,15 +137,16 @@ namespace ERP.Repository.Repositories
                     }
                     if (search_name != null)
                     {
-                        res = list.Where(t => t.cuo_code.Contains(search_name) || t.pu_name.Contains(search_name)).OrderByDescending(t => t.pu_id).Skip(skipAmount).Take(pageSize).ToList();
+                        res = list.Where(t => t.cuo_code.Contains(search_name) || t.pu_name.Contains(search_name)).ToList();
                     }
                     else
                     {
-                        res = list.OrderByDescending(t => t.pu_id).Skip(skipAmount).Take(pageSize).ToList();
+                        res = list.ToList();
                     }
                 }
             }
-            var totalNumberOfRecords = list.Count();
+            var totalNumberOfRecords = res.Count();
+            res = res.OrderByDescending(t => t.pu_id).Skip(skipAmount).Take(pageSize).ToList();
             var mod = totalNumberOfRecords % pageSize;
             var totalPageCount = (totalNumberOfRecords / pageSize) + (mod == 0 ? 0 : 1);
             return new PagedResults<statisticsorderviewmodel>

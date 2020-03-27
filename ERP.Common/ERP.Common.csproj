@@ -104,6 +104,7 @@
     <Compile Include="Constants\Enums\EnumSms.cs" />
     <Compile Include="Constants\Enums\EnumsStaff.cs" />
     <Compile Include="Constants\Enums\EnumTransaction.cs" />
+    <Compile Include="Constants\GenDateOrderService.cs" />
     <Compile Include="Constants\HashMd5.cs" />
     <Compile Include="Constants\HttpCode.cs" />
     <Compile Include="Constants\MessageResponse.cs" />

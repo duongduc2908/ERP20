@@ -24,34 +24,18 @@ namespace ERP.Repository.Repositories
         public PagedResults<customergroupviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? cg_id, string name)
         {
             List<customergroupviewmodel> res = new List<customergroupviewmodel>();
-
+            List<customer_group> list_res;
+            List<customer_group> list;
             var skipAmount = pageSize * pageNumber;
-
-            var list = _dbContext.customer_group.Where(t => t.cg_id == cg_id && t.cg_name.Contains(name)).OrderBy(t => t.cg_id).Skip(skipAmount).Take(pageSize);
-            if (cg_id == null)
+            if(cg_id == null)
             {
-                if (name != null)
-                {
-                    list = _dbContext.customer_group.Where(t => t.cg_name.Contains(name)).OrderBy(t => t.cg_id).Skip(skipAmount).Take(pageSize);
-                }
-                else
-                {
-                    list = _dbContext.customer_group.OrderBy(t => t.cg_id).Skip(skipAmount).Take(pageSize);
-                }
-
+                list_res = _dbContext.customer_group.ToList();
             }
-            if (name == null)
-            {
-                if (cg_id != null)
-                {
-                    list = _dbContext.customer_group.Where(t => t.cg_id == cg_id).OrderBy(t => t.cg_id).Skip(skipAmount).Take(pageSize);
-                }
-                else
-                {
-                    list = _dbContext.customer_group.OrderBy(t => t.cg_id).Skip(skipAmount).Take(pageSize);
-                }
-            }
-            var total = _dbContext.customer_group.Count();
+            else list_res = _dbContext.customer_group.Where(x => x.cg_id == cg_id).ToList();
+            if(name != null) list_res = _dbContext.customer_group.Where(x => x.cg_name.Contains(name)).ToList();
+            
+            var total = list_res.Count();
+            list = list_res.OrderByDescending(t => t.cg_id).Skip(skipAmount).Take(pageSize).ToList();
             var results = list.ToList();
             foreach (customer_group i in results)
             {

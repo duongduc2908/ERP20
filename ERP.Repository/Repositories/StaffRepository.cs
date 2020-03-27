@@ -134,8 +134,9 @@ namespace ERP.Repository.Repositories
             {
                 list_res = list_res.Where(t => t.sta_fullname.Contains(name) || t.sta_mobile.Contains(name) || t.sta_email.Contains(name) || t.sta_code.Contains(name) || t.sta_username.Contains(name)).ToList();
             }
+            var total = list_res.Count();
             list = list_res.OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize).ToList();
-            var total = _dbContext.staffs.Count();
+            
             
 
             var results = list.ToList();
