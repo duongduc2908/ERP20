@@ -42,6 +42,7 @@ namespace ERP.API.AutoMapper
             CreateMap<customer, customeraddressviewmodel>();
             CreateMap<customer, transactioncustomerviewmodel>();
             CreateMap<customer, smscustomerviewmodel>();
+            CreateMap<customer, servicesearchcustomerviewmodel>();
 
             CreateMap<CustomerOrderCreateViewModel, customer_order>();
             CreateMap<CustomerOrderUpdateViewModel, customer_order>();
@@ -64,6 +65,7 @@ namespace ERP.API.AutoMapper
             CreateMap<ShipAddressCreateViewModel, ship_address>();
             CreateMap<ShipAddressUpdateViewModel, ship_address>();
             CreateMap<ship_address, shipaddressviewmodel>();
+            CreateMap<shipaddressviewmodel, ship_address>();
 
             CreateMap<UndertakenLocationCreateViewModel, undertaken_location>();
             CreateMap<UndertakenLocationUpdateViewModel, undertaken_location>();
@@ -74,10 +76,18 @@ namespace ERP.API.AutoMapper
             CreateMap<order_product,productorderviewmodel >();
             CreateMap<order_product,orderproducthistoryviewmodel >();
             CreateMap<order_product,transactionorderproductviewmodel >();
-            
+
+            CreateMap<OrderServiceCreateViewModel, order_service>();
+            CreateMap<OrderServiceUpdateViewModel, order_service>();
+
+            CreateMap<ExecutorCreateViewModel, executor>();
+            CreateMap<ExecutorUpdateViewModel, executor>();
+
+
             CreateMap<ServiceCreateViewModel, service>();
             CreateMap<ServiceUpdateViewModel, service>();
             CreateMap<service, serviceviewmodel>();
+            CreateMap<service, serviceinforviewmodel>();
 
             CreateMap<GroupRoleCreateViewModel, group_role>();
             CreateMap<GroupRoleUpdateViewModel, group_role>();

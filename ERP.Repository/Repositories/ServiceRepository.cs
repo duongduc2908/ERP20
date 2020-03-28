@@ -62,21 +62,7 @@ namespace ERP.Repository.Repositories
 
             var totalNumberOfRecords = _dbContext.services.Count();
 
-            foreach(service i in lts_se)
-            {
-                var serviceview = _mapper.Map<serviceviewmodel>(i);
-                var se_cat = _dbContext.service_category.Where(t => t.sc_id == serviceview.service_category_id).FirstOrDefault();
-                if (se_cat != null) serviceview.service_category_name = se_cat.sc_name;
-
-                for (int j = 1; j < EnumService.se_type.Length + 1; j++)
-                {
-                    if (j == i.se_type)
-                    {
-                        serviceview.se_type_name = EnumService.se_type[j - 1];
-                    }
-                }
-                res.Add(serviceview);
-            }
+           //Do sonething 
 
             var mod = totalNumberOfRecords % pageSize;
 
@@ -91,6 +77,50 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = totalNumberOfRecords
             };
         }
+        public PagedResults<serviceinforviewmodel> GetAllPageInforService(int pageNumber, int pageSize, string search_name)
+        {
+            if (search_name != null)
+            {
+                search_name = search_name.Trim();
+            }
+            List<serviceinforviewmodel> res = new List<serviceinforviewmodel>();
+            var skipAmount = pageSize * pageNumber;
+            List<service> list = new List<service>();
+            if (search_name == null)
+            {
+                list = _dbContext.services.ToList();
+            }
+            else
+            {
+                list = _dbContext.services.Where(x => x.se_code.Contains(search_name) || x.se_name.Contains(search_name)).ToList();
+            }
+           
+            var totalNumberOfRecords = list.Count();
+            var results = list.OrderByDescending(t => t.se_id).Skip(skipAmount).Take(pageSize);
+
+            //Do sonething 
+            foreach(service s in results)
+            {
+                var add = _mapper.Map<serviceinforviewmodel>(s);
+                var category = _dbContext.service_category.Find(s.service_category_id);
+                add.service_category_name = category.sc_name;
+                res.Add(add);
+            }
+
+            var mod = totalNumberOfRecords % pageSize;
+
+            var totalPageCount = (totalNumberOfRecords / pageSize) + (mod == 0 ? 0 : 1);
+
+            return new PagedResults<serviceinforviewmodel>
+            {
+                Results = res,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalNumberOfPages = totalPageCount,
+                TotalNumberOfRecords = totalNumberOfRecords
+            };
+        }
+
         public List<dropdown> GetType()
         {
 

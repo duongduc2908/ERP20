@@ -15,6 +15,7 @@ namespace ERP.Repository.Repositories.IRepositories
     {
         PagedResults<service> CreatePagedResults(int pageNumber, int pageSize);
         PagedResults<serviceviewmodel> GetAllPageSearch(int pageNumber, int pageSize, string search_name);
+        PagedResults<serviceinforviewmodel> GetAllPageInforService(int pageNumber, int pageSize, string search_name);
         List<dropdown> GetType();
     }
 }

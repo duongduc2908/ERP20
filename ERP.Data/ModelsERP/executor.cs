@@ -10,7 +10,6 @@ namespace ERP.Data.ModelsERP
     public partial class executor
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int exe_id { get; set; }
 
         public int? customer_order_id { get; set; }
@@ -19,8 +18,6 @@ namespace ERP.Data.ModelsERP
 
         public int? service_time_id { get; set; }
 
-        public DateTime? start_datetime { get; set; }
-
-        public DateTime? end_datetime { get; set; }
+        public DateTime? work_time { get; set; }
     }
 }

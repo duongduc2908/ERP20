@@ -1,16 +1,16 @@
-namespace ERP.Data.ModelsERP
+﻿
+using ERP.Data.ModelsERP.ModelView.Customer;
+using System;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ERP.API.Models
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
-
-    public partial class service_time
+    public class CustomerOrderServiceViewModelCreate
     {
-        [Key]
-        public int st_id { get; set; }
+        public int[] list_service_id { get; set; }
+        public int[] list_staff_id { get; set; }
 
+        public customeraddressviewmodel customer { get; set; }
         public TimeSpan? st_start_time { get; set; }
 
         public TimeSpan? st_end_time { get; set; }
@@ -47,6 +47,10 @@ namespace ERP.Data.ModelsERP
 
         public int? st_on_day { get; set; }
 
-        public int? customer_order_id { get; set; }
+
+        public byte? cuo_evaluation { get; set; }
+    
+        public string cuo_feedback { get; set; }
+
     }
 }

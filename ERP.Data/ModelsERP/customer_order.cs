@@ -39,5 +39,9 @@ namespace ERP.Data.ModelsERP
 
         [StringLength(150)]
         public string cuo_address { get; set; }
+        public byte? cuo_evaluation { get; set; }
+        [StringLength(500)]
+        public string cuo_feedback { get; set; }
+
     }
 }

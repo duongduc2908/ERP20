@@ -82,6 +82,7 @@ namespace ERP.API.Controllers.Dashboard
 
             return Ok(response);
         }
+        
         [HttpGet]
         [Route("api/service/get-all-search")]
         public IHttpActionResult GetAllPageSearch(int pageSize, int pageNumber,string search_name)
@@ -92,6 +93,29 @@ namespace ERP.API.Controllers.Dashboard
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
                 response.Data = _serviceservice.GetAllPageSearch(pageNumber, pageSize,search_name);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+
+                Console.WriteLine(ex.ToString());
+            }
+
+            return Ok(response);
+        }
+        //PagedResults<serviceinforviewmodel> GetAllPageInforService(int pageNumber, int pageSize, string search_name)
+        [HttpGet]
+        [Route("api/service/get-search-infor")]
+        public IHttpActionResult GetAllPageInforService(int pageNumber, int pageSize, string search_name)
+        {
+            ResponseDataDTO<PagedResults<serviceinforviewmodel>> response = new ResponseDataDTO<PagedResults<serviceinforviewmodel>>();
+            try
+            {
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = _serviceservice.GetAllPageInforService(pageNumber, pageSize, search_name);
             }
             catch (Exception ex)
             {

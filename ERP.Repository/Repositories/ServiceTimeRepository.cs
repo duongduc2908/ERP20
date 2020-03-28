@@ -1,7 +1,9 @@
-﻿using ERP.Common.GenericRepository;
+﻿using ERP.Common.Constants.Enums;
+using ERP.Common.GenericRepository;
 using ERP.Common.Models;
 using ERP.Data.DbContext;
 using ERP.Data.ModelsERP;
+using ERP.Data.ModelsERP.ModelView;
 using ERP.Repository.Repositories.IRepositories;
 using System;
 using System.Collections.Generic;
@@ -37,6 +39,20 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfPages = totalPageCount,
                 TotalNumberOfRecords = totalNumberOfRecords
             };
+        }
+        public List<dropdown> GetRepeatType()
+        {
+
+            List<dropdown> res = new List<dropdown>();
+            for (int i = 1; i < EnumRepeatType.st_repeat_type.Length + 1; i++)
+            {
+                dropdown pu = new dropdown();
+                pu.id = i;
+                pu.name = EnumRepeatType.st_repeat_type[i - 1];
+
+                res.Add(pu);
+            }
+            return res;
         }
     }
 }

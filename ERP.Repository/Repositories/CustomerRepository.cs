@@ -7,6 +7,7 @@ using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
 using ERP.Data.ModelsERP.ModelView.Customer;
 using ERP.Data.ModelsERP.ModelView.ExportDB;
+using ERP.Data.ModelsERP.ModelView.Service;
 using ERP.Data.ModelsERP.ModelView.Sms;
 using ERP.Data.ModelsERP.ModelView.Transaction;
 using ERP.Repository.Repositories.IRepositories;
@@ -251,7 +252,83 @@ namespace ERP.Repository.Repositories
             };
 
         }
+        
+        public PagedResults<servicesearchcustomerviewmodel> GetAllPageSearchService(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, string name)
+        {
+            if (name != null) name = name.Trim();
+            List<customer> list;
+            List<servicesearchcustomerviewmodel> res = new List<servicesearchcustomerviewmodel>();
+            var skipAmount = pageSize * pageNumber;
+            if (name == null)
+            {
+                list = _dbContext.customers.ToList();
+            }
+            else list = _dbContext.customers.Where(x => x.cu_fullname.Contains(name)).ToList();
+            if (source_id != null)
+            {
+                list = list.Where(x => x.source_id == source_id).ToList();
+            }
+            if (cu_type != null)
+            {
+                list = list.Where(x => x.cu_type == cu_type).ToList();
+            }
+            if (customer_group_id != null)
+            {
+                list = list.Where(x => x.customer_group_id == customer_group_id).ToList();
+            }
+            var total = list.Count();
 
+            var results = list.OrderByDescending(t => t.cu_id).Skip(skipAmount).Take(pageSize);
+            foreach (customer i in results)
+            {
+                var customerview = _mapper.Map<servicesearchcustomerviewmodel>(i);
+                var sources = _dbContext.sources.FirstOrDefault(x => x.src_id == i.source_id);
+                var customergroup = _dbContext.customer_group.FirstOrDefault(x => x.cg_id == i.customer_group_id);
+                customerview.source_name = sources.src_name;
+                customerview.customer_group_name = customergroup.cg_name;
+                var curator = _dbContext.staffs.Find(i.cu_curator_id);
+                var staff_cu = _dbContext.staffs.Find(i.staff_id);
+                if (curator != null) customerview.cu_curator_name = curator.sta_fullname;
+                if (staff_cu != null) customerview.staff_name = staff_cu.sta_fullname;
+
+                for (int j = 1; j < EnumCustomer.cu_type.Length + 1; j++)
+                {
+                    if (j == i.cu_type)
+                    {
+                        customerview.cu_type_name = EnumCustomer.cu_type[j - 1];
+                    }
+                }
+                // lay ra dia chi khach hang 
+                var list_address = _dbContext.ship_address.Where(s => s.customer_id == i.cu_id).ToList();
+                List<shipaddressviewmodel> lst_add = new List<shipaddressviewmodel>();
+                foreach (ship_address s in list_address)
+                {
+                    shipaddressviewmodel add = _mapper.Map<shipaddressviewmodel>(s);
+                    add.ward_id = _dbContext.ward.Where(t => t.Name.Contains(s.sha_ward)).FirstOrDefault().Id;
+                    add.district_id = _dbContext.district.Where(t => t.Name.Contains(s.sha_district)).FirstOrDefault().Id;
+                    add.province_id = _dbContext.province.Where(t => t.Name.Contains(s.sha_province)).FirstOrDefault().Id;
+                    lst_add.Add(add);
+                }
+                customerview.list_address = lst_add;
+               
+
+                res.Add(customerview);
+            }
+
+            var mod = total % pageSize;
+
+            var totalPageCount = (total / pageSize) + (mod == 0 ? 0 : 1);
+
+            return new PagedResults<servicesearchcustomerviewmodel>
+            {
+                Results = res,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalNumberOfPages = totalPageCount,
+                TotalNumberOfRecords = total
+            };
+
+        }
         public PagedResults<smscustomerviewmodel> GetAllPageSearchSms(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, string name)
         {
             if (name != null) name = name.Trim();
@@ -429,6 +506,46 @@ namespace ERP.Repository.Repositories
 
             customerview.list_transaction = lst_tra_his;
             
+            return res;
+        }
+        public servicesearchcustomerviewmodel GetServiceInforCustomer(int cu_id)
+        {
+
+            servicesearchcustomerviewmodel res = new servicesearchcustomerviewmodel();
+            var i = _dbContext.customers.Find(cu_id);
+            var customerview = _mapper.Map<servicesearchcustomerviewmodel>(i);
+            res = customerview;
+            
+            var sources = _dbContext.sources.FirstOrDefault(x => x.src_id == i.source_id);
+            var customergroup = _dbContext.customer_group.FirstOrDefault(x => x.cg_id == i.customer_group_id);
+            customerview.source_name = sources.src_name;
+            customerview.customer_group_name = customergroup.cg_name;
+            var curator = _dbContext.staffs.Find(i.cu_curator_id);
+            var staff_cu = _dbContext.staffs.Find(i.staff_id);
+            if (curator != null) customerview.cu_curator_name = curator.sta_fullname;
+            if (staff_cu != null) customerview.staff_name = staff_cu.sta_fullname;
+
+            for (int j = 1; j < EnumCustomer.cu_type.Length + 1; j++)
+            {
+                if (j == i.cu_type)
+                {
+                    customerview.cu_type_name = EnumCustomer.cu_type[j - 1];
+                }
+            }
+            // lay ra dia chi khach hang 
+            var list_address = _dbContext.ship_address.Where(s => s.customer_id == i.cu_id).ToList();
+            List<shipaddressviewmodel> lst_add = new List<shipaddressviewmodel>();
+            foreach (ship_address s in list_address)
+            {
+                shipaddressviewmodel add = _mapper.Map<shipaddressviewmodel>(s);
+                add.ward_id = _dbContext.ward.Where(t => t.Name.Contains(s.sha_ward)).FirstOrDefault().Id;
+                add.district_id = _dbContext.district.Where(t => t.Name.Contains(s.sha_district)).FirstOrDefault().Id;
+                add.province_id = _dbContext.province.Where(t => t.Name.Contains(s.sha_province)).FirstOrDefault().Id;
+                lst_add.Add(add);
+            }
+            customerview.list_address = lst_add;
+
+
             return res;
         }
         public List<dropdown> GetAllType()

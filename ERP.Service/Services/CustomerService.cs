@@ -3,6 +3,7 @@ using ERP.Common.Models;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
 using ERP.Data.ModelsERP.ModelView.ExportDB;
+using ERP.Data.ModelsERP.ModelView.Service;
 using ERP.Data.ModelsERP.ModelView.Sms;
 using ERP.Data.ModelsERP.ModelView.Transaction;
 using ERP.Repository.Repositories.IRepositories;
@@ -46,11 +47,20 @@ namespace ERP.Service.Services
         {
             return this._repository.GetAllPageSearchSms(pageNumber, pageSize, source_id, cu_type, customer_group_id, name);
         }
+        public PagedResults<servicesearchcustomerviewmodel> GetAllPageSearchService(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, string name)
+        {
+            return this._repository.GetAllPageSearchService(pageNumber, pageSize, source_id, cu_type, customer_group_id,name);
+        }
        
         public customerviewmodel GetInfor(int cu_id)
         {
             return this._repository.GetInfor(cu_id);
         }
+        public servicesearchcustomerviewmodel GetServiceInforCustomer(int cu_id)
+        {
+            return this._repository.GetServiceInforCustomer(cu_id);
+        }
+
         public transactioncustomerviewmodel GetInforCustomerTransaction(int cu_id)
         {
             return this._repository.GetInforCustomerTransaction(cu_id);

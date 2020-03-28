@@ -8,6 +8,7 @@ using ERP.Data.Dto;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
 using ERP.Data.ModelsERP.ModelView.ExportDB;
+using ERP.Data.ModelsERP.ModelView.Service;
 using ERP.Data.ModelsERP.ModelView.Sms;
 using ERP.Data.ModelsERP.ModelView.Transaction;
 using ERP.Extension.Extensions;
@@ -121,6 +122,29 @@ namespace ERP.API.Controllers.Dashboard
             return Ok(response);
         }
         [HttpGet]
+        [Route("api/customer-service/infor")]
+        public IHttpActionResult GetServiceInforCustomer(int cu_id)
+        {
+            ResponseDataDTO<servicesearchcustomerviewmodel> response = new ResponseDataDTO<servicesearchcustomerviewmodel>();
+            try
+            {
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = _customerservice.GetServiceInforCustomer(cu_id);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+
+                Console.WriteLine(ex.ToString());
+            }
+
+            return Ok(response);
+        }
+
+        [HttpGet]
         [Route("api/transaction-customers/infor")]
         public IHttpActionResult GetInforCustomerTransaction(int cu_id)
         {
@@ -178,6 +202,29 @@ namespace ERP.API.Controllers.Dashboard
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
                 response.Data = _customerservice.GetAllPageSearchSms(pageNumber, pageSize, source_id, cu_type, customer_group_id, name);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+
+                Console.WriteLine(ex.ToString());
+            }
+
+            return Ok(response);
+        }
+       
+        [HttpGet]
+        [Route("api/customer-service/search")]
+        public IHttpActionResult GetAllPageSearchService(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, string name)
+        {
+            ResponseDataDTO<PagedResults<servicesearchcustomerviewmodel>> response = new ResponseDataDTO<PagedResults<servicesearchcustomerviewmodel>>();
+            try
+            {
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = _customerservice.GetAllPageSearchService(pageNumber, pageSize, source_id, cu_type, customer_group_id, name);
             }
             catch (Exception ex)
             {

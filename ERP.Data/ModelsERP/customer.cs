@@ -9,6 +9,7 @@ namespace ERP.Data.ModelsERP
     [Table("customer")]
     public partial class customer
     {
+
         [Key]
         public int cu_id { get; set; }
 

@@ -153,6 +153,7 @@
     <Compile Include="ModelsERP\ModelView\ExportDB\productview.cs" />
     <Compile Include="ModelsERP\ModelView\ExportDB\staffview.cs" />
     <Compile Include="ModelsERP\ModelView\ExportDB\transactionview.cs" />
+    <Compile Include="ModelsERP\ModelView\OrderService\orderseviceviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Product\orderproducthistoryviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Product\orderproductviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Product\productorderviewmodel.cs" />
@@ -160,6 +161,9 @@
     <Compile Include="ModelsERP\ModelView\dropdown.cs" />
     <Compile Include="ModelsERP\ModelView\Customer\shipaddressviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\revenue.cs" />
+    <Compile Include="ModelsERP\ModelView\Service\serviceinforviewmodel.cs" />
+    <Compile Include="ModelsERP\ModelView\Service\servicesearchcustomerviewmodel.cs" />
+    <Compile Include="ModelsERP\ModelView\Service\servicestaffviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Service\serviceviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Sms\smscustomerviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Sms\smsstrategyviewmodel.cs" />

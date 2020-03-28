@@ -29,6 +29,10 @@ namespace ERP.API.Controllers.Dashboard
         private readonly ICustomerOrderService _customer_orderservice;
         private readonly ICustomerService _customerservice;
         private readonly IOrderProductService _order_productservice;
+        private readonly IOrderServiceService _orderserviceservice;
+        private readonly IShipAddressService _shipaddressservice;
+        private readonly IExecutorService _executorservice;
+        private readonly IServiceTimeService _servicetimeservice;
 
         private readonly IMapper _mapper;
 
@@ -36,12 +40,18 @@ namespace ERP.API.Controllers.Dashboard
         {
 
         }
-        public ManagerCustomerOrderController(ICustomerOrderService customer_orderservice, ICustomerService customerservice, IOrderProductService order_productservice, IMapper mapper)
+        public ManagerCustomerOrderController(IServiceTimeService servicetimeservice,IExecutorService executorservice,IOrderServiceService orderserviceservice,ICustomerOrderService customer_orderservice, ICustomerService customerservice, IOrderProductService order_productservice, IShipAddressService shipAddressService, IMapper mapper)
         {
+
+            this._order_productservice = order_productservice;
+            this._shipaddressservice = shipAddressService;
             this._customer_orderservice = customer_orderservice;
             this._customerservice = customerservice;
+            this._orderserviceservice = orderserviceservice;
+            this._executorservice = executorservice;
+            this._servicetimeservice = servicetimeservice;
             this._mapper = mapper;
-            this._order_productservice = order_productservice;
+
         }
 
 
@@ -160,7 +170,7 @@ namespace ERP.API.Controllers.Dashboard
 
         [HttpPost]
         [Route("api/customer-orders/create")]
-        public async Task<IHttpActionResult> Createcustomer_order([FromBody] CustomerOrderProductViewModel customer_order)
+        public async Task<IHttpActionResult> CreateCustomerOrderProduct([FromBody] CustomerOrderProductViewModel customer_order)
         {
             ResponseDataDTO<customer_order> response = new ResponseDataDTO<customer_order>();
             try
@@ -316,6 +326,14 @@ namespace ERP.API.Controllers.Dashboard
                     _customerservice.Create(createdcustomer);
                     var cu_last = _customerservice.GetLast();
                     c.customer.cu_id = cu_last.cu_id;
+
+                    // Them dia chi 
+                    foreach(shipaddressviewmodel s in c.customer.list_address)
+                    {
+                        var addresscreate = _mapper.Map<ship_address>(s);
+                        addresscreate.customer_id = c.customer.cu_id;
+                        _shipaddressservice.Create(addresscreate);
+                    }
                     #endregion
                 }
 
@@ -336,18 +354,17 @@ namespace ERP.API.Controllers.Dashboard
                 // mapping view model to entity
                 var createdcustomer_order = _mapper.Map<customer_order>(customer_orderCreateViewModel);
                 var op_last1 = _customer_orderservice.GetLast();
-                if(op_last1 == null) createdcustomer_order.cuo_code = Utilis.CreateCode("OR", 0, 7);
-                else createdcustomer_order.cuo_code = Utilis.CreateCode("OR", op_last1.cuo_id,7) ;
+                if(op_last1 == null) createdcustomer_order.cuo_code = Utilis.CreateCode("ORP", 0, 7);
+                else createdcustomer_order.cuo_code = Utilis.CreateCode("ORP", op_last1.cuo_id,7) ;
 
                 // save new customer_order
                 _customer_orderservice.Create(createdcustomer_order);
                 var op_last = _customer_orderservice.GetLast();
                 //create order product
-                OrderProductCreateViewModel orderCreateViewModel = new OrderProductCreateViewModel { };
-               
 
                 foreach (productorderviewmodel i in c.list_product)
                 {
+                    OrderProductCreateViewModel orderCreateViewModel = new OrderProductCreateViewModel { };
                     orderCreateViewModel.customer_order_id = op_last.cuo_id;
                     orderCreateViewModel.op_discount = i.op_discount;
                     orderCreateViewModel.op_note = i.op_note;
@@ -378,7 +395,528 @@ namespace ERP.API.Controllers.Dashboard
             }
 
         }
+        [HttpPost]
+        [Route("api/customer-order-service/create")]
+        public async Task<IHttpActionResult> CreateCustomerOrderService([FromBody] CustomerOrderServiceViewModelCreate customer_order)
+        {
+            ResponseDataDTO<customer_order> response = new ResponseDataDTO<customer_order>();
+            try
+            {
+                var c = customer_order;
+                //Id user now
 
+                var current_id = BaseController.get_id_current();
+                if (c.customer.cu_id == 0)
+                {
+                    #region[Create Customer]
+                    //Cach truong bat buoc 
+                    if (c.customer.cu_fullname == null)
+                    {
+                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                        response.Message = "Họ và tên không được để trống";
+                        response.Data = null;
+                        return Ok(response);
+                    }
+                    if (c.customer.cu_mobile == null)
+                    {
+                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                        response.Message = "Số điện thoại không được để trống";
+                        response.Data = null;
+                        return Ok(response);
+                    }
+                    if (c.customer.cu_email == null)
+                    {
+                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                        response.Message = "Email không được để trống";
+                        response.Data = null;
+                        return Ok(response);
+                    }
+                    if (c.customer.cu_type == 0)
+                    {
+                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                        response.Message = "Loại khách hàng không được để trống";
+                        response.Data = null;
+                        return Ok(response);
+                    }
+                    if (c.customer.customer_group_id == 0)
+                    {
+                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                        response.Message = "Nhóm khách hàng không được để trống";
+                        response.Data = null;
+                        return Ok(response);
+                    }
+                    if (c.customer.source_id == 0)
+                    {
+                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                        response.Message = "Nguồn không được để trống";
+                        response.Data = null;
+                        return Ok(response);
+                    }
+                    // get data from formdata
+                    CustomerCreateViewModel customerCreateViewModel = new CustomerCreateViewModel
+                    {
+                        cu_mobile = Convert.ToString(c.customer.cu_mobile),
+                        cu_email = Convert.ToString(c.customer.cu_email),
+                        cu_fullname = Convert.ToString(c.customer.cu_fullname),
+
+                        customer_group_id = Convert.ToInt32(c.customer.customer_group_id),
+                        source_id = Convert.ToInt32(c.customer.source_id),
+
+                        cu_type = Convert.ToByte(c.customer.cu_type),
+
+                    };
+                    //Bat cac dieu kien rang buoc
+                    if (CheckEmail.IsValidEmail(customerCreateViewModel.cu_email) == false && customerCreateViewModel.cu_email == "")
+                    {
+                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                        response.Message = "Định dạng email không hợp lệ !";
+                        response.Data = null;
+                        return Ok(response);
+                    }
+
+                    if (CheckNumber.IsPhoneNumber(customerCreateViewModel.cu_mobile) == false && customerCreateViewModel.cu_mobile == "")
+                    {
+                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                        response.Message = "Số điện thoại không hợp lệ";
+                        response.Data = null;
+                        return Ok(response);
+                    }
+
+
+                    //bat cac truog con lai 
+                    if (c.customer.cu_birthday == null)
+                    {
+                        customerCreateViewModel.cu_birthday = null;
+                    }
+                    else
+                    {
+                        customerCreateViewModel.cu_birthday = Convert.ToDateTime(c.customer.cu_birthday);
+                    }
+                    if (c.customer.cu_address == null)
+                    {
+                        customerCreateViewModel.cu_address = null;
+                    }
+                    else
+                    {
+                        customerCreateViewModel.cu_address = Convert.ToString(c.customer.cu_address);
+                    }
+                    if (c.customer.cu_note == null)
+                    {
+                        customerCreateViewModel.cu_note = null;
+                    }
+                    else
+                    {
+                        customerCreateViewModel.cu_note = Convert.ToString(c.customer.cu_note);
+                    }
+                    if (c.customer.cu_geocoding == null)
+                    {
+                        customerCreateViewModel.cu_geocoding = null;
+                    }
+                    else
+                    {
+                        customerCreateViewModel.cu_geocoding = Convert.ToString(c.customer.cu_geocoding);
+                    }
+                    if (c.customer.cu_curator_id == 0)
+                    {
+                        customerCreateViewModel.cu_curator_id = null;
+                    }
+                    else
+                    {
+                        customerCreateViewModel.cu_curator_id = Convert.ToInt32(c.customer.cu_curator_id);
+                    }
+                    if (c.customer.cu_age == 0)
+                    {
+                        customerCreateViewModel.cu_age = null;
+                    }
+                    else
+                    {
+                        customerCreateViewModel.cu_age = Convert.ToInt32(c.customer.cu_age);
+                    }
+                    if (c.customer.cu_status == 0)
+                    {
+                        customerCreateViewModel.cu_status = null;
+                    }
+                    else
+                    {
+                        customerCreateViewModel.cu_status = Convert.ToByte(c.customer.cu_status);
+                    }
+
+                    customerCreateViewModel.staff_id = Convert.ToInt32(current_id);
+                    customerCreateViewModel.cu_create_date = DateTime.Now;
+                    var cu = _customerservice.GetLast();
+                    if (cu == null) customerCreateViewModel.cu_code = Utilis.CreateCode("CU", 0, 7);
+                    else customerCreateViewModel.cu_code = Utilis.CreateCode("CU", cu.cu_id, 7);
+                    // mapping view model to entity
+                    var createdcustomer = _mapper.Map<customer>(customerCreateViewModel);
+
+                    // save new customer
+                    _customerservice.Create(createdcustomer);
+                    var cu_last = _customerservice.GetLast();
+                    c.customer.cu_id = cu_last.cu_id;
+
+                    // Them dia chi 
+                    foreach (shipaddressviewmodel s in c.customer.list_address)
+                    {
+                        var addresscreate = _mapper.Map<ship_address>(s);
+                        addresscreate.customer_id = c.customer.cu_id;
+                        _shipaddressservice.Create(addresscreate);
+                    }
+                    #endregion
+                }
+
+                #region create customer order service
+                CustomerOrderCreateViewModel customerOrderCreateViewModel = new CustomerOrderCreateViewModel { };
+                customerOrderCreateViewModel.customer_id = c.customer.cu_id;
+                customerOrderCreateViewModel.staff_id = Convert.ToInt32(current_id);
+                customerOrderCreateViewModel.cuo_evaluation = c.cuo_evaluation;
+                customerOrderCreateViewModel.cuo_feedback = c.cuo_feedback;
+                customerOrderCreateViewModel.cuo_date = DateTime.Now;
+                // mapping view model to entity
+                var createdcustomer_order = _mapper.Map<customer_order>(customerOrderCreateViewModel);
+                var op_last1 = _customer_orderservice.GetLast();
+                if (op_last1 == null) createdcustomer_order.cuo_code = Utilis.CreateCode("ORS", 0, 7);
+                else createdcustomer_order.cuo_code = Utilis.CreateCode("ORS", op_last1.cuo_id, 7);
+
+                // save new customer_order
+                _customer_orderservice.Create(createdcustomer_order);
+
+                #endregion
+                var op_last = _customer_orderservice.GetLast();
+                #region create order service
+
+                for (int i = 0; i < c.list_service_id.Length; i++)
+                {
+                    OrderServiceCreateViewModel orderCreateViewModel = new OrderServiceCreateViewModel { };
+                    orderCreateViewModel.customer_order_id = op_last.cuo_id;
+                    orderCreateViewModel.service_id = c.list_service_id[i];
+                    var createOrderSecvice = _mapper.Map<order_service>(orderCreateViewModel);
+                    _orderserviceservice.Create(createOrderSecvice);
+
+                }
+                #endregion
+                #region create service time
+                ServiceTimeCreateViewModel serviceTimeCreate = new ServiceTimeCreateViewModel();
+                serviceTimeCreate.customer_order_id = op_last.cuo_id;
+                serviceTimeCreate.st_start_time = c.st_start_time;
+                serviceTimeCreate.st_end_time = c.st_end_time;
+                serviceTimeCreate.st_start_date = c.st_start_date;
+                serviceTimeCreate.st_end_date = c.st_end_date;
+                serviceTimeCreate.st_repeat_type = c.st_repeat_type;
+                serviceTimeCreate.st_sun_flag = c.st_sun_flag;
+                serviceTimeCreate.st_mon_flag = c.st_mon_flag;
+                serviceTimeCreate.st_tue_flag = c.st_tue_flag;
+                serviceTimeCreate.st_wed_flag = c.st_wed_flag;
+                serviceTimeCreate.st_thu_flag = c.st_thu_flag;
+                serviceTimeCreate.st_fri_flag = c.st_fri_flag;
+                serviceTimeCreate.st_sat_flag = c.st_sat_flag;
+                serviceTimeCreate.st_repeat = c.st_repeat;
+                serviceTimeCreate.st_repeat_every = c.st_repeat_every;
+                serviceTimeCreate.st_on_the = c.st_on_the;
+                serviceTimeCreate.st_on_day_flag = c.st_on_day_flag;
+                serviceTimeCreate.st_on_day = c.st_on_day;
+                var createServiceTime = _mapper.Map<service_time>(serviceTimeCreate);
+                _servicetimeservice.Create(createServiceTime);
+
+                //Do something
+                #endregion
+                var st_last = _servicetimeservice.GetLast();
+                #region create executor
+                for (int i = 0; i < c.list_staff_id.Length; i++)
+                {
+                    ExecutorCreateViewModel executorCreateViewModel = new ExecutorCreateViewModel { };
+                    executorCreateViewModel.customer_order_id = op_last.cuo_id;
+                    executorCreateViewModel.staff_id = c.list_staff_id[i];
+                    executorCreateViewModel.service_time_id = st_last.st_id;
+                    var createExecutor = _mapper.Map<executor>(executorCreateViewModel);
+                    _executorservice.Create(createExecutor);
+
+                }
+                #endregion
+
+
+
+                // return response
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = null;
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+                Console.WriteLine(ex.ToString());
+
+                return Ok(response);
+            }
+
+        }
+        [HttpPut]
+        [Route("api/customer-order-service/update")]
+        public async Task<IHttpActionResult> UpdateCustomerOrderService([FromBody] CustomerOrderServiceViewModelUpdate customer_order)
+        {
+            ResponseDataDTO<customer_order> response = new ResponseDataDTO<customer_order>();
+            try
+            {
+               
+                var c = customer_order;
+                //Delete customer order service old 
+                var cuoDeleted = _customer_orderservice.Find(c.cuo_id);
+                if (cuoDeleted != null)
+                {
+                    _customer_orderservice.Delete(cuoDeleted);
+                }
+                //Id user now
+
+                var current_id = BaseController.get_id_current();
+                if (c.customer.cu_id == 0)
+                {
+                    #region[Create Customer]
+                    //Cach truong bat buoc 
+                    if (c.customer.cu_fullname == null)
+                    {
+                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                        response.Message = "Họ và tên không được để trống";
+                        response.Data = null;
+                        return Ok(response);
+                    }
+                    if (c.customer.cu_mobile == null)
+                    {
+                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                        response.Message = "Số điện thoại không được để trống";
+                        response.Data = null;
+                        return Ok(response);
+                    }
+                    if (c.customer.cu_email == null)
+                    {
+                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                        response.Message = "Email không được để trống";
+                        response.Data = null;
+                        return Ok(response);
+                    }
+                    if (c.customer.cu_type == 0)
+                    {
+                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                        response.Message = "Loại khách hàng không được để trống";
+                        response.Data = null;
+                        return Ok(response);
+                    }
+                    if (c.customer.customer_group_id == 0)
+                    {
+                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                        response.Message = "Nhóm khách hàng không được để trống";
+                        response.Data = null;
+                        return Ok(response);
+                    }
+                    if (c.customer.source_id == 0)
+                    {
+                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                        response.Message = "Nguồn không được để trống";
+                        response.Data = null;
+                        return Ok(response);
+                    }
+                    // get data from formdata
+                    CustomerCreateViewModel customerCreateViewModel = new CustomerCreateViewModel
+                    {
+                        cu_mobile = Convert.ToString(c.customer.cu_mobile),
+                        cu_email = Convert.ToString(c.customer.cu_email),
+                        cu_fullname = Convert.ToString(c.customer.cu_fullname),
+
+                        customer_group_id = Convert.ToInt32(c.customer.customer_group_id),
+                        source_id = Convert.ToInt32(c.customer.source_id),
+
+                        cu_type = Convert.ToByte(c.customer.cu_type),
+
+                    };
+                    //Bat cac dieu kien rang buoc
+                    if (CheckEmail.IsValidEmail(customerCreateViewModel.cu_email) == false && customerCreateViewModel.cu_email == "")
+                    {
+                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                        response.Message = "Định dạng email không hợp lệ !";
+                        response.Data = null;
+                        return Ok(response);
+                    }
+
+                    if (CheckNumber.IsPhoneNumber(customerCreateViewModel.cu_mobile) == false && customerCreateViewModel.cu_mobile == "")
+                    {
+                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                        response.Message = "Số điện thoại không hợp lệ";
+                        response.Data = null;
+                        return Ok(response);
+                    }
+
+
+                    //bat cac truog con lai 
+                    if (c.customer.cu_birthday == null)
+                    {
+                        customerCreateViewModel.cu_birthday = null;
+                    }
+                    else
+                    {
+                        customerCreateViewModel.cu_birthday = Convert.ToDateTime(c.customer.cu_birthday);
+                    }
+                    if (c.customer.cu_address == null)
+                    {
+                        customerCreateViewModel.cu_address = null;
+                    }
+                    else
+                    {
+                        customerCreateViewModel.cu_address = Convert.ToString(c.customer.cu_address);
+                    }
+                    if (c.customer.cu_note == null)
+                    {
+                        customerCreateViewModel.cu_note = null;
+                    }
+                    else
+                    {
+                        customerCreateViewModel.cu_note = Convert.ToString(c.customer.cu_note);
+                    }
+                    if (c.customer.cu_geocoding == null)
+                    {
+                        customerCreateViewModel.cu_geocoding = null;
+                    }
+                    else
+                    {
+                        customerCreateViewModel.cu_geocoding = Convert.ToString(c.customer.cu_geocoding);
+                    }
+                    if (c.customer.cu_curator_id == 0)
+                    {
+                        customerCreateViewModel.cu_curator_id = null;
+                    }
+                    else
+                    {
+                        customerCreateViewModel.cu_curator_id = Convert.ToInt32(c.customer.cu_curator_id);
+                    }
+                    if (c.customer.cu_age == 0)
+                    {
+                        customerCreateViewModel.cu_age = null;
+                    }
+                    else
+                    {
+                        customerCreateViewModel.cu_age = Convert.ToInt32(c.customer.cu_age);
+                    }
+                    if (c.customer.cu_status == 0)
+                    {
+                        customerCreateViewModel.cu_status = null;
+                    }
+                    else
+                    {
+                        customerCreateViewModel.cu_status = Convert.ToByte(c.customer.cu_status);
+                    }
+
+                    customerCreateViewModel.staff_id = Convert.ToInt32(current_id);
+                    customerCreateViewModel.cu_create_date = DateTime.Now;
+                    var cu = _customerservice.GetLast();
+                    if (cu == null) customerCreateViewModel.cu_code = Utilis.CreateCode("CU", 0, 7);
+                    else customerCreateViewModel.cu_code = Utilis.CreateCode("CU", cu.cu_id, 7);
+                    // mapping view model to entity
+                    var createdcustomer = _mapper.Map<customer>(customerCreateViewModel);
+
+                    // save new customer
+                    _customerservice.Create(createdcustomer);
+                    var cu_last = _customerservice.GetLast();
+                    c.customer.cu_id = cu_last.cu_id;
+
+                    // Them dia chi 
+                    foreach (shipaddressviewmodel s in c.customer.list_address)
+                    {
+                        var addresscreate = _mapper.Map<ship_address>(s);
+                        addresscreate.customer_id = c.customer.cu_id;
+                        _shipaddressservice.Create(addresscreate);
+                    }
+                    #endregion
+                }
+
+                #region update customer order service
+
+                CustomerOrderCreateViewModel customerOrderCreateViewModel = new CustomerOrderCreateViewModel { };
+                customerOrderCreateViewModel.customer_id = c.customer.cu_id;
+                customerOrderCreateViewModel.staff_id = Convert.ToInt32(current_id);
+                customerOrderCreateViewModel.cuo_evaluation = c.cuo_evaluation;
+                customerOrderCreateViewModel.cuo_feedback = c.cuo_feedback;
+                customerOrderCreateViewModel.cuo_date = DateTime.Now;
+                // mapping view model to entity
+                var createdcustomer_order = _mapper.Map<customer_order>(customerOrderCreateViewModel);
+                var op_last1 = _customer_orderservice.GetLast();
+                if (op_last1 == null) createdcustomer_order.cuo_code = Utilis.CreateCode("ORS", 0, 7);
+                else createdcustomer_order.cuo_code = Utilis.CreateCode("ORS", op_last1.cuo_id, 7);
+
+                // save new customer_order
+                _customer_orderservice.Create(createdcustomer_order);
+
+                #endregion
+                var op_last = _customer_orderservice.GetLast();
+                #region create order service
+
+                for (int i = 0; i < c.list_service_id.Length; i++)
+                {
+                    OrderServiceCreateViewModel orderCreateViewModel = new OrderServiceCreateViewModel { };
+                    orderCreateViewModel.customer_order_id = op_last.cuo_id;
+                    orderCreateViewModel.service_id = c.list_service_id[i];
+                    var createOrderSecvice = _mapper.Map<order_service>(orderCreateViewModel);
+                    _orderserviceservice.Create(createOrderSecvice);
+
+                }
+                #endregion
+                #region create service time
+                ServiceTimeCreateViewModel serviceTimeCreate = new ServiceTimeCreateViewModel();
+                serviceTimeCreate.customer_order_id = op_last.cuo_id;
+                serviceTimeCreate.st_start_time = c.st_start_time;
+                serviceTimeCreate.st_end_time = c.st_end_time;
+                serviceTimeCreate.st_start_date = c.st_start_date;
+                serviceTimeCreate.st_end_date = c.st_end_date;
+                serviceTimeCreate.st_repeat_type = c.st_repeat_type;
+                serviceTimeCreate.st_sun_flag = c.st_sun_flag;
+                serviceTimeCreate.st_mon_flag = c.st_mon_flag;
+                serviceTimeCreate.st_tue_flag = c.st_tue_flag;
+                serviceTimeCreate.st_wed_flag = c.st_wed_flag;
+                serviceTimeCreate.st_thu_flag = c.st_thu_flag;
+                serviceTimeCreate.st_fri_flag = c.st_fri_flag;
+                serviceTimeCreate.st_sat_flag = c.st_sat_flag;
+                serviceTimeCreate.st_repeat = c.st_repeat;
+                serviceTimeCreate.st_repeat_every = c.st_repeat_every;
+                serviceTimeCreate.st_on_the = c.st_on_the;
+                serviceTimeCreate.st_on_day_flag = c.st_on_day_flag;
+                serviceTimeCreate.st_on_day = c.st_on_day;
+                var createServiceTime = _mapper.Map<service_time>(serviceTimeCreate);
+                _servicetimeservice.Create(createServiceTime);
+
+                //Do something
+                #endregion
+                var st_last = _servicetimeservice.GetLast();
+                #region create executor
+                for (int i = 0; i < c.list_staff_id.Length; i++)
+                {
+                    ExecutorCreateViewModel executorCreateViewModel = new ExecutorCreateViewModel { };
+                    executorCreateViewModel.customer_order_id = op_last.cuo_id;
+                    executorCreateViewModel.staff_id = c.list_staff_id[i];
+                    executorCreateViewModel.service_time_id = st_last.st_id;
+                    var createExecutor = _mapper.Map<executor>(executorCreateViewModel);
+                    _executorservice.Create(createExecutor);
+
+                }
+                #endregion
+
+
+
+                // return response
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = null;
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+                Console.WriteLine(ex.ToString());
+
+                return Ok(response);
+            }
+
+        }
         [HttpPut]
         [Route("api/customer-orders/update")]
         public async Task<IHttpActionResult> UpdateCustomerOder([FromBody] CustomerOrderProductViewModelUpdate customer_order_update)

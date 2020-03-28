@@ -1,6 +1,7 @@
 ﻿using ERP.Common.GenericService;
 using ERP.Common.Models;
 using ERP.Data.ModelsERP;
+using ERP.Data.ModelsERP.ModelView.OrderService;
 using ERP.Repository.Repositories.IRepositories;
 using ERP.Service.Services.IServices;
 using System;
@@ -19,6 +20,10 @@ namespace ERP.Service.Services
         }
 
         public PagedResults<order_service> CreatePagedResults(int pageNumber, int pageSize)
+        {
+            return this._repository.CreatePagedResults(pageNumber, pageSize);
+        }
+        public PagedResults<orderseviceviewmodel> GetAllSearch(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name)
         {
             return this._repository.CreatePagedResults(pageNumber, pageSize);
         }

@@ -28,6 +28,10 @@ namespace ERP.Service.Services
         {
             return this._repository.GetAllPageSearch(pageNumber,pageSize,search_name);
         }
+        public PagedResults<serviceinforviewmodel> GetAllPageInforService(int pageNumber, int pageSize, string search_name)
+        {
+            return this._repository.GetAllPageInforService(pageNumber,pageSize,search_name);
+        }
         public List<dropdown> GetType()
         {
             return this._repository.GetType();

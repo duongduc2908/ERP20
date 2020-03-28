@@ -57,6 +57,12 @@
     <Reference Include="AutoMapper, Version=9.0.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoMapper.9.0.0\lib\net461\AutoMapper.dll</HintPath>
     </Reference>
+    <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.Core.4.3.1\lib\net45\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Windsor, Version=5.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.Windsor.5.0.1\lib\net45\Castle.Windsor.dll</HintPath>
+    </Reference>
     <Reference Include="EPPlus, Version=4.5.3.3, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
       <HintPath>..\packages\EPPlus.4.5.3.3\lib\net40\EPPlus.dll</HintPath>
     </Reference>
@@ -71,6 +77,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Security" />
     <Reference Include="System.Web.Cors, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Cors.5.2.7\lib\net45\System.Web.Cors.dll</HintPath>
@@ -236,6 +243,7 @@
     <Compile Include="Controllers\Dashboard\ManagerCustomerGroupController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerCustomerOrderController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerFieldController.cs" />
+    <Compile Include="Controllers\Dashboard\ManagerServiceTimeController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerStatisticalController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerOrderProductController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerProductCategoryController.cs" />
@@ -272,6 +280,7 @@
     <Compile Include="Models\CustomerOrderCreateViewModel.cs" />
     <Compile Include="Models\CustomerOrderProductViewModel.cs" />
     <Compile Include="Models\CustomerOrderProductViewModelUpdate.cs" />
+    <Compile Include="Models\CustomerOrderServiceViewModel.cs" />
     <Compile Include="Models\CustomerOrderUpdateViewModel.cs" />
     <Compile Include="Models\CustomerUpdateViewModel.cs" />
     <Compile Include="Models\DepartmentCreateViewModel.cs" />
@@ -283,17 +292,23 @@
     <Compile Include="Models\EmailTemplateUpdateViewModel.cs" />
     <Compile Include="Models\EmailUpdateViewModel.cs" />
     <Compile Include="Models\Excel\RQ_Department.cs" />
+    <Compile Include="Models\ExecutorCreateViewModel.cs" />
+    <Compile Include="Models\ExecutorUpdateViewModel.cs" />
     <Compile Include="Models\GroupRoleCreateViewModel.cs" />
     <Compile Include="Models\GroupRoleUpdateViewModel.cs" />
     <Compile Include="Models\NotificationCreateViewModel.cs" />
     <Compile Include="Models\NotificationUpdateViewModel.cs" />
     <Compile Include="Models\OrderProductCreateViewModel.cs" />
     <Compile Include="Models\OrderProductUpdateViewModel.cs" />
+    <Compile Include="Models\OrderServiceCreateViewModel.cs" />
+    <Compile Include="Models\OrderServiceUpdateViewModel.cs" />
     <Compile Include="Models\PositionCreateViewModel.cs" />
     <Compile Include="Models\PositionUpdateViewModel.cs" />
     <Compile Include="Models\ProductCreateViewModel.cs" />
     <Compile Include="Models\ProductUpdateViewModel.cs" />
     <Compile Include="Models\ServiceCreateViewModel.cs" />
+    <Compile Include="Models\ServiceTimeCreateViewModel.cs" />
+    <Compile Include="Models\ServiceTimeUpdateViewModel.cs" />
     <Compile Include="Models\ServiceUpdateViewModel.cs" />
     <Compile Include="Models\ShipAddressCreateViewModel.cs" />
     <Compile Include="Models\ShipAddressUpdateViewModel.cs" />
@@ -424,6 +439,7 @@
     <Folder Include="Views\ManagerPosition\" />
     <Folder Include="Views\ManagerProductCategory\" />
     <Folder Include="Views\ManagerProduct\" />
+    <Folder Include="Views\ManagerServiceTime\" />
     <Folder Include="Views\ManagerService\" />
     <Folder Include="Views\ManagerSmsStrategy\" />
     <Folder Include="Views\ManagerSmsTemplate\" />

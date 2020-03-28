@@ -1,15 +1,14 @@
-namespace ERP.Data.ModelsERP
-{
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Web;
 
-    public partial class service_time
+namespace ERP.API.Models
+{
+    public class ServiceTimeCreateViewModel
     {
-        [Key]
-        public int st_id { get; set; }
+        public ServiceTimeCreateViewModel() { }
 
         public TimeSpan? st_start_time { get; set; }
 
