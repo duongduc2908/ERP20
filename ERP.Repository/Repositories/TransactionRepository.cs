@@ -197,7 +197,9 @@ namespace ERP.Repository.Repositories
                                 add.cuo_status_name = EnumCustomerOrder.status[j - 1];
                             }
                         }
+
                         add.cuo_address = cuo.cuo_address;
+
                         add.cuo_date = cuo.cuo_date;
                         add.op_total_value = ord.op_total_value;
                         list_add_order_product.Add(add);

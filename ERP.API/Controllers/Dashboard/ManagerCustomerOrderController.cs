@@ -7,6 +7,7 @@ using ERP.Data.Dto;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
 using ERP.Data.ModelsERP.ModelView.ExportDB;
+using ERP.Data.ModelsERP.ModelView.Service;
 using ERP.Extension.Extensions;
 using ERP.Service.Services.IServices;
 using System;
@@ -78,6 +79,7 @@ namespace ERP.API.Controllers.Dashboard
 
             return Ok(response);
         }
+
         [HttpGet]
         [Route("api/customer-orders/status")]
         public IHttpActionResult GetllStatus()
@@ -100,6 +102,7 @@ namespace ERP.API.Controllers.Dashboard
 
             return Ok(response);
         }
+
         [HttpGet]
         [Route("api/customer-orders/get-all-payment")]
         public IHttpActionResult GetAllSPayment()
@@ -122,6 +125,7 @@ namespace ERP.API.Controllers.Dashboard
 
             return Ok(response);
         }
+
         [HttpGet]
         [Route("api/customer-orders/search")]
         public IHttpActionResult GetAllSearch(int pageNumber, int pageSize, int? payment_type_id, DateTime? start_date, DateTime? end_date, string code)
@@ -132,6 +136,29 @@ namespace ERP.API.Controllers.Dashboard
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
                 response.Data = _customer_orderservice.GetAllSearch(pageNumber: pageNumber, pageSize: pageSize, payment_type_id: payment_type_id,start_date,end_date, code);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = "Không tìm thấy";
+                response.Data = null;
+
+                Console.WriteLine(ex.ToString());
+            }
+
+            return Ok(response);
+        }
+
+        [HttpGet]
+        [Route("api/customer-order-service/search")]
+        public IHttpActionResult GetAllSearchCustomerOrderService(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name)
+        {
+            ResponseDataDTO<PagedResults<servicercustomerorderviewmodel>> response = new ResponseDataDTO<PagedResults<servicercustomerorderviewmodel>>();
+            try
+            {
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = _customer_orderservice.GetAllSearchCustomerOrderService(pageNumber: pageNumber, pageSize: pageSize, start_date,end_date, search_name);
             }
             catch (Exception ex)
             {
@@ -155,6 +182,31 @@ namespace ERP.API.Controllers.Dashboard
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
                 response.Data = _customer_orderservice.CreatePagedResults(pageNumber, pageSize);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+
+                Console.WriteLine(ex.ToString());
+            }
+
+            return Ok(response);
+        }
+
+        [HttpGet]
+        [Route("api/customer-orders/get_staffs_free")]
+        public IHttpActionResult GetStaffFree(service_time c,string fullName)
+        {
+            ResponseDataDTO<List<dropdown>> response = new ResponseDataDTO<List<dropdown>>();
+            try
+            {
+                var results = GenDateOrderService.Gen(c.st_custom_start, c.st_custom_end, c.st_repeat_type, c.st_repeat_every, c.st_sun_flag, c.st_mon_flag, c.st_tue_flag, c.st_wed_flag, c.st_thu_flag, c.st_fri_flag, c.st_sat_flag, c.st_on_day_flag, c.st_on_day, c.st_on_the_flag, c.st_on_the);
+
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = _customer_orderservice.Get_staff_free(results, fullName);
             }
             catch (Exception ex)
             {
@@ -204,6 +256,7 @@ namespace ERP.API.Controllers.Dashboard
                         response.Data = null;
                         return Ok(response);
                     }
+                    
                     if (c.customer.cu_type == 0)
                     {
                         response.Code = HttpCode.INTERNAL_SERVER_ERROR;
@@ -313,7 +366,7 @@ namespace ERP.API.Controllers.Dashboard
                     {
                         customerCreateViewModel.cu_status = Convert.ToByte(c.customer.cu_status);
                     }
-
+                    
                     customerCreateViewModel.staff_id = Convert.ToInt32(current_id);
                     customerCreateViewModel.cu_create_date = DateTime.Now;
                     var cu = _customerservice.GetLast();
@@ -328,14 +381,17 @@ namespace ERP.API.Controllers.Dashboard
                     c.customer.cu_id = cu_last.cu_id;
 
                     // Them dia chi 
-                    foreach(shipaddressviewmodel s in c.customer.list_address)
+                    foreach (shipaddressviewmodel s in c.customer.list_address)
                     {
                         var addresscreate = _mapper.Map<ship_address>(s);
                         addresscreate.customer_id = c.customer.cu_id;
                         _shipaddressservice.Create(addresscreate);
                     }
+                    var add_last = _shipaddressservice.GetLast();
+                    c.sha_id = add_last.sha_id;
                     #endregion
                 }
+                
 
                 // get data from formdata
                 CustomerOrderCreateViewModel customer_orderCreateViewModel = new CustomerOrderCreateViewModel { };
@@ -347,9 +403,9 @@ namespace ERP.API.Controllers.Dashboard
                 customer_orderCreateViewModel.cuo_total_price = c.cuo_total_price;
                 customer_orderCreateViewModel.cuo_discount = c.cuo_discount;
                 customer_orderCreateViewModel.cuo_status = c.cuo_status;
+                customer_orderCreateViewModel.cuo_address = c.cuo_address;
+               
 
-
-                
                 customer_orderCreateViewModel.cuo_date = DateTime.Now;
                 // mapping view model to entity
                 var createdcustomer_order = _mapper.Map<customer_order>(customer_orderCreateViewModel);
@@ -571,6 +627,8 @@ namespace ERP.API.Controllers.Dashboard
                 customerOrderCreateViewModel.cuo_evaluation = c.cuo_evaluation;
                 customerOrderCreateViewModel.cuo_feedback = c.cuo_feedback;
                 customerOrderCreateViewModel.cuo_date = DateTime.Now;
+                customerOrderCreateViewModel.cuo_address = c.cuo_address;
+                
                 // mapping view model to entity
                 var createdcustomer_order = _mapper.Map<customer_order>(customerOrderCreateViewModel);
                 var op_last1 = _customer_orderservice.GetLast();
@@ -614,26 +672,40 @@ namespace ERP.API.Controllers.Dashboard
                 serviceTimeCreate.st_on_the = c.st_on_the;
                 serviceTimeCreate.st_on_day_flag = c.st_on_day_flag;
                 serviceTimeCreate.st_on_day = c.st_on_day;
+                serviceTimeCreate.st_on_the_flag = c.st_on_the_flag;
+                serviceTimeCreate.st_custom_start = c.st_custom_start;
+                serviceTimeCreate.st_custom_end = c.st_custom_end;
+
                 var createServiceTime = _mapper.Map<service_time>(serviceTimeCreate);
                 _servicetimeservice.Create(createServiceTime);
 
-                //Do something
+                //Do something gen data 
+                List<DateTime> results = new List<DateTime>();
+                if (c.st_repeat == true)
+                {
+                    results = GenDateOrderService.Gen(c.st_custom_start, c.st_custom_end, c.st_repeat_type, c.st_repeat_every, c.st_sun_flag , c.st_mon_flag , c.st_tue_flag, c.st_wed_flag, c.st_thu_flag , c.st_fri_flag, c.st_sat_flag, c.st_on_day_flag, c.st_on_day, c.st_on_the_flag, c.st_on_the);
+                }
                 #endregion
                 var st_last = _servicetimeservice.GetLast();
                 #region create executor
+
                 for (int i = 0; i < c.list_staff_id.Length; i++)
                 {
-                    ExecutorCreateViewModel executorCreateViewModel = new ExecutorCreateViewModel { };
-                    executorCreateViewModel.customer_order_id = op_last.cuo_id;
-                    executorCreateViewModel.staff_id = c.list_staff_id[i];
-                    executorCreateViewModel.service_time_id = st_last.st_id;
-                    var createExecutor = _mapper.Map<executor>(executorCreateViewModel);
-                    _executorservice.Create(createExecutor);
-
+                    for(int j =0; j< results.Count;j++)
+                    {
+                        ExecutorCreateViewModel executorCreateViewModel = new ExecutorCreateViewModel { };
+                        executorCreateViewModel.customer_order_id = op_last.cuo_id;
+                        executorCreateViewModel.staff_id = c.list_staff_id[i];
+                        executorCreateViewModel.service_time_id = st_last.st_id;
+                        executorCreateViewModel.work_time = results[j].Date;
+                        executorCreateViewModel.start_time = c.st_start_time;
+                        executorCreateViewModel.end_time = c.st_end_time;
+                        var createExecutor = _mapper.Map<executor>(executorCreateViewModel);
+                        _executorservice.Create(createExecutor);
+                    }
+                    
                 }
                 #endregion
-
-
 
                 // return response
                 response.Code = HttpCode.OK;
@@ -825,6 +897,7 @@ namespace ERP.API.Controllers.Dashboard
                         addresscreate.customer_id = c.customer.cu_id;
                         _shipaddressservice.Create(addresscreate);
                     }
+                    var add_last = _shipaddressservice.GetLast();
                     #endregion
                 }
 
@@ -836,6 +909,7 @@ namespace ERP.API.Controllers.Dashboard
                 customerOrderCreateViewModel.cuo_evaluation = c.cuo_evaluation;
                 customerOrderCreateViewModel.cuo_feedback = c.cuo_feedback;
                 customerOrderCreateViewModel.cuo_date = DateTime.Now;
+                customerOrderCreateViewModel.cuo_address = c.cuo_address;
                 // mapping view model to entity
                 var createdcustomer_order = _mapper.Map<customer_order>(customerOrderCreateViewModel);
                 var op_last1 = _customer_orderservice.GetLast();
@@ -879,21 +953,36 @@ namespace ERP.API.Controllers.Dashboard
                 serviceTimeCreate.st_on_the = c.st_on_the;
                 serviceTimeCreate.st_on_day_flag = c.st_on_day_flag;
                 serviceTimeCreate.st_on_day = c.st_on_day;
+                serviceTimeCreate.st_on_the_flag = c.st_on_the_flag;
+                serviceTimeCreate.st_custom_start = c.st_custom_start;
+                serviceTimeCreate.st_custom_end = c.st_custom_end;
                 var createServiceTime = _mapper.Map<service_time>(serviceTimeCreate);
                 _servicetimeservice.Create(createServiceTime);
 
-                //Do something
+                //Do something gen data 
+                List<DateTime> results = new List<DateTime>();
+                if (c.st_repeat == true)
+                {
+                    results = GenDateOrderService.Gen(c.st_custom_start, c.st_custom_end, c.st_repeat_type, c.st_repeat_every, c.st_sun_flag, c.st_mon_flag, c.st_tue_flag, c.st_wed_flag, c.st_thu_flag, c.st_fri_flag, c.st_sat_flag, c.st_on_day_flag, c.st_on_day, c.st_on_the_flag, c.st_on_the);
+                }
                 #endregion
                 var st_last = _servicetimeservice.GetLast();
                 #region create executor
+
                 for (int i = 0; i < c.list_staff_id.Length; i++)
                 {
-                    ExecutorCreateViewModel executorCreateViewModel = new ExecutorCreateViewModel { };
-                    executorCreateViewModel.customer_order_id = op_last.cuo_id;
-                    executorCreateViewModel.staff_id = c.list_staff_id[i];
-                    executorCreateViewModel.service_time_id = st_last.st_id;
-                    var createExecutor = _mapper.Map<executor>(executorCreateViewModel);
-                    _executorservice.Create(createExecutor);
+                    for (int j = 0; j < results.Count; j++)
+                    {
+                        ExecutorCreateViewModel executorCreateViewModel = new ExecutorCreateViewModel { };
+                        executorCreateViewModel.customer_order_id = op_last.cuo_id;
+                        executorCreateViewModel.staff_id = c.list_staff_id[i];
+                        executorCreateViewModel.service_time_id = st_last.st_id;
+                        executorCreateViewModel.work_time = results[j].Date;
+                        executorCreateViewModel.start_time = c.st_start_time;
+                        executorCreateViewModel.end_time = c.st_end_time;
+                        var createExecutor = _mapper.Map<executor>(executorCreateViewModel);
+                        _executorservice.Create(createExecutor);
+                    }
 
                 }
                 #endregion
@@ -917,6 +1006,7 @@ namespace ERP.API.Controllers.Dashboard
             }
 
         }
+
         [HttpPut]
         [Route("api/customer-orders/update")]
         public async Task<IHttpActionResult> UpdateCustomerOder([FromBody] CustomerOrderProductViewModelUpdate customer_order_update)
@@ -1076,6 +1166,15 @@ namespace ERP.API.Controllers.Dashboard
                     _customerservice.Create(createdcustomer);
                     var cu_last = _customerservice.GetLast();
                     customer_order_update.customer.cu_id = cu_last.cu_id;
+                    // Them dia chi 
+                    foreach (shipaddressviewmodel s in customer_order_update.customer.list_address)
+                    {
+                        var addresscreate = _mapper.Map<ship_address>(s);
+                        addresscreate.customer_id = customer_order_update.customer.cu_id;
+                        _shipaddressservice.Create(addresscreate);
+                    }
+                    var add_last = _shipaddressservice.GetLast();
+                    customer_order_update.sha_id = add_last.sha_id;
                     #endregion
                 }
 
@@ -1091,6 +1190,9 @@ namespace ERP.API.Controllers.Dashboard
                 existscustomerorder.cuo_discount = customer_order_update.cuo_discount;
                 existscustomerorder.cuo_status = customer_order_update.cuo_status;
                 existscustomerorder.cuo_address = customer_order_update.cuo_address;
+
+                
+
 
                 // update customer order
                 _customer_orderservice.Update(existscustomerorder, existscustomerorder.cuo_id);
@@ -1219,6 +1321,7 @@ namespace ERP.API.Controllers.Dashboard
             }
         }
         #endregion
+
         #region["Export Excel"]
         [HttpGet]
         [Route("api/customer-order/export")]

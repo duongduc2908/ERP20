@@ -41,14 +41,22 @@ namespace ERP.API.Models
 
         public bool? st_repeat { get; set; }
 
-        public bool? st_repeat_every { get; set; }
+        public int? st_repeat_every { get; set; }
 
-        public byte? st_on_the { get; set; }
+        public bool? st_on_the_flag { get; set; }
+
+        public int? st_on_the { get; set; }
 
         public bool? st_on_day_flag { get; set; }
 
         public int? st_on_day { get; set; }
 
         public int? customer_order_id { get; set; }
+
+        [Column(TypeName = "date")]
+        public DateTime? st_custom_start { get; set; }
+
+        [Column(TypeName = "date")]
+        public DateTime? st_custom_end { get; set; }
     }
 }

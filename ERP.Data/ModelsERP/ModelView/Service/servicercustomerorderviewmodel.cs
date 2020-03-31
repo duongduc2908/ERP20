@@ -1,25 +1,26 @@
 ﻿using ERP.Data.ModelsERP.ModelView.Customer;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
-namespace ERP.API.Models
+namespace ERP.Data.ModelsERP.ModelView.Service
 {
-    public class CustomerOrderServiceViewModelUpdate
+    public class servicercustomerorderviewmodel
     {
-        [Key]
         public int cuo_id { get; set; }
-
-        public int[] list_service_id { get; set; }
-        public int[] list_staff_id { get; set; }
-
-        public customeraddressviewmodel customer { get; set; }
-        [Key]
-        public int st_id { get; set; }
+        public string cuo_code { get; set; }
+        public int? cuo_address_id { get; set; }
         public string cuo_address { get; set; }
+        public string cu_fullname { get; set; }
+        public string cu_mobile { get; set; }
+        public DateTime? cuo_date { get; set; }
+
+        public List<serviceinforviewmodel> list_service { get; set; }
+        public List<servicestaffviewmodel> list_staff { get; set; }
+
+        public servicesearchcustomerviewmodel customer { get; set; }
         public TimeSpan st_start_time { get; set; }
 
         public TimeSpan st_end_time { get; set; }
@@ -31,6 +32,7 @@ namespace ERP.API.Models
         public DateTime st_end_date { get; set; }
 
         public byte st_repeat_type { get; set; }
+        public string st_repeat_type_name { get; set; }
 
         public bool st_sun_flag { get; set; }
 
@@ -67,9 +69,8 @@ namespace ERP.API.Models
         public DateTime st_custom_end { get; set; }
 
 
-        public byte cuo_evaluation { get; set; }
+        public byte? cuo_evaluation { get; set; }
 
         public string cuo_feedback { get; set; }
-
     }
 }

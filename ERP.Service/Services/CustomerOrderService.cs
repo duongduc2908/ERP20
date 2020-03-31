@@ -3,6 +3,7 @@ using ERP.Common.Models;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
 using ERP.Data.ModelsERP.ModelView.ExportDB;
+using ERP.Data.ModelsERP.ModelView.Service;
 using ERP.Data.ModelsERP.ModelView.Statistics;
 using ERP.Repository.Repositories.IRepositories;
 using ERP.Service.Services.IServices;
@@ -32,6 +33,11 @@ namespace ERP.Service.Services
         {
             return this._repository.GetAllSearch(pageNumber, pageSize,  payment_type_id,start_date,end_date, name);
         }
+         public PagedResults<servicercustomerorderviewmodel> GetAllSearchCustomerOrderService(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name)
+        {
+            return this._repository.GetAllSearchCustomerOrderService(pageNumber, pageSize,  start_date,end_date, search_name);
+        }
+
         public PagedResults<customerorderview> ExportCustomerOrder(int pageNumber, int pageSize, int? payment_type_id, DateTime? start_date, DateTime? end_date, string name)
         {
             return this._repository.ExportCustomerOrder(pageNumber, pageSize,  payment_type_id,start_date, end_date, name);
@@ -39,6 +45,10 @@ namespace ERP.Service.Services
         public List<dropdown> GetAllPayment()
         {
             return this._repository.GetAllPayment();
+        }
+        public List<dropdown> Get_staff_free(List<DateTime> results, string fullName)
+        {
+            return this._repository.Get_staff_free(results, fullName);
         }
         
         public PagedResults<customerorderviewmodel> ResultStatisticsCustomerOrder(int pageNumber, int pageSize, int staff_id, bool month, bool week, bool day)

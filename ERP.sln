@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERP.Repository", "ERP.Repos
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERP.Service", "ERP.Service\ERP.Service.csproj", "{91742099-CB09-48F7-A062-C0C372100E1A}"
 EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{2AB0B532-CA39-47A4-9D46-CBBE9B14DEAF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{91742099-CB09-48F7-A062-C0C372100E1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{91742099-CB09-48F7-A062-C0C372100E1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{91742099-CB09-48F7-A062-C0C372100E1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2AB0B532-CA39-47A4-9D46-CBBE9B14DEAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2AB0B532-CA39-47A4-9D46-CBBE9B14DEAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2AB0B532-CA39-47A4-9D46-CBBE9B14DEAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2AB0B532-CA39-47A4-9D46-CBBE9B14DEAF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

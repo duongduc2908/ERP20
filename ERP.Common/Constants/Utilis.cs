@@ -8,6 +8,35 @@ namespace ERP.Common.Constants
 {
     public class Utilis
     {
+        public static string[] thu = new string[]{ "M","T3","W","T5","F","S7","S8"};
+        public static int DayOfDate(DateTime datetime)
+        {
+            return (int)datetime.DayOfWeek;
+        }
+        public static int CompareDate(int thuNow, string thuSelect)
+        {
+            int numberSelect = 0;
+            for(int i = 1; i< 8; i++)
+            {
+                if(thu[i-1].Contains(thuSelect))
+                {
+                    numberSelect = i;
+                }
+            }
+            return numberSelect - thuNow;
+        }
+        public static int GetWeekNumberOfMonth(DateTime date)
+        {
+            date = date.Date;
+            DateTime firstMonthDay = new DateTime(date.Year, date.Month, 1);
+            DateTime firstMonthMonday = firstMonthDay.AddDays((DayOfWeek.Monday + 7 - firstMonthDay.DayOfWeek) % 7);
+            if (firstMonthMonday > date)
+            {
+                firstMonthDay = firstMonthDay.AddMonths(-1);
+                firstMonthMonday = firstMonthDay.AddDays((DayOfWeek.Monday + 7 - firstMonthDay.DayOfWeek) % 7);
+            }
+            return (date - firstMonthMonday).Days / 7 + 1;
+        }
         public static string GetFileFormat(string filename)
         {
             string res = "";

@@ -34,7 +34,7 @@ namespace ERP.API.Models
         public int? cuo_ship_tax { get; set; }
         public int? staff_id { get; set; }
 
-        [StringLength(150)]
+        [StringLength(250)]
         public string cuo_address { get; set; }
 
         public byte? cuo_evaluation { get; set; }

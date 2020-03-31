@@ -23,5 +23,6 @@ namespace ERP.Data.ModelsERP.ModelView
         public byte? cuo_payment_status { get; set; }
 
         public int? cuo_ship_tax { get; set; }
+        public int? cuo_address_id { get; set; }
     }
 }

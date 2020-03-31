@@ -33,6 +33,7 @@ namespace ERP.API.AutoMapper
             CreateMap< staff, staffviewmodel>();
             CreateMap< staff, statisticstaffviewmodel>();
             CreateMap< staff, staffview>();
+            CreateMap< staff, servicestaffviewmodel>();
             
 
             CreateMap<CustomerCreateViewModel, customer>();
@@ -51,7 +52,13 @@ namespace ERP.API.AutoMapper
             CreateMap<customer_order, customerorderhistoryviewmodel>();
             CreateMap<customer_order, statisticsorderviewmodel>();
             CreateMap<customer_order, customerorderview>();
-            
+            CreateMap<customer_order, servicercustomerorderviewmodel>();
+
+            CreateMap<service_time, servicercustomerorderviewmodel>();
+            CreateMap<service_time, serviceinforviewmodel>();
+            CreateMap<ServiceTimeCreateViewModel, service_time>();
+            CreateMap<ServiceTimeUpdateViewModel, service_time>();
+
             CreateMap<customer_group, customergroupviewmodel>();
             CreateMap<CustomerGroupCreateViewModel, customer_group>();
             CreateMap<CustomerGroupUpdateViewModel, customer_group>();
