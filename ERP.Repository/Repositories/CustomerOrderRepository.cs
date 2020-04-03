@@ -15,6 +15,7 @@ using ERP.Data.ModelsERP.ModelView.Customer;
 using ERP.Data.ModelsERP.ModelView.Statistics;
 using ERP.Data.ModelsERP.ModelView.ExportDB;
 using ERP.Data.ModelsERP.ModelView.Service;
+using ERP.Data.ModelsERP.ModelView.OrderService;
 
 namespace ERP.Repository.Repositories
 {
@@ -312,6 +313,7 @@ namespace ERP.Repository.Repositories
                 add.cuo_evaluation = i.cuo_evaluation;
                 add.cuo_feedback = i.cuo_feedback;
                 add.cuo_id = i.cuo_id;
+                add.cuo_infor_time = i.cuo_infor_time;
                 //customer
                 customer cu = _dbContext.customers.Find(i.customer_id);
                 add.cu_fullname = cu.cu_fullname;
@@ -333,8 +335,15 @@ namespace ERP.Repository.Repositories
                 add.list_service = list_service;
                 //list staff
                 List<servicestaffviewmodel> list_staff = new List<servicestaffviewmodel>();
-                var lts_exe = _dbContext.executors.Where(s => s.customer_order_id == i.cuo_id).ToList();
-                foreach (executor ex in lts_exe)
+                var lts_exe = (from ex in _dbContext.executors where ex.customer_order_id == i.cuo_id
+                               group ex by ex.staff_id into t
+                              
+                           select new
+                           {
+                               staff_id = t.Key,
+                           }).ToList();
+                
+                foreach (var ex in lts_exe)
                 {
                     var lts_sta = _dbContext.staffs.Where(s => s.sta_id == ex.staff_id).ToList(); ;
                     foreach (staff s in lts_sta)
@@ -598,6 +607,48 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfPages = totalPageCount,
                 TotalNumberOfRecords = totalNumberOfRecords
             };
+        }
+
+        public List<order_service_view> GetServiceByDay(int id, DateTime start_date, DateTime to_date)
+        {
+            List<order_service_view> res = new List<order_service_view>();
+            
+            var lts_cg = (from ex in _dbContext.executors
+                          join od in _dbContext.order_service on ex.customer_order_id equals od.customer_order_id
+                          join sv in _dbContext.services on od.service_id equals sv.se_id
+                          where ex.staff_id == id && ex.work_time >= start_date && ex.work_time <= to_date
+                          orderby ex.work_time 
+                          select new
+                          {
+                              ex.work_time,ex.start_time, ex.end_time, sv.se_name
+                          }).ToList();
+            for(int i =0; i<lts_cg.Count;i++)
+            {
+                orderservice_day oday = new orderservice_day();
+                order_service_view ov = new order_service_view();
+                oday.start_time = lts_cg[i].start_time;
+                oday.end_time = lts_cg[i].end_time;
+                oday.service_name = lts_cg[i].se_name;
+                ov.list_service.Add(oday);
+                for (int j = i+1;j<lts_cg.Count; j++)
+                {
+                    
+                    if (lts_cg[i].work_time == lts_cg[j].work_time)
+                    {
+                        orderservice_day oday2 = new orderservice_day();
+                        oday2.start_time = lts_cg[j].start_time;
+                        oday2.end_time = lts_cg[j].end_time;
+                        oday2.service_name = lts_cg[j].se_name;
+                        ov.list_service.Add(oday2);
+                        i = j;
+                        break;
+
+                    }
+                }
+                ov.work_time = lts_cg[i].work_time;
+                res.Add(ov);
+            }
+            return res;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using ERP.Data.ModelsERP.ModelView.Customer;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
@@ -72,5 +73,8 @@ namespace ERP.Data.ModelsERP.ModelView.Service
         public byte? cuo_evaluation { get; set; }
 
         public string cuo_feedback { get; set; }
+        [StringLength(100)]
+        public string cuo_infor_time { get; set; }
+
     }
 }

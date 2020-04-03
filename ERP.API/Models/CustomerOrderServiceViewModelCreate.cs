@@ -65,5 +65,7 @@ namespace ERP.API.Models
         public byte cuo_evaluation { get; set; }
         [StringLength(500)]
         public string cuo_feedback { get; set; }
+        [StringLength(100)]
+        public string cuo_infor_time { get; set; }
     }
 }

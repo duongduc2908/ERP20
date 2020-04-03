@@ -3,6 +3,7 @@ using ERP.Common.Models;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
 using ERP.Data.ModelsERP.ModelView.ExportDB;
+using ERP.Data.ModelsERP.ModelView.OrderService;
 using ERP.Data.ModelsERP.ModelView.Service;
 using ERP.Data.ModelsERP.ModelView.Statistics;
 using ERP.Repository.Repositories.IRepositories;
@@ -27,6 +28,10 @@ namespace ERP.Service.Services
         public customerordermodelview GetAllOrderById(int id)
         {
             return this._repository.GetAllOrderById(id);
+        }
+        public List<order_service_view> GetServiceByDay(int id, DateTime start_date, DateTime to_date)
+        {
+            return this._repository.GetServiceByDay(id, start_date, to_date);
         }
        
         public PagedResults<customerorderviewmodel> GetAllSearch(int pageNumber, int pageSize, int? payment_type_id, DateTime? start_date, DateTime? end_date, string name)

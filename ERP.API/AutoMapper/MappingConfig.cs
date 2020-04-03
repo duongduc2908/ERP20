@@ -4,6 +4,7 @@ using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
 using ERP.Data.ModelsERP.ModelView.Customer;
 using ERP.Data.ModelsERP.ModelView.ExportDB;
+using ERP.Data.ModelsERP.ModelView.OrderService;
 using ERP.Data.ModelsERP.ModelView.Product;
 using ERP.Data.ModelsERP.ModelView.Service;
 using ERP.Data.ModelsERP.ModelView.Sms;
@@ -89,6 +90,7 @@ namespace ERP.API.AutoMapper
 
             CreateMap<ExecutorCreateViewModel, executor>();
             CreateMap<ExecutorUpdateViewModel, executor>();
+            CreateMap<executor, orderservice_day>();
 
 
             CreateMap<ServiceCreateViewModel, service>();

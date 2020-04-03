@@ -153,6 +153,8 @@
     <Compile Include="ModelsERP\ModelView\ExportDB\productview.cs" />
     <Compile Include="ModelsERP\ModelView\ExportDB\staffview.cs" />
     <Compile Include="ModelsERP\ModelView\ExportDB\transactionview.cs" />
+    <Compile Include="ModelsERP\ModelView\OrderService\orderservice_day.cs" />
+    <Compile Include="ModelsERP\ModelView\OrderService\order_service_view.cs" />
     <Compile Include="ModelsERP\ModelView\Product\orderproducthistoryviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Product\orderproductviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Product\productorderviewmodel.cs" />
@@ -221,7 +223,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="ModelsERP\ModelView\OrderService\" />
     <Folder Include="SQL\" />
   </ItemGroup>
   <PropertyGroup>

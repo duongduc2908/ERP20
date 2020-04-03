@@ -7,6 +7,7 @@ using ERP.Data.Dto;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
 using ERP.Data.ModelsERP.ModelView.ExportDB;
+using ERP.Data.ModelsERP.ModelView.OrderService;
 using ERP.Data.ModelsERP.ModelView.Service;
 using ERP.Extension.Extensions;
 using ERP.Service.Services.IServices;
@@ -628,7 +629,22 @@ namespace ERP.API.Controllers.Dashboard
                 customerOrderCreateViewModel.cuo_feedback = c.cuo_feedback;
                 customerOrderCreateViewModel.cuo_date = DateTime.Now;
                 customerOrderCreateViewModel.cuo_address = c.cuo_address;
-                
+                customerOrderCreateViewModel.cuo_infor_time = c.cuo_infor_time;
+                //Them dia chi shipaddress
+                //Delete ship_address old
+                List<ship_address> list_ship = _shipaddressservice.GetAllIncluing(x => x.customer_id == c.customer.cu_id).ToList();
+                foreach(ship_address sa in list_ship)
+                {
+                    _shipaddressservice.Delete(sa);
+                }
+                //Add list shipaddress new
+                foreach(shipaddressviewmodel sav in c.customer.list_address)
+                {
+                    var createShipAddress = _mapper.Map<ship_address>(sav);
+                    createShipAddress.customer_id = c.customer.cu_id;
+                    _shipaddressservice.Create(createShipAddress);
+                }
+
                 // mapping view model to entity
                 var createdcustomer_order = _mapper.Map<customer_order>(customerOrderCreateViewModel);
                 var op_last1 = _customer_orderservice.GetLast();
@@ -674,19 +690,39 @@ namespace ERP.API.Controllers.Dashboard
                 serviceTimeCreate.st_on_day = c.st_on_day;
                 serviceTimeCreate.st_on_the_flag = c.st_on_the_flag;
                 serviceTimeCreate.st_custom_start = c.st_custom_start;
-                serviceTimeCreate.st_custom_end = c.st_custom_end;
+                if(c.st_custom_end == null)
+                    serviceTimeCreate.st_custom_end = c.st_custom_start;
+                else
+                    serviceTimeCreate.st_custom_end = c.st_custom_end;
 
                 var createServiceTime = _mapper.Map<service_time>(serviceTimeCreate);
                 _servicetimeservice.Create(createServiceTime);
 
                 //Do something gen data 
+                var st_last = _servicetimeservice.GetLast();
                 List<DateTime> results = new List<DateTime>();
                 if (c.st_repeat == true)
                 {
                     results = GenDateOrderService.Gen(c.st_custom_start, c.st_custom_end, c.st_repeat_type, c.st_repeat_every, c.st_sun_flag , c.st_mon_flag , c.st_tue_flag, c.st_wed_flag, c.st_thu_flag , c.st_fri_flag, c.st_sat_flag, c.st_on_day_flag, c.st_on_day, c.st_on_the_flag, c.st_on_the);
                 }
+                else
+                {
+                    for (int i = 0; i < c.list_staff_id.Length; i++)
+                    {
+                        ExecutorCreateViewModel executorCreateViewModel = new ExecutorCreateViewModel { };
+                        executorCreateViewModel.customer_order_id = op_last.cuo_id;
+                        executorCreateViewModel.staff_id = c.list_staff_id[i];
+                        executorCreateViewModel.service_time_id = st_last.st_id;
+                        executorCreateViewModel.work_time = st_last.st_start_date.Date;
+                        executorCreateViewModel.start_time = c.st_start_time;
+                        executorCreateViewModel.end_time = c.st_end_time;
+                        var createExecutor = _mapper.Map<executor>(executorCreateViewModel);
+                        _executorservice.Create(createExecutor);
+
+                    }
+                }
                 #endregion
-                var st_last = _servicetimeservice.GetLast();
+                
                 #region create executor
 
                 for (int i = 0; i < c.list_staff_id.Length; i++)
@@ -910,6 +946,22 @@ namespace ERP.API.Controllers.Dashboard
                 customerOrderCreateViewModel.cuo_feedback = c.cuo_feedback;
                 customerOrderCreateViewModel.cuo_date = DateTime.Now;
                 customerOrderCreateViewModel.cuo_address = c.cuo_address;
+                customerOrderCreateViewModel.cuo_infor_time = c.cuo_infor_time;
+                //Them dia chi shipaddress
+                //Delete ship_address old
+                List<ship_address> list_ship = _shipaddressservice.GetAllIncluing(x => x.customer_id == c.customer.cu_id).ToList();
+                foreach (ship_address sa in list_ship)
+                {
+                    _shipaddressservice.Delete(sa);
+                }
+                //Add list shipaddress new
+                foreach (shipaddressviewmodel sav in c.customer.list_address)
+                {
+                    var createShipAddress = _mapper.Map<ship_address>(sav);
+                    createShipAddress.customer_id = c.customer.cu_id;
+                    _shipaddressservice.Create(createShipAddress);
+                }
+
                 // mapping view model to entity
                 var createdcustomer_order = _mapper.Map<customer_order>(customerOrderCreateViewModel);
                 var op_last1 = _customer_orderservice.GetLast();
@@ -955,18 +1007,38 @@ namespace ERP.API.Controllers.Dashboard
                 serviceTimeCreate.st_on_day = c.st_on_day;
                 serviceTimeCreate.st_on_the_flag = c.st_on_the_flag;
                 serviceTimeCreate.st_custom_start = c.st_custom_start;
-                serviceTimeCreate.st_custom_end = c.st_custom_end;
+                if (c.st_custom_end == null)
+                    serviceTimeCreate.st_custom_end = c.st_custom_start;
+                else
+                    serviceTimeCreate.st_custom_end = c.st_custom_end;
                 var createServiceTime = _mapper.Map<service_time>(serviceTimeCreate);
                 _servicetimeservice.Create(createServiceTime);
 
                 //Do something gen data 
+                var st_last = _servicetimeservice.GetLast();
                 List<DateTime> results = new List<DateTime>();
                 if (c.st_repeat == true)
                 {
                     results = GenDateOrderService.Gen(c.st_custom_start, c.st_custom_end, c.st_repeat_type, c.st_repeat_every, c.st_sun_flag, c.st_mon_flag, c.st_tue_flag, c.st_wed_flag, c.st_thu_flag, c.st_fri_flag, c.st_sat_flag, c.st_on_day_flag, c.st_on_day, c.st_on_the_flag, c.st_on_the);
                 }
+                else
+                {
+                    for (int i = 0; i < c.list_staff_id.Length; i++)
+                    {
+                        ExecutorCreateViewModel executorCreateViewModel = new ExecutorCreateViewModel { };
+                        executorCreateViewModel.customer_order_id = op_last.cuo_id;
+                        executorCreateViewModel.staff_id = c.list_staff_id[i];
+                        executorCreateViewModel.service_time_id = st_last.st_id;
+                        executorCreateViewModel.work_time = st_last.st_start_date.Date;
+                        executorCreateViewModel.start_time = c.st_start_time;
+                        executorCreateViewModel.end_time = c.st_end_time;
+                        var createExecutor = _mapper.Map<executor>(executorCreateViewModel);
+                        _executorservice.Create(createExecutor);
+
+                    }
+                }
                 #endregion
-                var st_last = _servicetimeservice.GetLast();
+                
                 #region create executor
 
                 for (int i = 0; i < c.list_staff_id.Length; i++)
@@ -1319,6 +1391,32 @@ namespace ERP.API.Controllers.Dashboard
 
                 return Ok(response);
             }
+        }
+        #endregion
+
+        #region["Dịch vụ"]
+        [HttpGet]
+        [Route("api/customer-orders/service_by_date")]
+        public IHttpActionResult GetServiceByDay(DateTime start_date, DateTime to_date)
+        {
+            ResponseDataDTO<List<order_service_view>> response = new ResponseDataDTO<List<order_service_view>>();
+            try
+            {
+                int staff_id = BaseController.get_id_current();
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = _customer_orderservice.GetServiceByDay(staff_id,start_date, to_date);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+
+                Console.WriteLine(ex.ToString());
+            }
+
+            return Ok(response);
         }
         #endregion
 
