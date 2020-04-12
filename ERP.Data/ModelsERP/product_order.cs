@@ -19,5 +19,7 @@ namespace ERP.Data.ModelsERP
 
         [StringLength(50)]
         public string po_note { get; set; }
+
+        public virtual product product { get; set; }
     }
 }

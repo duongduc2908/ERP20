@@ -9,6 +9,7 @@ namespace ERP.Data.ModelsERP
     [Table("email")]
     public partial class email
     {
+
         [Key]
         public int ema_id { get; set; }
 
@@ -20,8 +21,6 @@ namespace ERP.Data.ModelsERP
 
         [StringLength(50)]
         public string ema_api { get; set; }
-
-        public int? company_id { get; set; }
 
         public int? ema_pop_or_imap_port { get; set; }
 
@@ -35,5 +34,9 @@ namespace ERP.Data.ModelsERP
 
         [StringLength(250)]
         public string ema_note { get; set; }
+
+        public int? company_id { get; set; }
+
+        public virtual company company { get; set; }
     }
 }

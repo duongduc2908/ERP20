@@ -8,6 +8,7 @@ namespace ERP.Data.ModelsERP
 
     public partial class product_category
     {
+
         [Key]
         public int pc_id { get; set; }
 

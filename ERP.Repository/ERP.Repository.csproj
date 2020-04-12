@@ -521,9 +521,11 @@
     <Compile Include="Repositories\IRepositories\ISocialRepository.cs" />
     <Compile Include="Repositories\IRepositories\ISourceRepository.cs" />
     <Compile Include="Repositories\IRepositories\IStaffRepository.cs" />
+    <Compile Include="Repositories\IRepositories\IStaffWorkTimeRepository.cs" />
     <Compile Include="Repositories\IRepositories\ISupplierRepository.cs" />
     <Compile Include="Repositories\IRepositories\ISupplierTypeRepository.cs" />
     <Compile Include="Repositories\IRepositories\ITaskRepository.cs" />
+    <Compile Include="Repositories\IRepositories\ITrainingStaffRepository.cs" />
     <Compile Include="Repositories\IRepositories\ITransactionRepository.cs" />
     <Compile Include="Repositories\IRepositories\IUndertakenLocationRepository.cs" />
     <Compile Include="Repositories\NotificationRepository.cs" />
@@ -545,9 +547,11 @@
     <Compile Include="Repositories\SocialRepository.cs" />
     <Compile Include="Repositories\SourceRepository.cs" />
     <Compile Include="Repositories\StaffRepository.cs" />
+    <Compile Include="Repositories\StaffWorkTimeRepository.cs" />
     <Compile Include="Repositories\SupplierRepository.cs" />
     <Compile Include="Repositories\SupplierTypeRepository.cs" />
     <Compile Include="Repositories\TaskRepository.cs" />
+    <Compile Include="Repositories\TrainingStaffRepository.cs" />
     <Compile Include="Repositories\TransactionRepository.cs" />
     <Compile Include="Repositories\UndertakenLocationRepository.cs" />
   </ItemGroup>

@@ -7,6 +7,7 @@ using ERP.Common.Models;
 using ERP.Data.Dto;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
+using ERP.Data.ModelsERP.ModelView.Customer;
 using ERP.Data.ModelsERP.ModelView.ExportDB;
 using ERP.Data.ModelsERP.ModelView.Service;
 using ERP.Data.ModelsERP.ModelView.Sms;
@@ -59,6 +60,28 @@ namespace ERP.API.Controllers.Dashboard
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
                 response.Data = _customerservice.GetAll();
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+
+                Console.WriteLine(ex.ToString());
+            }
+
+            return Ok(response);
+        }
+        [HttpGet]
+        [Route("api/customer/search_by_curator")]
+        public IHttpActionResult GetCustomerByCurator(int pageSize, int pageNumber, int? cu_curator_id, string search_name)
+        {
+            ResponseDataDTO<PagedResults<customeraddressviewmodel>> response = new ResponseDataDTO<PagedResults<customeraddressviewmodel>>();
+            try
+            {
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = _customerservice.GetCustomerByCurator(pageSize,pageNumber,cu_curator_id,search_name);
             }
             catch (Exception ex)
             {

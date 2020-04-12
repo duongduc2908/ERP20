@@ -30,5 +30,7 @@ namespace ERP.Data.ModelsERP
         public string unl_geocoding { get; set; }
 
         public int? staff_id { get; set; }
+
+        public byte? unl_flag_center { get; set; }
     }
 }

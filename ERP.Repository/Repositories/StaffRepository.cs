@@ -135,23 +135,110 @@ namespace ERP.Repository.Repositories
                 list_res = list_res.Where(t => t.sta_fullname.Contains(name) || t.sta_mobile.Contains(name) || t.sta_email.Contains(name) || t.sta_code.Contains(name) || t.sta_username.Contains(name)).ToList();
             }
             var total = list_res.Count();
-            list = list_res.OrderBy(t => t.sta_id).Skip(skipAmount).Take(pageSize).ToList();
+            list = list_res.OrderByDescending(t => t.sta_id).Skip(skipAmount).Take(pageSize).ToList();
             
             
 
             var results = list.ToList();
             foreach (staff i in results)
             {
-                var staffview = _mapper.Map<staffviewmodel>(i);
-                var deparment = _dbContext.departments.FirstOrDefault(x => x.de_id == i.department_id);
-                var position = _dbContext.positions.FirstOrDefault(x => x.pos_id == i.position_id);
-                //var group_role = _dbContext.group_role.FirstOrDefault(x => x.gr_id == i.group_role_id);
-                staffview.department_name = deparment.de_name;
-                staffview.position_name = position.pos_name;
-                //staffview.group_name = group_role.gr_name;
+                staffviewmodel staffview = _mapper.Map<staffviewmodel>(i);
+                department de = _dbContext.departments.Where(x => x.de_id == i.department_id).FirstOrDefault();
+                position po = _dbContext.positions.Where(x => x.pos_id == i.position_id).FirstOrDefault();
+                group_role gr = _dbContext.group_role.Where(x => x.gr_id == i.group_role_id).FirstOrDefault();
+                staffview.department_name = de.de_name;
+                staffview.position_name = po.pos_name;
+                staffview.group_role_name = gr.gr_name;
+                for (int j = 1; j < EnumsStaff.sta_status.Length + 1; j++)
+                {
+                    if (j == staffview.sta_status)
+                    {
+                        staffview.status_name = EnumsStaff.sta_status[j - 1];
+                    }
+                }
+                for (int j = 1; j < EnumsStaff.sta_sex.Length + 1; j++)
+                {
+                    if (j == staffview.sta_sex)
+                    {
+                        staffview.sta_sex_name = EnumsStaff.sta_sex[j - 1];
+                    }
+                }
+                for (int j = 1; j < EnumsStaff.sta_type_contact_name.Length + 1; j++)
+                {
+                    if (j == staffview.sta_type_contact)
+                    {
+                        staffview.sta_type_contact_name = EnumsStaff.sta_type_contact_name[j - 1];
+                    }
+                }
+                //lấy ra thông tin loại hợp đồng 
+                staff_work_time swt = _dbContext.staff_work_times.Where(x => x.staff_id == staffview.sta_id).FirstOrDefault();
+                if(swt != null)
+                {
+                    staffview.sw_time_start = swt.sw_time_start;
+                    staffview.sw_time_end = swt.sw_time_end;
+                    staffview.st_fri_flag = swt.st_fri_flag;
+                    staffview.st_mon_flag = swt.st_mon_flag;
+                    staffview.st_sat_flag = swt.st_sat_flag;
+                    staffview.st_sun_flag = swt.st_sun_flag;
+                    staffview.st_thu_flag = swt.st_thu_flag;
+                    staffview.st_tue_flag = swt.st_tue_flag;
+                    staffview.st_wed_flag = swt.st_wed_flag;
+                }
                 
-                //Lay dia chi 
-                var list_address = _dbContext.undertaken_location.Where(s => s.staff_id == i.sta_id).ToList();
+                //Lấy ra địa chỉ thường chú 
+                undertaken_location address_permanent = _dbContext.undertaken_location.Where(x => x.staff_id == staffview.sta_id && x.unl_flag_center == 1).FirstOrDefault();
+                if(address_permanent != null)
+                {
+                    staffview.unl_id_permanent = address_permanent.unl_id;
+                    staffview.unl_ward_permanent = address_permanent.unl_ward;
+                    staffview.unl_province_permanent = address_permanent.unl_province;
+                    staffview.unl_district_permanent = address_permanent.unl_district;
+                    staffview.unl_geocoding_permanent = address_permanent.unl_geocoding;
+                    staffview.unl_detail_permanent = address_permanent.unl_detail;
+                    staffview.unl_note_permanent = address_permanent.unl_note;
+                }
+                
+                //Lấy ra address hiện tại 
+                undertaken_location address_now = _dbContext.undertaken_location.Where(x => x.staff_id == staffview.sta_id && x.unl_flag_center == 2).FirstOrDefault();
+                if(address_now != null)
+                {
+                    staffview.unl_id_now= address_now.unl_id;
+                    staffview.unl_ward_now = address_now.unl_ward;
+                    staffview.unl_province_now = address_now.unl_province;
+                    staffview.unl_district_now = address_now.unl_district;
+                    staffview.unl_geocoding_now = address_now.unl_geocoding;
+                    staffview.unl_detail_now = address_now.unl_detail;
+                    staffview.unl_note_now = address_now.unl_note;
+                }
+               
+                //Lấy ra danh sách training
+                List<training> res_training = new List<training>();
+                var lts_cg = (from ex in _dbContext.training_staffs
+                              join od in _dbContext.trainings on ex.training_id equals od.tn_id
+                              where ex.staff_id == staffview.sta_id
+                              select new
+                              {
+                                  od.tn_id, od.tn_name,od.tn_purpose,od.tn_start_date,od.tn_end_date,od.tn_content,od.tn_code
+                              }).ToList();
+                if(lts_cg != null)
+                {
+                    for (int j = 0; j < lts_cg.Count; j++)
+                    {
+                        training tr = new training();
+                        tr.tn_id = lts_cg[j].tn_id;
+                        tr.tn_name = lts_cg[j].tn_name;
+                        tr.tn_purpose = lts_cg[j].tn_purpose;
+                        tr.tn_start_date = lts_cg[j].tn_start_date;
+                        tr.tn_end_date = lts_cg[j].tn_end_date;
+                        tr.tn_content = lts_cg[j].tn_content;
+                        tr.tn_code = lts_cg[j].tn_code;
+                        res_training.Add(tr);
+                    }
+                    staffview.list_training = res_training;
+                }
+                
+                //Lay dia chi ship
+                var list_address = _dbContext.undertaken_location.Where(s => s.staff_id == i.sta_id && s.unl_flag_center == 0).ToList();
                 List<undertakenlocationviewmodel> lst_add = new List<undertakenlocationviewmodel>();
                 foreach (undertaken_location s in list_address)
                 {
@@ -161,7 +248,8 @@ namespace ERP.Repository.Repositories
                     add.province_id = _dbContext.province.Where(t => t.Name.Contains(s.unl_province)).FirstOrDefault().Id;
                     lst_add.Add(add);
                 }
-                staffview.list_address = lst_add;
+                staffview.list_undertaken_location = lst_add;
+
                 res.Add(staffview);
             }
 
@@ -224,28 +312,121 @@ namespace ERP.Repository.Repositories
         }
         public staffviewmodel GetInforById(int id)
         {
-            staffviewmodel res = new staffviewmodel();
-            var staff_cur = _dbContext.staffs.Where(i => i.sta_id == id).FirstOrDefault();
-            var satffview = _mapper.Map<staffviewmodel>(staff_cur);
-            res = satffview;
-            var deparment = _dbContext.departments.FirstOrDefault(x => x.de_id == staff_cur.department_id);
-            res.department_name = deparment.de_name;
-            var position = _dbContext.positions.FirstOrDefault(x => x.pos_id == staff_cur.position_id);
-            res.position_name = position.pos_name;
-
-            res.group_name = _dbContext.group_role.FirstOrDefault(x => x.gr_id == staff_cur.group_role_id).gr_name;
-            var list_address = _dbContext.undertaken_location.Where(i => i.staff_id == staff_cur.sta_id).ToList();
-            List<undertakenlocationviewmodel> lst = new List<undertakenlocationviewmodel>();
-            foreach (undertaken_location i in list_address)
+            staff i = _dbContext.staffs.Find(id);
+            staffviewmodel staffview = _mapper.Map<staffviewmodel>(i);
+            department de = _dbContext.departments.Where(x => x.de_id == i.department_id).FirstOrDefault();
+            position po = _dbContext.positions.Where(x => x.pos_id == i.position_id).FirstOrDefault();
+            group_role gr = _dbContext.group_role.Where(x => x.gr_id == i.group_role_id).FirstOrDefault();
+            staffview.department_name = de.de_name;
+            staffview.position_name = po.pos_name;
+            staffview.group_role_name = gr.gr_name;
+            for (int j = 1; j < EnumsStaff.sta_status.Length + 1; j++)
             {
-                undertakenlocationviewmodel add = _mapper.Map<undertakenlocationviewmodel>(i);
-                add.ward_id = _dbContext.ward.Where(t => t.Name.Contains(i.unl_ward)).FirstOrDefault().Id;
-                add.district_id = _dbContext.district.Where(t => t.Name.Contains(i.unl_district)).FirstOrDefault().Id;
-                add.province_id = _dbContext.province.Where(t => t.Name.Contains(i.unl_province)).FirstOrDefault().Id;
-                lst.Add(add);
+                if (j == staffview.sta_status)
+                {
+                    staffview.status_name = EnumsStaff.sta_status[j - 1];
+                }
             }
-            res.list_address = lst;
-            return res;
+            for (int j = 1; j < EnumsStaff.sta_sex.Length + 1; j++)
+            {
+                if (j == staffview.sta_sex)
+                {
+                    staffview.sta_sex_name = EnumsStaff.sta_sex[j - 1];
+                }
+            }
+            for (int j = 1; j < EnumsStaff.sta_type_contact_name.Length + 1; j++)
+            {
+                if (j == staffview.sta_type_contact)
+                {
+                    staffview.sta_type_contact_name = EnumsStaff.sta_type_contact_name[j - 1];
+                }
+            }
+            //lấy ra thông tin loại hợp đồng 
+            staff_work_time swt = _dbContext.staff_work_times.Where(x => x.staff_id == staffview.sta_id).FirstOrDefault();
+            if (swt != null)
+            {
+                staffview.sw_time_start = swt.sw_time_start;
+                staffview.sw_time_end = swt.sw_time_end;
+                staffview.st_fri_flag = swt.st_fri_flag;
+                staffview.st_mon_flag = swt.st_mon_flag;
+                staffview.st_sat_flag = swt.st_sat_flag;
+                staffview.st_sun_flag = swt.st_sun_flag;
+                staffview.st_thu_flag = swt.st_thu_flag;
+                staffview.st_tue_flag = swt.st_tue_flag;
+                staffview.st_wed_flag = swt.st_wed_flag;
+            }
+
+            //Lấy ra địa chỉ thường chú 
+            undertaken_location address_permanent = _dbContext.undertaken_location.Where(x => x.staff_id == staffview.sta_id && x.unl_flag_center == 1).FirstOrDefault();
+            if (address_permanent != null)
+            {
+                staffview.unl_id_permanent = address_permanent.unl_id;
+                staffview.unl_ward_permanent = address_permanent.unl_ward;
+                staffview.unl_province_permanent = address_permanent.unl_province;
+                staffview.unl_district_permanent = address_permanent.unl_district;
+                staffview.unl_geocoding_permanent = address_permanent.unl_geocoding;
+                staffview.unl_detail_permanent = address_permanent.unl_detail;
+                staffview.unl_note_permanent = address_permanent.unl_note;
+            }
+
+            //Lấy ra address hiện tại 
+            undertaken_location address_now = _dbContext.undertaken_location.Where(x => x.staff_id == staffview.sta_id && x.unl_flag_center == 2).FirstOrDefault();
+            if (address_now != null)
+            {
+                staffview.unl_id_now = address_now.unl_id;
+                staffview.unl_ward_now = address_now.unl_ward;
+                staffview.unl_province_now = address_now.unl_province;
+                staffview.unl_district_now = address_now.unl_district;
+                staffview.unl_geocoding_now = address_now.unl_geocoding;
+                staffview.unl_detail_now = address_now.unl_detail;
+                staffview.unl_note_now = address_now.unl_note;
+            }
+
+            //Lấy ra danh sách training
+            List<training> res_training = new List<training>();
+            var lts_cg = (from ex in _dbContext.training_staffs
+                          join od in _dbContext.trainings on ex.training_id equals od.tn_id
+                          where ex.staff_id == staffview.sta_id
+                          select new
+                          {
+                              od.tn_id,
+                              od.tn_name,
+                              od.tn_purpose,
+                              od.tn_start_date,
+                              od.tn_end_date,
+                              od.tn_content,
+                              od.tn_code
+                          }).ToList();
+            if (lts_cg != null)
+            {
+                for (int j = 0; j < lts_cg.Count; j++)
+                {
+                    training tr = new training();
+                    tr.tn_id = lts_cg[j].tn_id;
+                    tr.tn_name = lts_cg[j].tn_name;
+                    tr.tn_purpose = lts_cg[j].tn_purpose;
+                    tr.tn_start_date = lts_cg[j].tn_start_date;
+                    tr.tn_end_date = lts_cg[j].tn_end_date;
+                    tr.tn_content = lts_cg[j].tn_content;
+                    tr.tn_code = lts_cg[j].tn_code;
+                    res_training.Add(tr);
+                }
+                staffview.list_training = res_training;
+            }
+
+            //Lay dia chi ship
+            var list_address = _dbContext.undertaken_location.Where(s => s.staff_id == i.sta_id && s.unl_flag_center == 0).ToList();
+            List<undertakenlocationviewmodel> lst_add = new List<undertakenlocationviewmodel>();
+            foreach (undertaken_location s in list_address)
+            {
+                undertakenlocationviewmodel add = _mapper.Map<undertakenlocationviewmodel>(s);
+                add.ward_id = _dbContext.ward.Where(t => t.Name.Contains(s.unl_ward)).FirstOrDefault().Id;
+                add.district_id = _dbContext.district.Where(t => t.Name.Contains(s.unl_district)).FirstOrDefault().Id;
+                add.province_id = _dbContext.province.Where(t => t.Name.Contains(s.unl_province)).FirstOrDefault().Id;
+                lst_add.Add(add);
+            }
+            staffview.list_undertaken_location = lst_add;
+            return staffview;
             
         }
         public List<dropdown> GetInforManager()

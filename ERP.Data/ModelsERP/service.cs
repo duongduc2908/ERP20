@@ -9,6 +9,7 @@ namespace ERP.Data.ModelsERP
     [Table("service")]
     public partial class service
     {
+
         [Key]
         public int se_id { get; set; }
 
@@ -31,7 +32,8 @@ namespace ERP.Data.ModelsERP
         public int? se_saleoff { get; set; }
 
         public int? service_category_id { get; set; }
+
         [StringLength(200)]
-        public string se_note{ get; set; }
+        public string se_note { get; set; }
     }
 }

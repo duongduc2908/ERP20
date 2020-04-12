@@ -9,11 +9,6 @@ namespace ERP.Data.ModelsERP
     [Table("Province")]
     public partial class Province
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Province()
-        {
-            Districts = new HashSet<District>();
-        }
 
         public int Id { get; set; }
 
@@ -40,7 +35,6 @@ namespace ERP.Data.ModelsERP
 
         public bool? IsDeleted { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<District> Districts { get; set; }
+        public virtual Country Country { get; set; }
     }
 }

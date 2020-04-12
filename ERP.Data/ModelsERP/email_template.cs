@@ -8,6 +8,7 @@ namespace ERP.Data.ModelsERP
 
     public partial class email_template
     {
+
         [Key]
         public int emt_id { get; set; }
 

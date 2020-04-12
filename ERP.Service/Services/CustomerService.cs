@@ -2,6 +2,7 @@
 using ERP.Common.Models;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
+using ERP.Data.ModelsERP.ModelView.Customer;
 using ERP.Data.ModelsERP.ModelView.ExportDB;
 using ERP.Data.ModelsERP.ModelView.Service;
 using ERP.Data.ModelsERP.ModelView.Sms;
@@ -43,6 +44,11 @@ namespace ERP.Service.Services
         {
             return this._repository.GetAllPageSearch(pageNumber, pageSize, source_id, cu_type, customer_group_id,start_date,end_date, name);
         }
+        public PagedResults<customeraddressviewmodel> GetCustomerByCurator(int pageSize, int pageNumber, int? cu_curator_id, string search_name)
+        {
+            return this._repository.GetCustomerByCurator(pageSize, pageNumber, cu_curator_id,search_name);
+        }
+
         public PagedResults<smscustomerviewmodel> GetAllPageSearchSms(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, string name)
         {
             return this._repository.GetAllPageSearchSms(pageNumber, pageSize, source_id, cu_type, customer_group_id, name);

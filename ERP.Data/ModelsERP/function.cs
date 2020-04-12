@@ -9,6 +9,7 @@ namespace ERP.Data.ModelsERP
     [Table("function")]
     public partial class function
     {
+
         [Key]
         public int fun_id { get; set; }
 

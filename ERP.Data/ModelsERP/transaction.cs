@@ -17,7 +17,7 @@ namespace ERP.Data.ModelsERP
 
         public string tra_content { get; set; }
 
-        public int tra_rate { get; set; }
+        public int? tra_rate { get; set; }
 
         public byte? tra_type { get; set; }
 
@@ -33,5 +33,9 @@ namespace ERP.Data.ModelsERP
         public int? customer_id { get; set; }
 
         public byte? tra_status { get; set; }
+
+        public virtual customer customer { get; set; }
+
+        public virtual staff staff { get; set; }
     }
 }

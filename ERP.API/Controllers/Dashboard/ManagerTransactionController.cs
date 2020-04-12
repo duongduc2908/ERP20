@@ -171,13 +171,6 @@ namespace ERP.API.Controllers.Dashboard
                         response.Data = null;
                         return Ok(response);
                     }
-                    if (tra.customer.cu_mobile == null)
-                    {
-                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                        response.Message = "Số điện thoại không được để trống";
-                        response.Data = null;
-                        return Ok(response);
-                    }
                     if (tra.customer.cu_email == null)
                     {
                         response.Code = HttpCode.INTERNAL_SERVER_ERROR;
@@ -209,7 +202,6 @@ namespace ERP.API.Controllers.Dashboard
                     // get data from formdata
                     CustomerCreateViewModel customerCreateViewModel = new CustomerCreateViewModel
                     {
-                        cu_mobile = Convert.ToString(tra.customer.cu_mobile),
                         cu_email = Convert.ToString(tra.customer.cu_email),
                         cu_fullname = Convert.ToString(tra.customer.cu_fullname),
 
@@ -243,14 +235,6 @@ namespace ERP.API.Controllers.Dashboard
                     else
                     {
                         customerCreateViewModel.cu_birthday = Convert.ToDateTime(tra.customer.cu_birthday);
-                    }
-                    if (tra.customer.cu_address == null)
-                    {
-                        customerCreateViewModel.cu_address = null;
-                    }
-                    else
-                    {
-                        customerCreateViewModel.cu_address = Convert.ToString(tra.customer.cu_address);
                     }
                     if (tra.customer.cu_note == null)
                     {
@@ -372,13 +356,6 @@ namespace ERP.API.Controllers.Dashboard
                         response.Data = false;
                         return Ok(response);
                     }
-                    if (transaction_update.customer.cu_mobile == null)
-                    {
-                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                        response.Message = "Số điện thoại không được để trống";
-                        response.Data = false;
-                        return Ok(response);
-                    }
                     if (transaction_update.customer.cu_email == null)
                     {
                         response.Code = HttpCode.INTERNAL_SERVER_ERROR;
@@ -410,7 +387,6 @@ namespace ERP.API.Controllers.Dashboard
                     // get data from formdata
                     CustomerCreateViewModel customerCreateViewModel = new CustomerCreateViewModel
                     {
-                        cu_mobile = Convert.ToString(transaction_update.customer.cu_mobile),
                         cu_email = Convert.ToString(transaction_update.customer.cu_email),
                         cu_fullname = Convert.ToString(transaction_update.customer.cu_fullname),
 
@@ -444,14 +420,6 @@ namespace ERP.API.Controllers.Dashboard
                     else
                     {
                         customerCreateViewModel.cu_birthday = Convert.ToDateTime(transaction_update.customer.cu_birthday);
-                    }
-                    if (transaction_update.customer.cu_address == null)
-                    {
-                        customerCreateViewModel.cu_address = null;
-                    }
-                    else
-                    {
-                        customerCreateViewModel.cu_address = Convert.ToString(transaction_update.customer.cu_address);
                     }
                     if (transaction_update.customer.cu_note == null)
                     {

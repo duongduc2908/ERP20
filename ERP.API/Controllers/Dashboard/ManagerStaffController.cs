@@ -33,17 +33,20 @@ namespace ERP.API.Controllers.Dashboard
     {
         private readonly IStaffService _staffservice;
         private readonly IDepartmentService _departmentservice;
+        private readonly ICustomerService _customerservice;
         private readonly IGroupRoleService _groupRoleservice;
         private readonly IPositionService _positionService;
         private readonly ISocialService _socialService;
+        private readonly IStaffWorkTimeService _staffworktimeService;
         private readonly IUndertakenLocationService _undertakenlocationService;
+        private readonly ITrainingStaffService _trainingStaffService;
         private readonly IMapper _mapper;
         private static string pass_word;
         private static List<string> list_email;
         private static List<string> list_pass;
         private static List<string> list_username;
         public ManagerstaffsController() { }
-        public ManagerstaffsController(IStaffService staffservice, IMapper mapper, IDepartmentService departmentService, IGroupRoleService groupRoleService, IPositionService positionService, IUndertakenLocationService undertakenlocationService, ISocialService socialService)
+        public ManagerstaffsController(IStaffWorkTimeService staffworktimeService,ITrainingStaffService trainingStaffService, ICustomerService customerservice,IStaffService staffservice, IMapper mapper, IDepartmentService departmentService, IGroupRoleService groupRoleService, IPositionService positionService, IUndertakenLocationService undertakenlocationService, ISocialService socialService)
         {
             this._staffservice = staffservice;
             this._mapper = mapper;
@@ -52,6 +55,9 @@ namespace ERP.API.Controllers.Dashboard
             this._positionService = positionService;
             this._undertakenlocationService = undertakenlocationService;
             this._socialService = socialService;
+            this._customerservice = customerservice;
+            this._trainingStaffService = trainingStaffService;
+            this._staffworktimeService = staffworktimeService;
         }
 
         #region methods
@@ -101,8 +107,8 @@ namespace ERP.API.Controllers.Dashboard
             return Ok(response);
         }
 
-        [Route("api/staffs/search-active-name")]
-        public IHttpActionResult GetstaffsPaging(int pageSize, int pageNumber, int? status, DateTime? start_date, DateTime? end_date, string name)
+        [Route("api/staff/search")]
+        public IHttpActionResult GetStaffSearch(int pageSize, int pageNumber, int? status, DateTime? start_date, DateTime? end_date, string name)
         {
             ResponseDataDTO<PagedResults<staffviewmodel>> response = new ResponseDataDTO<PagedResults<staffviewmodel>>();
             try
@@ -123,7 +129,7 @@ namespace ERP.API.Controllers.Dashboard
             return Ok(response);
         }
 
-        [Route("api/staffs/infor")]
+        [Route("api/staff/infor")]
         public IHttpActionResult GetInforById(int id)
         {
             ResponseDataDTO<staffviewmodel> response = new ResponseDataDTO<staffviewmodel>();
@@ -189,32 +195,39 @@ namespace ERP.API.Controllers.Dashboard
         }
 
         [HttpPost]
-        [Route("api/staffs/create")]
-        public async Task<IHttpActionResult> Createstaff()
+        [Route("api/staff/create")]
+        public async Task<IHttpActionResult> CreateStaff([FromBody] StaffCreateViewModelJson create_staff)
         {
             ResponseDataDTO<staff> response = new ResponseDataDTO<staff>();
             try
             {
-                var path = Path.GetTempPath();
-
-                if (!Request.Content.IsMimeMultipartContent("form-data"))
-                {
-                    throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.UnsupportedMediaType));
-                }
-
-                MultipartFormDataStreamProvider streamProvider = new MultipartFormDataStreamProvider(path);
-
-                await Request.Content.ReadAsMultipartAsync(streamProvider);
+                var staff = create_staff;
                 #region["Check null"]
 
-                if (streamProvider.FormData["sta_fullname"] == null)
+                if (staff.sta_fullname == null)
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
                     response.Message = "Họ và tên không được để trống";
                     response.Data = null;
                     return Ok(response);
                 }
-                if (streamProvider.FormData["sta_username"] == null)
+                if (staff.group_role_id == 0)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Nhóm quyền không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+
+                if (staff.sta_sex == 0)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Giới tính không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+
+                if (staff.sta_username == null)
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
                     response.Message = "Tên đăng nhập không được để trống";
@@ -222,212 +235,168 @@ namespace ERP.API.Controllers.Dashboard
                     return Ok(response);
                 }
 
-                if (streamProvider.FormData["sta_mobile"] == null)
-                {
-                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                    response.Message = "Số điện thoại không được để trống";
-                    response.Data = null;
-                    return Ok(response);
-                }
-
-                if (streamProvider.FormData["sta_status"] == null)
-                {
-                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                    response.Message = "Trạng thái không được để trống";
-                    response.Data = null;
-                    return Ok(response);
-                }
-
-                if (streamProvider.FormData["department_id"] == null)
-                {
-                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                    response.Message = "Phòng ban không được để trống";
-                    response.Data = null;
-                    return Ok(response);
-                }
-                if (streamProvider.FormData["sta_email"] == null)
-                {
-                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                    response.Message = "Email không được để trống";
-                    response.Data = null;
-                    return Ok(response);
-                }
-
-                if (streamProvider.FormData["position_id"] == null)
+                if (staff.position_id == 0)
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
                     response.Message = "Chức vụ không được để trống";
                     response.Data = null;
                     return Ok(response);
                 }
+                if (staff.department_id == 0)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Phòng ban không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+
+                if (staff.sta_mobile == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Số điện thoại không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
                 #endregion
-
-                #region["Check exits"]
-                if (!check_department(Convert.ToInt32(streamProvider.FormData["department_id"])))
-                {
-                    response.Code = HttpCode.NOT_FOUND;
-                    response.Message = "Không có mã phòng ban "+ streamProvider.FormData["department_id"]+" trong hệ thống.";
-                    response.Data = null;
-                    return Ok(response);
-                }
-                if (!check_position(Convert.ToInt32(Convert.ToInt32(streamProvider.FormData["position_id"]))))
-                {
-                    response.Code = HttpCode.NOT_FOUND;
-                    response.Message = "Không có mã bộ phận " + streamProvider.FormData["position_id"] + " trong hệ thống.";
-                    response.Data = null;
-                    return Ok(response);
-                }
-                if (!check_grouprole(Convert.ToInt32(streamProvider.FormData["group_role_id"])))
-                {
-                    response.Code = HttpCode.NOT_FOUND;
-                    response.Message = "Không có mã nhóm quyền "+ streamProvider.FormData["group_role_id"]+" trong hệ thống.";
-                    response.Data = null;
-                    return Ok(response);
-                }
-                
-                #endregion
-                // get data from formdata những trường bắt buộc
-                StaffCreateViewModel StaffCreateViewModel = new StaffCreateViewModel
-                {
-                    sta_fullname = Convert.ToString(streamProvider.FormData["sta_fullname"]),
-                    //sta_code = Convert.ToString(streamProvider.FormData["sta_code"]),
-                    sta_username = Convert.ToString(streamProvider.FormData["sta_username"]).Trim(),
-                    sta_email = Convert.ToString(streamProvider.FormData["sta_email"]),
-
-                    sta_aboutme = Convert.ToString(streamProvider.FormData["sta_aboutme"]),
-                    sta_mobile = Convert.ToString(streamProvider.FormData["sta_mobile"]),
-                    sta_identity_card = Convert.ToString(streamProvider.FormData["sta_identity_card"]),
-                    sta_address = Convert.ToString(streamProvider.FormData["sta_address"]),
-                    sta_hometown = Convert.ToString(streamProvider.FormData["sta_hometown"]),
-                    sta_reason_to_end_work = Convert.ToString(streamProvider.FormData["sta_reason_to_end_work"]),
-                    sta_note = Convert.ToString(streamProvider.FormData["sta_note"]),
-
-                    department_id = Convert.ToInt32(streamProvider.FormData["department_id"]),
-                    group_role_id = Convert.ToInt32(streamProvider.FormData["group_role_id"]),
-                    social_id = Convert.ToInt32(streamProvider.FormData["social_id"]),
-                    position_id = Convert.ToInt32(streamProvider.FormData["position_id"]),
-                    sta_leader_flag = Convert.ToByte(streamProvider.FormData["sta_leader_flag"]),
-
-
-
-
-                    sta_status = Convert.ToByte(streamProvider.FormData["sta_status"]),
-                    sta_sex = Convert.ToByte(streamProvider.FormData["sta_sex"]),
-                };
                 //Kiểm tra các trường rằng buộc
-                if (check_username(StaffCreateViewModel.sta_username))
+                if (check_username(staff.sta_username))
                 {
                     response.Code = HttpCode.NOT_FOUND;
-                    response.Message = "Đã có người dùng '" + StaffCreateViewModel.sta_username+" ' trong hệ thống.";
+                    response.Message = "Đã có người dùng '" + staff.sta_username+" ' trong hệ thống.";
                     response.Data = null;
                     return Ok(response);
                 }
-                if (check_email(StaffCreateViewModel.sta_email))
+                if (check_email(staff.sta_email))
                 {
                     response.Code = HttpCode.NOT_FOUND;
-                    response.Message = "Đã có người dùng '" + StaffCreateViewModel.sta_email + " ' trong hệ thống.";
+                    response.Message = "Đã có người dùng '" + staff.sta_email + " ' trong hệ thống.";
                     response.Data = null;
                     return Ok(response);
                 }
-                if (check_username(StaffCreateViewModel.sta_mobile))
+                if (check_phone(staff.sta_mobile))
                 {
                     response.Code = HttpCode.NOT_FOUND;
-                    response.Message = "Đã có số điện thoại người dùng '" + StaffCreateViewModel.sta_mobile + " ' trong hệ thống.";
+                    response.Message = "Đã có số điện thoại người dùng '" + staff.sta_mobile + " ' trong hệ thống.";
                     response.Data = null;
                     return Ok(response);
                 }
-                //md5
-                if (StaffCreateViewModel.sta_email != null)
-                {
-                    if (CheckEmail.IsValidEmail(StaffCreateViewModel.sta_email) == false)
-                    {
-                        response.Code = HttpCode.NOT_FOUND;
-                        response.Message = "Định dạng email không hợp lệ !";
-                        response.Data = null;
-                        return Ok(response);
-                    }
-                }
+                //Save staff to database
+                staff staff_create = new staff();
+                //Thong tin chung 
+                staff_create.sta_fullname = staff.sta_fullname;
+                staff_create.group_role_id = staff.group_role_id;
+                staff_create.sta_status = staff.sta_status;
+                staff_create.sta_sex = staff.sta_sex;
+                staff_create.sta_start_work_date = staff.sta_start_work_date;
+                staff_create.sta_salary_to = staff.sta_salary_to;
+                staff_create.sta_salary_end = staff.sta_salary_end;
+                staff_create.sta_tax_code = staff.sta_tax_code;
+                staff_create.sta_reason_to_end_work = staff.sta_reason_to_end_work;
+                staff_create.sta_note = staff.sta_note;
+               
+                staff_create.sta_username = staff.sta_username;
+                staff_create.position_id = staff.position_id;
+                staff_create.department_id = staff.department_id;
+                staff_create.sta_type_contact = staff.sta_type_contact;
+                staff_create.sta_traffic = staff.sta_traffic;
+                staff_create.sta_birthday = staff.sta_birthday;
+                staff_create.sta_working_status = staff.sta_working_status;
+                staff_create.sta_end_work_date = staff.sta_end_work_date;
+                //Thong tin lien he
+                staff_create.sta_mobile = staff.sta_mobile;
+                staff_create.sta_email = staff.sta_email;
 
-                //check_phone_number
+                // CMTND
+                staff_create.sta_identity_card = staff.sta_identity_card;
+                staff_create.sta_identity_card_date = staff.sta_identity_card_date;
+                staff_create.sta_identity_card_date_end = staff.sta_identity_card_date_end;
+                staff_create.sta_identity_card_location = staff.sta_identity_card_location;
                 
-               if (CheckNumber.IsPhoneNumber(StaffCreateViewModel.sta_mobile) == false)
-                {
-                    response.Code = HttpCode.NOT_FOUND;
-                    response.Message = "Số điện thoại không hợp lệ";
-                   response.Data = null;
-                   return Ok(response);
-               }
-               //Bắt các truongf còn lại 
-                //check datetime
-
-                if (streamProvider.FormData["sta_birthday"] == null)
-                {
-                    StaffCreateViewModel.sta_birthday = null;
-                }
-                else
-                {
-                    StaffCreateViewModel.sta_birthday = Convert.ToDateTime(streamProvider.FormData["sta_birthday"]);
-                }
-
-                if (streamProvider.FormData["sta_identity_card_date"] == null)
-                {
-                    StaffCreateViewModel.sta_identity_card_date = null;
-                }
-                else
-                {
-                    StaffCreateViewModel.sta_identity_card_date = Convert.ToDateTime(streamProvider.FormData["sta_identity_card_date"]);
-                }
-                if (streamProvider.FormData["sta_end_work_date"] == null)
-                {
-                    StaffCreateViewModel.sta_end_work_date = null;
-                }
-                else
-                {
-                    StaffCreateViewModel.sta_end_work_date = Convert.ToDateTime(streamProvider.FormData["sta_end_work_date"]);
-                }
-                if (streamProvider.FormData["sta_start_work_date"] == null)
-                {
-                    StaffCreateViewModel.sta_start_work_date = null;
-                }
-                else
-                {
-                    StaffCreateViewModel.sta_start_work_date = Convert.ToDateTime(streamProvider.FormData["sta_start_work_date"]);
-                }
-
-
-                if (streamProvider.FormData["sta_created_date"] == null)
-                {
-                    StaffCreateViewModel.sta_created_date = DateTime.Now;
-                }
                 //Lấy ra bản ghi cuối cùng tạo mã code 
                 var x = _staffservice.GetLast();
-                if(x == null) StaffCreateViewModel.sta_code = Utilis.CreateCode("NV", 0, 7);
-                else StaffCreateViewModel.sta_code = Utilis.CreateCode("NV", x.sta_id, 7);
-                pass_word = Utilis.MakeRandomPassword(8);
-                StaffCreateViewModel.sta_password = HashMd5.convertMD5(pass_word);
-                // mapping view model to entity
-                // save file
-                string fileName = "";
-                foreach (MultipartFileData fileData in streamProvider.FileData)
+                if(x == null) staff_create.sta_code = "NV000000";
+                else staff_create.sta_code = Utilis.CreateCodeByCode("NV", x.sta_code, 8);
+                string sta_pass = "";
+                if(staff.sta_type_contact == 0)
                 {
-                    fileName = (FileExtension.SaveFileStaffOnDisk(fileData, StaffCreateViewModel.sta_code));
+                    sta_pass = staff_create.sta_code;
                 }
-                var createdstaff = _mapper.Map<staff>(StaffCreateViewModel);
-                if(createdstaff.sta_sex == 1)
+                if(staff.sta_type_contact == 1)
                 {
-                    createdstaff.sta_thumbnai = "/Uploads/Images/default/girl.png";
+                    sta_pass = Utilis.MakeRandomPassword(8);
                 }
-                else
-                {
-                    createdstaff.sta_thumbnai = "/Uploads/Images/default/man.png";
-                }
-                createdstaff.sta_login = true;
+
+                staff_create.sta_password = HashMd5.convertMD5(sta_pass);
+
+                staff_create.sta_created_date = DateTime.Now;
+                //Lần đầu đăng nhập login == true
+                staff_create.sta_login = true;
                 // save new staff
-                _staffservice.Create(createdstaff);
+                _staffservice.Create(staff_create);
+                staff staff_last = _staffservice.GetLast();
+
+                //save staff_work_time
+                staff_work_time sta_work_time = new staff_work_time();
+                sta_work_time.staff_id = staff_last.sta_id;
+                sta_work_time.sw_time_start = staff.sw_time_start;
+                sta_work_time.sw_time_end = staff.sw_time_end;
+                sta_work_time.st_fri_flag = staff.st_fri_flag;
+                sta_work_time.st_mon_flag = staff.st_mon_flag;
+                sta_work_time.st_sat_flag = staff.st_sat_flag;
+                sta_work_time.st_sun_flag = staff.st_sun_flag;
+                sta_work_time.st_thu_flag = staff.st_thu_flag;
+                sta_work_time.st_tue_flag = staff.st_tue_flag;
+                sta_work_time.st_wed_flag = staff.st_wed_flag;
+                _staffworktimeService.Create(sta_work_time);
+                //save address thường trú 
+                undertaken_location address_permanent = new undertaken_location();
+                address_permanent.staff_id = staff_last.sta_id;
+                address_permanent.unl_ward = staff.unl_ward_permanent;
+                address_permanent.unl_province = staff.unl_province_permanent;
+                address_permanent.unl_district = staff.unl_district_permanent;
+                address_permanent.unl_geocoding = staff.unl_geocoding_permanent;
+                address_permanent.unl_detail = staff.unl_detail_permanent;
+                address_permanent.unl_note = staff.unl_note_permanent;
+                address_permanent.unl_flag_center = 1;
+                _undertakenlocationService.Create(address_permanent);
+                //save address hiện tại 
+                undertaken_location address_now = new undertaken_location();
+                address_now.staff_id = staff_last.sta_id;
+                address_now.unl_ward = staff.unl_ward_now;
+                address_now.unl_province = staff.unl_province_now;
+                address_now.unl_district = staff.unl_district_now;
+                address_now.unl_geocoding = staff.unl_geocoding_now;
+                address_now.unl_detail = staff.unl_detail_now;
+                address_now.unl_note = staff.unl_note_now;
+                address_now.unl_flag_center = 2;
+                _undertakenlocationService.Create(address_now);
+                //Save list training 
+                foreach(int training_id in staff.list_training)
+                {
+                    training_staff create_training_staff = new training_staff();
+                    create_training_staff.staff_id = staff_last.sta_id;
+                    create_training_staff.training_id = training_id;
+                    _trainingStaffService.Create(create_training_staff);
+                }
+                //Save list_undertaken_location
+                foreach(undertaken_location location in staff.list_undertaken_location)
+                {
+                    undertaken_location address = new undertaken_location();
+                    address.staff_id = staff_last.sta_id;
+                    address.unl_ward = location.unl_ward;
+                    address.unl_province = location.unl_province;
+                    address.unl_district = location.unl_district;
+                    address.unl_geocoding = location.unl_geocoding;
+                    address.unl_detail = location.unl_detail;
+                    address.unl_note = location.unl_note;
+                    address.unl_flag_center = 0;
+                    _undertakenlocationService.Create(address);
+                }
+
                 // return response
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = createdstaff;
+                response.Data = staff_create;
                 return Ok(response);
             }
             catch (Exception ex)
@@ -439,6 +408,204 @@ namespace ERP.API.Controllers.Dashboard
                 return Ok(response);
             }
 
+        }
+        [HttpPut]
+        [Route("api/staff/update")]
+        public async Task<IHttpActionResult> UpdateStaff([FromBody] StaffUpdateViewModelJson update_staff)
+        {
+            ResponseDataDTO<staff> response = new ResponseDataDTO<staff>();
+            try
+            {
+                
+                var staff = update_staff;
+                staff existstaff = _staffservice.Find(staff.sta_id);
+                #region["Check null"]
+
+                if (staff.sta_fullname == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Họ và tên không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+                if (staff.group_role_id == 0)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Nhóm quyền không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+
+                if (staff.sta_sex == 0)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Giới tính không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+
+                if (staff.sta_username == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Tên đăng nhập không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+
+                if (staff.position_id == 0)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Chức vụ không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+                if (staff.department_id == 0)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Phòng ban không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+
+                if (staff.sta_mobile == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Số điện thoại không được để trống";
+                    response.Data = null;
+                    return Ok(response);
+                }
+                #endregion
+                //Update 
+                //Thong tin chung 
+                existstaff.sta_fullname = staff.sta_fullname;
+                existstaff.group_role_id = staff.group_role_id;
+                existstaff.sta_status = staff.sta_status;
+                existstaff.sta_sex = staff.sta_sex;
+                existstaff.sta_start_work_date = staff.sta_start_work_date;
+                existstaff.sta_salary_to = staff.sta_salary_to;
+                existstaff.sta_salary_end = staff.sta_salary_end;
+                existstaff.sta_tax_code = staff.sta_tax_code;
+                existstaff.sta_reason_to_end_work = staff.sta_reason_to_end_work;
+                existstaff.sta_note = staff.sta_note;
+
+                existstaff.sta_username = staff.sta_username;
+                existstaff.position_id = staff.position_id;
+                existstaff.department_id = staff.department_id;
+                existstaff.sta_traffic = staff.sta_traffic;
+                existstaff.sta_birthday = staff.sta_birthday;
+                existstaff.sta_working_status = staff.sta_working_status;
+                existstaff.sta_end_work_date = staff.sta_end_work_date;
+                //Thong tin lien he
+                existstaff.sta_mobile = staff.sta_mobile;
+                existstaff.sta_email = staff.sta_email;
+
+                // CMTND
+                existstaff.sta_identity_card = staff.sta_identity_card;
+                existstaff.sta_identity_card_date = staff.sta_identity_card_date;
+                existstaff.sta_identity_card_date_end = staff.sta_identity_card_date_end;
+                existstaff.sta_identity_card_location = staff.sta_identity_card_location;
+                
+                // save new staff
+                _staffservice.Update(existstaff,staff.sta_id);
+
+                //save staff_work_time
+                staff_work_time exist_work_time = _staffworktimeService.GetAllIncluing(x => x.staff_id == staff.sta_id).FirstOrDefault();
+
+                exist_work_time.sw_time_start = staff.sw_time_start;
+                exist_work_time.sw_time_end = staff.sw_time_end;
+                exist_work_time.st_fri_flag = staff.st_fri_flag;
+                exist_work_time.st_mon_flag = staff.st_mon_flag;
+                exist_work_time.st_sat_flag = staff.st_sat_flag;
+                exist_work_time.st_sun_flag = staff.st_sun_flag;
+                exist_work_time.st_thu_flag = staff.st_thu_flag;
+                exist_work_time.st_tue_flag = staff.st_tue_flag;
+                exist_work_time.st_wed_flag = staff.st_wed_flag;
+                _staffworktimeService.Update(exist_work_time, exist_work_time.sw_id);
+                //save address thường trú 
+                undertaken_location exist_address_permanent = _undertakenlocationService.GetAllIncluing(x => x.staff_id == staff.sta_id && x.unl_flag_center == 1).FirstOrDefault();
+
+                exist_address_permanent.unl_ward = staff.unl_ward_permanent;
+                exist_address_permanent.unl_province = staff.unl_province_permanent;
+                exist_address_permanent.unl_district = staff.unl_district_permanent;
+                exist_address_permanent.unl_geocoding = staff.unl_geocoding_permanent;
+                exist_address_permanent.unl_detail = staff.unl_detail_permanent;
+                exist_address_permanent.unl_note = staff.unl_note_permanent;
+                _undertakenlocationService.Update(exist_address_permanent, exist_address_permanent.unl_id);
+                //update address hiện tại 
+                undertaken_location exist_address_now = new undertaken_location();
+                exist_address_now.unl_ward = staff.unl_ward_now;
+                exist_address_now.unl_province = staff.unl_province_now;
+                exist_address_now.unl_district = staff.unl_district_now;
+                exist_address_now.unl_geocoding = staff.unl_geocoding_now;
+                exist_address_now.unl_detail = staff.unl_detail_now;
+                exist_address_now.unl_note = staff.unl_note_now;
+                _undertakenlocationService.Update(exist_address_now, exist_address_now.unl_id);
+                //update training 
+                //Xóa bản ghi cũ update cái mới 
+                List<training_staff> training_staff_old = _trainingStaffService.GetAllIncluing(x => x.staff_id == staff.sta_id).ToList();
+                foreach(training_staff ts in training_staff_old)
+                {
+                    _trainingStaffService.Delete(ts);
+                }
+                foreach(int training_id in staff.list_training)
+                {
+                    training_staff create_training_staff = new training_staff();
+                    create_training_staff.staff_id = staff.sta_id;
+                    create_training_staff.training_id = training_id;
+                    _trainingStaffService.Create(create_training_staff);
+
+                }
+                //update list_undertaken_location
+                List<undertaken_location> lts_ul_db = _undertakenlocationService.GetAllIncluing(x => x.staff_id == staff.sta_id && x.unl_flag_center == 0).ToList();
+                List<undertaken_location> lts_ul_v = new List<undertaken_location>(staff.list_undertaken_location);
+                foreach(undertaken_location ul_f in lts_ul_v)
+                {
+                    foreach(undertaken_location ul in lts_ul_db)
+                    {
+                        if(ul.unl_id == ul_f.unl_id)
+                        {
+                            //update
+                            undertaken_location exist_address = _undertakenlocationService.Find(ul_f.unl_id);
+                            exist_address.unl_ward = ul_f.unl_ward;
+                            exist_address.unl_province = ul_f.unl_province;
+                            exist_address.unl_district = ul_f.unl_district;
+                            exist_address.unl_geocoding = ul_f.unl_geocoding;
+                            exist_address.unl_detail = ul_f.unl_detail;
+                            exist_address.unl_note = ul_f.unl_note;
+                            _undertakenlocationService.Update(exist_address, exist_address.unl_id);
+                            lts_ul_db.Remove(_undertakenlocationService.Find(ul.unl_id));
+                            break;
+                        }
+                    }
+                    if(ul_f.unl_id == 0 )
+                    {
+                        //Create
+                        ul_f.staff_id = staff.sta_id;
+                        ul_f.unl_flag_center = 0;
+                        _undertakenlocationService.Create(ul_f);
+                    }
+                }
+                foreach(undertaken_location ul_d in lts_ul_db)
+                {
+                    _undertakenlocationService.Delete(ul_d);
+                }
+               
+
+                // return response
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = existstaff;
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+                Console.WriteLine(ex.ToString());
+
+                return Ok(response);
+            }
         }
 
         [HttpPost]
@@ -470,269 +637,16 @@ namespace ERP.API.Controllers.Dashboard
            
         }
 
-        [HttpPut]
-        [Route("api/staffs/update")]
-        public async Task<IHttpActionResult> Updatestaff()
-        {
-            ResponseDataDTO<staff> response = new ResponseDataDTO<staff>();
-            try
-            {
-                var path = Path.GetTempPath();
-
-                if (!Request.Content.IsMimeMultipartContent("form-data"))
-                {
-                    throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.UnsupportedMediaType));
-                }
-
-                MultipartFormDataStreamProvider streamProvider = new MultipartFormDataStreamProvider(path);
-
-                await Request.Content.ReadAsMultipartAsync(streamProvider);
-                if (streamProvider.FormData["sta_fullname"] == null)
-                {
-                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                    response.Message = "Họ và tên không được để trống";
-                    response.Data = null;
-                    return Ok(response);
-                }
-                if (streamProvider.FormData["sta_username"] == null)
-                {
-                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                    response.Message = "Tên đăng nhập không được để trống";
-                    response.Data = null;
-                    return Ok(response);
-                }
-
-                if (streamProvider.FormData["sta_mobile"] == null)
-                {
-                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                    response.Message = "Số điện thoại không được để trống";
-                    response.Data = null;
-                    return Ok(response);
-                }
-
-                if (streamProvider.FormData["sta_status"] == null)
-                {
-                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                    response.Message = "Trạng thái không được để trống";
-                    response.Data = null;
-                    return Ok(response);
-                }
-
-                if (streamProvider.FormData["department_id"] == null)
-                {
-                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                    response.Message = "Phòng ban không được để trống";
-                    response.Data = null;
-                    return Ok(response);
-                }
-
-
-                if (streamProvider.FormData["position_id"] == null)
-                {
-                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                    response.Message = "Chức vụ không được để trống";
-                    response.Data = null;
-                    return Ok(response);
-                }
-
-                // get data from formdata
-
-                StaffUpdateViewModel staffUpdateViewModel = new StaffUpdateViewModel
-                {
-                    sta_id = Convert.ToInt32(streamProvider.FormData["sta_id"]),
-
-                    sta_fullname = Convert.ToString(streamProvider.FormData["sta_fullname"]),
-                    sta_code = Convert.ToString(streamProvider.FormData["sta_code"]),
-                    sta_username = Convert.ToString(streamProvider.FormData["sta_username"]).Trim(),
-                    sta_email = Convert.ToString(streamProvider.FormData["sta_email"]),
-                    sta_thumbnai = Convert.ToString(streamProvider.FormData["cu_thumbnail"]),
-                    sta_aboutme = Convert.ToString(streamProvider.FormData["sta_aboutme"]),
-                    sta_mobile = Convert.ToString(streamProvider.FormData["sta_mobile"]),
-                    sta_identity_card = Convert.ToString(streamProvider.FormData["sta_identity_card"]),
-                    sta_address = Convert.ToString(streamProvider.FormData["sta_address"]),
-                    sta_hometown = Convert.ToString(streamProvider.FormData["sta_hometown"]),
-                    sta_reason_to_end_work = Convert.ToString(streamProvider.FormData["sta_reason_to_end_work"]),
-                    sta_note = Convert.ToString(streamProvider.FormData["sta_note"]),
-
-                    department_id = Convert.ToInt32(streamProvider.FormData["department_id"]),
-                    group_role_id = Convert.ToInt32(streamProvider.FormData["group_role_id"]),
-                    social_id = Convert.ToInt32(streamProvider.FormData["social_id"]),
-                    position_id = Convert.ToInt32(streamProvider.FormData["position_id"]),
-                    sta_leader_flag = Convert.ToByte(streamProvider.FormData["sta_leader_flag"]),
-
-
-
-
-                    sta_status = Convert.ToByte(streamProvider.FormData["sta_status"]),
-                    sta_sex = Convert.ToByte(streamProvider.FormData["sta_sex"]),
-
-                };
-
-
-                var existstaff = _staffservice.Find(staffUpdateViewModel.sta_id);
-
-                if (streamProvider.FormData["cu_thumbnail"] != null)
-                {
-                  staffUpdateViewModel.sta_thumbnai = existstaff.sta_thumbnai;
-                }
-
-
-                //md5
-                if (staffUpdateViewModel.sta_email != null)
-                {
-                    if (CheckEmail.IsValidEmail(staffUpdateViewModel.sta_email) == false)
-                    {
-                        response.Code = HttpCode.NOT_FOUND;
-                        response.Message = "Định dạng email không hợp lệ !";
-                        response.Data = null;
-                        return Ok(response);
-                    }
-                }
-                else
-                {
-                    staffUpdateViewModel.sta_email = null;
-                }
-                //check_phone_number
-
-                if (CheckNumber.IsPhoneNumber(staffUpdateViewModel.sta_mobile) == false)
-                {
-                    response.Code = HttpCode.NOT_FOUND;
-                    response.Message = "Số điện thoại không hợp lệ";
-                    response.Data = null;
-                    return Ok(response);
-                }
-                //Ma code
-                staffUpdateViewModel.sta_code = existstaff.sta_code;
-
-                //Address 
-                if (streamProvider.FormData["sta_address"] == null)
-                {
-                    staffUpdateViewModel.sta_address = null;
-
-                }
-                // Option choose 
-                if (streamProvider.FormData["sta_sex"] == null)
-                {
-                    if (existstaff.sta_sex != null)
-                    {
-                        staffUpdateViewModel.sta_sex = existstaff.sta_sex;
-                    }
-                    else
-                    {
-                        staffUpdateViewModel.sta_sex = null;
-                    }
-                }
-
-
-                //checkdatetime
-                if (streamProvider.FormData["sta_birthday"] == null)
-                {
-                    if (existstaff.sta_birthday != null)
-                    {
-                        staffUpdateViewModel.sta_birthday = existstaff.sta_birthday;
-                    }
-                    else
-                    {
-                        staffUpdateViewModel.sta_birthday = null;
-                    }
-                }
-                else
-                {
-                    staffUpdateViewModel.sta_birthday = Convert.ToDateTime(streamProvider.FormData["sta_birthday"]);
-                }
-                if (streamProvider.FormData["sta_identity_card"] == null)
-                {
-                    staffUpdateViewModel.sta_identity_card = null;
-                }
-                else
-                {
-                    staffUpdateViewModel.sta_identity_card = Convert.ToString(streamProvider.FormData["sta_identity_card"]);
-                }
-
-                if (streamProvider.FormData["sta_identity_card_date"] == null)
-                {
-                    if (existstaff.sta_identity_card_date != null)
-                    {
-                        staffUpdateViewModel.sta_identity_card_date = existstaff.sta_identity_card_date;
-                    }
-                    else
-                    {
-                        staffUpdateViewModel.sta_identity_card_date = null;
-                    }
-
-                }
-                else
-                {
-                    staffUpdateViewModel.sta_identity_card_date = Convert.ToDateTime(streamProvider.FormData["sta_identity_card_date"]);
-                }
-                if (streamProvider.FormData["sta_end_work_date"] == null)
-                {
-                    if (existstaff.sta_end_work_date != null)
-                    {
-                        staffUpdateViewModel.sta_end_work_date = existstaff.sta_end_work_date;
-                    }
-                    else
-                    {
-                        staffUpdateViewModel.sta_end_work_date = null;
-                    }
-
-                }
-                else
-                {
-                    staffUpdateViewModel.sta_end_work_date = Convert.ToDateTime(streamProvider.FormData["sta_end_work_date"]);
-                }
-
-                if (streamProvider.FormData["sta_start_work_date"] == null)
-                {
-                    if (existstaff.sta_start_work_date != null)
-                    {
-                        staffUpdateViewModel.sta_start_work_date = existstaff.sta_start_work_date;
-                    }
-                    else
-                    {
-                        staffUpdateViewModel.sta_start_work_date = null;
-                    }
-
-                }
-                else
-                {
-                    staffUpdateViewModel.sta_start_work_date = Convert.ToDateTime(streamProvider.FormData["sta_start_work_date"]);
-                }
-                staffUpdateViewModel.sta_code = existstaff.sta_code; 
-                staffUpdateViewModel.sta_created_date = existstaff.sta_created_date;
-                staffUpdateViewModel.sta_password = existstaff.sta_password;
-                staffUpdateViewModel.sta_thumbnai = existstaff.sta_thumbnai;
-                // mapping view model to entity
-                var updatedstaff = _mapper.Map<staff>(staffUpdateViewModel);
-
-                // update staff
-                _staffservice.Update(updatedstaff, staffUpdateViewModel.sta_id);
-                
-                // return response
-                response.Code = HttpCode.OK;
-                response.Message = MessageResponse.SUCCESS;
-                response.Data = updatedstaff;
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = ex.Message;
-                response.Data = null;
-                Console.WriteLine(ex.ToString());
-
-                return Ok(response);
-            }
-        }
+       
 
         [HttpDelete]
-        [Route("api/staffs/delete")]
-        public IHttpActionResult Deletestaff(int staffId)
+        [Route("api/staff/delete")]
+        public IHttpActionResult Deletestaff(int staff_id)
         {
             ResponseDataDTO<staff> response = new ResponseDataDTO<staff>();
             try
             {
-                var staffDeleted = _staffservice.Find(staffId);
+                var staffDeleted = _staffservice.Find(staff_id);
                 if (staffDeleted != null)
                 {
                     _staffservice.Delete(staffDeleted);
@@ -1171,7 +1085,7 @@ namespace ERP.API.Controllers.Dashboard
 
         #region["Export Excel"]
         [HttpGet]
-        [Route("api/satffs/export")]
+        [Route("api/satff/export")]
         public async Task<IHttpActionResult> Export(int pageSize, int pageNumber, int? status, DateTime? start_date, DateTime? end_date, string name)
         {
             ResponseDataDTO<string> response = new ResponseDataDTO<string>();
@@ -1362,7 +1276,6 @@ namespace ERP.API.Controllers.Dashboard
                 var existstaff = _staffservice.Find(staff_id);
                 existstaff.sta_fullname = Convert.ToString(streamProvider.FormData["sta_fullname"]);
                 existstaff.sta_email = Convert.ToString(streamProvider.FormData["sta_email"]);
-                existstaff.sta_address = Convert.ToString(streamProvider.FormData["sta_address"]);
                 existstaff.sta_mobile = Convert.ToString(streamProvider.FormData["sta_mobile"]);
                 existstaff.sta_aboutme = Convert.ToString(streamProvider.FormData["sta_aboutme"]);
                 //Cập nhập thông tin mạng xã hội 
@@ -1400,6 +1313,136 @@ namespace ERP.API.Controllers.Dashboard
 
                 return Ok(response);
             }
+        }
+        #endregion
+        #region[Update curator]
+        [HttpPut]
+        [Route("api/staff/update-curator")]
+        public async Task<IHttpActionResult> UpdateCurator([FromBody] StaffUpdateCuratorViewModel staff_update)
+        {
+            ResponseDataDTO<string> response = new ResponseDataDTO<string>();
+            try
+            {
+                // Sử dụng thuật toán trong stack hay hon nhưng chưa có thời gian 
+                var assignment = staff_update;
+                List<customer> lts_cus = _customerservice.GetAllIncluing(x => x.cu_curator_id == null).ToList();
+                Stack<customer> myStack = new Stack<customer>(lts_cus);
+                int total_customer = lts_cus.Count(); // so luong khach hang 
+                int number = assignment.list_staff_id.Length; //So luong satff
+                int skip = total_customer / number;
+                int mod = total_customer % number;
+                if (assignment.customer_group_id == 0)
+                {
+                    if(number < total_customer)
+                    {
+                        foreach (int s in assignment.list_staff_id)
+                        {
+                            for(int i = 0; i< skip; i++)
+                            {
+                                customer update_customer;
+                                if (myStack.Count() == 0) break;
+                                else
+                                {
+                                    update_customer = myStack.Pop();
+                                }
+                                update_customer.cu_curator_id = s;
+                                _customerservice.Update(update_customer, update_customer.cu_id);
+                            }
+                        }
+                        foreach (int s in assignment.list_staff_id)
+                        {
+                            customer update_customer;
+                            if (myStack.Count() == 0) break;
+                            else
+                            {
+                                update_customer = myStack.Pop();
+                            }
+                            update_customer.cu_curator_id = s;
+                            _customerservice.Update(update_customer, update_customer.cu_id);
+                        }
+                    }
+                    else
+                    {
+                        foreach (int s in assignment.list_staff_id)
+                        {
+                            customer update_customer;
+                            if (myStack.Count() == 0) break;
+                            else
+                            {
+                                update_customer = myStack.Pop();
+                            }
+                            update_customer.cu_curator_id = s;
+                            _customerservice.Update(update_customer, update_customer.cu_id);
+                        }
+                    }
+                    
+                }
+                else
+                {
+                    lts_cus = lts_cus.Where(x => x.customer_group_id == assignment.customer_group_id).ToList();
+                    myStack = new Stack<customer>(lts_cus);
+                    total_customer = lts_cus.Count();
+                    skip = total_customer / number;
+                    mod = total_customer % number;
+                    if (number < total_customer)
+                    {
+                        foreach (int s in assignment.list_staff_id)
+                        {
+                            for (int i = 0; i < skip; i++)
+                            {
+                                customer update_customer;
+                                if (myStack.Count() == 0) break;
+                                else
+                                {
+                                    update_customer = myStack.Pop();
+                                }
+                                update_customer.cu_curator_id = s;
+                                _customerservice.Update(update_customer, update_customer.cu_id);
+                            }
+                        }
+                        foreach (int s in assignment.list_staff_id)
+                        {
+                            customer update_customer;
+                            if (myStack.Count() == 0) break;
+                            else
+                            {
+                                update_customer = myStack.Pop();
+                            }
+                            update_customer.cu_curator_id = s;
+                            _customerservice.Update(update_customer, update_customer.cu_id);
+                        }
+                    }
+                    else
+                    {
+                        foreach (int s in assignment.list_staff_id)
+                        {
+                            customer update_customer;
+                            if (myStack.Count() == 0) break;
+                            else
+                            {
+                                update_customer = myStack.Pop();
+                            }
+                            update_customer.cu_curator_id = s;
+                            _customerservice.Update(update_customer, update_customer.cu_id);
+                        }
+                    }
+
+                }
+                // return response
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = null;
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+
+                return Ok(response);
+            }
+
         }
         #endregion
 

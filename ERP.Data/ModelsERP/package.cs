@@ -9,6 +9,7 @@ namespace ERP.Data.ModelsERP
     [Table("package")]
     public partial class package
     {
+
         [Key]
         public int pac_id { get; set; }
 
@@ -25,5 +26,6 @@ namespace ERP.Data.ModelsERP
         public DateTime? pac_duration { get; set; }
 
         public int? funtion_id { get; set; }
+
     }
 }

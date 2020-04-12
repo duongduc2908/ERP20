@@ -2,6 +2,7 @@
 using ERP.Common.Models;
 using ERP.Data.DbContext;
 using ERP.Data.ModelsERP;
+using ERP.Data.ModelsERP.ModelView;
 using ERP.Repository.Repositories.IRepositories;
 using System;
 using System.Collections.Generic;
@@ -37,6 +38,19 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfPages = totalPageCount,
                 TotalNumberOfRecords = totalNumberOfRecords
             };
+        }
+        public List<dropdown> GetDropdown()
+        {
+            List<dropdown> res = new List<dropdown>();
+            List<group_role> lts_gr =  _dbContext.group_role.ToList();
+            foreach(group_role gr in lts_gr)
+            {
+                dropdown dr = new dropdown();
+                dr.id = gr.gr_id;
+                dr.name = gr.gr_name;
+                res.Add(dr);
+            }
+            return res;
         }
     }
 }

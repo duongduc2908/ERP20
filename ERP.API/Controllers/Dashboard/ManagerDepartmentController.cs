@@ -6,6 +6,7 @@ using ERP.Common.Excel;
 using ERP.Common.Models;
 using ERP.Data.Dto;
 using ERP.Data.ModelsERP;
+using ERP.Data.ModelsERP.ModelView;
 using ERP.Extension.Extensions;
 using ERP.Service.Services;
 using ERP.Service.Services.IServices;
@@ -41,7 +42,7 @@ namespace ERP.API.Controllers.Dashboard
 
         #region methods
         [HttpGet]
-        [Route("api/departments/all")]
+        [Route("api/department/all")]
         public IHttpActionResult Getdepartments()
         {
             ResponseDataDTO<IEnumerable<department>> response = new ResponseDataDTO<IEnumerable<department>>();
@@ -77,6 +78,50 @@ namespace ERP.API.Controllers.Dashboard
             {
                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
                 response.Message = ex.Message;;
+                response.Data = null;
+
+                Console.WriteLine(ex.ToString());
+            }
+
+            return Ok(response);
+        }
+        [HttpGet]
+        [Route("api/department/get")]
+        public IHttpActionResult GetLevelOne()
+        {
+            ResponseDataDTO<List<dropdown>> response = new ResponseDataDTO<List<dropdown>>();
+            try
+            {
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = _departmentservice.Get_Level_One();
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;;
+                response.Data = null;
+
+                Console.WriteLine(ex.ToString());
+            }
+
+            return Ok(response);
+        }
+        [HttpGet]
+        [Route("api/department/get_children")]
+        public IHttpActionResult GetChilden(int id)
+        {
+            ResponseDataDTO<List<dropdown>> response = new ResponseDataDTO<List<dropdown>>();
+            try
+            {
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = _departmentservice.Get_Children(id);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message; ;
                 response.Data = null;
 
                 Console.WriteLine(ex.ToString());
@@ -163,9 +208,6 @@ namespace ERP.API.Controllers.Dashboard
             }
 
         }
-
-
-
 
         [HttpPut]
         [Route("api/departments/update")]

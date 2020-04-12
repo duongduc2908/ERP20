@@ -323,7 +323,10 @@
     <Compile Include="Models\SmsTemplateUpdateViewModel.cs" />
     <Compile Include="Models\SmsUpdateViewModel.cs" />
     <Compile Include="Models\StaffCreateViewModel.cs" />
+    <Compile Include="Models\StaffCreateViewModelJson.cs" />
+    <Compile Include="Models\StaffUpdateCuratorViewModel.cs" />
     <Compile Include="Models\StaffUpdateViewModel.cs" />
+    <Compile Include="Models\StaffUpdateViewModelJson.cs" />
     <Compile Include="Models\Token.cs" />
     <Compile Include="Models\TransactionCreateViewModel.cs" />
     <Compile Include="Models\TransactionUpdateViewModel.cs" />

@@ -8,6 +8,7 @@ namespace ERP.Data.ModelsERP
 
     public partial class service_category
     {
+
         [Key]
         public int sc_id { get; set; }
 

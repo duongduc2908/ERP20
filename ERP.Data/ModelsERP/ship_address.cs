@@ -30,5 +30,9 @@ namespace ERP.Data.ModelsERP
         public string sha_geocoding { get; set; }
 
         public int? customer_id { get; set; }
+
+        public byte? sha_flag_center { get; set; }
+
+        public virtual customer customer { get; set; }
     }
 }

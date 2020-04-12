@@ -317,7 +317,6 @@ namespace ERP.Repository.Repositories
                 //customer
                 customer cu = _dbContext.customers.Find(i.customer_id);
                 add.cu_fullname = cu.cu_fullname;
-                add.cu_mobile = cu.cu_mobile;
                 //list_service
                 List<serviceinforviewmodel> list_service = new List<serviceinforviewmodel>();
                 var lts_or_ser = _dbContext.order_service.Where(s => s.customer_order_id == i.cuo_id).ToList();
@@ -612,11 +611,11 @@ namespace ERP.Repository.Repositories
         public List<order_service_view> GetServiceByDay(int id, DateTime start_date, DateTime to_date)
         {
             List<order_service_view> res = new List<order_service_view>();
-            
+            var test = _dbContext.executors.Where(ex => ex.staff_id == id && ex.work_time >= start_date.Date && ex.work_time <= to_date.Date).ToList();
             var lts_cg = (from ex in _dbContext.executors
                           join od in _dbContext.order_service on ex.customer_order_id equals od.customer_order_id
                           join sv in _dbContext.services on od.service_id equals sv.se_id
-                          where ex.staff_id == id && ex.work_time >= start_date && ex.work_time <= to_date
+                          where ex.staff_id == id && ex.work_time >= start_date.Date && ex.work_time <= to_date.Date
                           orderby ex.work_time 
                           select new
                           {

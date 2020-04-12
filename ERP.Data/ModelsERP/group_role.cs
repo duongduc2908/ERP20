@@ -8,16 +8,17 @@ namespace ERP.Data.ModelsERP
 
     public partial class group_role
     {
+
         [Key]
         public int gr_id { get; set; }
 
         [StringLength(20)]
         public string gr_name { get; set; }
 
-        [StringLength(45)]
+        [StringLength(50)]
         public string gr_thumbnail { get; set; }
 
-        [Column(TypeName = "text")]
+        [StringLength(50)]
         public string gr_description { get; set; }
 
         public byte? gr_status { get; set; }

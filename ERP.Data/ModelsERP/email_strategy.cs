@@ -38,5 +38,11 @@ namespace ERP.Data.ModelsERP
         public int? email_template_id { get; set; }
 
         public int? customer_group_id { get; set; }
+
+        public virtual customer_group customer_group { get; set; }
+
+        public virtual email email { get; set; }
+
+        public virtual email_template email_template { get; set; }
     }
 }

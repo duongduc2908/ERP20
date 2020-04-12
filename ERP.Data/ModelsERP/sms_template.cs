@@ -18,11 +18,15 @@ namespace ERP.Data.ModelsERP
         public string smt_title { get; set; }
 
         public DateTime? smt_created_date { get; set; }
-        public DateTime? smt_modify_time { get; set; }
 
         public string smt_content { get; set; }
 
         public int? staff_id { get; set; }
+
         public int? smt_modifier { get; set; }
+
+        public DateTime? smt_modify_time { get; set; }
+
+        public virtual staff staff { get; set; }
     }
 }

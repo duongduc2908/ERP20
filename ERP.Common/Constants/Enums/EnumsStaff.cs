@@ -11,6 +11,7 @@ namespace ERP.Common.Constants.Enums
         public static string[] cuo_payment_type = new string[3] { "Trả tiền mặt", "Chuyển khoản","Thẻ visa"};
         public static string[] cuo_payment_status = new string[3] { "Trả tiền mặt", "Chuyển khoản","Thẻ visa"};
         public static string[] sta_sex = new string[3] { "Nam", "Nữ","Giới tính khác"};
+        public static string[] sta_type_contact_name = new string[2] { "Đang làm việc", "Nghỉ viêc"};
 
 
 

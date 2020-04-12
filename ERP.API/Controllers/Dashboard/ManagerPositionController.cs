@@ -4,6 +4,7 @@ using ERP.Common.Constants;
 using ERP.Common.Models;
 using ERP.Data.Dto;
 using ERP.Data.ModelsERP;
+using ERP.Data.ModelsERP.ModelView;
 using ERP.Extension.Extensions;
 using ERP.Service.Services.IServices;
 using System;
@@ -43,6 +44,28 @@ namespace ERP.API.Controllers.Dashboard
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
                 response.Data = _positionservice.GetAll();
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+
+                Console.WriteLine(ex.ToString());
+            }
+
+            return Ok(response);
+        }
+        [HttpGet]
+        [Route("api/position/dropdown")]
+        public IHttpActionResult GetDropdown()
+        {
+            ResponseDataDTO<List<dropdown>> response = new ResponseDataDTO<List<dropdown>>();
+            try
+            {
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = _positionservice.GetDropdowns();
             }
             catch (Exception ex)
             {

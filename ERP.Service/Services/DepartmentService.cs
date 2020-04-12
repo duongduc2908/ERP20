@@ -1,6 +1,7 @@
 ﻿using ERP.Common.GenericService;
 using ERP.Common.Models;
 using ERP.Data.ModelsERP;
+using ERP.Data.ModelsERP.ModelView;
 using ERP.Repository.Repositories.IRepositories;
 using ERP.Service.Services.IServices;
 using System;
@@ -22,5 +23,14 @@ namespace ERP.Service.Services
         {
             return this._repository.CreatePagedResults(pageNumber, pageSize);
         }
+        public List<dropdown> Get_Level_One()
+        {
+            return this._repository.Get_Level_One();
+        }
+        public List<dropdown> Get_Children(int id)
+        {
+            return this._repository.Get_Children(id);
+        }
+
     }
 }

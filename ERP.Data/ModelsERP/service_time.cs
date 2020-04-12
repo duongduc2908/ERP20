@@ -8,6 +8,7 @@ namespace ERP.Data.ModelsERP
 
     public partial class service_time
     {
+
         [Key]
         public int st_id { get; set; }
 

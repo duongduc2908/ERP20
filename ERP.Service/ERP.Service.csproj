@@ -119,9 +119,11 @@
     <Compile Include="Services\IServices\ISocialService.cs" />
     <Compile Include="Services\IServices\ISourceService.cs" />
     <Compile Include="Services\IServices\IStaffService.cs" />
+    <Compile Include="Services\IServices\IStaffWorkTimeService.cs" />
     <Compile Include="Services\IServices\ISupplierService.cs" />
     <Compile Include="Services\IServices\ISupplierTypeService.cs" />
     <Compile Include="Services\IServices\ITaskService.cs" />
+    <Compile Include="Services\IServices\ITrainingStaffService.cs" />
     <Compile Include="Services\IServices\ITransactionService.cs" />
     <Compile Include="Services\IServices\IUndertakenLocationService.cs" />
     <Compile Include="Services\NotificationService.cs" />
@@ -143,8 +145,10 @@
     <Compile Include="Services\SocialService.cs" />
     <Compile Include="Services\SourceService.cs" />
     <Compile Include="Services\StaffService.cs" />
+    <Compile Include="Services\StaffWorkTimeService.cs" />
     <Compile Include="Services\SupplierService.cs" />
     <Compile Include="Services\SupplierTypeService.cs" />
+    <Compile Include="Services\TrainingStaffService.cs" />
     <Compile Include="Services\TransactionService.cs" />
     <Compile Include="Services\UndertakenLocationService.cs" />
   </ItemGroup>

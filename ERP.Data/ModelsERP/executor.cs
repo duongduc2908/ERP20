@@ -20,7 +20,21 @@ namespace ERP.Data.ModelsERP
 
         [Column(TypeName = "date")]
         public DateTime work_time { get; set; }
+
         public TimeSpan start_time { get; set; }
+
         public TimeSpan end_time { get; set; }
+
+        public bool exe_flag_overtime { get; set; }
+
+        public int exe_time_overtime { get; set; }
+
+        public byte exe_status { get; set; }
+
+        public int exe_evaluate { get; set; }
+
+        public string exe_note { get; set; }
+
+        public virtual service_time service_time { get; set; }
     }
 }

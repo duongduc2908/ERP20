@@ -9,6 +9,7 @@ namespace ERP.Data.ModelsERP
     [Table("company")]
     public partial class company
     {
+
         [Key]
         public int co_id { get; set; }
 
@@ -38,6 +39,7 @@ namespace ERP.Data.ModelsERP
         public int? co_no_of_employees { get; set; }
 
         public int? co_revenue { get; set; }
+
         public int? package_id { get; set; }
     }
 }

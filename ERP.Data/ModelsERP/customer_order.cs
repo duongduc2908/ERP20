@@ -8,6 +8,7 @@ namespace ERP.Data.ModelsERP
 
     public partial class customer_order
     {
+
         [Key]
         public int cuo_id { get; set; }
 
@@ -36,13 +37,21 @@ namespace ERP.Data.ModelsERP
         public string cuo_note { get; set; }
 
         public int? cuo_who_support { get; set; }
+
         [StringLength(250)]
         public string cuo_address { get; set; }
+
         public byte? cuo_evaluation { get; set; }
+
         [StringLength(500)]
         public string cuo_feedback { get; set; }
+
         [StringLength(100)]
         public string cuo_infor_time { get; set; }
+
+        public virtual customer customer { get; set; }
+
+        public virtual staff staff { get; set; }
 
     }
 }

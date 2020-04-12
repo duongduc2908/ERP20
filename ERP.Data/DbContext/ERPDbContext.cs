@@ -68,5 +68,8 @@ namespace ERP.Data.DbContext
         public virtual DbSet<transaction> transactions { get; set; }
         public virtual DbSet<social> socials { get; set; }
         public virtual DbSet<executor> executors { get; set; }
+        public virtual DbSet<training> trainings { get; set; }
+        public virtual DbSet<training_staff> training_staffs { get; set; }
+        public virtual DbSet<staff_work_time> staff_work_times { get; set; }
     }
 }

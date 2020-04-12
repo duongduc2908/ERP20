@@ -9,6 +9,7 @@ namespace ERP.Data.ModelsERP
     [Table("product")]
     public partial class product
     {
+
         [Key]
         public int pu_id { get; set; }
 
@@ -50,5 +51,6 @@ namespace ERP.Data.ModelsERP
 
         [StringLength(200)]
         public string pu_thumbnail { get; set; }
+
     }
 }
