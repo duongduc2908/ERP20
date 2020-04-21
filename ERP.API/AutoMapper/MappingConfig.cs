@@ -3,6 +3,7 @@ using ERP.API.Models;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
 using ERP.Data.ModelsERP.ModelView.Customer;
+using ERP.Data.ModelsERP.ModelView.Excutor;
 using ERP.Data.ModelsERP.ModelView.ExportDB;
 using ERP.Data.ModelsERP.ModelView.OrderService;
 using ERP.Data.ModelsERP.ModelView.Product;
@@ -40,7 +41,7 @@ namespace ERP.API.AutoMapper
             CreateMap<CustomerCreateViewModel, customer>();
             CreateMap<CustomerUpdateViewModel, customer>();
             CreateMap<customer, customerviewmodel>();
-            CreateMap<customer, customerview>();
+            CreateMap<customer, customerviewexport>();
             CreateMap<customer, customeraddressviewmodel>();
             CreateMap<customer, transactioncustomerviewmodel>();
             CreateMap<customer, smscustomerviewmodel>();
@@ -54,6 +55,8 @@ namespace ERP.API.AutoMapper
             CreateMap<customer_order, statisticsorderviewmodel>();
             CreateMap<customer_order, customerorderview>();
             CreateMap<customer_order, servicercustomerorderviewmodel>();
+
+            CreateMap<customer_phone, customer_phoneviewmodel>();
 
             CreateMap<service_time, servicercustomerorderviewmodel>();
             CreateMap<service_time, serviceinforviewmodel>();
@@ -91,6 +94,7 @@ namespace ERP.API.AutoMapper
             CreateMap<ExecutorCreateViewModel, executor>();
             CreateMap<ExecutorUpdateViewModel, executor>();
             CreateMap<executor, orderservice_day>();
+            CreateMap<executor, executorviewmodel>();
 
 
             CreateMap<ServiceCreateViewModel, service>();

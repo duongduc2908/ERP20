@@ -34,7 +34,28 @@ namespace ERP.API.Controllers.Dashboard
         }
 
         #region methods
+        [HttpGet]
+        [Route("api/source/getall")]
+        public IHttpActionResult GetAllDropdown()
+        {
+            ResponseDataDTO<List<dropdown>> response = new ResponseDataDTO<List<dropdown>>();
+            try
+            {
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = _sourceservice.GetAllDropdown();
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
 
+                Console.WriteLine(ex.ToString());
+            }
+
+            return Ok(response);
+        }
 
         [HttpGet]
         [Route("api/sources/all")]

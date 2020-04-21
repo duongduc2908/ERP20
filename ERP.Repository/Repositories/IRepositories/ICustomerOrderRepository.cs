@@ -2,6 +2,7 @@
 using ERP.Common.Models;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
+using ERP.Data.ModelsERP.ModelView.CustomerOrder;
 using ERP.Data.ModelsERP.ModelView.ExportDB;
 using ERP.Data.ModelsERP.ModelView.OrderService;
 using ERP.Data.ModelsERP.ModelView.Service;
@@ -17,8 +18,9 @@ namespace ERP.Repository.Repositories.IRepositories
     {
         PagedResults<customerorderviewmodel> CreatePagedResults(int pageNumber, int pageSize);
         customerordermodelview GetAllOrderById(int id);
+        servicercustomerorderviewmodel GetAllOrderServiceById(int id);
         List<order_service_view> GetServiceByDay(int id, DateTime start_date, DateTime to_date);
-        List<dropdown> Get_staff_free(List<DateTime> results, string fullName);
+        List<dropdown> Get_staff_free(work_time_view c, string fullName);
         PagedResults<customerorderviewmodel> GetAllSearch(int pageNumber, int pageSize, int? payment_type_id, DateTime? start_date, DateTime? end_date, string name);
 
         PagedResults<servicercustomerorderviewmodel> GetAllSearchCustomerOrderService(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name);

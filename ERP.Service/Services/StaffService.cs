@@ -36,9 +36,9 @@ namespace ERP.Service.Services
         {
             return this._repository.GetAllPage(pageNumber, pageSize);
         }
-        public PagedResults<staffviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? status, DateTime? start_date, DateTime? end_date, string name)
+        public PagedResults<staffviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? status, DateTime? start_date, DateTime? end_date, string name, int? sta_working_status)
         {
-            return this._repository.GetAllPageSearch(pageNumber, pageSize, status, start_date, end_date, name);
+            return this._repository.GetAllPageSearch(pageNumber, pageSize, status, start_date, end_date, name, sta_working_status);
         }
         public PagedResults<staffview> ExportStaff(int pageNumber, int pageSize, int? status, DateTime? start_date, DateTime? end_date, string name)
         {

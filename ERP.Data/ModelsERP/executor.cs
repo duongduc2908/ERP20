@@ -16,7 +16,7 @@ namespace ERP.Data.ModelsERP
 
         public int staff_id { get; set; }
 
-        public int service_time_id { get; set; }
+        public int? service_time_id { get; set; }
 
         [Column(TypeName = "date")]
         public DateTime work_time { get; set; }
@@ -34,7 +34,5 @@ namespace ERP.Data.ModelsERP
         public int exe_evaluate { get; set; }
 
         public string exe_note { get; set; }
-
-        public virtual service_time service_time { get; set; }
     }
 }

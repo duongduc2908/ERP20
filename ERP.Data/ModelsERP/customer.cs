@@ -49,7 +49,7 @@ namespace ERP.Data.ModelsERP
 
         public int? staff_id { get; set; }
 
-        public bool? cu_flag_used { get; set; }
+        public byte? cu_flag_used { get; set; }
 
         public byte? cu_flag_order { get; set; }
     }

@@ -251,6 +251,7 @@
     <Compile Include="Controllers\Dashboard\ManagerShipAddressController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerSourceController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerSupplierController.cs" />
+    <Compile Include="Controllers\Dashboard\ManagerTrainingController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerTransactionController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerUndertakenLocationController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerServiceCategoryController.cs" />
@@ -276,6 +277,7 @@
     <Compile Include="Models\CompanyCreateViewModel.cs" />
     <Compile Include="Models\CompanyUpdateViewModel.cs" />
     <Compile Include="Models\CustomerCreateViewModel.cs" />
+    <Compile Include="Models\CustomerCreateViewModelJson.cs" />
     <Compile Include="Models\CustomerGroupCreateViewModel.cs" />
     <Compile Include="Models\CustomerGroupUpdateViewModel.cs" />
     <Compile Include="Models\CustomerOrderCreateViewModel.cs" />
@@ -285,6 +287,7 @@
     <Compile Include="Models\CustomerOrderServiceViewModelUpdate.cs" />
     <Compile Include="Models\CustomerOrderUpdateViewModel.cs" />
     <Compile Include="Models\CustomerUpdateViewModel.cs" />
+    <Compile Include="Models\CustomerUpdateViewModelJson.cs" />
     <Compile Include="Models\DepartmentCreateViewModel.cs" />
     <Compile Include="Models\DepartmentUpdateViewModel.cs" />
     <Compile Include="Models\EmailCreateViewModel.cs" />
@@ -451,6 +454,7 @@
     <Folder Include="Views\ManagerSms\" />
     <Folder Include="Views\ManagerSource\" />
     <Folder Include="Views\ManagerSupplier\" />
+    <Folder Include="Views\ManagerTraining\" />
     <Folder Include="Views\ManagerTransaction\" />
     <Folder Include="Views\ServiceCategory\" />
   </ItemGroup>

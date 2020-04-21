@@ -106,7 +106,7 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = total
             };
         }
-        public PagedResults<staffviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? status, DateTime? start_date, DateTime? end_date, string name)
+        public PagedResults<staffviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? status, DateTime? start_date, DateTime? end_date, string name,int? sta_working_status)
         {
             if(name != null)
             {
@@ -134,6 +134,11 @@ namespace ERP.Repository.Repositories
             {
                 list_res = list_res.Where(t => t.sta_fullname.Contains(name) || t.sta_mobile.Contains(name) || t.sta_email.Contains(name) || t.sta_code.Contains(name) || t.sta_username.Contains(name)).ToList();
             }
+            if(sta_working_status != null)
+            {
+                list_res = list_res.Where(t => t.sta_working_status == sta_working_status).ToList();
+
+            }
             var total = list_res.Count();
             list = list_res.OrderByDescending(t => t.sta_id).Skip(skipAmount).Take(pageSize).ToList();
             
@@ -146,9 +151,20 @@ namespace ERP.Repository.Repositories
                 department de = _dbContext.departments.Where(x => x.de_id == i.department_id).FirstOrDefault();
                 position po = _dbContext.positions.Where(x => x.pos_id == i.position_id).FirstOrDefault();
                 group_role gr = _dbContext.group_role.Where(x => x.gr_id == i.group_role_id).FirstOrDefault();
-                staffview.department_name = de.de_name;
-                staffview.position_name = po.pos_name;
-                staffview.group_role_name = gr.gr_name;
+                if(de != null)
+                {
+                    staffview.department_name = de.de_name;
+                }
+                if(po != null)
+                {
+                    staffview.position_name = po.pos_name;
+                }
+                if(gr != null)
+                {
+                    staffview.group_role_name = gr.gr_name;
+                }
+               
+                
                 for (int j = 1; j < EnumsStaff.sta_status.Length + 1; j++)
                 {
                     if (j == staffview.sta_status)
@@ -163,11 +179,11 @@ namespace ERP.Repository.Repositories
                         staffview.sta_sex_name = EnumsStaff.sta_sex[j - 1];
                     }
                 }
-                for (int j = 1; j < EnumsStaff.sta_type_contact_name.Length + 1; j++)
+                for (int j = 1; j < EnumsStaff.sta_working_status_name.Length + 1; j++)
                 {
                     if (j == staffview.sta_type_contact)
                     {
-                        staffview.sta_type_contact_name = EnumsStaff.sta_type_contact_name[j - 1];
+                        staffview.sta_working_status_name = EnumsStaff.sta_working_status_name[j - 1];
                     }
                 }
                 //lấy ra thông tin loại hợp đồng 
@@ -176,13 +192,7 @@ namespace ERP.Repository.Repositories
                 {
                     staffview.sw_time_start = swt.sw_time_start;
                     staffview.sw_time_end = swt.sw_time_end;
-                    staffview.st_fri_flag = swt.st_fri_flag;
-                    staffview.st_mon_flag = swt.st_mon_flag;
-                    staffview.st_sat_flag = swt.st_sat_flag;
-                    staffview.st_sun_flag = swt.st_sun_flag;
-                    staffview.st_thu_flag = swt.st_thu_flag;
-                    staffview.st_tue_flag = swt.st_tue_flag;
-                    staffview.st_wed_flag = swt.st_wed_flag;
+                    staffview.sw_day_flag = swt.sw_day_flag;
                 }
                 
                 //Lấy ra địa chỉ thường chú 
@@ -317,9 +327,18 @@ namespace ERP.Repository.Repositories
             department de = _dbContext.departments.Where(x => x.de_id == i.department_id).FirstOrDefault();
             position po = _dbContext.positions.Where(x => x.pos_id == i.position_id).FirstOrDefault();
             group_role gr = _dbContext.group_role.Where(x => x.gr_id == i.group_role_id).FirstOrDefault();
-            staffview.department_name = de.de_name;
-            staffview.position_name = po.pos_name;
-            staffview.group_role_name = gr.gr_name;
+            if (de != null)
+            {
+                staffview.department_name = de.de_name;
+            }
+            if (po != null)
+            {
+                staffview.position_name = po.pos_name;
+            }
+            if (gr != null)
+            {
+                staffview.group_role_name = gr.gr_name;
+            }
             for (int j = 1; j < EnumsStaff.sta_status.Length + 1; j++)
             {
                 if (j == staffview.sta_status)
@@ -334,11 +353,11 @@ namespace ERP.Repository.Repositories
                     staffview.sta_sex_name = EnumsStaff.sta_sex[j - 1];
                 }
             }
-            for (int j = 1; j < EnumsStaff.sta_type_contact_name.Length + 1; j++)
+            for (int j = 1; j < EnumsStaff.sta_working_status_name.Length + 1; j++)
             {
                 if (j == staffview.sta_type_contact)
                 {
-                    staffview.sta_type_contact_name = EnumsStaff.sta_type_contact_name[j - 1];
+                    staffview.sta_working_status_name = EnumsStaff.sta_working_status_name[j - 1];
                 }
             }
             //lấy ra thông tin loại hợp đồng 
@@ -347,13 +366,7 @@ namespace ERP.Repository.Repositories
             {
                 staffview.sw_time_start = swt.sw_time_start;
                 staffview.sw_time_end = swt.sw_time_end;
-                staffview.st_fri_flag = swt.st_fri_flag;
-                staffview.st_mon_flag = swt.st_mon_flag;
-                staffview.st_sat_flag = swt.st_sat_flag;
-                staffview.st_sun_flag = swt.st_sun_flag;
-                staffview.st_thu_flag = swt.st_thu_flag;
-                staffview.st_tue_flag = swt.st_tue_flag;
-                staffview.st_wed_flag = swt.st_wed_flag;
+                staffview.sw_day_flag = swt.sw_day_flag;
             }
 
             //Lấy ra địa chỉ thường chú 

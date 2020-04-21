@@ -58,6 +58,28 @@ namespace ERP.API.Controllers.Dashboard
             return Ok(response);
         }
         [HttpGet]
+        [Route("api/customer_group/getall")]
+        public IHttpActionResult GetAllDropdown()
+        {
+            ResponseDataDTO<List<dropdown>> response = new ResponseDataDTO<List<dropdown>>();
+            try
+            {
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = _customer_groupservice.GetAllDropdown();
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+
+                Console.WriteLine(ex.ToString());
+            }
+
+            return Ok(response);
+        }
+        [HttpGet]
         [Route("api/customer-groups/get-pie-chart")]
         public IHttpActionResult GetPieChart()
         {

@@ -428,6 +428,15 @@ namespace ERP.Common.Excel
             ExportToExcel(dt, strFileName);
         }
 
+        public static void ExportToExcelTemplate<T>(List<T> oDT, Dictionary<string, string> dicColumnNames, string strFileName, string tableName = "")
+        {
+            var dt = ConstructDataTableTemplate(oDT, dicColumnNames);
+
+            if (!string.IsNullOrEmpty(tableName))
+                dt.TableName = tableName;
+            ExportToExcel(dt, strFileName);
+        }
+
         private static DataTable ConstructDataTable(DataTable dt, Dictionary<string, string> dicColumnNames)
         {
 
@@ -494,6 +503,34 @@ namespace ERP.Common.Excel
 
 
         }
+        private static DataTable ConstructDataTableTemplate<T>(List<T> dt, Dictionary<string, string> dicColumnNames)
+        {
+
+
+            DataTable dtRet = new DataTable();
+            
+            foreach (var col in dicColumnNames.Keys)
+            {
+                dtRet.Columns.Add(col, typeof(string));
+            }
+
+            DataRow nDr = dtRet.NewRow();
+            int i = 0;
+            foreach (var prop in dicColumnNames.Keys)
+            {
+                    nDr[i] = dicColumnNames[prop];
+                i++;
+            }
+
+            dtRet.Rows.Add(nDr);
+
+
+            return dtRet;
+
+
+
+        }
+
     }
 
     public class DataTableCmUtils

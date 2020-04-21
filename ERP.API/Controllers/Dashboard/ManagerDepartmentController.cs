@@ -86,7 +86,7 @@ namespace ERP.API.Controllers.Dashboard
             return Ok(response);
         }
         [HttpGet]
-        [Route("api/department/get")]
+        [Route("api/department/getall")]
         public IHttpActionResult GetLevelOne()
         {
             ResponseDataDTO<List<dropdown>> response = new ResponseDataDTO<List<dropdown>>();

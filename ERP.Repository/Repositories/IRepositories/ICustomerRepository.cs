@@ -23,13 +23,14 @@ namespace ERP.Repository.Repositories.IRepositories
         PagedResults<customerviewmodel> GetAllPageByGroup(int pageNumber, int pageSize, int customer_group_id);
         PagedResults<customerviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, DateTime? start_date, DateTime? end_date, string name);
         PagedResults<customeraddressviewmodel> GetCustomerByCurator(int pageSize, int pageNumber, int? cu_curator_id,string search_name);
-        PagedResults<customerview> ExportCustomer(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, DateTime? start_date, DateTime? end_date, string name);
+        PagedResults<customerviewexport> ExportCustomer(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, DateTime? start_date, DateTime? end_date, string name);
         PagedResults<smscustomerviewmodel> GetAllPageSearchSms(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, string name);
         PagedResults<servicesearchcustomerviewmodel> GetAllPageSearchService(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, string name);
         customerviewmodel GetInfor(int cu_id);
         servicesearchcustomerviewmodel GetServiceInforCustomer(int cu_id);
         List<dropdown> GetAllType();
         transactioncustomerviewmodel GetInforCustomerTransaction(int cu_id);
+        List<dropdown> GetAllDropdown();
 
 
     }

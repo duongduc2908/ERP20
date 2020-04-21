@@ -9,14 +9,16 @@ namespace ERP.Data.Dto
         public String Message { get; set; }
 
         public T Data { get; set; }
+        public String Error { get; set; }
 
         public ResponseDataDTO() { }
 
-        public ResponseDataDTO(int code, String message, T data) 
+        public ResponseDataDTO(int code, String message, T data, string error = null)
         {
             this.Code = code;
             this.Message = message;
             this.Data = data;
+            this.Error = error;
         }
     }
 }

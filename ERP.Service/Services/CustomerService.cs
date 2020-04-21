@@ -75,7 +75,11 @@ namespace ERP.Service.Services
         {
             return this._repository.GetAllType();
         }
-        public PagedResults<customerview> ExportCustomer(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, DateTime? start_date, DateTime? end_date, string name)
+        public List<dropdown> GetAllDropdown()
+        {
+            return this._repository.GetAllDropdown();
+        }
+        public PagedResults<customerviewexport> ExportCustomer(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, DateTime? start_date, DateTime? end_date, string name)
         {
             return this._repository.ExportCustomer(pageNumber, pageSize, source_id, cu_type, customer_group_id,start_date, end_date, name);
         }

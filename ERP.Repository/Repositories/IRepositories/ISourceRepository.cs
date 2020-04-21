@@ -1,6 +1,7 @@
 ﻿using ERP.Common.GenericRepository;
 using ERP.Common.Models;
 using ERP.Data.ModelsERP;
+using ERP.Data.ModelsERP.ModelView;
 using ERP.Data.ModelsERP.ModelView.Statistics;
 using System;
 using System.Collections.Generic;
@@ -16,5 +17,6 @@ namespace ERP.Repository.Repositories.IRepositories
         PagedResults<source> GetAllPageById(int pageNumber, int pageSize, int id);
         PagedResults<source> GetSources(string search_name);
         List<statisticrevenueviewmodel> GetRevenueSource(int staff_id);
+        List<dropdown> GetAllDropdown();
     }
 }

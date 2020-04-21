@@ -35,6 +35,7 @@ namespace ERP.API.Controllers.Dashboard
         private readonly ICustomerGroupService _customergroupservice;
         private readonly ISourceService _sourceservice;
         private readonly IShipAddressService _shipaddressservice;
+        private readonly ICustomerPhoneService _customerphoneservice;
 
         private readonly IMapper _mapper;
 
@@ -42,14 +43,37 @@ namespace ERP.API.Controllers.Dashboard
         {
 
         }
-        public ManagerCustomerController(ICustomerService customerservice, IShipAddressService shipaddressservice, IMapper mapper)
+        public ManagerCustomerController(ICustomerPhoneService customerphoneservice,ICustomerService customerservice, IShipAddressService shipaddressservice, IMapper mapper)
         {
             this._customerservice = customerservice;
             this._shipaddressservice = shipaddressservice;
+            this._customerphoneservice = customerphoneservice;
             this._mapper = mapper;
         }
 
         #region methods
+        [HttpGet]
+        [Route("api/customer/getall")]
+        public IHttpActionResult GetAllDropdown()
+        {
+            ResponseDataDTO<List<dropdown>> response = new ResponseDataDTO<List<dropdown>>();
+            try
+            {
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = _customerservice.GetAllDropdown();
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+
+                Console.WriteLine(ex.ToString());
+            }
+
+            return Ok(response);
+        }
         [HttpGet]
         [Route("api/customer/all")]
         public IHttpActionResult Getcustomers()
@@ -123,7 +147,7 @@ namespace ERP.API.Controllers.Dashboard
 
         #region [Get Infor by Id]
         [HttpGet]
-        [Route("api/customers/infor")]
+        [Route("api/customer/get_by_id")]
         public IHttpActionResult GetIforId(int cu_id)
         {
             ResponseDataDTO<customerviewmodel> response = new ResponseDataDTO<customerviewmodel>();
@@ -193,8 +217,8 @@ namespace ERP.API.Controllers.Dashboard
 
         #region [Search source, type, group, name Page]
         [HttpGet]
-        [Route("api/customers/search")]
-        public IHttpActionResult GetInforByName(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, DateTime? start_date, DateTime? end_date, string name)
+        [Route("api/customer/search")]
+        public IHttpActionResult GetSearch(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, DateTime? start_date, DateTime? end_date, string name)
         {
             ResponseDataDTO<PagedResults<customerviewmodel>> response = new ResponseDataDTO<PagedResults<customerviewmodel>>();
             try
@@ -290,178 +314,165 @@ namespace ERP.API.Controllers.Dashboard
 
         #region[Create Customer]
         [HttpPost]
-        [Route("api/customers/create")]
-        public async Task<IHttpActionResult> Createcustomer()
+        [Route("api/customer/create")]
+        public async Task<IHttpActionResult> CreateCustomer([FromBody] CustomerCreateViewModelJson create_customer)
         {
             ResponseDataDTO<customer> response = new ResponseDataDTO<customer>();
             try
             {
-                var path = Path.GetTempPath();
+                var customer = create_customer;
 
-                if (!Request.Content.IsMimeMultipartContent("form-data"))
-                {
-                    throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.UnsupportedMediaType));
-                }
+                #region["Check null"]
 
-                MultipartFormDataStreamProvider streamProvider = new MultipartFormDataStreamProvider(path);
-
-                await Request.Content.ReadAsMultipartAsync(streamProvider);
-                //Cach truong bat buoc 
-                if (streamProvider.FormData["cu_fullname"] == null)
+                if (customer.cu_fullname == null || customer.cu_fullname.Trim() == "")
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
                     response.Message = "Họ và tên không được để trống";
-                    response.Data = null;
+                    response.Error = "cu_fullname";
                     return Ok(response);
                 }
-                if (streamProvider.FormData["cu_mobile"] == null)
-                {
-                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                    response.Message = "Số điện thoại không được để trống";
-                    response.Data = null;
-                    return Ok(response);
-                }
-                if (streamProvider.FormData["cu_email"] == null)
-                {
-                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                    response.Message = "Email không được để trống";
-                    response.Data = null;
-                    return Ok(response);
-                }
-                if (streamProvider.FormData["cu_type"] == null)
+                if (customer.cu_type == 0)
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
                     response.Message = "Loại khách hàng không được để trống";
-                    response.Data = null;
+                    response.Error = "cu_type";
                     return Ok(response);
                 }
-                if (streamProvider.FormData["customer_group_id"] == null)
+
+                if (customer.customer_group_id == 0)
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
                     response.Message = "Nhóm khách hàng không được để trống";
-                    response.Data = null;
+                    response.Error = "customer_group_id";
                     return Ok(response);
                 }
-                if (streamProvider.FormData["source_id"] == null)
+
+                if (customer.cu_flag_order == 0)
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                    response.Message = "Nguồn không được để trống";
-                    response.Data = null;
+                    response.Message = "Đặt dịch vụ không được để trống";
+                    response.Error = "cu_flag_order";
                     return Ok(response);
                 }
-                // get data from formdata
-                CustomerCreateViewModel customerCreateViewModel = new CustomerCreateViewModel
-                {
-                    cu_mobile = Convert.ToString(streamProvider.FormData["cu_mobile"]),
-                    cu_email = Convert.ToString(streamProvider.FormData["cu_email"]),
-                    cu_fullname = Convert.ToString(streamProvider.FormData["cu_fullname"]),
-                    
-                    customer_group_id = Convert.ToInt32(streamProvider.FormData["customer_group_id"]),
-                    source_id = Convert.ToInt32(streamProvider.FormData["source_id"]),
-                    
-                    cu_type = Convert.ToByte(streamProvider.FormData["cu_type"]),
-                    
-                };
-                //Bat cac dieu kien rang buoc
-                if (CheckEmail.IsValidEmail(customerCreateViewModel.cu_email) == false && customerCreateViewModel.cu_email == "")
+                if (customer.source_id == 0)
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                    response.Message = "Định dạng email không hợp lệ !";
-                    response.Data = null;
+                    response.Message = "Nguồn khách hàng không được để trống";
+                    response.Error = "source_id";
                     return Ok(response);
                 }
-               
-                if (CheckNumber.IsPhoneNumber(customerCreateViewModel.cu_mobile) == false && customerCreateViewModel.cu_mobile == "")
+                if (customer.cu_birthday == null)
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                    response.Message = "Số điện thoại không hợp lệ";
-                    response.Data = null;
+                    response.Message = "Ngày sinh không được để trống";
+                    response.Error = "source_id";
+                    return Ok(response);
+                }
+                if (customer.cu_flag_used == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Sử dụng dịch vụ  không được để trống";
+                    response.Error = "source_id";
                     return Ok(response);
                 }
                 
+                if (!Utilis.IsValidEmail(customer.cu_email) && customer.cu_email.Trim() != "")
+                {
+                    response.Code = HttpCode.NOT_FOUND;
+                    response.Message = "Email sai định dạng";
+                    response.Error = "cu_email";
+                    return Ok(response);
+                }
+                if (customer.sha_detail_now == null || customer.sha_detail_now.Trim() == "")
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Địa chỉ chi tiết không được để trống";
+                    response.Error = "sha_detail_now";
+                    return Ok(response);
+                }
 
-                //bat cac truog con lai 
-                if (streamProvider.FormData["cu_birthday"] == null)
+                #endregion
+                //Kiểm tra các trường rằng buộc
+                foreach (customer_phonejson cp in customer.list_customer_phone)
                 {
-                    customerCreateViewModel.cu_birthday = null;
+                    var temp = _customerphoneservice.GetAllIncluing(t => t.cp_phone_number.Equals(cp.cp_phone_number));
+                    if(temp.Count() != 0 )
+                    {
+                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                        response.Message = "Số điện thoại bị trùng hoặc đã tồn tại ";
+                        response.Error = "list_customer_phone";
+                        return Ok(response);
+                    }
                 }
-                else
-                {
-                    customerCreateViewModel.cu_birthday = Convert.ToDateTime(streamProvider.FormData["cu_birthday"]);
-                }
-                if (streamProvider.FormData["cu_address"] == null)
-                {
-                    customerCreateViewModel.cu_address = null;
-                }
-                else
-                {
-                    customerCreateViewModel.cu_address = Convert.ToString(streamProvider.FormData["cu_address"]);
-                }
-                if (streamProvider.FormData["cu_note"] == null)
-                {
-                    customerCreateViewModel.cu_note = null;
-                }
-                else
-                {
-                    customerCreateViewModel.cu_note = Convert.ToString(streamProvider.FormData["cu_note"]);
-                }
-                if (streamProvider.FormData["cu_geocoding"] == null)
-                {
-                    customerCreateViewModel.cu_geocoding = null;
-                }
-                else
-                {
-                    customerCreateViewModel.cu_geocoding = Convert.ToString(streamProvider.FormData["cu_geocoding"]);
-                }
-                if (streamProvider.FormData["cu_curator_id"] == null)
-                {
-                    customerCreateViewModel.cu_curator_id = null;
-                }
-                else
-                {
-                    customerCreateViewModel.cu_curator_id = Convert.ToInt32(streamProvider.FormData["cu_curator_id"]);
-                }
-                if (streamProvider.FormData["cu_age"] == null)
-                {
-                    customerCreateViewModel.cu_age = null;
-                }
-                else
-                {
-                    customerCreateViewModel.cu_age = Convert.ToInt32(streamProvider.FormData["cu_age"]);
-                }
-                if (streamProvider.FormData["cu_status"] == null)
-                {
-                    customerCreateViewModel.cu_status = null;
-                }
-                else
-                {
-                    customerCreateViewModel.cu_status = Convert.ToByte(streamProvider.FormData["cu_status"]);
-                }
-                var current_id = BaseController.get_id_current();
-                customerCreateViewModel.staff_id = Convert.ToInt32(current_id);
-                customerCreateViewModel.cu_create_date = DateTime.Now;
-                var cu = _customerservice.GetLast();
-                if(cu == null) customerCreateViewModel.cu_code = Utilis.CreateCode("CU", 0, 7);
-                else customerCreateViewModel.cu_code = Utilis.CreateCode("CU", cu.cu_id, 7);
-                // mapping view model to entity
-                var createdcustomer = _mapper.Map<customer>(customerCreateViewModel);
-                // save file
-                string fileName = "";
-                foreach (MultipartFileData fileData in streamProvider.FileData)
-                {
-                    fileName = (FileExtension.SaveFileCustomerOnDisk(fileData, createdcustomer.cu_code));
-                }
-                if (fileName == null)
-                {
-                    createdcustomer.cu_thumbnail = "/Uploads/Images/default/customer.png";
-                }
-                else createdcustomer.cu_thumbnail = fileName;
+                //end kiểm tra
+                //Save customer to database
+                customer customer_create = new customer();
+                //Thong tin chung 
+
+                if(customer.cu_fullname != null) customer_create.cu_fullname = customer.cu_fullname.Trim();
+                customer_create.customer_group_id = customer.customer_group_id;
+                customer_create.cu_birthday = customer.cu_birthday;
+                if(customer.cu_email != null) customer_create.cu_email = customer.cu_email.Trim();
+                customer_create.cu_flag_order = customer.cu_flag_order;
+                customer_create.cu_flag_used = customer.cu_flag_used;
+                customer_create.cu_status = customer.cu_status;
+                customer_create.source_id = customer.source_id;
+                customer_create.cu_note = customer.cu_note;
+                customer_create.cu_type = customer.cu_type;
+                
+                //Thong tin lien he
+               
+                //Lấy ra bản ghi cuối cùng tạo mã code 
+                var x = _customerservice.GetLast();
+                if (x == null) customer_create.cu_code = "KH000000";
+                else customer_create.cu_code = Utilis.CreateCodeByCode("KH", x.cu_code, 8);
+                
+                customer_create.cu_create_date = DateTime.Now;
+                customer_create.staff_id = BaseController.get_id_current();
+                customer_create.cu_thumbnail = "/Uploads/Images/default/customer.png";
                 // save new customer
-                _customerservice.Create(createdcustomer);
+                _customerservice.Create(customer_create);
+                customer customer_last = _customerservice.GetLast();
+                //save address hiện tại 
+                ship_address address_now = new ship_address();
+                address_now.customer_id = customer_last.cu_id;
+                address_now.sha_ward = customer.sha_ward_now;
+                address_now.sha_province = customer.sha_province_now;
+                address_now.sha_district = customer.sha_district_now;
+                address_now.sha_geocoding = customer.sha_geocoding_now;
+                if(customer.sha_detail_now != null) address_now.sha_detail = customer.sha_detail_now.Trim();
+                address_now.sha_note = customer.sha_note_now;
+                address_now.sha_flag_center = 1;
+                _shipaddressservice.Create(address_now);
+                //Save list sdt
+                foreach (customer_phonejson cup in customer.list_customer_phone)
+                {
+                    customer_phone cup_create = new customer_phone();
+                    cup_create.customer_id = customer_last.cu_id;
+                    cup_create.cp_type = cup.cp_type;
+                    cup_create.cp_phone_number = cup.cp_phone_number;
+                    cup_create.cp_note = cup.cp_note;
+                    _customerphoneservice.Create(cup_create);
+                }
+                //Save shipaddress
+                foreach (customer_ship_addressjson add in customer.list_ship_address)
+                {
+                    ship_address add_create = new ship_address();
+                    add_create.customer_id = customer_last.cu_id;
+                    add_create.sha_ward = add.sha_ward;
+                    add_create.sha_province = add.sha_province;
+                    add_create.sha_district = add.sha_district;
+                    add_create.sha_geocoding = add.sha_geocoding;
+                    add_create.sha_detail = add.sha_detail;
+                    add_create.sha_note = add.sha_note;
+                    add_create.sha_flag_center = 0;
+                    _shipaddressservice.Create(add_create);
+                }
+
                 // return response
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = createdcustomer;
+                response.Data = customer_create;
                 return Ok(response);
             }
             catch (Exception ex)
@@ -469,7 +480,6 @@ namespace ERP.API.Controllers.Dashboard
                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
                 response.Message = ex.Message;
                 response.Data = null;
-                Console.WriteLine(ex.ToString());
 
                 return Ok(response);
             }
@@ -480,183 +490,203 @@ namespace ERP.API.Controllers.Dashboard
         #region[Update]
 
         [HttpPut]
-        [Route("api/customers/update/")]
+        [Route("api/customer/update")]
 
-        public async Task<IHttpActionResult> Updatecustomer()
+        public async Task<IHttpActionResult> UpdateCustomer([FromBody] CustomerUpdateViewModelJson update_customer)
         {
             ResponseDataDTO<customer> response = new ResponseDataDTO<customer>();
             try
             {
-                var path = Path.GetTempPath();
+                var customer = update_customer;
 
-                if (!Request.Content.IsMimeMultipartContent("form-data"))
-                {
-                    throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.UnsupportedMediaType));
-                }
+                #region["Check null"]
 
-                MultipartFormDataStreamProvider streamProvider = new MultipartFormDataStreamProvider(path);
-
-                await Request.Content.ReadAsMultipartAsync(streamProvider);
-                //Cach truong bat buoc 
-                if (streamProvider.FormData["cu_fullname"] == null)
+                if (customer.cu_fullname == null || customer.cu_fullname.Trim() == "")
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
                     response.Message = "Họ và tên không được để trống";
-                    response.Data = null;
+                    response.Error = "cu_fullname";
                     return Ok(response);
                 }
-                if (streamProvider.FormData["cu_mobile"] == null)
-                {
-                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                    response.Message = "Số điện thoại không được để trống";
-                    response.Data = null;
-                    return Ok(response);
-                }
-                if (streamProvider.FormData["cu_email"] == null)
-                {
-                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                    response.Message = "Email không được để trống";
-                    response.Data = null;
-                    return Ok(response);
-                }
-                if (streamProvider.FormData["cu_type"] == null)
+                if (customer.cu_type == 0)
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
                     response.Message = "Loại khách hàng không được để trống";
-                    response.Data = null;
+                    response.Error = "cu_type";
                     return Ok(response);
                 }
-                if (streamProvider.FormData["customer_group_id"] == null)
+
+                if (customer.customer_group_id == 0)
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
                     response.Message = "Nhóm khách hàng không được để trống";
-                    response.Data = null;
+                    response.Error = "customer_group_id";
                     return Ok(response);
                 }
-                if (streamProvider.FormData["source_id"] == null)
+
+                if (customer.cu_flag_order == 0)
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                    response.Message = "Nguồn không được để trống";
-                    response.Data = null;
+                    response.Message = "Đặt dịch vụ không được để trống";
+                    response.Error = "cu_flag_order";
                     return Ok(response);
                 }
-                // get data from formdata
-                CustomerUpdateViewModel customerUpdateViewModel = new CustomerUpdateViewModel
+                if (customer.source_id == 0)
                 {
-                    cu_id = Convert.ToInt32(streamProvider.FormData["cu_id"]),
-                    cu_mobile = Convert.ToString(streamProvider.FormData["cu_mobile"]),
-                    cu_email = Convert.ToString(streamProvider.FormData["cu_email"]),
-                    cu_fullname = Convert.ToString(streamProvider.FormData["cu_fullname"]),
-
-                    customer_group_id = Convert.ToInt32(streamProvider.FormData["customer_group_id"]),
-                    source_id = Convert.ToInt32(streamProvider.FormData["source_id"]),
-
-                    cu_type = Convert.ToByte(streamProvider.FormData["cu_type"]),
-                };
-
-
-                var existcustomer = _customerservice.Find(customerUpdateViewModel.cu_id);
-                customerUpdateViewModel.cu_code = existcustomer.cu_code;
-                customerUpdateViewModel.cu_create_date = existcustomer.cu_create_date;
-                if(streamProvider.FormData["cu_thumbnail"] != null)
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Nguồn khách hàng không được để trống";
+                    response.Error = "source_id";
+                    return Ok(response);
+                }
+                if (customer.cu_birthday == null)
                 {
-                    customerUpdateViewModel.cu_thumbnail = existcustomer.cu_thumbnail;
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Ngày sinh không được để trống";
+                    response.Error = "source_id";
+                    return Ok(response);
+                }
+                if (customer.cu_flag_used == null)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Sử dụng dịch vụ  không được để trống";
+                    response.Error = "source_id";
+                    return Ok(response);
+                }
+                if (customer.sha_detail_now == null || customer.sha_detail_now.Trim() == "")
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Địa chỉ chi tiết không được để trống";
+                    response.Error = "sha_detail_now";
+                    return Ok(response);
                 }
                 
-                //md5
+                if (!Utilis.IsValidEmail(customer.cu_email) && customer.cu_email.Trim() != "")
+                {
+                    response.Code = HttpCode.NOT_FOUND;
+                    response.Message = "Email sai định dạng";
+                    response.Error = "cu_email";
+                    return Ok(response);
+                }
 
-                if (CheckEmail.IsValidEmail(customerUpdateViewModel.cu_email) == false && customerUpdateViewModel.cu_email == "")
+
+                #endregion
+                //Kiểm tra các trường rằng buộc
+                //end kiểm tra
+                //Save customer to database
+                customer exists_customer = _customerservice.Find(customer.cu_id);
+                //Thong tin chung 
+                if(customer.cu_fullname != null) exists_customer.cu_fullname = customer.cu_fullname.Trim();
+                exists_customer.customer_group_id = customer.customer_group_id;
+                exists_customer.cu_birthday = customer.cu_birthday;
+                if(customer.cu_email != null) exists_customer.cu_email = customer.cu_email.Trim();
+                exists_customer.cu_flag_order = customer.cu_flag_order;
+                exists_customer.cu_flag_used = customer.cu_flag_used;
+                exists_customer.cu_status = customer.cu_status;
+                exists_customer.source_id = customer.source_id;
+                exists_customer.cu_note = customer.cu_note;
+                exists_customer.cu_type = customer.cu_type;
+
+                // save new customer
+                _customerservice.Update(exists_customer,exists_customer.cu_id);
+                //save address hiện tại 
+                ship_address exists_address = _shipaddressservice.GetAllIncluing(x => x.customer_id == customer.cu_id && x.sha_flag_center == 1).FirstOrDefault();
+              
+                exists_address.sha_ward = customer.sha_ward_now;
+                exists_address.sha_province = customer.sha_province_now;
+                exists_address.sha_district = customer.sha_district_now;
+                exists_address.sha_geocoding = customer.sha_geocoding_now;
+                if(customer.sha_detail_now != null) exists_address.sha_detail = customer.sha_detail_now.Trim();
+                exists_address.sha_note = customer.sha_note_now;
+                _shipaddressservice.Update(exists_address, exists_address.sha_id);
+                //Update list sdt
+                List<customer_phone> lts_cp_db = _customerphoneservice.GetAllIncluing(x => x.customer_id == customer.cu_id ).ToList();
+                List<customer_phonejson> lts_cp_v = new List<customer_phonejson>(customer.list_customer_phone);
+                foreach (customer_phonejson cp_f in lts_cp_v)
                 {
-                    response.Message = "Định dạng email không hợp lệ !";
-                    response.Data = null;
-                    return Ok(response);
-                }
-                //check_phone_number
-                if (CheckNumber.IsPhoneNumber(customerUpdateViewModel.cu_mobile) == false && customerUpdateViewModel.cu_mobile == "")
-                {
-                    response.Message = "Số điện thoại không hợp lệ";
-                    response.Data = null;
-                    return Ok(response);
-                }
-                //bat cac truog con lai 
-                if (streamProvider.FormData["cu_birthday"] == null)
-                {
-                    if(existcustomer.cu_birthday != null)
+                    if (Utilis.IsNumber(cp_f.cp_id))
                     {
-                        customerUpdateViewModel.cu_birthday = existcustomer.cu_birthday;
+                        int _id = Convert.ToInt32(cp_f.cp_id);
+                        foreach (customer_phone cp in lts_cp_db)
+                        {
+                            if (cp.cp_id == _id)
+                            {
+                                //update
+                                customer_phone exist_cp = _customerphoneservice.Find(_id);
+                                exist_cp.cp_type = cp_f.cp_type;
+                                exist_cp.cp_phone_number = cp_f.cp_phone_number;
+                                exist_cp.cp_note = cp_f.cp_note;
+                                _customerphoneservice.Update(exist_cp, exist_cp.cp_id);
+                                lts_cp_db.Remove(_customerphoneservice.Find(cp.cp_id));
+                                break;
+                            }
+                        }
                     }
                     else
                     {
-                        customerUpdateViewModel.cu_birthday = null;
+                        //Create
+                        customer_phone cup_create = new customer_phone();
+                        cup_create.customer_id = customer.cu_id;
+                        cup_create.cp_type = cp_f.cp_type;
+                        cup_create.cp_phone_number = cp_f.cp_phone_number;
+                        cup_create.cp_note = cp_f.cp_note;
+                        _customerphoneservice.Create(cup_create);
                     }
-                    
                 }
-                else
+                foreach (customer_phone cp_d in lts_cp_db)
                 {
-                    customerUpdateViewModel.cu_birthday = Convert.ToDateTime(streamProvider.FormData["cu_birthday"]);
-                }
-                if (streamProvider.FormData["cu_address"] == null)
-                {
-                    customerUpdateViewModel.cu_address = null;
-                }
-                else
-                {
-                    customerUpdateViewModel.cu_address = Convert.ToString(streamProvider.FormData["cu_address"]);
-                }
-                if (streamProvider.FormData["cu_note"] == null)
-                {
-                    customerUpdateViewModel.cu_note = null;
-                }
-                else
-                {
-                    customerUpdateViewModel.cu_note = Convert.ToString(streamProvider.FormData["cu_note"]);
-                }
-                if (streamProvider.FormData["cu_geocoding"] == null)
-                {
-                    customerUpdateViewModel.cu_geocoding = null;
-                }
-                else
-                {
-                    customerUpdateViewModel.cu_geocoding = Convert.ToString(streamProvider.FormData["cu_geocoding"]);
-                }
-                if (streamProvider.FormData["cu_curator_id"] == null)
-                {
-                    customerUpdateViewModel.cu_curator_id = null;
-                }
-                else
-                {
-                    customerUpdateViewModel.cu_curator_id = Convert.ToInt32(streamProvider.FormData["cu_curator_id"]);
-                }
-                if (streamProvider.FormData["cu_age"] == null)
-                {
-                    customerUpdateViewModel.cu_age = null;
-                }
-                else
-                {
-                    customerUpdateViewModel.cu_age = Convert.ToInt32(streamProvider.FormData["cu_age"]);
+                    _customerphoneservice.Delete(cp_d);
                 }
 
-
-                if (streamProvider.FormData["cu_status"] == null)
+                //update shipaddress
+                List<ship_address> lts_sha_db = _shipaddressservice.GetAllIncluing(x => x.customer_id == customer.cu_id && x.sha_flag_center == 0).ToList();
+                List<customer_ship_addressjson> lts_sha_v = new List<customer_ship_addressjson>(customer.list_ship_address);
+                foreach (customer_ship_addressjson sha_f in lts_sha_v)
                 {
-                    customerUpdateViewModel.cu_status = null;
+                    if (Utilis.IsNumber(sha_f.sha_id))
+                    {
+                        int _id = Convert.ToInt32(sha_f.sha_id);
+                        foreach (ship_address sha in lts_sha_db)
+                        {
+                            if (sha.sha_id == _id)
+                            {
+                                //update
+                                ship_address exist_address = _shipaddressservice.Find(_id);
+                                exist_address.sha_ward = sha_f.sha_ward;
+                                exist_address.sha_province = sha_f.sha_province;
+                                exist_address.sha_district = sha_f.sha_district;
+                                exist_address.sha_geocoding = sha_f.sha_geocoding;
+                                exist_address.sha_detail = sha_f.sha_detail;
+                                exist_address.sha_note = sha_f.sha_note;
+                                _shipaddressservice.Update(exist_address, exist_address.sha_id);
+                                lts_sha_db.Remove(_shipaddressservice.Find(sha.sha_id));
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //Create
+                        ship_address create_address = new ship_address();
+                        create_address.sha_ward = sha_f.sha_ward;
+                        create_address.sha_province = sha_f.sha_province;
+                        create_address.sha_district = sha_f.sha_district;
+                        create_address.sha_geocoding = sha_f.sha_geocoding;
+                        create_address.sha_detail = sha_f.sha_detail;
+                        create_address.sha_note = sha_f.sha_note;
+                        create_address.customer_id = customer.cu_id;
+                        create_address.sha_flag_center = 0;
+                        _shipaddressservice.Create(create_address);
+                    }
                 }
-                else
+                foreach (ship_address sha_d in lts_sha_db)
                 {
-                    customerUpdateViewModel.cu_status = Convert.ToByte(streamProvider.FormData["cu_status"]);
+                    _shipaddressservice.Delete(sha_d);
                 }
-
-                // mapping view model to entity
-                var updatedcustomer = _mapper.Map<customer>(customerUpdateViewModel);
-
-
-                // update customer
-                _customerservice.Update(updatedcustomer, customerUpdateViewModel.cu_id);
 
                 // return response
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = updatedcustomer;
+                response.Data = exists_customer;
                 return Ok(response);
             }
             catch (Exception ex)
@@ -664,7 +694,6 @@ namespace ERP.API.Controllers.Dashboard
                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
                 response.Message = ex.Message;
                 response.Data = null;
-                Console.WriteLine(ex.ToString());
 
                 return Ok(response);
             }
@@ -673,7 +702,7 @@ namespace ERP.API.Controllers.Dashboard
 
         #region[Delete]
         [HttpDelete]
-        [Route("api/customers/delete")]
+        [Route("api/customer/delete")]
         public IHttpActionResult Deletecustomer(int customerId)
         {
             ResponseDataDTO<customer> response = new ResponseDataDTO<customer>();
@@ -952,13 +981,13 @@ namespace ERP.API.Controllers.Dashboard
 
         #region["Export Excel"]
         [HttpGet]
-        [Route("api/customers/export")]
+        [Route("api/customer/export")]
         public async Task<IHttpActionResult> Export(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, DateTime? start_date, DateTime? end_date, string name)
         {
             ResponseDataDTO<string> response = new ResponseDataDTO<string>();
             try
             {
-                var listStaff = new List<customerview>();
+                var listStaff = new List<customerviewexport>();
 
                 //Đưa ra danh sách staff trong trang nào đó 
                 var objRT_Mst_Staff = _customerservice.ExportCustomer(pageNumber, pageSize, source_id, cu_type, customer_group_id,start_date,end_date, name);

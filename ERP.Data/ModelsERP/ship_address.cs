@@ -33,6 +33,5 @@ namespace ERP.Data.ModelsERP
 
         public byte? sha_flag_center { get; set; }
 
-        public virtual customer customer { get; set; }
     }
 }

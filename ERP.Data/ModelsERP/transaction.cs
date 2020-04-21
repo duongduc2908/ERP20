@@ -33,9 +33,5 @@ namespace ERP.Data.ModelsERP
         public int? customer_id { get; set; }
 
         public byte? tra_status { get; set; }
-
-        public virtual customer customer { get; set; }
-
-        public virtual staff staff { get; set; }
     }
 }

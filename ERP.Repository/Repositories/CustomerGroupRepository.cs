@@ -140,6 +140,19 @@ namespace ERP.Repository.Repositories
             
             return res;
         }
+        public List<dropdown> GetAllDropdown()
+        {
+            List<dropdown> res = new List<dropdown>();
+            List<customer_group> lts_s = _dbContext.customer_group.ToList();
+            foreach (customer_group cg in lts_s)
+            {
+                dropdown dr = new dropdown();
+                dr.id = cg.cg_id;
+                dr.name = cg.cg_name;
+                res.Add(dr);
+            }
+            return res;
+        }
 
     }
 }

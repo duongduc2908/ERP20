@@ -71,5 +71,6 @@ namespace ERP.Data.DbContext
         public virtual DbSet<training> trainings { get; set; }
         public virtual DbSet<training_staff> training_staffs { get; set; }
         public virtual DbSet<staff_work_time> staff_work_times { get; set; }
+        public virtual DbSet<customer_phone> customer_phones { get; set; }
     }
 }

@@ -15,6 +15,8 @@ namespace ERP.Service.Services.IServices
     {
         PagedResults<service> CreatePagedResults(int pageNumber, int pageSize);
         PagedResults<serviceviewmodel> GetAllPageSearch(int pageNumber, int pageSize,string search_name);
+        serviceviewmodel GetById(int se_id);
+        List<dropdown> GetAllDropdown();
         PagedResults<serviceinforviewmodel> GetAllPageInforService(int pageNumber, int pageSize,string search_name);
         List<dropdown> GetType();
         

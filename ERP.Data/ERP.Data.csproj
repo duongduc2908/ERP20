@@ -134,6 +134,8 @@
     <Compile Include="ModelsERP\District.cs" />
     <Compile Include="ModelsERP\executor.cs" />
     <Compile Include="ModelsERP\ModelView\CustomerGroup\piechartview.cs" />
+    <Compile Include="ModelsERP\ModelView\CustomerOrder\servicejson.cs" />
+    <Compile Include="ModelsERP\ModelView\CustomerOrder\work_time_view.cs" />
     <Compile Include="ModelsERP\ModelView\Customer\customeraddressviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Customer\customerorderhistoryviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Customer\customerordermodelview.cs" />
@@ -150,8 +152,13 @@
     <Compile Include="ModelsERP\ModelView\Customer\customerorderviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Customer\customerviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Customer\customertransactionviewmodel.cs" />
+    <Compile Include="ModelsERP\ModelView\Customer\customer_phonejson.cs" />
+    <Compile Include="ModelsERP\ModelView\Customer\customer_phoneviewmodel.cs" />
+    <Compile Include="ModelsERP\ModelView\Customer\customer_ship_addressjson.cs" />
+    <Compile Include="ModelsERP\ModelView\Excutor\executorjson.cs" />
+    <Compile Include="ModelsERP\ModelView\Excutor\executorviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\ExportDB\customerorderview.cs" />
-    <Compile Include="ModelsERP\ModelView\ExportDB\customerview.cs" />
+    <Compile Include="ModelsERP\ModelView\ExportDB\customerviewexport.cs" />
     <Compile Include="ModelsERP\ModelView\ExportDB\productview.cs" />
     <Compile Include="ModelsERP\ModelView\ExportDB\staffview.cs" />
     <Compile Include="ModelsERP\ModelView\ExportDB\transactionview.cs" />
@@ -173,7 +180,11 @@
     <Compile Include="ModelsERP\ModelView\Sms\smsstrategyviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Sms\smstemplatemodelview.cs" />
     <Compile Include="ModelsERP\ModelView\Sms\smstemplatestrategyviewmodel.cs" />
+    <Compile Include="ModelsERP\ModelView\Staff\stafftrainingjson.cs" />
+    <Compile Include="ModelsERP\ModelView\Staff\staffundertaken_locationjson.cs" />
     <Compile Include="ModelsERP\ModelView\Staff\staffviewmodel.cs" />
+    <Compile Include="ModelsERP\ModelView\Staff\staff_time.cs" />
+    <Compile Include="ModelsERP\ModelView\Staff\staff_time_detail.cs" />
     <Compile Include="ModelsERP\ModelView\StatisticStaff\statisticviemodel.cs" />
     <Compile Include="ModelsERP\ModelView\StatisticStaff\statisticstaffviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Statistics\statisticrevenueviewmodel.cs" />
@@ -230,6 +241,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="ModelsERP\ModelView\Training\" />
     <Folder Include="SQL\" />
   </ItemGroup>
   <PropertyGroup>

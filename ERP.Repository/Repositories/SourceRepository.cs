@@ -3,6 +3,7 @@ using ERP.Common.GenericRepository;
 using ERP.Common.Models;
 using ERP.Data.DbContext;
 using ERP.Data.ModelsERP;
+using ERP.Data.ModelsERP.ModelView;
 using ERP.Data.ModelsERP.ModelView.Statistics;
 using ERP.Repository.Repositories.IRepositories;
 using System;
@@ -130,6 +131,19 @@ namespace ERP.Repository.Repositories
                 }
             }
 
+            return res;
+        }
+        public List<dropdown> GetAllDropdown()
+        {
+            List<dropdown> res = new List<dropdown>();
+            List<source> lts_s = _dbContext.sources.ToList();
+            foreach(source so in lts_s)
+            {
+                dropdown dr = new dropdown();
+                dr.id = so.src_id;
+                dr.name = so.src_name;
+                res.Add(dr);
+            }
             return res;
         }
     }

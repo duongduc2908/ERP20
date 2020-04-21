@@ -48,10 +48,8 @@ namespace ERP.Data.ModelsERP
 
         [StringLength(100)]
         public string cuo_infor_time { get; set; }
-
-        public virtual customer customer { get; set; }
-
-        public virtual staff staff { get; set; }
+        [StringLength(150)]
+        public string cuo_color_show { get; set; }
 
     }
 }

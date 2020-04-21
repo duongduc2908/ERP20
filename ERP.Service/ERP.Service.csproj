@@ -75,6 +75,7 @@
     <Compile Include="Services\CompanyService.cs" />
     <Compile Include="Services\CustomerGroupService.cs" />
     <Compile Include="Services\CustomerOrderService.cs" />
+    <Compile Include="Services\CustomerPhoneService.cs" />
     <Compile Include="Services\CustomerService.cs" />
     <Compile Include="Services\DepartmentService.cs" />
     <Compile Include="Services\EmailService.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="Services\IServices\ICompanyService.cs" />
     <Compile Include="Services\IServices\ICustomerGroupService.cs" />
     <Compile Include="Services\IServices\ICustomerOrderService.cs" />
+    <Compile Include="Services\IServices\ICustomerPhoneService.cs" />
     <Compile Include="Services\IServices\ICustomerService.cs" />
     <Compile Include="Services\IServices\IDepartmentService.cs" />
     <Compile Include="Services\IServices\IEmailService.cs" />
@@ -123,6 +125,7 @@
     <Compile Include="Services\IServices\ISupplierService.cs" />
     <Compile Include="Services\IServices\ISupplierTypeService.cs" />
     <Compile Include="Services\IServices\ITaskService.cs" />
+    <Compile Include="Services\IServices\ITrainingService.cs" />
     <Compile Include="Services\IServices\ITrainingStaffService.cs" />
     <Compile Include="Services\IServices\ITransactionService.cs" />
     <Compile Include="Services\IServices\IUndertakenLocationService.cs" />
@@ -148,6 +151,7 @@
     <Compile Include="Services\StaffWorkTimeService.cs" />
     <Compile Include="Services\SupplierService.cs" />
     <Compile Include="Services\SupplierTypeService.cs" />
+    <Compile Include="Services\TrainingService.cs" />
     <Compile Include="Services\TrainingStaffService.cs" />
     <Compile Include="Services\TransactionService.cs" />
     <Compile Include="Services\UndertakenLocationService.cs" />

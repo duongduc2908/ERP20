@@ -1,4 +1,5 @@
 ﻿using ERP.Data.ModelsERP;
+using ERP.Data.ModelsERP.ModelView.Staff;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -15,20 +16,8 @@ namespace ERP.API.Models
         public TimeSpan? sw_time_start { get; set; }
 
         public TimeSpan? sw_time_end { get; set; }
-
-        public bool? st_sun_flag { get; set; }
-
-        public bool? st_mon_flag { get; set; }
-
-        public bool? st_tue_flag { get; set; }
-
-        public bool? st_wed_flag { get; set; }
-
-        public bool? st_thu_flag { get; set; }
-
-        public bool? st_fri_flag { get; set; }
-
-        public bool? st_sat_flag { get; set; }
+        [StringLength(3)]
+        public string sw_day_flag { get; set; }
 
         //Thông tin chung 
 
@@ -95,9 +84,7 @@ namespace ERP.API.Models
         [StringLength(50)]
         public string sta_traffic { get; set; }
 
-        public int? sta_salary_to { get; set; }
-
-        public int? sta_salary_end { get; set; }
+        public int? sta_salary { get; set; }
 
         [StringLength(100)]
         public string sta_tax_code { get; set; }
@@ -140,8 +127,8 @@ namespace ERP.API.Models
         [StringLength(50)]
         public string unl_geocoding_now { get; set; }
         //Danh sách đào tạo 
-        public int[] list_training { get; set; }
+        public List<stafftrainingjson> list_training { get; set; }
         //Danh sách địa chỉ làm việc 
-        public List<undertaken_location> list_undertaken_location { get; set; }
+        public List<staffundertaken_locationjson> list_undertaken_location { get; set; }
     }
 }

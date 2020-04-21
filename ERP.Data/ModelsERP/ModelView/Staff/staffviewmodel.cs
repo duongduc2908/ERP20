@@ -13,20 +13,8 @@ namespace ERP.Data.ModelsERP.ModelView
         public TimeSpan? sw_time_start { get; set; }
 
         public TimeSpan? sw_time_end { get; set; }
-
-        public bool? st_sun_flag { get; set; }
-
-        public bool? st_mon_flag { get; set; }
-
-        public bool? st_tue_flag { get; set; }
-
-        public bool? st_wed_flag { get; set; }
-
-        public bool? st_thu_flag { get; set; }
-
-        public bool? st_fri_flag { get; set; }
-
-        public bool? st_sat_flag { get; set; }
+        [StringLength(3)]
+        public string sw_day_flag { get; set; }
         public int sw_id { get; set; }
 
         //Thông tin chung 
@@ -151,6 +139,6 @@ namespace ERP.Data.ModelsERP.ModelView
         public string department_name { get; set; }
         public string group_role_name { get; set; }
         public string status_name { get; set; }
-        public string sta_type_contact_name { get; set; }
+        public string sta_working_status_name { get; set; }
     }
 }

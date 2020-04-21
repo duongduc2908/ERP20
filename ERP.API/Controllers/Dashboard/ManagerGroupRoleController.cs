@@ -57,7 +57,7 @@ namespace ERP.API.Controllers.Dashboard
             return Ok(response);
         }
         [HttpGet]
-        [Route("api/group-role/dropdown")]
+        [Route("api/group-role/getall")]
         public IHttpActionResult GetDropdown()
         {
             ResponseDataDTO<List<dropdown>> response = new ResponseDataDTO<List<dropdown>>();
@@ -160,8 +160,6 @@ namespace ERP.API.Controllers.Dashboard
             }
 
         }
-
-
 
 
         [HttpPut]

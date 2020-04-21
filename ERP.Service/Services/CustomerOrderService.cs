@@ -2,6 +2,7 @@
 using ERP.Common.Models;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
+using ERP.Data.ModelsERP.ModelView.CustomerOrder;
 using ERP.Data.ModelsERP.ModelView.ExportDB;
 using ERP.Data.ModelsERP.ModelView.OrderService;
 using ERP.Data.ModelsERP.ModelView.Service;
@@ -29,6 +30,10 @@ namespace ERP.Service.Services
         {
             return this._repository.GetAllOrderById(id);
         }
+        public servicercustomerorderviewmodel GetAllOrderServiceById(int id)
+        {
+            return this._repository.GetAllOrderServiceById(id);
+        }
         public List<order_service_view> GetServiceByDay(int id, DateTime start_date, DateTime to_date)
         {
             return this._repository.GetServiceByDay(id, start_date, to_date);
@@ -51,9 +56,9 @@ namespace ERP.Service.Services
         {
             return this._repository.GetAllPayment();
         }
-        public List<dropdown> Get_staff_free(List<DateTime> results, string fullName)
+        public List<dropdown> Get_staff_free(work_time_view c, string fullName)
         {
-            return this._repository.Get_staff_free(results, fullName);
+            return this._repository.Get_staff_free(c, fullName);
         }
         
         public PagedResults<customerorderviewmodel> ResultStatisticsCustomerOrder(int pageNumber, int pageSize, int staff_id, bool month, bool week, bool day)

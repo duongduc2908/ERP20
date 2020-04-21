@@ -1,10 +1,9 @@
-﻿using ERP.Data.ModelsERP.ModelView.Customer;
+﻿using ERP.Data.ModelsERP.ModelView.CustomerOrder;
+using ERP.Data.ModelsERP.ModelView.Excutor;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
 
 namespace ERP.API.Models
 {
@@ -13,13 +12,16 @@ namespace ERP.API.Models
         [Key]
         public int cuo_id { get; set; }
 
-        public int[] list_service_id { get; set; }
-        public int[] list_staff_id { get; set; }
+        //Thong in order 
+        public string cuo_color_show { get; set; }
+        public int cuo_discount { get; set; }
 
-        public customeraddressviewmodel customer { get; set; }
-        [Key]
-        public int st_id { get; set; }
-        public string cuo_address { get; set; }
+        //Thông tin khách hàng và thông tin địa chỉ 
+        public CustomerUpdateViewModelJson customer { get; set; }
+        //Thông tin dịch vụ
+        public List<servicejson> list_service { get; set; }
+        //Thông tin ngày làm việc
+        public List<executorjson> list_executor { get; set; }
         public TimeSpan st_start_time { get; set; }
 
         public TimeSpan st_end_time { get; set; }
@@ -57,7 +59,6 @@ namespace ERP.API.Models
         public bool st_on_day_flag { get; set; }
 
         public int st_on_day { get; set; }
-
         public int customer_order_id { get; set; }
 
         [Column(TypeName = "date")]
@@ -65,13 +66,5 @@ namespace ERP.API.Models
 
         [Column(TypeName = "date")]
         public DateTime st_custom_end { get; set; }
-
-
-        public byte cuo_evaluation { get; set; }
-
-        public string cuo_feedback { get; set; }
-        [StringLength(100)]
-        public string cuo_infor_time { get; set; }
-
     }
 }

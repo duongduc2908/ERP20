@@ -476,6 +476,7 @@
     <Compile Include="Repositories\CompanyRepository.cs" />
     <Compile Include="Repositories\CustomerGroupRepository.cs" />
     <Compile Include="Repositories\CustomerOrderRepository.cs" />
+    <Compile Include="Repositories\CustomerPhoneRepository.cs" />
     <Compile Include="Repositories\CustomerRepository.cs" />
     <Compile Include="Repositories\DepartmentRepository.cs" />
     <Compile Include="Repositories\EmailRepository.cs" />
@@ -491,6 +492,7 @@
     <Compile Include="Repositories\IRepositories\ICompanyRepository.cs" />
     <Compile Include="Repositories\IRepositories\ICustomerGroupRepository.cs" />
     <Compile Include="Repositories\IRepositories\ICustomerOrderRepository.cs" />
+    <Compile Include="Repositories\IRepositories\ICustomerPhoneRepository.cs" />
     <Compile Include="Repositories\IRepositories\ICustomerRepository.cs" />
     <Compile Include="Repositories\IRepositories\IDepartmentRepository.cs" />
     <Compile Include="Repositories\IRepositories\IEmailRepository.cs" />
@@ -525,6 +527,7 @@
     <Compile Include="Repositories\IRepositories\ISupplierRepository.cs" />
     <Compile Include="Repositories\IRepositories\ISupplierTypeRepository.cs" />
     <Compile Include="Repositories\IRepositories\ITaskRepository.cs" />
+    <Compile Include="Repositories\IRepositories\ITrainingRepository.cs" />
     <Compile Include="Repositories\IRepositories\ITrainingStaffRepository.cs" />
     <Compile Include="Repositories\IRepositories\ITransactionRepository.cs" />
     <Compile Include="Repositories\IRepositories\IUndertakenLocationRepository.cs" />
@@ -551,6 +554,7 @@
     <Compile Include="Repositories\SupplierRepository.cs" />
     <Compile Include="Repositories\SupplierTypeRepository.cs" />
     <Compile Include="Repositories\TaskRepository.cs" />
+    <Compile Include="Repositories\TrainingRepository.cs" />
     <Compile Include="Repositories\TrainingStaffRepository.cs" />
     <Compile Include="Repositories\TransactionRepository.cs" />
     <Compile Include="Repositories\UndertakenLocationRepository.cs" />

@@ -15,13 +15,8 @@ namespace ERP.Data.ModelsERP.ModelView.Service
         [StringLength(10)]
         public string se_code { get; set; }
 
-        //public byte? se_type { get; set; }
-        [StringLength(45)]
-        public string cu_fullname { get; set; }
-
-        [StringLength(10)]
-        public string cu_mobile { get; set; }
-
+        public byte? se_type { get; set; }
+        public string se_type_name { get; set; }
 
         [StringLength(100)]
         public string se_name { get; set; }
@@ -38,5 +33,8 @@ namespace ERP.Data.ModelsERP.ModelView.Service
 
         public int? service_category_id { get; set; }
         public string service_category_name { get; set; }
+
+        [StringLength(200)]
+        public string se_note { get; set; }
     }
 }

@@ -22,7 +22,5 @@ namespace ERP.Data.ModelsERP
         public int? os_reminder { get; set; }
 
         public int? os_discount { get; set; }
-        [StringLength(50)]
-        public string os_color_show { get; set; }
     }
 }

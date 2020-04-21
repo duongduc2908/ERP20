@@ -38,6 +38,10 @@ namespace ERP.Service.Services
         {
             return this._repository.GetRevenueCustomerGroup(staff_id);
         }
+        public List<dropdown> GetAllDropdown()
+        {
+            return this._repository.GetAllDropdown();
+        }
         
     }
 }

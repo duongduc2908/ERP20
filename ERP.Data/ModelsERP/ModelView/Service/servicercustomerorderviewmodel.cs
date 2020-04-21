@@ -1,4 +1,6 @@
 ﻿using ERP.Data.ModelsERP.ModelView.Customer;
+using ERP.Data.ModelsERP.ModelView.CustomerOrder;
+using ERP.Data.ModelsERP.ModelView.Excutor;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,18 +12,22 @@ namespace ERP.Data.ModelsERP.ModelView.Service
 {
     public class servicercustomerorderviewmodel
     {
+
+        //Thong tin man hinh chinh 
         public int cuo_id { get; set; }
         public string cuo_code { get; set; }
-        public int? cuo_address_id { get; set; }
         public string cuo_address { get; set; }
         public string cu_fullname { get; set; }
         public string cu_mobile { get; set; }
         public DateTime? cuo_date { get; set; }
+        //Thong tin ben trong 
+        
 
-        public List<serviceinforviewmodel> list_service { get; set; }
-        public List<servicestaffviewmodel> list_staff { get; set; }
-
-        public servicesearchcustomerviewmodel customer { get; set; }
+        //Thong in order 
+        public string cuo_color_show { get; set; }
+        public int? cuo_discount { get; set; }
+        //service_time
+        public int st_id { get; set; }
         public TimeSpan st_start_time { get; set; }
 
         public TimeSpan st_end_time { get; set; }
@@ -60,7 +66,6 @@ namespace ERP.Data.ModelsERP.ModelView.Service
         public bool st_on_day_flag { get; set; }
 
         public int st_on_day { get; set; }
-
         public int customer_order_id { get; set; }
 
         [Column(TypeName = "date")]
@@ -69,12 +74,13 @@ namespace ERP.Data.ModelsERP.ModelView.Service
         [Column(TypeName = "date")]
         public DateTime st_custom_end { get; set; }
 
+        //Thông tin khách hàng và thông tin địa chỉ 
+        public customerviewmodel customer { get; set; }
+        //Thông tin dịch vụ
+        public List<serviceviewmodel> list_service { get; set; }
+        //Thông tin ngày làm việc
+        public List<executorviewmodel> list_executor { get; set; }
 
-        public byte? cuo_evaluation { get; set; }
-
-        public string cuo_feedback { get; set; }
-        [StringLength(100)]
-        public string cuo_infor_time { get; set; }
 
     }
 }

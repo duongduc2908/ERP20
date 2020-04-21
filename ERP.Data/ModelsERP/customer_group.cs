@@ -23,7 +23,5 @@ namespace ERP.Data.ModelsERP
         public DateTime? cg_created_date { get; set; }
 
         public int? staff_id { get; set; }
-
-        public virtual staff staff { get; set; }
     }
 }

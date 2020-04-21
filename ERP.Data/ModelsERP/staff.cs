@@ -77,14 +77,13 @@ namespace ERP.Data.ModelsERP
         [StringLength(50)]
         public string sta_traffic { get; set; }
 
-        public int? sta_salary_to { get; set; }
-
-        public int? sta_salary_end { get; set; }
+        public int? sta_salary { get; set; }
 
         [StringLength(100)]
         public string sta_tax_code { get; set; }
 
         public byte? sta_type_contact { get; set; }
+
         [StringLength(250)]
         public string sta_identity_card_location { get; set; }
 

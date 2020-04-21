@@ -7,7 +7,7 @@ namespace ERP.Data.ModelsERP
     using System.Data.Entity.Spatial;
 
     [Table("training")]
-    public partial class training
+    public partial class training 
     {
 
         [Key]

@@ -1,6 +1,7 @@
 ﻿using ERP.Common.GenericService;
 using ERP.Common.Models;
 using ERP.Data.ModelsERP;
+using ERP.Data.ModelsERP.ModelView;
 using ERP.Data.ModelsERP.ModelView.Statistics;
 using ERP.Repository.Repositories.IRepositories;
 using ERP.Service.Services.IServices;
@@ -35,5 +36,10 @@ namespace ERP.Service.Services
         {
             return this._repository.GetRevenueSource(staff_id);
         }
+        public List<dropdown> GetAllDropdown()
+        {
+            return this._repository.GetAllDropdown();
+        }
+
     }
 }

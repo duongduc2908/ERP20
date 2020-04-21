@@ -35,6 +35,11 @@ namespace ERP.API.Providers
                 context.SetError("invalid_grant", "Provided staff_username and password is incorrect");
                 return;
             }
+            else if(staff_user.sta_status == 0)
+            {
+                context.SetError("Error", "Tài khoản đã bị khóa.");
+                return;
+            }
             if(staff_user.sta_thumbnai != null)
             {
                 url_thumbnai = staff_user.sta_thumbnai;
@@ -48,7 +53,10 @@ namespace ERP.API.Providers
             var identity = new ClaimsIdentity(context.Options.AuthenticationType);
             identity.AddClaim(new Claim(ClaimTypes.Role, role));
             identity.AddClaim(new Claim(ClaimTypes.Name, staff_user.sta_fullname));
-            identity.AddClaim(new Claim(ClaimTypes.Email, staff_user.sta_email));
+            if (staff_user.sta_email != null)
+            {
+                identity.AddClaim(new Claim(ClaimTypes.Email, staff_user.sta_email));
+            }
             identity.AddClaim(new Claim("Id", staff_user.sta_id.ToString()));
             var props = new AuthenticationProperties(new Dictionary<string, string>
                 {

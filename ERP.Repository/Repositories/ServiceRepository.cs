@@ -52,21 +52,35 @@ namespace ERP.Repository.Repositories
             List<service> lts_se = new List<service>();
             if(search_name != null)
             {
-                lts_se = _dbContext.services.Where(t => t.se_name == search_name).OrderByDescending(t => t.se_id).Skip(skipAmount).Take(pageSize).ToList();
+                lts_se = _dbContext.services.Where(t => t.se_name.Contains(search_name)).ToList();
             }
             else
             {
-                lts_se = _dbContext.services.OrderByDescending(t => t.se_id).Skip(skipAmount).Take(pageSize).ToList();
+                lts_se = _dbContext.services.ToList();
             }
-           
+            var total = lts_se.Count();
 
-            var totalNumberOfRecords = _dbContext.services.Count();
+            var results = lts_se.OrderByDescending(t => t.se_id).Skip(skipAmount).Take(pageSize);
+            foreach (service i in results)
+            {
+                serviceviewmodel serviceview = _mapper.Map<serviceviewmodel>(i);
+                for (int j = 1; j < EnumService.se_type.Length + 1; j++)
+                {
+                    if (j == i.se_type)
+                    {
+                        serviceview.se_type_name = EnumService.se_type[j - 1];
+                    }
+                }
+                var x = _dbContext.service_category.Find(i.service_category_id);
+                if (x != null) serviceview.service_category_name = x.sc_name;
 
-           //Do sonething 
 
-            var mod = totalNumberOfRecords % pageSize;
+                res.Add(serviceview);
+            }
 
-            var totalPageCount = (totalNumberOfRecords / pageSize) + (mod == 0 ? 0 : 1);
+            var mod = total % pageSize;
+
+            var totalPageCount = (total / pageSize) + (mod == 0 ? 0 : 1);
 
             return new PagedResults<serviceviewmodel>
             {
@@ -74,7 +88,7 @@ namespace ERP.Repository.Repositories
                 PageNumber = pageNumber,
                 PageSize = pageSize,
                 TotalNumberOfPages = totalPageCount,
-                TotalNumberOfRecords = totalNumberOfRecords
+                TotalNumberOfRecords = total
             };
         }
         public PagedResults<serviceinforviewmodel> GetAllPageInforService(int pageNumber, int pageSize, string search_name)
@@ -135,5 +149,36 @@ namespace ERP.Repository.Repositories
             }
             return res;
         }
+        public serviceviewmodel GetById(int se_id)
+        {
+            service i = _dbContext.services.Find(se_id);
+            serviceviewmodel serviceview = _mapper.Map<serviceviewmodel>(i);
+            for (int j = 1; j < EnumService.se_type.Length + 1; j++)
+            {
+                if (j == i.se_type)
+                {
+                    serviceview.se_type_name = EnumService.se_type[j - 1];
+                }
+            }
+            var x = _dbContext.service_category.Find(i.service_category_id);
+            if (x != null) serviceview.service_category_name = x.sc_name;
+            return serviceview;
+        }
+        public List<dropdown> GetAllDropdown()
+        {
+
+            List<dropdown> res = new List<dropdown>();
+            List<service> lts_se = _dbContext.services.ToList();
+            foreach(service se in lts_se)
+            {
+                dropdown pu = new dropdown();
+                pu.id = se.se_id;
+                pu.name = se.se_name;
+
+                res.Add(pu);
+            }
+            return res;
+        }
     }
+
 }

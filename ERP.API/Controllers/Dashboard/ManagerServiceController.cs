@@ -39,15 +39,15 @@ namespace ERP.API.Controllers.Dashboard
 
         #region methods
         [HttpGet]
-        [Route("api/services/all")]
+        [Route("api/service/getall")]
         public IHttpActionResult Getservices()
         {
-            ResponseDataDTO<IEnumerable<service>> response = new ResponseDataDTO<IEnumerable<service>>();
+            ResponseDataDTO<List<dropdown>> response = new ResponseDataDTO<List<dropdown>>();
             try
             {
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _serviceservice.GetAll();
+                response.Data = _serviceservice.GetAllDropdown();
             }
             catch (Exception ex)
             {
@@ -84,7 +84,7 @@ namespace ERP.API.Controllers.Dashboard
         }
         
         [HttpGet]
-        [Route("api/service/get-all-search")]
+        [Route("api/service/search")]
         public IHttpActionResult GetAllPageSearch(int pageSize, int pageNumber,string search_name)
         {
             ResponseDataDTO<PagedResults<serviceviewmodel>> response = new ResponseDataDTO<PagedResults<serviceviewmodel>>();
@@ -105,7 +105,28 @@ namespace ERP.API.Controllers.Dashboard
 
             return Ok(response);
         }
-        //PagedResults<serviceinforviewmodel> GetAllPageInforService(int pageNumber, int pageSize, string search_name)
+        [HttpGet]
+        [Route("api/service/get_by_id")]
+        public IHttpActionResult GetById(int se_id)
+        {
+            ResponseDataDTO<serviceviewmodel> response = new ResponseDataDTO<serviceviewmodel>();
+            try
+            {
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = _serviceservice.GetById(se_id);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+
+                Console.WriteLine(ex.ToString());
+            }
+
+            return Ok(response);
+        }
         [HttpGet]
         [Route("api/service/get-search-infor")]
         public IHttpActionResult GetAllPageInforService(int pageNumber, int pageSize, string search_name)
@@ -184,8 +205,8 @@ namespace ERP.API.Controllers.Dashboard
                 var createdservice = _mapper.Map<service>(serviceCreateViewModel);
                 //Tạo mã 
                 var x = _serviceservice.GetLast();
-                if (x == null) createdservice.se_code = Utilis.CreateCode("DV", 0, 7);
-                else createdservice.se_code = Utilis.CreateCode("DV", x.se_id, 7);
+                if (x == null) createdservice.se_code = "DV000000";
+                else createdservice.se_code = Utilis.CreateCodeByCode("DV", x.se_code, 8);
                 //save file 
                 string fileName = "";
                 foreach (MultipartFileData fileData in streamProvider.FileData)
@@ -220,7 +241,7 @@ namespace ERP.API.Controllers.Dashboard
 
 
         [HttpPut]
-        [Route("api/service/update/")]
+        [Route("api/service/update")]
 
         public async Task<IHttpActionResult> Updateservice()
         {
@@ -284,12 +305,12 @@ namespace ERP.API.Controllers.Dashboard
 
         [HttpDelete]
         [Route("api/service/delete")]
-        public IHttpActionResult Deleteservice(int serviceId)
+        public IHttpActionResult Deleteservice(int se_id)
         {
             ResponseDataDTO<service> response = new ResponseDataDTO<service>();
             try
             {
-                var serviceDeleted = _serviceservice.Find(serviceId);
+                var serviceDeleted = _serviceservice.Find(se_id);
                 if (serviceDeleted != null)
                 {
                     _serviceservice.Delete(serviceDeleted);

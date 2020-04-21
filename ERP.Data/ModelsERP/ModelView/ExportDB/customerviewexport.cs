@@ -6,7 +6,7 @@ using System.Web;
 
 namespace ERP.Data.ModelsERP.ModelView.ExportDB
 {
-    public class customerview
+    public class customerviewexport
     {
         public int cu_id { get; set; }
 

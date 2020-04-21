@@ -19,5 +19,8 @@ namespace ERP.Repository.Repositories.IRepositories
         bool CheckUniqueName(string name,int id);
 
         List<statisticrevenueviewmodel> GetRevenueCustomerGroup(int staff_id);
+        List<dropdown> GetAllDropdown();
+
+
     }
 }
