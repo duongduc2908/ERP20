@@ -23,5 +23,6 @@ namespace ERP.Data.ModelsERP.ModelView.Staff
         public DateTime? tn_end_date { get; set; }
 
         public string tn_purpose { get; set; }
+        public int? ts_evaluate { get; set; }
     }
 }

@@ -83,7 +83,7 @@ namespace ERP.API.Controllers.Dashboard
         }
         
         [HttpGet]
-        [Route("api/service-category/get-name")]
+        [Route("api/service/get_category")]
         public IHttpActionResult GetAllName()
         {
             ResponseDataDTO<List<dropdown>> response = new ResponseDataDTO<List<dropdown>>();

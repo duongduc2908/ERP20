@@ -1,4 +1,5 @@
 ﻿using ERP.Data.ModelsERP;
+using ERP.Data.ModelsERP.ModelView;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,8 +10,9 @@ namespace ERP.API.Models
 {
     public class TransactionViewModelUpdate
     {
+        public customerviewmodel customer { get; set; }
         public int tra_id { get; set; }
-        public customer customer { get; set; }
+       
         [StringLength(50)]
         public string tra_title { get; set; }
 

@@ -35,6 +35,7 @@ namespace ERP.API.AutoMapper
             CreateMap< staff, staffviewmodel>();
             CreateMap< staff, statisticstaffviewmodel>();
             CreateMap< staff, staffview>();
+            CreateMap<staffview, staff>();
             CreateMap< staff, servicestaffviewmodel>();
             
 
@@ -51,7 +52,8 @@ namespace ERP.API.AutoMapper
             CreateMap<CustomerOrderUpdateViewModel, customer_order>();
 
             CreateMap<customer_order, customerorderviewmodel>();
-            CreateMap<customer_order, customerorderhistoryviewmodel>();
+            CreateMap<customer_order, customerorderservicehistoryviewmodel>();
+            CreateMap<customer_order, customerorderproducthistoryviewmodel>();
             CreateMap<customer_order, statisticsorderviewmodel>();
             CreateMap<customer_order, customerorderview>();
             CreateMap<customer_order, servicercustomerorderviewmodel>();
@@ -72,6 +74,7 @@ namespace ERP.API.AutoMapper
             CreateMap<ProductUpdateViewModel, product>();
             CreateMap<product, productviewmodel>();
             CreateMap<product, productview>();
+            CreateMap<product, productviewmodelpluss>();
 
             CreateMap<ShipAddressCreateViewModel, ship_address>();
             CreateMap<ShipAddressUpdateViewModel, ship_address>();
@@ -87,9 +90,11 @@ namespace ERP.API.AutoMapper
             CreateMap<order_product,productorderviewmodel >();
             CreateMap<order_product,orderproducthistoryviewmodel >();
             CreateMap<order_product,transactionorderproductviewmodel >();
+            
 
             CreateMap<OrderServiceCreateViewModel, order_service>();
             CreateMap<OrderServiceUpdateViewModel, order_service>();
+            CreateMap<order_service, transactionorderserviceviewmodel>();
 
             CreateMap<ExecutorCreateViewModel, executor>();
             CreateMap<ExecutorUpdateViewModel, executor>();
@@ -101,6 +106,7 @@ namespace ERP.API.AutoMapper
             CreateMap<ServiceUpdateViewModel, service>();
             CreateMap<service, serviceviewmodel>();
             CreateMap<service, serviceinforviewmodel>();
+            CreateMap<service, transactionorderserviceviewmodel>();
 
             CreateMap<GroupRoleCreateViewModel, group_role>();
             CreateMap<GroupRoleUpdateViewModel, group_role>();

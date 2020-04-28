@@ -25,6 +25,7 @@ namespace ERP.API
         // For more information on configuring authentication, please visit https://go.microsoft.com/fwlink/?LinkId=301864
         public void ConfigureAuth(IAppBuilder app)
         {
+            app.UseCors(CorsOptions.AllowAll);
             // Configure the db context and user manager to use a single instance per request
             app.CreatePerOwinContext(ERPDbContext.Create);
             //app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
@@ -33,7 +34,6 @@ namespace ERP.API
             // and to use a cookie to temporarily store information about a user logging in with a third party login provider
             app.UseCookieAuthentication(new CookieAuthenticationOptions());
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
-            app.UseCors(CorsOptions.AllowAll);
             // Configure the application for OAuth based flow
             OAuthAuthorizationServerOptions options = new OAuthAuthorizationServerOptions
             {

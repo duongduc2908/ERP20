@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ERP.Data.ModelsERP.ModelView.Staff;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -10,9 +11,7 @@ namespace ERP.Data.ModelsERP.ModelView
     public class staffviewmodel
     {
         //Thông tin thời gian loại hợp đồng partime hay fulltime 9 trường 
-        public TimeSpan? sw_time_start { get; set; }
-
-        public TimeSpan? sw_time_end { get; set; }
+        public List<staff_work_time> list_staff_work_time{ get; set; }
         [StringLength(3)]
         public string sw_day_flag { get; set; }
         public int sw_id { get; set; }
@@ -68,7 +67,6 @@ namespace ERP.Data.ModelsERP.ModelView
         public int? department_id { get; set; }
 
         public int? group_role_id { get; set; }
-
         public bool? sta_login { get; set; }
 
         [Column(TypeName = "text")]
@@ -83,9 +81,7 @@ namespace ERP.Data.ModelsERP.ModelView
         [StringLength(50)]
         public string sta_traffic { get; set; }
 
-        public int? sta_salary_to { get; set; }
-
-        public int? sta_salary_end { get; set; }
+        public int? sta_salary { get; set; }
 
         [StringLength(100)]
         public string sta_tax_code { get; set; }
@@ -130,7 +126,7 @@ namespace ERP.Data.ModelsERP.ModelView
         [StringLength(50)]
         public string unl_geocoding_now { get; set; }
         //Danh sách đào tạo 
-        public List<training> list_training { get; set; }
+        public List<stafftraningviewmodel> list_training { get; set; }
         //Danh sách địa chỉ làm việc 
         public List<undertakenlocationviewmodel> list_undertaken_location { get; set; }
         //Các trường bổ sung trong view search

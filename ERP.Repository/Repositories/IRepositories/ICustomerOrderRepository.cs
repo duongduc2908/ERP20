@@ -20,7 +20,7 @@ namespace ERP.Repository.Repositories.IRepositories
         customerordermodelview GetAllOrderById(int id);
         servicercustomerorderviewmodel GetAllOrderServiceById(int id);
         List<order_service_view> GetServiceByDay(int id, DateTime start_date, DateTime to_date);
-        List<dropdown> Get_staff_free(work_time_view c, string fullName);
+        List<dropdown_salary> Get_staff_free(work_time_view c, string fullName);
         PagedResults<customerorderviewmodel> GetAllSearch(int pageNumber, int pageSize, int? payment_type_id, DateTime? start_date, DateTime? end_date, string name);
 
         PagedResults<servicercustomerorderviewmodel> GetAllSearchCustomerOrderService(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name);

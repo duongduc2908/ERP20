@@ -76,7 +76,8 @@ namespace ERP.Data.ModelsERP.ModelView
         //Danh sach cham soc 
         public List<customertransactionviewmodel> list_transaction { get; set; }
         //Danh sach order
-        public List<customerorderhistoryviewmodel> list_customer_order { get; set; }
+        public List<customerorderservicehistoryviewmodel> list_customer_order_service { get; set; }
+        public List<customerorderproducthistoryviewmodel> list_customer_order_product { get; set; }
 
         //Name
         public string cu_type_name{ get; set; }

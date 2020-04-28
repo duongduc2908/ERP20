@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ERP.Data.ModelsERP.ModelView.Customer;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace ERP.Data.ModelsERP.ModelView.Transaction
     public class transactioncustomerviewmodel
     {
         public List<transactionorderproductviewmodel> list_order_product { get; set; }
+        public List<transactionorderserviceviewmodel> list_customer_order_service { get; set; }
         public int cu_id { get; set; }
 
         [StringLength(45)]

@@ -23,7 +23,7 @@ namespace ERP.Service.Services
         {
             return this._repository.GetAllPage(pageNumber, pageSize);
         }
-        public PagedResults<productviewmodel> GetAllPageById( int id)
+        public productviewmodel GetAllPageById( int id)
         {
             return this._repository.GetAllPageById(id);
         }

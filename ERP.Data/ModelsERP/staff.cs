@@ -77,7 +77,7 @@ namespace ERP.Data.ModelsERP
         [StringLength(50)]
         public string sta_traffic { get; set; }
 
-        public int? sta_salary { get; set; }
+        public int sta_salary { get; set; }
 
         [StringLength(100)]
         public string sta_tax_code { get; set; }

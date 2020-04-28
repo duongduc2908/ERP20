@@ -27,10 +27,12 @@ namespace ERP.Data.ModelsERP.ModelView.Excutor
         public TimeSpan end_time { get; set; }
 
         public bool exe_flag_overtime { get; set; }
+        public string exe_flag_overtime_name { get; set; }
 
         public int exe_time_overtime { get; set; }
 
         public byte exe_status { get; set; }
+        public string exe_status_name { get; set; }
 
         public int exe_evaluate { get; set; }
 

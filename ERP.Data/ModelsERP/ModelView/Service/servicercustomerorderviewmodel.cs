@@ -20,6 +20,7 @@ namespace ERP.Data.ModelsERP.ModelView.Service
         public string cu_fullname { get; set; }
         public string cu_mobile { get; set; }
         public DateTime? cuo_date { get; set; }
+
         //Thong tin ben trong 
         
 

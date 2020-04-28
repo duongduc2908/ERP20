@@ -20,6 +20,7 @@ namespace ERP.Repository.Repositories.IRepositories
 
         List<statisticrevenueviewmodel> GetRevenueCustomerGroup(int staff_id);
         List<dropdown> GetAllDropdown();
+        customergroupviewmodel GetById(int cg_id);
 
 
     }

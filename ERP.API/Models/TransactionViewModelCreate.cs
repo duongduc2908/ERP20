@@ -1,4 +1,5 @@
 ﻿using ERP.Data.ModelsERP;
+using ERP.Data.ModelsERP.ModelView;
 using ERP.Data.ModelsERP.ModelView.Transaction;
 using System;
 using System.Collections.Generic;
@@ -10,8 +11,7 @@ namespace ERP.API.Models
 {
     public class TransactionViewModelCreate
     {
-        public customer customer { get; set; }
-        [StringLength(50)]
+        public customerviewmodel customer { get; set; }
         public string tra_title { get; set; }
 
         public string tra_content { get; set; }

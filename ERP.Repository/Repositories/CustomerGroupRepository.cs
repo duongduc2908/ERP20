@@ -23,6 +23,7 @@ namespace ERP.Repository.Repositories
         }
         public PagedResults<customergroupviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? cg_id, string name)
         {
+            if (name != null) name = name.Trim();
             List<customergroupviewmodel> res = new List<customergroupviewmodel>();
             List<customer_group> list_res;
             List<customer_group> list;
@@ -59,7 +60,17 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfPages = totalPageCount,
                 TotalNumberOfRecords = total
             };
-        } 
+        }
+        public customergroupviewmodel GetById(int cg_id)
+        {
+            customergroupviewmodel customer_group_view = new customergroupviewmodel();
+            customer_group ct_g = new customer_group();
+            ct_g = _dbContext.customer_group.Where(x => x.cg_id == cg_id).FirstOrDefault();
+            customer_group_view = _mapper.Map<customergroupviewmodel>(ct_g);
+            var staffview = _dbContext.staffs.FirstOrDefault(x => x.sta_id == ct_g.staff_id);
+            customer_group_view.staff_name = staffview.sta_fullname;
+            return customer_group_view;
+        }
         public List<piechartview> GetPieChart()
         {
             List<piechartview> res = new List<piechartview>();

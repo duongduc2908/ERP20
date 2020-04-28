@@ -56,7 +56,7 @@ namespace ERP.Service.Services
         {
             return this._repository.GetAllPayment();
         }
-        public List<dropdown> Get_staff_free(work_time_view c, string fullName)
+        public List<dropdown_salary> Get_staff_free(work_time_view c, string fullName)
         {
             return this._repository.Get_staff_free(c, fullName);
         }

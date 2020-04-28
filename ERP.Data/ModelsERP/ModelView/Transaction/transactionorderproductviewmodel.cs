@@ -33,5 +33,6 @@ namespace ERP.Data.ModelsERP.ModelView.Transaction
 
         public double? op_total_value { get; set; }
 
+
     }
 }

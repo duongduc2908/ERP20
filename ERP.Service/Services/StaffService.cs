@@ -40,9 +40,9 @@ namespace ERP.Service.Services
         {
             return this._repository.GetAllPageSearch(pageNumber, pageSize, status, start_date, end_date, name, sta_working_status);
         }
-        public PagedResults<staffview> ExportStaff(int pageNumber, int pageSize, int? status, DateTime? start_date, DateTime? end_date, string name)
+        public PagedResults<staffview> ExportStaff(int pageNumber, int pageSize, int? status, DateTime? start_date, DateTime? end_date, string name, int? sta_working_status)
         {
-            return this._repository.ExportStaff(pageNumber, pageSize, status, start_date, end_date, name);
+            return this._repository.ExportStaff(pageNumber, pageSize, status, start_date, end_date, name, sta_working_status);
         }
         public staffviewmodel GetInforById(int id)
         {
@@ -53,7 +53,10 @@ namespace ERP.Service.Services
             return this._repository.GetAllActive(status, pageNumber, pageSize);
         }
         
-
+        public bool Check_location(undertaken_location un)
+        {
+            return this._repository.Check_location(un);
+        }
         public List<dropdown> GetInforManager()
         {
             return this._repository.GetInforManager();

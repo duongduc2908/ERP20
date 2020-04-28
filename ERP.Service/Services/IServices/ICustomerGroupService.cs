@@ -20,5 +20,6 @@ namespace ERP.Service.Services.IServices
         bool CheckUniqueName(string name,int id);
         List<statisticrevenueviewmodel> GetRevenueCustomerGroup(int staff_id);
         List<dropdown> GetAllDropdown();
+        customergroupviewmodel GetById(int cg_id);
     }
 }

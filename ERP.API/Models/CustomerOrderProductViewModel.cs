@@ -11,7 +11,7 @@ namespace ERP.API.Models
     public class CustomerOrderProductViewModel
     {
         public List<productorderviewmodel> list_product { get; set; }
-        public customeraddressviewmodel customer { get; set; }
+        public CustomerUpdateViewModelJson customer { get; set; }
         public int sha_id { get; set; }
         public int? cuo_total_price { get; set; }
 

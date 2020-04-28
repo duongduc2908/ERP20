@@ -12,7 +12,7 @@ namespace ERP.API.Models
     {
         public int cuo_id { get; set; }
         public List<productorderviewmodel> list_product { get; set; }
-        public customeraddressviewmodel customer { get; set; }
+        public CustomerUpdateViewModelJson customer { get; set; }
         public int? cuo_total_price { get; set; }
 
         public byte? cuo_status { get; set; }

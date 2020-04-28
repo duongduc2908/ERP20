@@ -14,6 +14,8 @@ namespace ERP.API.Models
     public class CustomerOrderServiceViewModelCreate
     {
         //Thong in order 
+        public string cuo_address { get; set; }
+        public string cuo_infor_time { get; set; }
         public string cuo_color_show {get;set;}
         public int cuo_discount { get; set; }
 
@@ -60,7 +62,7 @@ namespace ERP.API.Models
         public bool st_on_day_flag { get; set; }
 
         public int st_on_day { get; set; }
-        public int customer_order_id { get; set; }
+        //public int customer_order_id { get; set; }
 
         [Column(TypeName = "date")]
         public DateTime st_custom_start { get; set; }

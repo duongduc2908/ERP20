@@ -61,6 +61,28 @@ namespace ERP.API.Controllers.Dashboard
             return Ok(response);
         }
         [HttpGet]
+        [Route("api/transactions/get_by_id")]
+        public IHttpActionResult GetTransactionById(int tra_id)
+        {
+            ResponseDataDTO<transactionviewmodel> response = new ResponseDataDTO<transactionviewmodel>();
+            try
+            {
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = _transactionservice.GetById(tra_id);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+
+                Console.WriteLine(ex.ToString());
+            }
+
+            return Ok(response);
+        }
+        [HttpGet]
         [Route("api/transactions/get_transaction_type")]
         public IHttpActionResult GetTransactionType()
         {
@@ -160,138 +182,7 @@ namespace ERP.API.Controllers.Dashboard
             {
                 var tra = transaction;
                 var current_id = BaseController.get_id_current();
-                if (tra.customer.cu_id == 0)
-                {
-                    #region[Create Customer]
-                    //Cach truong bat buoc 
-                    if (tra.customer.cu_fullname == null)
-                    {
-                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                        response.Message = "Họ và tên không được để trống";
-                        response.Data = null;
-                        return Ok(response);
-                    }
-                    if (tra.customer.cu_email == null)
-                    {
-                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                        response.Message = "Email không được để trống";
-                        response.Data = null;
-                        return Ok(response);
-                    }
-                    if (tra.customer.cu_type == 0)
-                    {
-                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                        response.Message = "Loại khách hàng không được để trống";
-                        response.Data = null;
-                        return Ok(response);
-                    }
-                    if (tra.customer.customer_group_id == 0)
-                    {
-                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                        response.Message = "Nhóm khách hàng không được để trống";
-                        response.Data = null;
-                        return Ok(response);
-                    }
-                    if (tra.customer.source_id == 0)
-                    {
-                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                        response.Message = "Nguồn không được để trống";
-                        response.Data = null;
-                        return Ok(response);
-                    }
-                    // get data from formdata
-                    CustomerCreateViewModel customerCreateViewModel = new CustomerCreateViewModel
-                    {
-                        cu_email = Convert.ToString(tra.customer.cu_email),
-                        cu_fullname = Convert.ToString(tra.customer.cu_fullname),
-
-                        customer_group_id = Convert.ToInt32(tra.customer.customer_group_id),
-                        source_id = Convert.ToInt32(tra.customer.source_id),
-
-                        cu_type = Convert.ToByte(tra.customer.cu_type),
-
-                    };
-                    //Bat cac dieu kien rang buoc
-                    if (CheckEmail.IsValidEmail(customerCreateViewModel.cu_email) == false && customerCreateViewModel.cu_email == "")
-                    {
-                        response.Message = "Định dạng email không hợp lệ !";
-                        response.Data = null;
-                        return Ok(response);
-                    }
-
-                    if (CheckNumber.IsPhoneNumber(customerCreateViewModel.cu_mobile) == false && customerCreateViewModel.cu_mobile == "")
-                    {
-                        response.Message = "Số điện thoại không hợp lệ";
-                        response.Data = null;
-                        return Ok(response);
-                    }
-
-
-                    //bat cac truog con lai 
-                    if (tra.customer.cu_birthday == null)
-                    {
-                        customerCreateViewModel.cu_birthday = null;
-                    }
-                    else
-                    {
-                        customerCreateViewModel.cu_birthday = Convert.ToDateTime(tra.customer.cu_birthday);
-                    }
-                    if (tra.customer.cu_note == null)
-                    {
-                        customerCreateViewModel.cu_note = null;
-                    }
-                    else
-                    {
-                        customerCreateViewModel.cu_note = Convert.ToString(tra.customer.cu_note);
-                    }
-                    if (tra.customer.cu_geocoding == null)
-                    {
-                        customerCreateViewModel.cu_geocoding = null;
-                    }
-                    else
-                    {
-                        customerCreateViewModel.cu_geocoding = Convert.ToString(tra.customer.cu_geocoding);
-                    }
-                    if (tra.customer.cu_curator_id == 0)
-                    {
-                        customerCreateViewModel.cu_curator_id = null;
-                    }
-                    else
-                    {
-                        customerCreateViewModel.cu_curator_id = Convert.ToInt32(tra.customer.cu_curator_id);
-                    }
-                    if (tra.customer.cu_age == 0)
-                    {
-                        customerCreateViewModel.cu_age = null;
-                    }
-                    else
-                    {
-                        customerCreateViewModel.cu_age = Convert.ToInt32(tra.customer.cu_age);
-                    }
-                    if (tra.customer.cu_status == 0)
-                    {
-                        customerCreateViewModel.cu_status = null;
-                    }
-                    else
-                    {
-                        customerCreateViewModel.cu_status = Convert.ToByte(tra.customer.cu_status);
-                    }
-
-                    customerCreateViewModel.staff_id = Convert.ToInt32(current_id);
-                    customerCreateViewModel.cu_create_date = DateTime.Now;
-                    var cu = _customerservice.GetLast();
-                    if (cu == null) customerCreateViewModel.cu_code = Utilis.CreateCode("CU", 0, 7);
-                    else customerCreateViewModel.cu_code = Utilis.CreateCode("CU", cu.cu_id, 7);
-                    // mapping view model to entity
-                    var createdcustomer = _mapper.Map<customer>(customerCreateViewModel);
-
-                    // save new customer
-                    _customerservice.Create(createdcustomer);
-                    var cu_last = _customerservice.GetLast();
-                    tra.customer.cu_id = cu_last.cu_id;
-                    #endregion
-                }
-
+                
                 // get data from formdata
                 TransactionCreateViewModel transactionCreateViewModel = new TransactionCreateViewModel();
                 
@@ -303,7 +194,7 @@ namespace ERP.API.Controllers.Dashboard
                 transactionCreateViewModel.tra_result= tra.tra_result;
                 transactionCreateViewModel.tra_priority= tra.tra_priority;
                 transactionCreateViewModel.staff_id = current_id;
-                transactionCreateViewModel.customer_id= tra.customer.cu_id;
+                transactionCreateViewModel.customer_id = tra.customer.cu_id;
                 transactionCreateViewModel.tra_status= tra.tra_status;
 
                 //Create date
@@ -345,139 +236,7 @@ namespace ERP.API.Controllers.Dashboard
             { //Id user now
                 new BaseController();
                 var current_id = BaseController.get_id_current();
-                if (transaction_update.customer.cu_id == 0)
-                {
-                    #region[Create Customer]
-                    //Cach truong bat buoc 
-                    if (transaction_update.customer.cu_fullname == null)
-                    {
-                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                        response.Message = "Họ và tên không được để trống";
-                        response.Data = false;
-                        return Ok(response);
-                    }
-                    if (transaction_update.customer.cu_email == null)
-                    {
-                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                        response.Message = "Email không được để trống";
-                        response.Data = false;
-                        return Ok(response);
-                    }
-                    if (transaction_update.customer.cu_type == 0)
-                    {
-                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                        response.Message = "Loại khách hàng không được để trống";
-                        response.Data = false;
-                        return Ok(response);
-                    }
-                    if (transaction_update.customer.customer_group_id == 0)
-                    {
-                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                        response.Message = "Nhóm khách hàng không được để trống";
-                        response.Data = false;
-                        return Ok(response);
-                    }
-                    if (transaction_update.customer.source_id == 0)
-                    {
-                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                        response.Message = "Nguồn không được để trống";
-                        response.Data = false;
-                        return Ok(response);
-                    }
-                    // get data from formdata
-                    CustomerCreateViewModel customerCreateViewModel = new CustomerCreateViewModel
-                    {
-                        cu_email = Convert.ToString(transaction_update.customer.cu_email),
-                        cu_fullname = Convert.ToString(transaction_update.customer.cu_fullname),
-
-                        customer_group_id = Convert.ToInt32(transaction_update.customer.customer_group_id),
-                        source_id = Convert.ToInt32(transaction_update.customer.source_id),
-
-                        cu_type = Convert.ToByte(transaction_update.customer.cu_type),
-
-                    };
-                    //Bat cac dieu kien rang buoc
-                    if (CheckEmail.IsValidEmail(customerCreateViewModel.cu_email) == false && customerCreateViewModel.cu_email == "")
-                    {
-                        response.Message = "Định dạng email không hợp lệ !";
-                        response.Data = false;
-                        return Ok(response);
-                    }
-
-                    if (CheckNumber.IsPhoneNumber(customerCreateViewModel.cu_mobile) == false && customerCreateViewModel.cu_mobile == "")
-                    {
-                        response.Message = "Số điện thoại không hợp lệ";
-                        response.Data = false;
-                        return Ok(response);
-                    }
-
-
-                    //bat cac truog con lai 
-                    if (transaction_update.customer.cu_birthday == null)
-                    {
-                        customerCreateViewModel.cu_birthday = null;
-                    }
-                    else
-                    {
-                        customerCreateViewModel.cu_birthday = Convert.ToDateTime(transaction_update.customer.cu_birthday);
-                    }
-                    if (transaction_update.customer.cu_note == null)
-                    {
-                        customerCreateViewModel.cu_note = null;
-                    }
-                    else
-                    {
-                        customerCreateViewModel.cu_note = Convert.ToString(transaction_update.customer.cu_note);
-                    }
-                    if (transaction_update.customer.cu_geocoding == null)
-                    {
-                        customerCreateViewModel.cu_geocoding = null;
-                    }
-                    else
-                    {
-                        customerCreateViewModel.cu_geocoding = Convert.ToString(transaction_update.customer.cu_geocoding);
-                    }
-                    if (transaction_update.customer.cu_curator_id == 0)
-                    {
-                        customerCreateViewModel.cu_curator_id = null;
-                    }
-                    else
-                    {
-                        customerCreateViewModel.cu_curator_id = Convert.ToInt32(transaction_update.customer.cu_curator_id);
-                    }
-                    if (transaction_update.customer.cu_age == 0)
-                    {
-                        customerCreateViewModel.cu_age = null;
-                    }
-                    else
-                    {
-                        customerCreateViewModel.cu_age = Convert.ToInt32(transaction_update.customer.cu_age);
-                    }
-                    if (transaction_update.customer.cu_status == 0)
-                    {
-                        customerCreateViewModel.cu_status = null;
-                    }
-                    else
-                    {
-                        customerCreateViewModel.cu_status = Convert.ToByte(transaction_update.customer.cu_status);
-                    }
-
-                    customerCreateViewModel.staff_id = Convert.ToInt32(current_id);
-                    customerCreateViewModel.cu_create_date = DateTime.Now;
-                    var cu = _customerservice.GetLast();
-                    if (cu == null) customerCreateViewModel.cu_code = Utilis.CreateCode("CU", 0, 7);
-                    else customerCreateViewModel.cu_code = Utilis.CreateCode("CU", cu.cu_id, 7);
-                    // mapping view model to entity
-                    var createdcustomer = _mapper.Map<customer>(customerCreateViewModel);
-
-                    // save new customer
-                    _customerservice.Create(createdcustomer);
-                    var cu_last = _customerservice.GetLast();
-                    transaction_update.customer.cu_id = cu_last.cu_id;
-                    #endregion
-                }
-
-
+                
                 var existstransaction = _transactionservice.Find(transaction_update.tra_id);
 
                 existstransaction.tra_content = transaction_update.tra_content;
@@ -549,6 +308,7 @@ namespace ERP.API.Controllers.Dashboard
             }
         }
         #endregion
+
         #region [Delete]
         [HttpDelete]
         [Route("api/transactions/delete")]
@@ -591,6 +351,7 @@ namespace ERP.API.Controllers.Dashboard
             }
         }
         #endregion
+
         #region["Export Excel"]
         [HttpGet]
         [Route("api/transaction/export")]

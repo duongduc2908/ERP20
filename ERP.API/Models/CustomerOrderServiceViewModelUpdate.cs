@@ -13,6 +13,8 @@ namespace ERP.API.Models
         public int cuo_id { get; set; }
 
         //Thong in order 
+        public string cuo_address { get; set; }
+        public string cuo_infor_time { get; set; }
         public string cuo_color_show { get; set; }
         public int cuo_discount { get; set; }
 

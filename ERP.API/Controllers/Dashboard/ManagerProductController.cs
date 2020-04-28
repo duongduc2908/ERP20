@@ -105,10 +105,10 @@ namespace ERP.API.Controllers.Dashboard
             return Ok(response);
         }
         #region [Get By Id]
-        [Route("api/products/infor")]
+        [Route("api/products/get_by_id")]
         public IHttpActionResult GetAllById(int pu_id)
         {
-            ResponseDataDTO<PagedResults<productviewmodel>> response = new ResponseDataDTO<PagedResults<productviewmodel>>();
+            ResponseDataDTO<productviewmodel> response = new ResponseDataDTO<productviewmodel>();
             try
             {
                 response.Code = HttpCode.OK;

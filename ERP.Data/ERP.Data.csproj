@@ -137,7 +137,8 @@
     <Compile Include="ModelsERP\ModelView\CustomerOrder\servicejson.cs" />
     <Compile Include="ModelsERP\ModelView\CustomerOrder\work_time_view.cs" />
     <Compile Include="ModelsERP\ModelView\Customer\customeraddressviewmodel.cs" />
-    <Compile Include="ModelsERP\ModelView\Customer\customerorderhistoryviewmodel.cs" />
+    <Compile Include="ModelsERP\ModelView\Customer\customerorderproducthistoryviewmodel.cs" />
+    <Compile Include="ModelsERP\ModelView\Customer\customerorderservicehistoryviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Customer\customerordermodelview.cs" />
     <Compile Include="ModelsERP\department.cs" />
     <Compile Include="ModelsERP\email.cs" />
@@ -155,6 +156,7 @@
     <Compile Include="ModelsERP\ModelView\Customer\customer_phonejson.cs" />
     <Compile Include="ModelsERP\ModelView\Customer\customer_phoneviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Customer\customer_ship_addressjson.cs" />
+    <Compile Include="ModelsERP\ModelView\dropdown_salary.cs" />
     <Compile Include="ModelsERP\ModelView\Excutor\executorjson.cs" />
     <Compile Include="ModelsERP\ModelView\Excutor\executorviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\ExportDB\customerorderview.cs" />
@@ -170,6 +172,7 @@
     <Compile Include="ModelsERP\ModelView\Product\productviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\dropdown.cs" />
     <Compile Include="ModelsERP\ModelView\Customer\shipaddressviewmodel.cs" />
+    <Compile Include="ModelsERP\ModelView\Product\productviewmodelpluss.cs" />
     <Compile Include="ModelsERP\ModelView\revenue.cs" />
     <Compile Include="ModelsERP\ModelView\Service\serviceinforviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Service\servicercustomerorderviewmodel.cs" />
@@ -181,10 +184,12 @@
     <Compile Include="ModelsERP\ModelView\Sms\smstemplatemodelview.cs" />
     <Compile Include="ModelsERP\ModelView\Sms\smstemplatestrategyviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Staff\stafftrainingjson.cs" />
+    <Compile Include="ModelsERP\ModelView\Staff\stafftraningviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Staff\staffundertaken_locationjson.cs" />
     <Compile Include="ModelsERP\ModelView\Staff\staffviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Staff\staff_time.cs" />
     <Compile Include="ModelsERP\ModelView\Staff\staff_time_detail.cs" />
+    <Compile Include="ModelsERP\ModelView\Staff\staff_work_timejson.cs" />
     <Compile Include="ModelsERP\ModelView\StatisticStaff\statisticviemodel.cs" />
     <Compile Include="ModelsERP\ModelView\StatisticStaff\statisticstaffviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Statistics\statisticrevenueviewmodel.cs" />
@@ -193,6 +198,7 @@
     <Compile Include="ModelsERP\ModelView\Transaction\transactioncustomerorderviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Transaction\transactioncustomerviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Transaction\transactionorderproductviewmodel.cs" />
+    <Compile Include="ModelsERP\ModelView\Transaction\transactionorderserviceviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Transaction\transactionstatisticrateviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Transaction\transactionviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\undertakenlocationviewmodel.cs" />

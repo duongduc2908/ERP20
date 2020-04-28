@@ -60,6 +60,7 @@ namespace ERP.API.Controllers.Dashboard
 
             return Ok(response);
         }
+
         [HttpGet]
         [Route("api/services/page")]
         public IHttpActionResult GetservicesPaging(int pageSize, int pageNumber)
@@ -83,28 +84,29 @@ namespace ERP.API.Controllers.Dashboard
             return Ok(response);
         }
         
-        [HttpGet]
-        [Route("api/service/search")]
-        public IHttpActionResult GetAllPageSearch(int pageSize, int pageNumber,string search_name)
-        {
-            ResponseDataDTO<PagedResults<serviceviewmodel>> response = new ResponseDataDTO<PagedResults<serviceviewmodel>>();
-            try
-            {
-                response.Code = HttpCode.OK;
-                response.Message = MessageResponse.SUCCESS;
-                response.Data = _serviceservice.GetAllPageSearch(pageNumber, pageSize,search_name);
-            }
-            catch (Exception ex)
-            {
-                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = ex.Message;
-                response.Data = null;
+        //[HttpGet]
+        //[Route("api/service/search")]
+        //public IHttpActionResult GetAllPageSearch(int pageSize, int pageNumber,string search_name)
+        //{
+        //    ResponseDataDTO<PagedResults<serviceviewmodel>> response = new ResponseDataDTO<PagedResults<serviceviewmodel>>();
+        //    try
+        //    {
+        //        response.Code = HttpCode.OK;
+        //        response.Message = MessageResponse.SUCCESS;
+        //        response.Data = _serviceservice.GetAllPageSearch(pageNumber, pageSize,search_name);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+        //        response.Message = ex.Message;
+        //        response.Data = null;
 
-                Console.WriteLine(ex.ToString());
-            }
+        //        Console.WriteLine(ex.ToString());
+        //    }
 
-            return Ok(response);
-        }
+        //    return Ok(response);
+        //}
+
         [HttpGet]
         [Route("api/service/get_by_id")]
         public IHttpActionResult GetById(int se_id)
@@ -127,16 +129,17 @@ namespace ERP.API.Controllers.Dashboard
 
             return Ok(response);
         }
+
         [HttpGet]
-        [Route("api/service/get-search-infor")]
+        [Route("api/service/search")]
         public IHttpActionResult GetAllPageInforService(int pageNumber, int pageSize, string search_name)
         {
-            ResponseDataDTO<PagedResults<serviceinforviewmodel>> response = new ResponseDataDTO<PagedResults<serviceinforviewmodel>>();
+            ResponseDataDTO<PagedResults<serviceviewmodel>> response = new ResponseDataDTO<PagedResults<serviceviewmodel>>();
             try
             {
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _serviceservice.GetAllPageInforService(pageNumber, pageSize, search_name);
+                response.Data = _serviceservice.GetAllPageSearch(pageNumber, pageSize, search_name);
             }
             catch (Exception ex)
             {
@@ -149,7 +152,8 @@ namespace ERP.API.Controllers.Dashboard
 
             return Ok(response);
         }
-        [Route("api/service/get-type")]
+
+        [Route("api/service/get_type")]
         public IHttpActionResult GetType()
         {
             ResponseDataDTO<List<dropdown>> response = new ResponseDataDTO<List<dropdown>>();
@@ -173,7 +177,6 @@ namespace ERP.API.Controllers.Dashboard
 
         [HttpPost]
         [Route("api/service/create")]
-
         public async Task<IHttpActionResult> Createservice()
         {
             ResponseDataDTO<service> response = new ResponseDataDTO<service>();
@@ -239,10 +242,8 @@ namespace ERP.API.Controllers.Dashboard
 
         }
 
-
         [HttpPut]
         [Route("api/service/update")]
-
         public async Task<IHttpActionResult> Updateservice()
         {
             ResponseDataDTO<service> response = new ResponseDataDTO<service>();
@@ -305,12 +306,12 @@ namespace ERP.API.Controllers.Dashboard
 
         [HttpDelete]
         [Route("api/service/delete")]
-        public IHttpActionResult Deleteservice(int se_id)
+        public IHttpActionResult Deleteservice(int serviceId)
         {
             ResponseDataDTO<service> response = new ResponseDataDTO<service>();
             try
             {
-                var serviceDeleted = _serviceservice.Find(se_id);
+                var serviceDeleted = _serviceservice.Find(serviceId);
                 if (serviceDeleted != null)
                 {
                     _serviceservice.Delete(serviceDeleted);

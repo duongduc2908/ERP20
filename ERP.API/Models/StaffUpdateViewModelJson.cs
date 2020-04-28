@@ -13,11 +13,7 @@ namespace ERP.API.Models
     {
         public int sta_id { get; set; }
         //Thông tin thời gian loại hợp đồng partime hay fulltime 9 trường 
-        public TimeSpan? sw_time_start { get; set; }
-
-        public TimeSpan? sw_time_end { get; set; }
-        [StringLength(3)]
-        public string sw_day_flag { get; set; }
+        public List<staff_work_timejson> list_staff_work_time { get; set; }
 
         //Thông tin chung 
 
@@ -84,7 +80,7 @@ namespace ERP.API.Models
         [StringLength(50)]
         public string sta_traffic { get; set; }
 
-        public int? sta_salary { get; set; }
+        public int sta_salary { get; set; }
 
         [StringLength(100)]
         public string sta_tax_code { get; set; }

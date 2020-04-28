@@ -18,6 +18,7 @@ namespace ERP.Service.Services.IServices
         PagedResults<transactionviewmodel> GetAllPageSearch(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name);
         PagedResults<transactionview> ExportTransaction(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name);
         List<dropdown> GetTransactionType();
+        transactionviewmodel GetById(int tra_id);
         List<dropdown> GetTransactionPriority();
         List<dropdown> GetTransactionStatus();
         List<dropdown> GetTransactionRate();

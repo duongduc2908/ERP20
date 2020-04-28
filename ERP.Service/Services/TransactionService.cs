@@ -42,6 +42,10 @@ namespace ERP.Service.Services
         {
             return this._repository.GetTransactionStatus();
         }
+        public transactionviewmodel GetById(int tra_id)
+        {
+            return this._repository.GetById(tra_id);
+        }
         public List<dropdown> GetTransactionRate()
         {
             return this._repository.GetTransactionRate();

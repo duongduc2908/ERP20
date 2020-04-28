@@ -20,10 +20,10 @@ namespace ERP.Repository.Repositories.IRepositories
         
         PagedResults<staffviewmodel> GetAllPage(int pageNumber, int pageSize);
         PagedResults<staffviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? status, DateTime? start_date, DateTime? end_date, string name, int? sta_working_status);
-        PagedResults<staffview> ExportStaff(int pageNumber, int pageSize, int? status, DateTime? start_date, DateTime? end_date,string name);
+        PagedResults<staffview> ExportStaff(int pageNumber, int pageSize, int? status, DateTime? start_date, DateTime? end_date, string name, int? sta_working_status);
         staffviewmodel GetInforById(int id);
         PagedResults<staffviewmodel> GetAllActive(int pageNumber, int pageSize, int status);
-
+        bool Check_location(undertaken_location un);
         List<dropdown> GetInforManager();
         statisticstaffviewmodel GetInfor(int staff_id);
     }

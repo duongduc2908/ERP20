@@ -57,6 +57,29 @@ namespace ERP.API.Controllers.Dashboard
 
             return Ok(response);
         }
+
+        [HttpGet]
+        [Route("api/customer-groups/info")]
+        public IHttpActionResult GetById(int cg_id)
+        {
+            ResponseDataDTO<customergroupviewmodel> response = new ResponseDataDTO<customergroupviewmodel>();
+            try
+            {
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = _customer_groupservice.GetById(cg_id);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+
+                Console.WriteLine(ex.ToString());
+            }
+
+            return Ok(response);
+        }
         [HttpGet]
         [Route("api/customer_group/getall")]
         public IHttpActionResult GetAllDropdown()
@@ -124,6 +147,7 @@ namespace ERP.API.Controllers.Dashboard
 
             return Ok(response);
         }
+
         #region [Create]
         [HttpPost]
         [Route("api/customer-group/create")]
@@ -315,6 +339,7 @@ namespace ERP.API.Controllers.Dashboard
 
         }
         #endregion
+
         [HttpDelete]
         [Route("api/customer-group/delete")]
         public IHttpActionResult Deletestaff(int cg_id)

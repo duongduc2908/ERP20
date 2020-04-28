@@ -9,7 +9,7 @@ namespace ERP.Data.ModelsERP.ModelView
     public class customerordermodelview
     {
         public List<productorderviewmodel> list_product { get; set; }
-        public customeraddressviewmodel customer { get; set; }
+        public customerviewmodel customer { get; set; }
         public int? cuo_total_price { get; set; }
 
         public byte? cuo_status { get; set; }

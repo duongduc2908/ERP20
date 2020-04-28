@@ -34,7 +34,7 @@ namespace ERP.API.Controllers.Dashboard
         }
 
         #region methods
-        [Route("api/product-categorys/get-name")]
+        [Route("api/products/get_category")]
         public IHttpActionResult GetproductsPaging()
         {
             ResponseDataDTO<List<dropdown>> response = new ResponseDataDTO<List<dropdown>>();

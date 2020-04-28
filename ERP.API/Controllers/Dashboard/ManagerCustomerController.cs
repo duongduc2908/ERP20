@@ -361,13 +361,6 @@ namespace ERP.API.Controllers.Dashboard
                     response.Error = "source_id";
                     return Ok(response);
                 }
-                if (customer.cu_birthday == null)
-                {
-                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                    response.Message = "Ngày sinh không được để trống";
-                    response.Error = "source_id";
-                    return Ok(response);
-                }
                 if (customer.cu_flag_used == null)
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
@@ -375,13 +368,20 @@ namespace ERP.API.Controllers.Dashboard
                     response.Error = "source_id";
                     return Ok(response);
                 }
-                
-                if (!Utilis.IsValidEmail(customer.cu_email) && customer.cu_email.Trim() != "")
+
+                if (customer.cu_email != null)
                 {
-                    response.Code = HttpCode.NOT_FOUND;
-                    response.Message = "Email sai định dạng";
-                    response.Error = "cu_email";
-                    return Ok(response);
+                    if (customer.cu_email.Trim() != "")
+                    {
+                        if (!Utilis.IsValidEmail(customer.cu_email))
+                        {
+                            response.Code = HttpCode.NOT_FOUND;
+                            response.Message = "Email sai định dạng";
+                            response.Error = "cu_email";
+                            return Ok(response);
+                        }
+                    }
+
                 }
                 if (customer.sha_detail_now == null || customer.sha_detail_now.Trim() == "")
                 {
@@ -411,7 +411,7 @@ namespace ERP.API.Controllers.Dashboard
 
                 if(customer.cu_fullname != null) customer_create.cu_fullname = customer.cu_fullname.Trim();
                 customer_create.customer_group_id = customer.customer_group_id;
-                customer_create.cu_birthday = customer.cu_birthday;
+                if (customer.cu_birthday != null) customer_create.cu_birthday = customer.cu_birthday;
                 if(customer.cu_email != null) customer_create.cu_email = customer.cu_email.Trim();
                 customer_create.cu_flag_order = customer.cu_flag_order;
                 customer_create.cu_flag_used = customer.cu_flag_used;
@@ -538,13 +538,6 @@ namespace ERP.API.Controllers.Dashboard
                     response.Error = "source_id";
                     return Ok(response);
                 }
-                if (customer.cu_birthday == null)
-                {
-                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                    response.Message = "Ngày sinh không được để trống";
-                    response.Error = "source_id";
-                    return Ok(response);
-                }
                 if (customer.cu_flag_used == null)
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
@@ -559,13 +552,20 @@ namespace ERP.API.Controllers.Dashboard
                     response.Error = "sha_detail_now";
                     return Ok(response);
                 }
-                
-                if (!Utilis.IsValidEmail(customer.cu_email) && customer.cu_email.Trim() != "")
+
+                if (customer.cu_email != null)
                 {
-                    response.Code = HttpCode.NOT_FOUND;
-                    response.Message = "Email sai định dạng";
-                    response.Error = "cu_email";
-                    return Ok(response);
+                    if (customer.cu_email.Trim() != "")
+                    {
+                        if (!Utilis.IsValidEmail(customer.cu_email))
+                        {
+                            response.Code = HttpCode.NOT_FOUND;
+                            response.Message = "Email sai định dạng";
+                            response.Error = "cu_email";
+                            return Ok(response);
+                        }
+                    }
+
                 }
 
 
@@ -577,7 +577,7 @@ namespace ERP.API.Controllers.Dashboard
                 //Thong tin chung 
                 if(customer.cu_fullname != null) exists_customer.cu_fullname = customer.cu_fullname.Trim();
                 exists_customer.customer_group_id = customer.customer_group_id;
-                exists_customer.cu_birthday = customer.cu_birthday;
+                if(customer.cu_birthday != null) exists_customer.cu_birthday = customer.cu_birthday;
                 if(customer.cu_email != null) exists_customer.cu_email = customer.cu_email.Trim();
                 exists_customer.cu_flag_order = customer.cu_flag_order;
                 exists_customer.cu_flag_used = customer.cu_flag_used;
@@ -748,7 +748,7 @@ namespace ERP.API.Controllers.Dashboard
         [Route("api/customer/import")]
         public async Task<IHttpActionResult> Import()
         {
-            ResponseDataDTO<customer> response = new ResponseDataDTO<customer>();
+            ResponseDataDTO<customerviewexport> response = new ResponseDataDTO<customerviewexport>();
             var exitsData = "";
             try
             {
@@ -784,14 +784,14 @@ namespace ERP.API.Controllers.Dashboard
 
                     }
                 }
-                var list = new List<customer>();
-                fileName = "C:/inetpub/wwwroot/coerp" + fileName;
-                //fileName = "D:/ERP20/ERP.API" + fileName;
+                var list = new List<customerviewexport>();
+                //fileName = "C:/inetpub/wwwroot/coerp" + fileName;
+                fileName = "D:/ERP20/ERP.API" + fileName;
                 var dataset = ExcelImport.ImportExcelXLS(fileName, true);
                 DataTable table = (DataTable)dataset.Tables[7];
                 if (table != null && table.Rows.Count > 0)
                 {
-                    if (table.Columns.Count != 11)
+                    if (table.Columns.Count != 12)
                     {
                         exitsData = "File excel import không hợp lệ!";
                         response.Code = HttpCode.INTERNAL_SERVER_ERROR;
@@ -919,15 +919,15 @@ namespace ERP.API.Controllers.Dashboard
                         }
                         #endregion
                     }
-                    list = DataTableCmUtils.ToListof<customer>(table);
+                    list = DataTableCmUtils.ToListof<customerviewexport>(table);
                     // Gọi hàm save data
-                    foreach (customer i in list)
+                    foreach (customerviewexport i in list)
                     {
                         var x = _customerservice.GetLast();
                         if(x == null) i.cu_code = Utilis.CreateCode("CU", 0, 7);
                         else i.cu_code = Utilis.CreateCode("CU", x.cu_id, 7);
                         i.cu_thumbnail = "/Uploads/Images/default/customer.png";
-                        _customerservice.Create(i);
+                        //_customerservice.Create(i);
                     }
                     exitsData = "Đã nhập dữ liệu excel thành công!";
                     response.Code = HttpCode.OK;
@@ -1029,12 +1029,48 @@ namespace ERP.API.Controllers.Dashboard
         }
         #endregion
 
+        #region["Export Template"]
+        [HttpGet]
+        [Route("api/customer/export_template")]
+        public async Task<IHttpActionResult> ExportTemplate()
+        {
+
+            ResponseDataDTO<string> response = new ResponseDataDTO<string>();
+            try
+            {
+                var listStaff = new List<staffview>();
+                Dictionary<string, string> dicColNames = GetImportDicColumsTemplate();
+
+                string url = "";
+                string filePath = GenExcelExportFilePath(string.Format(typeof(customer).Name), ref url);
+
+                ExcelExport.ExportToExcelTemplate(listStaff, dicColNames, filePath, string.Format("Khách hàng"));
+
+                filePath = filePath.Replace("\\", "/");
+                int index = filePath.IndexOf("TempFiles");
+                filePath = filePath.Substring(index);
+                response.Code = HttpCode.OK;
+                response.Message = "Đã xuất excel thành công!";
+                response.Data = filePath;
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message; ;
+                response.Data = null;
+                Console.WriteLine(ex.ToString());
+
+                return Ok(response);
+            }
+            return Ok(response);
+        }
+        #endregion
         #region["DicColums"]
         private Dictionary<string, string> GetImportDicColums()
         {
             return new Dictionary<string, string>()
             {
-                 {"cu_code","MKH"},
+                 {"cu_code","Mã khách hàng"},
                  {"cu_fullname","Họ và tên "},
                  {"cu_mobile","SĐT" },
                  {"cu_email","Email"},
@@ -1043,10 +1079,9 @@ namespace ERP.API.Controllers.Dashboard
                  {"customer_group_name","Nhóm khách hàng"},
                  {"cu_address","Địa chỉ"},
                  {"cu_birthday","Ngày sinh"},
-                 {"cu_curator_name","Người phụ trách"},
-                 {"staff_name","Người tạo"},
                  {"cu_note","Chú ý"},
-                 {"cu_create_date","Ngày tạo"},
+                 {"cu_flag_used_name","Sử dụng dịch vụ"},
+                 {"cu_flag_order_name","Đặt dịch vụ"},
                  {"cu_status_name","Trạng thái"},
 
             };
@@ -1055,8 +1090,18 @@ namespace ERP.API.Controllers.Dashboard
         {
             return new Dictionary<string, string>()
             {
-                  {"email","Email phong ban"},
-                 {"id","Ma bộ phận phòng ban"}
+                 {"cu_fullname","Họ và tên "},
+                 {"cu_mobile","SĐT" },
+                 {"cu_email","Email"},
+                 {"cu_type_name","Loại khách hàng"},
+                 {"source_name","Nguồn khách hàng"},
+                 {"customer_group_name","Nhóm khách hàng"},
+                 {"cu_address","Địa chỉ"},
+                 {"cu_birthday","Ngày sinh"},
+                 {"cu_note","Chú ý"},
+                 {"cu_flag_used_name","Sử dụng dịch vụ"},
+                 {"cu_flag_order_name","Đặt dịch vụ"},
+                 {"cu_status_name","Trạng thái"},
             };
         }
         #endregion

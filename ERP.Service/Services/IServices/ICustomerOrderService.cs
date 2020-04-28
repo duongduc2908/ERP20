@@ -26,7 +26,7 @@ namespace ERP.Service.Services.IServices
         PagedResults<customerorderview> ExportCustomerOrder(int pageNumber, int pageSize, int? payment_type_id, DateTime? start_date, DateTime? end_date, string name);
         PagedResults<customerorderviewmodel> ResultStatisticsCustomerOrder(int pageNumber, int pageSize, int staff_id, bool month, bool week, bool day);
         List<dropdown> GetAllPayment();
-        List<dropdown> Get_staff_free(work_time_view c, string fullName);
+        List<dropdown_salary> Get_staff_free(work_time_view c, string fullName);
         statisticsbyrevenueviewmodel ResultStatisticsByRevenue(int staff_id);
         List<revenue> ResultStatisticByMonth(int staff_id);
 

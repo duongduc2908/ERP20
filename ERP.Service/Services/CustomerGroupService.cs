@@ -33,7 +33,10 @@ namespace ERP.Service.Services
         {
             return this._repository.CheckUniqueName(name,id);
         }
-
+        public customergroupviewmodel GetById(int cg_id)
+        {
+            return this._repository.GetById(cg_id);
+        }
         public List<statisticrevenueviewmodel> GetRevenueCustomerGroup(int staff_id)
         {
             return this._repository.GetRevenueCustomerGroup(staff_id);

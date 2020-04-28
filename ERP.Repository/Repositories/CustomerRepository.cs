@@ -7,6 +7,7 @@ using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
 using ERP.Data.ModelsERP.ModelView.Customer;
 using ERP.Data.ModelsERP.ModelView.ExportDB;
+using ERP.Data.ModelsERP.ModelView.Product;
 using ERP.Data.ModelsERP.ModelView.Service;
 using ERP.Data.ModelsERP.ModelView.Sms;
 using ERP.Data.ModelsERP.ModelView.Transaction;
@@ -258,18 +259,92 @@ namespace ERP.Repository.Repositories
                     lst_cp_add.Add(add);
                 }
                 customerview.list_customer_phone = lst_cp_add;
+
                 //lay ra lich su mua cua khach hang
-                var list_cuo_history = _dbContext.customer_order.Where(s => s.customer_id == i.cu_id).ToList();
-                List<customerorderhistoryviewmodel> lst_cuo_his = new List<customerorderhistoryviewmodel>();
-                foreach (customer_order s in list_cuo_history)
+                #region cusotmer order service
+                var list_cuo_service_history = _dbContext.customer_order.Where(s => s.customer_id == i.cu_id && s.cuo_code.Contains("ORS")).ToList();
+                List<customerorderservicehistoryviewmodel> lst_cuo_service_his = new List<customerorderservicehistoryviewmodel>();
+                foreach (customer_order s in list_cuo_service_history)
                 {
-                    customerorderhistoryviewmodel add = _mapper.Map<customerorderhistoryviewmodel>(s);
+                    customerorderservicehistoryviewmodel add = _mapper.Map<customerorderservicehistoryviewmodel>(s);
                     add.staff_name = _dbContext.staffs.Where(t => t.sta_id == s.staff_id).FirstOrDefault().sta_fullname;
-                    lst_cuo_his.Add(add);
+                    #region list_service
+                    var lts_service = (from ex in _dbContext.order_service
+                                       join od in _dbContext.services on ex.service_id equals od.se_id
+                                       join cuo in _dbContext.customer_order on ex.customer_order_id equals cuo.cuo_id
+                                       where ex.customer_order_id == s.cuo_id && cuo.customer_id == i.cu_id
+                                       group od by od.se_id into t
+                                       select new
+                                       {
+                                           t.Key
+                                       }).ToList();
+                    List<serviceviewmodel> lts_add_se = new List<serviceviewmodel>();
+                    foreach (var se in lts_service)
+                    {
+                        service ss = _dbContext.services.Find(se.Key);
+                        serviceviewmodel serviceview = _mapper.Map<serviceviewmodel>(ss);
+
+
+                        for (int j = 1; j < EnumService.se_type.Length + 1; j++)
+                        {
+                            if (j == ss.se_type)
+                            {
+                                serviceview.se_type_name = EnumService.se_type[j - 1];
+                            }
+                        }
+                        var x = _dbContext.service_category.Find(ss.service_category_id);
+                        if (x != null) serviceview.service_category_name = x.sc_name;
+
+
+                        lts_add_se.Add(serviceview);
+                    }
+                    add.list_service_history = lts_add_se;
+                    #endregion
+                    lst_cuo_service_his.Add(add);
                 }
+                customerview.list_customer_order_service = lst_cuo_service_his;
+                #endregion
+                //lay ra lich su mua cua khach hang
+                #region customer order product
+                var list_cuo_product_history = _dbContext.customer_order.Where(s => s.customer_id == i.cu_id && s.cuo_code.Contains("ORP")).ToList();
+                List<customerorderproducthistoryviewmodel> lst_cuo_product_his = new List<customerorderproducthistoryviewmodel>();
+                foreach (customer_order s in list_cuo_product_history)
+                {
+                    customerorderproducthistoryviewmodel add = _mapper.Map<customerorderproducthistoryviewmodel>(s);
+                    add.staff_name = _dbContext.staffs.Where(t => t.sta_id == s.staff_id).FirstOrDefault().sta_fullname;
+                    #region list_product
+                    var lts_product = (from ex in _dbContext.order_product
+                                       join od in _dbContext.products on ex.product_id equals od.pu_id
+                                       join cuo in _dbContext.customer_order on ex.customer_order_id equals cuo.cuo_id
+                                       where ex.customer_order_id == s.cuo_id && cuo.customer_id == i.cu_id
+                                       group od by od.pu_id into t
+                                       select new
+                                       {
+                                           t.Key
+                                       }).ToList();
+                    List<productviewmodelpluss> lts_add_se = new List<productviewmodelpluss>();
+                    foreach (var se in lts_product)
+                    {
+                        product ss = _dbContext.products.Find(se.Key);
+                        productviewmodelpluss productview = _mapper.Map<productviewmodelpluss>(ss);
+                        var product_category = _dbContext.product_category.Find(ss.product_category_id);
+                        if (product_category != null) productview.product_category_name = product_category.pc_name;
+                        for (int j = 1; j < EnumProduct.pu_unit.Length + 1; j++)
+                        {
+                            if (j == ss.pu_unit)
+                            {
+                                productview.pu_unit_name = EnumProduct.pu_unit[j - 1];
+                            }
+                        }
 
-
-                customerview.list_customer_order = lst_cuo_his;
+                        lts_add_se.Add(productview);
+                    }
+                    add.list_product_history = lts_add_se;
+                    #endregion
+                    lst_cuo_product_his.Add(add);
+                }
+                customerview.list_customer_order_product = lst_cuo_product_his;
+                #endregion
                 //lay ra lich su cham soc cua khach hang
                 var list_tran_history = _dbContext.transactions.Where(s => s.customer_id == i.cu_id).ToList();
                 List<customertransactionviewmodel> lst_tra_his = new List<customertransactionviewmodel>();
@@ -338,17 +413,17 @@ namespace ERP.Repository.Repositories
                     }
                 }
                 // lay ra dia chi khach hang 
-                var list_address = _dbContext.ship_address.Where(s => s.customer_id == i.cu_id).ToList();
-                List<shipaddressviewmodel> lst_add = new List<shipaddressviewmodel>();
-                foreach (ship_address s in list_address)
-                {
-                    shipaddressviewmodel add = _mapper.Map<shipaddressviewmodel>(s);
-                    add.ward_id = _dbContext.ward.Where(t => t.Name.Contains(s.sha_ward)).FirstOrDefault().Id;
-                    add.district_id = _dbContext.district.Where(t => t.Name.Contains(s.sha_district)).FirstOrDefault().Id;
-                    add.province_id = _dbContext.province.Where(t => t.Name.Contains(s.sha_province)).FirstOrDefault().Id;
-                    lst_add.Add(add);
-                }
-                customerview.list_address = lst_add;
+                //var list_address = _dbContext.ship_address.Where(s => s.customer_id == i.cu_id).ToList();
+                //List<shipaddressviewmodel> lst_add = new List<shipaddressviewmodel>();
+                //foreach (ship_address s in list_address)
+                //{
+                //    shipaddressviewmodel add = _mapper.Map<shipaddressviewmodel>(s);
+                //    add.ward_id = _dbContext.ward.Where(t => t.Name.Contains(s.sha_ward)).FirstOrDefault().Id;
+                //    add.district_id = _dbContext.district.Where(t => t.Name.Contains(s.sha_district)).FirstOrDefault().Id;
+                //    add.province_id = _dbContext.province.Where(t => t.Name.Contains(s.sha_province)).FirstOrDefault().Id;
+                //    lst_add.Add(add);
+                //}
+                //customerview.list_address = lst_add;
                 
 
                 res.Add(customerview);
@@ -642,17 +717,90 @@ namespace ERP.Repository.Repositories
             }
             customerview.list_customer_phone = lst_cp_add;
             //lay ra lich su mua cua khach hang
-            var list_cuo_history = _dbContext.customer_order.Where(s => s.customer_id == i.cu_id).ToList();
-            List<customerorderhistoryviewmodel> lst_cuo_his = new List<customerorderhistoryviewmodel>();
-            foreach (customer_order s in list_cuo_history)
+            #region cusotmer order service
+            var list_cuo_service_history = _dbContext.customer_order.Where(s => s.customer_id == i.cu_id && s.cuo_code.Contains("ORS")).ToList();
+            List<customerorderservicehistoryviewmodel> lst_cuo_service_his = new List<customerorderservicehistoryviewmodel>();
+            foreach (customer_order s in list_cuo_service_history)
             {
-                customerorderhistoryviewmodel add = _mapper.Map<customerorderhistoryviewmodel>(s);
+                customerorderservicehistoryviewmodel add = _mapper.Map<customerorderservicehistoryviewmodel>(s);
                 add.staff_name = _dbContext.staffs.Where(t => t.sta_id == s.staff_id).FirstOrDefault().sta_fullname;
-                lst_cuo_his.Add(add);
+                #region list_service
+                var lts_service = (from ex in _dbContext.order_service
+                                   join od in _dbContext.services on ex.service_id equals od.se_id
+                                   join cuo in _dbContext.customer_order on ex.customer_order_id equals cuo.cuo_id
+                                   where ex.customer_order_id == s.cuo_id && cuo.customer_id == cu_id
+                                   group od by od.se_id into t
+                                   select new
+                                   {
+                                       t.Key
+                                   }).ToList();
+                List<serviceviewmodel> lts_add_se = new List<serviceviewmodel>();
+                foreach (var se in lts_service)
+                {
+                    service ss = _dbContext.services.Find(se.Key);
+                    serviceviewmodel serviceview = _mapper.Map<serviceviewmodel>(ss);
+
+
+                    for (int j = 1; j < EnumService.se_type.Length + 1; j++)
+                    {
+                        if (j == ss.se_type)
+                        {
+                            serviceview.se_type_name = EnumService.se_type[j - 1];
+                        }
+                    }
+                    var x = _dbContext.service_category.Find(ss.service_category_id);
+                    if (x != null) serviceview.service_category_name = x.sc_name;
+
+
+                    lts_add_se.Add(serviceview);
+                }
+                add.list_service_history = lts_add_se;
+                #endregion
+                lst_cuo_service_his.Add(add);
             }
+            customerview.list_customer_order_service = lst_cuo_service_his;
+            #endregion
+            //lay ra lich su mua cua khach hang
+            #region customer order product
+            var list_cuo_product_history = _dbContext.customer_order.Where(s => s.customer_id == i.cu_id && s.cuo_code.Contains("ORS")).ToList();
+            List<customerorderproducthistoryviewmodel> lst_cuo_product_his = new List<customerorderproducthistoryviewmodel>();
+            foreach (customer_order s in list_cuo_product_history)
+            {
+                customerorderproducthistoryviewmodel add = _mapper.Map<customerorderproducthistoryviewmodel>(s);
+                add.staff_name = _dbContext.staffs.Where(t => t.sta_id == s.staff_id).FirstOrDefault().sta_fullname;
+                #region list_product
+                var lts_product = (from ex in _dbContext.order_product
+                                   join od in _dbContext.products on ex.product_id equals od.pu_id
+                                   join cuo in _dbContext.customer_order on ex.customer_order_id equals cuo.cuo_id
+                                   where ex.customer_order_id == s.cuo_id && cuo.customer_id == i.cu_id
+                                   group od by od.pu_id into t
+                                   select new
+                                   {
+                                       t.Key
+                                   }).ToList();
+                List<productviewmodelpluss> lts_add_se = new List<productviewmodelpluss>();
+                foreach (var se in lts_product)
+                {
+                    product ss = _dbContext.products.Find(se.Key);
+                    productviewmodelpluss productview = _mapper.Map<productviewmodelpluss>(ss);
+                    var product_category = _dbContext.product_category.Find(ss.product_category_id);
+                    if (product_category != null) productview.product_category_name = product_category.pc_name;
+                    for (int j = 1; j < EnumProduct.pu_unit.Length + 1; j++)
+                    {
+                        if (j == ss.pu_unit)
+                        {
+                            productview.pu_unit_name = EnumProduct.pu_unit[j - 1];
+                        }
+                    }
 
-
-            customerview.list_customer_order = lst_cuo_his;
+                    lts_add_se.Add(productview);
+                }
+                add.list_product_history = lts_add_se;
+                #endregion
+                lst_cuo_product_his.Add(add);
+            }
+            customerview.list_customer_order_product = lst_cuo_product_his;
+            #endregion
             //lay ra lich su cham soc cua khach hang
             var list_tran_history = _dbContext.transactions.Where(s => s.customer_id == i.cu_id).ToList();
             List<customertransactionviewmodel> lst_tra_his = new List<customertransactionviewmodel>();
@@ -725,15 +873,14 @@ namespace ERP.Repository.Repositories
         public PagedResults<customerviewexport> ExportCustomer(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, DateTime? start_date, DateTime? end_date, string name)
         {
             if (name != null) name = name.Trim();
-            List<customer> list = new List<customer>();
+            List<customer> list;
             List<customerviewexport> res = new List<customerviewexport>();
             var skipAmount = pageSize * pageNumber;
-
             if (name == null)
             {
                 list = _dbContext.customers.ToList();
             }
-            else list = _dbContext.customers.Where(x => x.cu_fullname.Contains(name)).ToList();
+            else list = _dbContext.customers.Where(x => x.cu_fullname.Contains(name) || x.cu_code.Contains(name) || x.cu_email.Contains(name) || x.cu_note.Contains(name)).ToList();
             if (source_id != null)
             {
                 list = list.Where(x => x.source_id == source_id).ToList();
@@ -755,38 +902,55 @@ namespace ERP.Repository.Repositories
                 end_date = end_date.Value.AddDays(1);
                 list = list.Where(x => x.cu_create_date <= end_date).ToList();
             }
+            var total = list.Count();
 
-            var total = _dbContext.customers.Count();
-
-            var results = list.OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
+            var results = list.OrderByDescending(t => t.cu_id).Skip(skipAmount).Take(pageSize);
             foreach (customer i in results)
             {
-                var customerex = _mapper.Map<customerviewexport>(i);
-                var sources = _dbContext.sources.FirstOrDefault(x => x.src_id == i.source_id);
-                var customergroup = _dbContext.customer_group.FirstOrDefault(x => x.cg_id == i.customer_group_id);
-                customerex.source_name = sources.src_name;
-                customerex.customer_group_name = customergroup.cg_name;
+                var customerview = _mapper.Map<customerviewexport>(i);
+                var sources = _dbContext.sources.Find(i.source_id);
+                var customergroup = _dbContext.customer_group.Find(i.customer_group_id);
                 var curator = _dbContext.staffs.Find(i.cu_curator_id);
                 var staff_cu = _dbContext.staffs.Find(i.staff_id);
-                if (curator != null) customerex.cu_curator_name = curator.sta_fullname;
-                if (staff_cu != null) customerex.staff_name = staff_cu.sta_fullname;
+                if (sources != null) customerview.source_name = sources.src_name;
+                if (customergroup != null) customerview.customer_group_name = customergroup.cg_name;
 
-                for (int j = 1; j < EnumCustomer.cu_type.Length+1; j++)
+                for (int j = 1; j < EnumCustomer.cu_type.Length + 1; j++)
                 {
                     if (j == i.cu_type)
                     {
-                        customerex.cu_type_name = EnumCustomer.cu_type[j - 1];
+                        customerview.cu_type_name = EnumCustomer.cu_type[j - 1];
                     }
                 }
-                //So dien thoại 
-                var mobile = _dbContext.customer_phones.Where(x => x.customer_id == i.cu_id && x.cp_type == 1).FirstOrDefault();
-                if(mobile != null) customerex.cu_mobile = mobile.cp_phone_number;
+                for (int j = 1; j < EnumCustomer.cu_flag_order.Length + 1; j++)
+                {
+                    if (j == i.cu_flag_order)
+                    {
+                        customerview.cu_flag_order_name = EnumCustomer.cu_flag_order[j - 1];
+                    }
+                }
+                for (int j = 1; j < EnumCustomer.cu_flag_used.Length + 1; j++)
+                {
+                    if (j == i.cu_flag_used)
+                    {
+                        customerview.cu_flag_used_name = EnumCustomer.cu_flag_used[j - 1];
+                    }
+                }
+                for (int j = 1; j < EnumCustomer.cu_status.Length + 1; j++)
+                {
+                    if (j == i.cu_status)
+                    {
+                        customerview.cu_status_name = EnumCustomer.cu_status[j - 1];
+                    }
+                }
                 var address = _dbContext.ship_address.Where(x => x.customer_id == i.cu_id && x.sha_flag_center == 1).FirstOrDefault();
-                if (address != null) customerex.cu_address = String.Concat(address.sha_province, " - ", address.sha_district, " - ", address.sha_ward, " - ", address.sha_detail);
-                if (customerex.cu_status == 1 || customerex.cu_status == null) customerex.cu_status_name = "Kích hoạt";
-                else customerex.cu_status_name = "Khóa";
+                if (address != null) customerview.cu_address = String.Concat(address.sha_province, "-", address.sha_district, "-", address.sha_ward, "-", address.sha_detail);
 
-                res.Add(customerex);
+                //so dien thoai 
+                var phone = _dbContext.customer_phones.Where(x => x.cp_type == 1).FirstOrDefault();
+                if (phone != null) customerview.cu_mobile = phone.cp_phone_number;
+
+                res.Add(customerview);
             }
 
             var mod = total % pageSize;
@@ -812,8 +976,10 @@ namespace ERP.Repository.Repositories
             var customerview = _mapper.Map<transactioncustomerviewmodel>(cus);
             var sources = _dbContext.sources.FirstOrDefault(x => x.src_id == cus.source_id);
             var customergroup = _dbContext.customer_group.FirstOrDefault(x => x.cg_id == cus.customer_group_id);
-            customerview.source_name = sources.src_name;
-            customerview.customer_group_name = customergroup.cg_name;
+            var curator = _dbContext.staffs.Find(customerview.cu_curator_id);
+            if(curator != null) customerview.cu_curator_name = curator.sta_fullname;
+            if (sources != null)  customerview.source_name = sources.src_name;
+            if (customergroup != null) customerview.customer_group_name = customergroup.cg_name;
             for (int j = 1; j < EnumCustomer.cu_type.Length + 1; j++)
             {
                 if (j == cus.cu_type)
@@ -821,10 +987,57 @@ namespace ERP.Repository.Repositories
                     customerview.cu_type_name = EnumCustomer.cu_type[j - 1];
                 }
             }
+            //lay ra lich su dich vu cua khach hang
+            #region cusotmer order service
+            List<transactionorderserviceviewmodel> list_add_order_service = new List<transactionorderserviceviewmodel>();
+            var list_customer_order_service = (from od in _dbContext.customer_order
+                                      join ex in _dbContext.executors on od.cuo_id equals ex.customer_order_id
+                                      where ex.exe_status == 1
+                                      select new
+                                      {
+                                          od.cuo_id
+                                      }).ToList();
+            foreach (var cuo in list_customer_order_service)
+            {
+                var list_order_service = _dbContext.order_service.Where(o => o.customer_order_id == cuo.cuo_id).ToList();
+                foreach (order_service ord in list_order_service)
+                {
+                    var se = _dbContext.services.Find(ord.service_id);
+                    if(se != null)
+                    {
+                        transactionorderserviceviewmodel add = _mapper.Map<transactionorderserviceviewmodel>(se);
+                        for (int j = 1; j < EnumService.se_type.Length + 1; j++)
+                        {
+                            if (j == add.se_type)
+                            {
+                                add.se_type_name = EnumService.se_type[j - 1];
+                            }
+                        }
+                        var x = _dbContext.service_category.Find(add.service_category_id);
+                        if (x != null) add.service_category_name = x.sc_name;
+                        var date_use_end = (from od in _dbContext.order_service
+                                           join cu in _dbContext.customers on cu_id equals cu.cu_id
+                                           join ex in _dbContext.executors on od.customer_order_id equals ex.customer_order_id
+                                           where ex.exe_status == 1 && od.service_id == ord.service_id
+                                           group ex by ex.work_time into t
+                                           orderby t.Key descending
+                                           select new
+                                           {
+                                               t.Key
+                                           }).FirstOrDefault();
+                        if (date_use_end != null) add.cuo_date = Convert.ToDateTime(date_use_end.Key);
+                        list_add_order_service.Add(add);
+                    }
+                    
+                }
+
+            }
+            customerview.list_customer_order_service = list_add_order_service;
+            #endregion
             //Lay ra lich su mua 
             List<transactionorderproductviewmodel> list_add_order_product = new List<transactionorderproductviewmodel>();
-            var list_customer_order = _dbContext.customer_order.Where(cuo => cuo.customer_id == cu_id).ToList();
-            foreach (customer_order cuo in list_customer_order)
+            var list_customer_order_product = _dbContext.customer_order.Where(cuo => cuo.customer_id == cu_id).ToList();
+            foreach (customer_order cuo in list_customer_order_product)
             {
                 var list_order_product = _dbContext.order_product.Where(o => o.customer_order_id == cuo.cuo_id).ToList();
                 foreach (order_product ord in list_order_product)
@@ -856,6 +1069,7 @@ namespace ERP.Repository.Repositories
 
             }
             customerview.list_order_product = list_add_order_product;
+
             res = customerview;
             
             return res;

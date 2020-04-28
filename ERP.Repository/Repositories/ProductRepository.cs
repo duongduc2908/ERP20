@@ -23,40 +23,25 @@ namespace ERP.Repository.Repositories
             this._mapper = _mapper;
         }
         
-        public PagedResults<productviewmodel> GetAllPageById( int id)
+        public productviewmodel GetAllPageById( int id)
         {
             List<productviewmodel> res = new List<productviewmodel>();
-            var list = _dbContext.products.Where(i => i.pu_id == id).ToList();
-            var totalNumberOfRecords = _dbContext.products.Count();
+            var results = _dbContext.products.Where(i => i.pu_id == id).FirstOrDefault();
+            var productview = _mapper.Map<productviewmodel>(results);
+            var product_category = _dbContext.product_category.FirstOrDefault(x => x.pc_id == results.product_category_id);
+            var supplier = _dbContext.suppliers.FirstOrDefault(x => x.su_id == results.provider_id);
 
-            var results = list.ToList();
-            foreach (product i in results)
+            productview.product_category_name = product_category.pc_name;
+            productview.provider_name = supplier.su_name;
+            for(int j = 1; j< 3; j++)
             {
-                var productview = _mapper.Map<productviewmodel>(i);
-                var product_category = _dbContext.product_category.FirstOrDefault(x => x.pc_id == i.product_category_id);
-                var supplier = _dbContext.suppliers.FirstOrDefault(x => x.su_id == i.provider_id);
-
-                productview.product_category_name = product_category.pc_name;
-                productview.provider_name = supplier.su_name;
-                for(int j = 1; j< 3; j++)
+                if(j == results.pu_unit)
                 {
-                    if(j == i.pu_unit)
-                    {
-                        productview.pu_unit_name = EnumProduct.pu_unit[j-1];
-                    }
+                    productview.pu_unit_name = EnumProduct.pu_unit[j-1];
                 }
-               
-                res.Add(productview);
             }
-            
-            return new PagedResults<productviewmodel>
-            {
-                Results = res,
-                PageNumber = 0,
-                PageSize = 0,
-                TotalNumberOfPages = 0,
-                TotalNumberOfRecords = totalNumberOfRecords
-            };
+
+            return productview;
         }
         public PagedResults<productviewmodel> GetAllPage(int pageNumber, int pageSize)
         {

@@ -14,5 +14,7 @@ namespace ERP.Data.ModelsERP
         public int? staff_id { get; set; }
 
         public int? training_id { get; set; }
+
+        public int? ts_evaluate { get; set; }
     }
 }
