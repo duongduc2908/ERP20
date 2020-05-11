@@ -83,8 +83,11 @@ namespace ERP.Repository.Repositories
                     }
                 }
                 //Bat cac truong tra ve id 
-                transactionview.staff_name = _dbContext.staffs.Where(s => s.sta_id == tran.staff_id).FirstOrDefault().sta_fullname;
-                transactionview.customer_name = _dbContext.customers.Where(s => s.cu_id == tran.customer_id).FirstOrDefault().cu_fullname;
+                var staff_name = _dbContext.staffs.Where(s => s.sta_id == tran.staff_id).FirstOrDefault();
+                if(staff_name != null) transactionview.staff_name = staff_name.sta_fullname;
+                var cus_name = _dbContext.customers.Where(s => s.cu_id == tran.customer_id).FirstOrDefault();
+                if(cus_name != null) transactionview.customer_name = cus_name.cu_fullname;
+
 
                 //Lay ra thong tin khach hang 
                 //#region customer
@@ -204,14 +207,15 @@ namespace ERP.Repository.Repositories
             List<transactionorderserviceviewmodel> list_add_order_service = new List<transactionorderserviceviewmodel>();
             var list_customer_order_service = (from od in _dbContext.customer_order
                                                join ex in _dbContext.executors on od.cuo_id equals ex.customer_order_id
-                                               where ex.exe_status == 1
+                                               where ex.exe_status == 1 && od.customer_id == cus.cu_id
+                                               group od by od.cuo_id into t
                                                select new
                                                {
-                                                   od.cuo_id
+                                                   t.Key
                                                }).ToList();
             foreach (var cuo in list_customer_order_service)
             {
-                var list_order_service = _dbContext.order_service.Where(o => o.customer_order_id == cuo.cuo_id).ToList();
+                var list_order_service = _dbContext.order_service.Where(o => o.customer_order_id == cuo.Key).ToList();
                 foreach (order_service ord in list_order_service)
                 {
                     var se = _dbContext.services.Find(ord.service_id);
@@ -256,15 +260,22 @@ namespace ERP.Repository.Repositories
                 {
                     transactionorderproductviewmodel add = _mapper.Map<transactionorderproductviewmodel>(ord);
                     var prodcut_cur = _dbContext.products.Where(pu => pu.pu_id == add.product_id).FirstOrDefault();
-                    add.pu_name = prodcut_cur.pu_name;
-                    for (int j = 1; j < EnumProduct.pu_unit.Length + 1; j++)
+                    if (prodcut_cur != null)
                     {
-                        if (j == prodcut_cur.pu_unit)
+                        add.pu_name = prodcut_cur.pu_name;
+                        for (int j = 1; j < EnumProduct.pu_unit.Length + 1; j++)
                         {
-                            add.pu_unit_name = EnumProduct.pu_unit[j - 1];
+                            if (j == prodcut_cur.pu_unit)
+                            {
+                                add.pu_unit_name = EnumProduct.pu_unit[j - 1];
+                            }
                         }
                     }
-                    add.cu_fullname = _dbContext.customers.Where(c => c.cu_id == cus.cu_id).FirstOrDefault().cu_fullname;
+
+                    
+                    var cu_name = _dbContext.customers.Where(c => c.cu_id == cus.cu_id).FirstOrDefault();
+                    if(cu_name != null) add.cu_fullname = cu_name.cu_fullname;
+
                     for (int j = 1; j < EnumCustomerOrder.status.Length + 1; j++)
                     {
                         if (j == cuo.cuo_status)
@@ -336,14 +347,14 @@ namespace ERP.Repository.Repositories
         }
         public PagedResults<transactionviewmodel> GetAllPageSearch(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name)
         {
-            if (search_name != null) search_name = search_name.Trim();
+            if (search_name != null) search_name = search_name.Trim().ToLower();
             List<transactionviewmodel> res = new List<transactionviewmodel>();
             List<transaction> list = new List<transaction>();
 
             var skipAmount = pageSize * pageNumber;
 
             if (search_name == null) list = _dbContext.transactions.ToList();
-            else list = _dbContext.transactions.Where(i => i.tra_title.Contains(search_name) || i.tra_result.Contains(search_name)).ToList();
+            else list = _dbContext.transactions.Where(i => i.tra_title.ToLower().Contains(search_name) || i.tra_result.ToLower().Contains(search_name)).ToList();
             if (start_date != null)
             {
                 list = list.Where(x => x.tra_datetime >= start_date).ToList();

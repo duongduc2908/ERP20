@@ -1,21 +1,13 @@
 ﻿using AutoMapper;
-using ERP.API.Models;
 using ERP.Common.Constants;
 using ERP.Common.Models;
 using ERP.Data.Dto;
-using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
 using ERP.Data.ModelsERP.ModelView.Statistics;
 using ERP.Data.ModelsERP.ModelView.Transaction;
-using ERP.Extension.Extensions;
 using ERP.Service.Services.IServices;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Cors;
 

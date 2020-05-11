@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SocketIOClient;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
@@ -6,7 +7,9 @@ using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
+using System.Net.Sockets;
 using System.Security.Claims;
+using System.Text;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
@@ -15,6 +18,7 @@ namespace ERP.API.Controllers.Dashboard
 {
     public class BaseController : ApiController
     {
+        #region["Parameters"]
         public string GwUserCode = "";
         public string GwPassword = "";
         public string FuncType = "";
@@ -22,7 +26,7 @@ namespace ERP.API.Controllers.Dashboard
         public string Ft_RecordStartExportExcel = "0";
         public string Ft_RecordCount = "123456000";
         public string Ft_WhereClause = "";
-        public static int current_id ;
+        public static int current_id;
         public string Hethong = "";
         public string FolderUploadTest = "";
         public static string SubPath = "";
@@ -31,13 +35,19 @@ namespace ERP.API.Controllers.Dashboard
         public int RowsWorksheets = 1048570; // If you are working on Excel 2007 or any of the latest versions - there are 1048576 rows and 16384 columns. 
         public string Uploads = "Uploads";
         public string TempFiles = "TempFiles";
-        //public double FileUploadSize = 10485760; // 10MB
-        //public double FileImageSize = 6164480; // 5MB
         public double FileUploadSize = 26214400; // 25MB
         public double FileImageSize = 26214400; // 25MB
         public string FlagActive = "1";
         public string FlagInActive = "0";
         private int inext = 0;
+        public static Socket socket;
+        public static String ip= "localhost";
+        public static String user;
+        public static int PORT_NUMBER = 9999;
+        public const int BUFFER_SIZE = 1024;
+        public static ASCIIEncoding encoding = new ASCIIEncoding();
+        #endregion
+
         public BaseController() {
             
         }
@@ -49,7 +59,6 @@ namespace ERP.API.Controllers.Dashboard
             //var strGetNextTId = strNextTId + fileId;
             return strNextTId;
         }
-
         public string GenExcelExportFilePath(string prefix, ref string virualPath)
         {
             String subpath = string.Format("/TempFiles/{0}", DateTime.Now.ToString("yyyy-MM-dd"));
@@ -77,8 +86,6 @@ namespace ERP.API.Controllers.Dashboard
 
             return filePath;
         }
-
-
         public static void send_mail(string body, string to_MailAddress, string title)
         {
             MailMessage message = new MailMessage();

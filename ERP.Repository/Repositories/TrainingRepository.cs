@@ -44,7 +44,7 @@ namespace ERP.Repository.Repositories
         {
             if (search_name != null)
             {
-                search_name = search_name.Trim();
+                search_name = search_name.Trim().ToLower();
             }
             List<training> list_res;
             List<training> list;
@@ -53,7 +53,7 @@ namespace ERP.Repository.Repositories
             {
                 list_res = _dbContext.trainings.ToList();
             }
-            else list_res = _dbContext.trainings.Where(x => x.tn_name.Contains(search_name)|| x.tn_code.Contains(search_name)).ToList();
+            else list_res = _dbContext.trainings.Where(x => x.tn_name.ToLower().Contains(search_name)|| x.tn_code.ToLower().Contains(search_name)).ToList();
             
             var total = list_res.Count();
             list = list_res.OrderByDescending(t => t.tn_id).Skip(skipAmount).Take(pageSize).ToList();

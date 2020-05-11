@@ -48,7 +48,10 @@ namespace ERP.Service.Services
         {
             return this._repository.GetCustomerByCurator(pageSize, pageNumber, cu_curator_id,search_name);
         }
-
+        public bool Check_location(ship_address sa)
+        {
+            return this._repository.Check_location(sa);
+        }
         public PagedResults<smscustomerviewmodel> GetAllPageSearchSms(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, string name)
         {
             return this._repository.GetAllPageSearchSms(pageNumber, pageSize, source_id, cu_type, customer_group_id, name);

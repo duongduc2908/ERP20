@@ -7,7 +7,7 @@ namespace ERP.Common.Constants.Enums
 {
     public class EnumProduct
     {
-        public static string[] pu_unit = new string[2] {"Cái", "Kg"};
+        public static string[] pu_unit = new string[3] {"Cái", "Kg","Hộp"};
         
     }
 }

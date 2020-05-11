@@ -28,6 +28,7 @@ namespace ERP.Repository.Repositories.IRepositories
         PagedResults<servicesearchcustomerviewmodel> GetAllPageSearchService(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, string name);
         customerviewmodel GetInfor(int cu_id);
         servicesearchcustomerviewmodel GetServiceInforCustomer(int cu_id);
+        bool Check_location(ship_address sa);
         List<dropdown> GetAllType();
         transactioncustomerviewmodel GetInforCustomerTransaction(int cu_id);
         List<dropdown> GetAllDropdown();

@@ -16,6 +16,7 @@ using ERP.Extension.Extensions;
 using ERP.Service.Services.IServices;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -40,6 +41,7 @@ namespace ERP.API.Controllers.Dashboard
         private readonly IServiceTimeService _servicetimeservice;
         private readonly IServiceService _serviceservice;
         private readonly ICustomerPhoneService _customerphoneservice;
+        private readonly IProductService _productservice;
 
         private readonly IMapper _mapper;
 
@@ -47,9 +49,9 @@ namespace ERP.API.Controllers.Dashboard
         {
 
         }
-        public ManagerCustomerOrderController(IServiceService serviceservice, ICustomerPhoneService customerphoneservice, IServiceTimeService servicetimeservice, IExecutorService executorservice, IOrderServiceService orderserviceservice, ICustomerOrderService customer_orderservice, ICustomerService customerservice, IOrderProductService order_productservice, IShipAddressService shipAddressService, IMapper mapper)
+        public ManagerCustomerOrderController(IServiceService serviceservice, ICustomerPhoneService customerphoneservice, IServiceTimeService servicetimeservice, IExecutorService executorservice, IOrderServiceService orderserviceservice, ICustomerOrderService customer_orderservice, ICustomerService customerservice, IOrderProductService order_productservice, IShipAddressService shipAddressService, IMapper mapper, IProductService productService)
         {
-
+            this._productservice = productService;
             this._order_productservice = order_productservice;
             this._shipaddressservice = shipAddressService;
             this._customer_orderservice = customer_orderservice;
@@ -672,10 +674,11 @@ namespace ERP.API.Controllers.Dashboard
                 customer_orderCreateViewModel.cuo_payment_status = c.cuo_payment_status;
                 customer_orderCreateViewModel.cuo_payment_type = c.cuo_payment_type;
                 customer_orderCreateViewModel.cuo_ship_tax = c.cuo_ship_tax;
-                customer_orderCreateViewModel.cuo_total_price = c.cuo_total_price;
-                customer_orderCreateViewModel.cuo_discount = c.cuo_discount;
                 customer_orderCreateViewModel.cuo_status = c.cuo_status;
                 customer_orderCreateViewModel.cuo_address = c.cuo_address;
+                customer_orderCreateViewModel.cuo_total_price = c.cuo_total_price;
+                customer_orderCreateViewModel.cuo_discount = c.cuo_discount;
+                
 
 
                 customer_orderCreateViewModel.cuo_date = DateTime.Now;
@@ -2165,7 +2168,7 @@ namespace ERP.API.Controllers.Dashboard
                     orderCreateViewModel.op_discount = i.op_discount;
                     orderCreateViewModel.op_note = i.op_note;
                     orderCreateViewModel.op_quantity = i.op_quantity;
-                    orderCreateViewModel.product_id = i.product_id;
+                    orderCreateViewModel.product_id = i.pu_id;
                     orderCreateViewModel.op_total_value = i.op_total_value;
 
 
@@ -2314,7 +2317,6 @@ namespace ERP.API.Controllers.Dashboard
         }
         #endregion
 
-
         #region["Dịch vụ"]
         [HttpGet]
         [Route("api/customer-orders/service_by_date")]
@@ -2349,10 +2351,10 @@ namespace ERP.API.Controllers.Dashboard
             ResponseDataDTO<string> response = new ResponseDataDTO<string>();
             try
             {
-                var list_customer_order = new List<customerorderview>();
+                var list_customer_order = new List<customerorderproductview>();
 
                 //Đưa ra danh sách staff trong trang nào đó 
-                var objRT_Mst_Customer_Order = _customer_orderservice.ExportCustomerOrder(pageNumber, pageSize, payment_type_id, start_date, end_date, name);
+                var objRT_Mst_Customer_Order = _customer_orderservice.ExportCustomerOrderProduct(pageNumber, pageSize, payment_type_id, start_date, end_date, name);
                 if (objRT_Mst_Customer_Order != null)
                 {
                     list_customer_order.AddRange(objRT_Mst_Customer_Order.Results);
@@ -2391,25 +2393,213 @@ namespace ERP.API.Controllers.Dashboard
             }
             return Ok(response);
         }
-        #endregion
+        [HttpGet]
+        [Route("api/customer_order_product/export_template")]
+        public async Task<IHttpActionResult> ExportTemplate()
+        {
 
+            ResponseDataDTO<string> response = new ResponseDataDTO<string>();
+            try
+            {
+                var listStaff = new List<customerorderproductview>();
+                Dictionary<string, string> dicColNames = GetImportDicColumsTemplate();
+
+                string url = "";
+                string filePath = GenExcelExportFilePath(string.Format(typeof(customerorderproductview).Name), ref url);
+
+                ExcelExport.ExportToExcelTemplate(listStaff, dicColNames, filePath, string.Format("Đặt hàng sản phẩm "));
+                //Input: http://27.72.147.222:1230/TempFiles/2020-03-11/department_200311210940.xlsx
+                //"D:\\BootAi\\ERP20\\ERP.API\\TempFiles\\2020-03-12\\department_200312092643.xlsx"
+
+                filePath = filePath.Replace("\\", "/");
+                int index = filePath.IndexOf("TempFiles");
+                filePath = filePath.Substring(index);
+                response.Code = HttpCode.OK;
+                response.Message = "Đã xuất excel thành công!";
+                response.Data = filePath;
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message; ;
+                response.Data = null;
+                Console.WriteLine(ex.ToString());
+
+                return Ok(response);
+            }
+            return Ok(response);
+        }
+        #endregion
+        #region["Import"] 
+        [HttpPost]
+        [Route("api/customer_order_product/import")]
+        public async Task<IHttpActionResult> Import()
+        {
+            ResponseDataDTO<customer_order> response = new ResponseDataDTO<customer_order>();
+            var exitsData = "";
+            try
+            {
+                var path = Path.GetTempPath();
+
+                if (!Request.Content.IsMimeMultipartContent("form-data"))
+                {
+                    throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.UnsupportedMediaType));
+                }
+
+                MultipartFormDataStreamProvider streamProvider = new MultipartFormDataStreamProvider(path);
+
+                await Request.Content.ReadAsMultipartAsync(streamProvider);
+
+                // save file
+                string fileName = "";
+                if (streamProvider.FileData.Count > 0)
+                {
+                    foreach (MultipartFileData fileData in streamProvider.FileData)
+                    {
+                        fileName = fileData.Headers.ContentDisposition.FileName;
+                        //fileName = fileName.Replace(@"","");
+
+                        string fileFormat = Utilis.GetFileFormat(fileName);
+                        if (fileFormat.Equals("xlsm") || fileFormat.Equals("xlsx"))
+                        {
+                            fileName = FileExtension.SaveFileCustomerOrderOnDiskExcel(fileData, "test", BaseController.folder(), BaseController.get_timestamp());
+                        }
+                        else
+                        {
+                            throw new Exception("File excel import không hợp lệ!");
+                        }
+
+                    }
+                }
+                var list = new List<customerorderproductview>();
+                fileName = "C:/inetpub/wwwroot/coerp" + fileName;
+                //fileName = "D:/ERP20/ERP.API" + fileName;
+                var dataset = ExcelImport.ImportExcelXLS(fileName, true);
+                DataTable table = (DataTable)dataset.Tables[0];
+                if (table != null && table.Rows.Count > 0)
+                {
+                    if (table.Columns.Count != 11)
+                    {
+                        exitsData = "File excel import không hợp lệ!";
+                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                        response.Message = exitsData;
+                        response.Data = null;
+                        return Ok(response);
+                    }
+                    list = DataTableCmUtils.ToListof<customerorderproductview>(table);
+                    foreach (customerorderproductview i in list)
+                    {
+                        #region["Check tồn tại"]
+                        var us = _customerservice.GetAllIncluing(t => t.cu_code.Equals(i.cu_code)).FirstOrDefault();
+                        if (us == null)
+                        {
+                            exitsData = "Chưa có mã '" + i.cu_code + "' trong cơ sở dữ liệu!";
+                            response.Code = HttpCode.NOT_FOUND;
+                            response.Message = exitsData;
+                            response.Error = "cu_code";
+                            return Ok(response);
+                        }
+                        var dt = _productservice.GetAllIncluing(y => y.pu_code.Equals(i.pu_code)).FirstOrDefault();
+                        if (dt == null)
+                        {
+                            exitsData = "Chưa có mã sản phẩm '" + i.pu_code + "' trong cơ sở dữ liệu!";
+                            response.Code = HttpCode.NOT_FOUND;
+                            response.Message = exitsData;
+                            response.Error = "pu_code";
+                            return Ok(response);
+                        }
+                        #endregion
+
+                        #region["Create customer_order_product"]
+                        customer_order cuo_create = new customer_order();
+                        cuo_create = _mapper.Map<customer_order>(i);
+                        var exits = _customer_orderservice.GetAllIncluing(cuo => cuo.cuo_code.ToLower().Equals(cuo_create.cuo_code.ToLower())).FirstOrDefault();
+                        if(exits==null)
+                        {
+                            cuo_create.cuo_code = cuo_create.cuo_code.ToUpper();
+                            cuo_create.customer_id = us.cu_id;
+                            cuo_create.staff_id = BaseController.get_id_current();
+                            cuo_create.cuo_payment_status = 1;
+                            cuo_create.cuo_payment_type = 1;
+                            cuo_create.cuo_ship_tax = 0;
+                            cuo_create.cuo_status = 3;
+                            try
+                            {
+                                _customer_orderservice.Create(cuo_create);
+                            }
+                            catch(Exception ex)
+                            {
+                                response.Code = HttpCode.NOT_FOUND;
+                                response.Message = ex.Message;
+                                response.Error = "";
+                                return Ok(response);
+                            }
+                        }
+                        #endregion
+
+                        #region["Create order_product"]
+                        
+                        try
+                        {
+                            var cuo_id_last = _customer_orderservice.GetLast().cuo_id;
+                            order_product op_create = new order_product();
+                            op_create = _mapper.Map<order_product>(i);
+                            op_create.customer_order_id = cuo_id_last;
+                            op_create.product_id = dt.pu_id;
+                            _order_productservice.Create(op_create);
+                        }
+                        catch(Exception ex)
+                        {
+                            response.Code = HttpCode.NOT_FOUND;
+                            response.Message = ex.Message;
+                            response.Error = "";
+                            return Ok(response);
+                        }
+                        #endregion
+                    }
+                    exitsData = "Đã nhập dữ liệu excel thành công!";
+                    response.Code = HttpCode.OK;
+                    response.Message = exitsData;
+                    response.Data = null;
+                    return Ok(response);
+                }
+                else
+                {
+                    exitsData = "File excel import không có dữ liệu!";
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = exitsData;
+                    response.Data = null;
+                    return Ok(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message; ;
+                response.Data = null;
+                Console.WriteLine(ex.ToString());
+
+                return Ok(response);
+            }
+        }
+        #endregion
         #region["DicColums"]
         private Dictionary<string, string> GetImportDicColums()
         {
             return new Dictionary<string, string>()
             {
 
-                 {"cuo_code","MDH" },
-                 {"cuo_date","Ngày tạo"},
+                 {"cuo_code","Mã đơn hàng" },
+                 {"cu_code","Mã khách hàng"},
+                 {"pu_code","Mã sản phẩm"},
+                 {"pu_name","Tên sản phẩm"},
+                 {"op_quantity","Số lượng bán"},
+                 {"pu_sale_price","Đơn giá"},
+                 {"op_discount","Chiết khấu "},
+                 {"cuo_discount","Chiết khấu đon hàng"},
+                 {"op_total_value","Thành tiền sản phẩm"},
                  {"cuo_total_price","Tổng tiền"},
-                 {"cuo_status_name","Trạng thái đơn hàng"},
-                 {"customer_name","Khách hàng"},
-                 {"cuo_payment_type_name","Loại thanh toán"},
-                 {"cuo_payment_status_name","Trạng thái thanh toán"},
-                 {"cuo_ship_tax","Phí vận chuyển"},
-                 {"staff_name","Người tạo đơn"},
-                 {"cuo_address","Địa chỉ"},
-                 {"cuo_note","Chú ý"}
+                 {"cuo_date","Ngày bán"}
 
 
             };
@@ -2418,8 +2608,17 @@ namespace ERP.API.Controllers.Dashboard
         {
             return new Dictionary<string, string>()
             {
-                  {"email","Email phong ban"},
-                 {"id","Ma bộ phận phòng ban"}
+                  {"cuo_code","Mã đơn hàng" },
+                 {"cu_code","Mã khách hàng"},
+                 {"pu_code","Mã sản phẩm"},
+                 {"pu_name","Tên sản phẩm"},
+                 {"op_quantity","Số lượng bán"},
+                 {"pu_sale_price","Đơn giá"},
+                 {"op_discount","Chiết khấu "},
+                 {"cuo_discount","Chiết khấu đon hàng"},
+                 {"op_total_value","Thành tiền sản phẩm"},
+                 {"cuo_total_price","Tổng tiền"},
+                 {"cuo_date","Ngày bán"}
             };
         }
         #endregion

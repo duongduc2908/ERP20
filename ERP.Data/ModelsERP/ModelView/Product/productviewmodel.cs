@@ -23,6 +23,7 @@ namespace ERP.Data.ModelsERP.ModelView
         public int? pu_buy_price { get; set; }
 
         public int? pu_sale_price { get; set; }
+        public int? pu_saleoff { get; set; }
 
         public string pu_unit_name { get; set; }
         public int pu_unit { get; set; }
@@ -38,6 +39,7 @@ namespace ERP.Data.ModelsERP.ModelView
 
         
         public DateTime? pu_create_date { get; set; }
+        public DateTime? pu_update_date { get; set; }
 
         public string pu_short_description { get; set; }
         [Column(TypeName = "text")]

@@ -94,6 +94,25 @@ namespace ERP.Repository.Repositories
             };
 
         }
+        public bool Check_location(ship_address sa)
+        {
+            if (sa.sha_province != null)
+            {
+                if (_dbContext.province.FirstOrDefault(x => x.Name.Equals(sa.sha_province)) == null)
+                    return false;
+            }
+            if (sa.sha_district != null)
+            {
+                if (_dbContext.district.FirstOrDefault(x => x.Name.Equals(sa.sha_district)) == null)
+                    return false;
+            }
+            if (sa.sha_ward != null)
+            {
+                if (_dbContext.ward.FirstOrDefault(x => x.Name.Equals(sa.sha_ward)) == null)
+                    return false;
+            }
+            return true;
+        }
         public PagedResults<customerviewmodel> GetAllPageByType(int pageNumber, int pageSize, int cu_type)
         {
             List<customerviewmodel> res = new List<customerviewmodel>();
@@ -149,7 +168,7 @@ namespace ERP.Repository.Repositories
         
         public PagedResults<customerviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, DateTime? start_date, DateTime? end_date, string name)
         {
-            if (name != null) name = name.Trim();
+            if (name != null) name = name.Trim().ToLower();
             List<customer> list;
             List<customerviewmodel> res = new List<customerviewmodel>();
             var skipAmount = pageSize * pageNumber;
@@ -157,7 +176,7 @@ namespace ERP.Repository.Repositories
             {
                 list = _dbContext.customers.ToList();
             }
-            else list = _dbContext.customers.Where(x => x.cu_fullname.Contains(name) || x.cu_code.Contains(name) || x.cu_email.Contains(name) || x.cu_note.Contains(name)).ToList();
+            else list = _dbContext.customers.Where(x => x.cu_fullname.ToLower().Contains(name) || x.cu_code.ToLower().Contains(name)  ).ToList();
             if (source_id != null)
             {
                 list = list.Where(x => x.source_id == source_id).ToList();
@@ -223,13 +242,16 @@ namespace ERP.Repository.Repositories
                     }
                 }
                 ship_address exists_address = _dbContext.ship_address.Where(x => x.customer_id == i.cu_id && x.sha_flag_center == 1).FirstOrDefault();
-
-                customerview.sha_ward_now = exists_address.sha_ward;
-                customerview.sha_province_now = exists_address.sha_province;
-                customerview.sha_district_now = exists_address.sha_district;
-                customerview.sha_geocoding_now = exists_address.sha_geocoding;
-                customerview.sha_detail_now = exists_address.sha_detail;
-                customerview.sha_note_now = exists_address.sha_note;
+                if(exists_address != null)
+                {
+                    customerview.sha_ward_now = exists_address.sha_ward;
+                    customerview.sha_province_now = exists_address.sha_province;
+                    customerview.sha_district_now = exists_address.sha_district;
+                    customerview.sha_geocoding_now = exists_address.sha_geocoding;
+                    customerview.sha_detail_now = exists_address.sha_detail;
+                    customerview.sha_note_now = exists_address.sha_note;
+                }
+                
                 // lay ra dia chi khach hang 
                 var list_address = _dbContext.ship_address.Where(s => s.customer_id == i.cu_id && s.sha_flag_center == 0).ToList();
                 List<shipaddressviewmodel> lst_add = new List<shipaddressviewmodel>();
@@ -306,7 +328,7 @@ namespace ERP.Repository.Repositories
                 #endregion
                 //lay ra lich su mua cua khach hang
                 #region customer order product
-                var list_cuo_product_history = _dbContext.customer_order.Where(s => s.customer_id == i.cu_id && s.cuo_code.Contains("ORP")).ToList();
+                var list_cuo_product_history = _dbContext.customer_order.Where(s => s.customer_id == i.cu_id && !s.cuo_code.Contains("ORS")).ToList();
                 List<customerorderproducthistoryviewmodel> lst_cuo_product_his = new List<customerorderproducthistoryviewmodel>();
                 foreach (customer_order s in list_cuo_product_history)
                 {
@@ -398,8 +420,8 @@ namespace ERP.Repository.Repositories
                 var customerview = _mapper.Map<customeraddressviewmodel>(i);
                 var sources = _dbContext.sources.FirstOrDefault(x => x.src_id == i.source_id);
                 var customergroup = _dbContext.customer_group.FirstOrDefault(x => x.cg_id == i.customer_group_id);
-                customerview.source_name = sources.src_name;
-                customerview.customer_group_name = customergroup.cg_name;
+                if(sources != null )customerview.source_name = sources.src_name;
+                if (customergroup != null)  customerview.customer_group_name = customergroup.cg_name;
                 var curator = _dbContext.staffs.Find(i.cu_curator_id);
                 var staff_cu = _dbContext.staffs.Find(i.staff_id);
                 if(curator != null) customerview.cu_curator_name = curator.sta_fullname;
@@ -680,13 +702,16 @@ namespace ERP.Repository.Repositories
                 }
             }
             ship_address exists_address = _dbContext.ship_address.Where(x => x.customer_id == i.cu_id && x.sha_flag_center == 1).FirstOrDefault();
-
-            customerview.sha_ward_now = exists_address.sha_ward;
-            customerview.sha_province_now = exists_address.sha_province;
-            customerview.sha_district_now = exists_address.sha_district;
-            customerview.sha_geocoding_now = exists_address.sha_geocoding;
-            customerview.sha_detail_now = exists_address.sha_detail;
-            customerview.sha_note_now = exists_address.sha_note;
+            if(exists_address != null)
+            {
+                customerview.sha_ward_now = exists_address.sha_ward;
+                customerview.sha_province_now = exists_address.sha_province;
+                customerview.sha_district_now = exists_address.sha_district;
+                customerview.sha_geocoding_now = exists_address.sha_geocoding;
+                customerview.sha_detail_now = exists_address.sha_detail;
+                customerview.sha_note_now = exists_address.sha_note;
+            }
+            
             // lay ra dia chi khach hang 
             var list_address = _dbContext.ship_address.Where(s => s.customer_id == i.cu_id && s.sha_flag_center == 0).ToList();
             List<shipaddressviewmodel> lst_add = new List<shipaddressviewmodel>();
@@ -992,7 +1017,7 @@ namespace ERP.Repository.Repositories
             List<transactionorderserviceviewmodel> list_add_order_service = new List<transactionorderserviceviewmodel>();
             var list_customer_order_service = (from od in _dbContext.customer_order
                                       join ex in _dbContext.executors on od.cuo_id equals ex.customer_order_id
-                                      where ex.exe_status == 1
+                                      where ex.exe_status == 1 && od.customer_id == cus.cu_id
                                       select new
                                       {
                                           od.cuo_id

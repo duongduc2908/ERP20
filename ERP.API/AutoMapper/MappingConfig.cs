@@ -47,6 +47,8 @@ namespace ERP.API.AutoMapper
             CreateMap<customer, transactioncustomerviewmodel>();
             CreateMap<customer, smscustomerviewmodel>();
             CreateMap<customer, servicesearchcustomerviewmodel>();
+            CreateMap<customer, customerviewexport>();
+            CreateMap<customerviewexport, customer>();
 
             CreateMap<CustomerOrderCreateViewModel, customer_order>();
             CreateMap<CustomerOrderUpdateViewModel, customer_order>();
@@ -55,7 +57,8 @@ namespace ERP.API.AutoMapper
             CreateMap<customer_order, customerorderservicehistoryviewmodel>();
             CreateMap<customer_order, customerorderproducthistoryviewmodel>();
             CreateMap<customer_order, statisticsorderviewmodel>();
-            CreateMap<customer_order, customerorderview>();
+            CreateMap<customer_order, customerorderproductview>();
+            CreateMap<customerorderproductview, customer_order>();
             CreateMap<customer_order, servicercustomerorderviewmodel>();
 
             CreateMap<customer_phone, customer_phoneviewmodel>();
@@ -90,7 +93,9 @@ namespace ERP.API.AutoMapper
             CreateMap<order_product,productorderviewmodel >();
             CreateMap<order_product,orderproducthistoryviewmodel >();
             CreateMap<order_product,transactionorderproductviewmodel >();
-            
+            CreateMap<customerorderproductview, order_product>();
+            CreateMap<order_product, customerorderproductview>();
+
 
             CreateMap<OrderServiceCreateViewModel, order_service>();
             CreateMap<OrderServiceUpdateViewModel, order_service>();

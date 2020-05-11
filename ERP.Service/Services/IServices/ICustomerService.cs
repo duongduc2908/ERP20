@@ -28,6 +28,7 @@ namespace ERP.Service.Services.IServices
         customerviewmodel GetInfor(int cu_id);
         servicesearchcustomerviewmodel GetServiceInforCustomer(int cu_id);
         List<dropdown> GetAllType();
+        bool Check_location(ship_address sa);
         transactioncustomerviewmodel GetInforCustomerTransaction(int cu_id);
         List<dropdown> GetAllDropdown();
 

@@ -159,7 +159,8 @@
     <Compile Include="ModelsERP\ModelView\dropdown_salary.cs" />
     <Compile Include="ModelsERP\ModelView\Excutor\executorjson.cs" />
     <Compile Include="ModelsERP\ModelView\Excutor\executorviewmodel.cs" />
-    <Compile Include="ModelsERP\ModelView\ExportDB\customerorderview.cs" />
+    <Compile Include="ModelsERP\ModelView\ExportDB\customerorderproductview.cs" />
+    <Compile Include="ModelsERP\ModelView\ExportDB\customerorderserviceview.cs" />
     <Compile Include="ModelsERP\ModelView\ExportDB\customerviewexport.cs" />
     <Compile Include="ModelsERP\ModelView\ExportDB\productview.cs" />
     <Compile Include="ModelsERP\ModelView\ExportDB\staffview.cs" />

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ERP.API.Models;
 using ERP.Common.Constants;
+using ERP.Common.Constants.Enums;
 using ERP.Common.Excel;
 using ERP.Common.Models;
 using ERP.Data.Dto;
@@ -11,6 +12,7 @@ using ERP.Extension.Extensions;
 using ERP.Service.Services.IServices;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -27,13 +29,15 @@ namespace ERP.API.Controllers.Dashboard
     public class ManagerProductController : BaseController
     {
         private readonly IProductService _productservice;
+        private readonly IProductCategoryService _productcategoryservice;
 
         private readonly IMapper _mapper;
 
         public ManagerProductController() { }
-        public ManagerProductController(IProductService productservice, IMapper mapper)
+        public ManagerProductController(IProductService productservice, IProductCategoryService productcategoryservice, IMapper mapper)
         {
             this._productservice = productservice;
+            this._productcategoryservice = productcategoryservice;
             this._mapper = mapper;
         }
 
@@ -235,7 +239,7 @@ namespace ERP.API.Controllers.Dashboard
                 // get data from formdata
                 ProductCreateViewModel productCreateViewModel = new ProductCreateViewModel
                 {
-                    pu_name = Convert.ToString(streamProvider.FormData["pu_name"]),
+                    pu_name = Convert.ToString(streamProvider.FormData["pu_name"]).Trim(),
 
                     pu_quantity = Convert.ToInt32(streamProvider.FormData["pu_quantity"]),
                     pu_buy_price = Convert.ToInt32(streamProvider.FormData["pu_buy_price"]),
@@ -256,8 +260,16 @@ namespace ERP.API.Controllers.Dashboard
                 {
                     productCreateViewModel.pu_update_date = Convert.ToDateTime(streamProvider.FormData["pu_update_date"]);
                 }
-
-                if (streamProvider.FormData["pu_saleoff"] == null)
+                if (streamProvider.FormData["pu_expired_date"] == null || streamProvider.FormData["pu_expired_date"] == "")
+                {
+                    productCreateViewModel.pu_expired_date = null;
+                }
+                else
+                {
+                    productCreateViewModel.pu_expired_date = Convert.ToDateTime(streamProvider.FormData["pu_expired_date"]);
+                }
+                
+                if (streamProvider.FormData["pu_saleoff"] == null || streamProvider.FormData["pu_saleoff"] == "null")
                 {
                     productCreateViewModel.pu_saleoff = null;
                 }
@@ -354,7 +366,7 @@ namespace ERP.API.Controllers.Dashboard
 
                 await Request.Content.ReadAsMultipartAsync(streamProvider);
                 //Các trường bắt buộc
-                if (streamProvider.FormData["pu_name"] == null)
+                if (streamProvider.FormData["pu_name"] == null || streamProvider.FormData["pu_name"].Trim() == "")
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
                     response.Message = "Tên sản phẩm không được để trống";
@@ -418,7 +430,7 @@ namespace ERP.API.Controllers.Dashboard
                 ProductUpdateViewModel productUpdateViewModel = new ProductUpdateViewModel
                 {
                     pu_id = Convert.ToInt32(streamProvider.FormData["pu_id"]),
-                    pu_name = Convert.ToString(streamProvider.FormData["pu_name"]),
+                    pu_name = Convert.ToString(streamProvider.FormData["pu_name"]).Trim(),
 
                     pu_quantity = Convert.ToInt32(streamProvider.FormData["pu_quantity"]),
                     pu_buy_price = Convert.ToInt32(streamProvider.FormData["pu_buy_price"]),
@@ -450,8 +462,23 @@ namespace ERP.API.Controllers.Dashboard
                 {
                     productUpdateViewModel.pu_update_date = Convert.ToDateTime(streamProvider.FormData["pu_update_date"]);
                 }
+                if (streamProvider.FormData["pu_expired_date"] == null || streamProvider.FormData["pu_expired_date"] == "")
+                {
+                    if (existproduct.pu_expired_date != null)
+                    {
+                        productUpdateViewModel.pu_expired_date = existproduct.pu_expired_date;
+                    }
+                    else
+                    {
+                        productUpdateViewModel.pu_expired_date = null;
+                    }
+                }
+                else
+                {
+                    productUpdateViewModel.pu_expired_date = Convert.ToDateTime(streamProvider.FormData["pu_expired_date"]);
+                }
 
-                if (streamProvider.FormData["pu_saleoff"] == null)
+                if (streamProvider.FormData["pu_saleoff"] == null || streamProvider.FormData["pu_saleoff"] == "null")
                 {
                     
                     productUpdateViewModel.pu_saleoff = null;
@@ -462,7 +489,7 @@ namespace ERP.API.Controllers.Dashboard
                     productUpdateViewModel.pu_saleoff = Convert.ToInt32(streamProvider.FormData["pu_saleoff"]);
                 }
 
-                if (streamProvider.FormData["pu_weight"] == null)
+                if (streamProvider.FormData["pu_weight"] == null || streamProvider.FormData["pu_weight"] == "null")
                 {
                     productUpdateViewModel.pu_weight = null;
                 }
@@ -491,6 +518,8 @@ namespace ERP.API.Controllers.Dashboard
                 //Cap nhập lại date code 
                 productUpdateViewModel.pu_create_date = existproduct.pu_create_date;
                 productUpdateViewModel.pu_code = existproduct.pu_code;
+                productUpdateViewModel.pu_thumbnail = existproduct.pu_thumbnail;
+                
                 // mapping view model to entity
                 var updatedproduct = _mapper.Map<product>(productUpdateViewModel);
 
@@ -667,29 +696,244 @@ namespace ERP.API.Controllers.Dashboard
             return Ok(response);
         }
         #endregion
+        #region["Import Excel"]
+        [HttpPost]
+        [Route("api/product/import")]
+        public async Task<IHttpActionResult> Import()
+        {
+            ResponseDataDTO<product> response = new ResponseDataDTO<product>();
+            var exitsData = "";
+            try
+            {
+                var path = Path.GetTempPath();
+
+                if (!Request.Content.IsMimeMultipartContent("form-data"))
+                {
+                    throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.UnsupportedMediaType));
+                }
+
+                MultipartFormDataStreamProvider streamProvider = new MultipartFormDataStreamProvider(path);
+
+                await Request.Content.ReadAsMultipartAsync(streamProvider);
+
+                // save file
+                string fileName = "";
+                if (streamProvider.FileData.Count > 0)
+                {
+                    foreach (MultipartFileData fileData in streamProvider.FileData)
+                    {
+                        fileName = fileData.Headers.ContentDisposition.FileName;
+                        //fileName = fileName.Replace(@"","");
+
+                        string fileFormat = Utilis.GetFileFormat(fileName);
+                        if (fileFormat.Equals("xlsm") || fileFormat.Equals("xlsx"))
+                        {
+                            fileName = FileExtension.SaveFileProductOnDiskExcel(fileData, "test", BaseController.folder(), BaseController.get_timestamp());
+                        }
+                        else
+                        {
+                            throw new Exception("File excel import không hợp lệ!");
+                        }
+
+                    }
+                }
+                var list = new List<productview>();
+                fileName = "C:/inetpub/wwwroot/coerp" + fileName;
+                //fileName = "D:/ERP20/ERP.API" + fileName;
+                var dataset = ExcelImport.ImportExcelXLS(fileName, true);
+                DataTable table = (DataTable)dataset.Tables[0];
+                if (table != null && table.Rows.Count > 0)
+                {
+                    if (table.Columns.Count != 5)
+                    {
+                        exitsData = "File excel import không hợp lệ!";
+                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                        response.Message = exitsData;
+                        response.Data = null;
+                        return Ok(response);
+                    }
+                    #region["Check duplicate"]
+                    for (var i = 0; i < table.Rows.Count; i++)
+                    {
+                        var Pu_code_cur = table.Rows[i]["pu_code"].ToString().Trim();
+                        for (var j = 0; j < table.Rows.Count; j++)
+                        {
+                            if (i != j)
+                            {
+                                var _puCodeCur = table.Rows[j]["pu_code"].ToString().Trim();
+                                if (Pu_code_cur.Equals(_puCodeCur))
+                                {
+                                    exitsData = "Mã sản phẩm'" + Pu_code_cur + "' bị lặp trong file excel!";
+                                    response.Code = HttpCode.NOT_FOUND;
+                                    response.Message = exitsData;
+                                    response.Error = "pu_code";
+                                    return Ok(response);
+                                }
+                            }
+                        }
+                    }
+                    #endregion
+
+                    list = DataTableCmUtils.ToListof<productview>(table);
+                    foreach (productview i in list)
+                    {
+                        #region["Check tồn tại"]
+                        var us = _productservice.GetAllIncluing(t => t.pu_code.Equals(i.pu_code)).FirstOrDefault();
+                        if (us != null)
+                        {
+                            exitsData = "Đã có mã '" + i.pu_code + "' tồn tại trong cơ sở dữ liệu!";
+                            response.Code = HttpCode.NOT_FOUND;
+                            response.Message = exitsData;
+                            response.Error = "pu_code";
+                            return Ok(response);
+                        }
+                        var dt = _productcategoryservice.GetAllIncluing(y => y.pc_name.Contains(i.product_category_name)).FirstOrDefault();
+                        int prc_index = 0;
+                        if (dt == null)
+                        {
+                            product_category prc = new product_category();
+                            prc.pc_name = i.product_category_name;
+                            _productcategoryservice.Create(prc);
+                            prc_index = _productcategoryservice.GetLast().pc_id;
+                        }
+                        else
+                        {
+                            prc_index = dt.pc_id;
+                        }
+                        int unit_index = 0;
+                        for(int u =0; u<EnumProduct.pu_unit.Length; u++ )
+                        {
+                            if(i.pu_unit_name.Contains(EnumProduct.pu_unit[u]))
+                            {
+                                unit_index = u+1;
+                            }
+                        }
+                        if(unit_index == 0)
+                        {
+                            exitsData = "Không có '" + i.pu_unit_name + "'  trong cơ sở dữ liệu!";
+                            response.Code = HttpCode.NOT_FOUND;
+                            response.Message = exitsData;
+                            response.Error = "pu_unit_name";
+                            return Ok(response);
+                        }
+                        #endregion
+
+                        #region["Create product"]
+                        product product_create = new product();
+                        product_create.pu_code = i.pu_code;
+                        product_create.pu_name= i.pu_name;
+                        product_create.pu_sale_price= i.pu_sale_price;
+                        product_create.pu_buy_price= 0;
+                        product_create.pu_tax= 0;
+                        product_create.provider_id= 1;
+
+                        product_create.pu_unit = Convert.ToByte(unit_index);
+                        product_create.product_category_id = prc_index;
+                        product_create.pu_create_date = DateTime.Now;
+                        product_create.pu_thumbnail = "/Uploads/Images/default/product.png";
+
+
+
+                        _productservice.Create(product_create);
+                        
+                        #endregion
+
+                    }
+                    exitsData = "Đã nhập dữ liệu excel thành công!";
+                    response.Code = HttpCode.OK;
+                    response.Message = exitsData;
+                    response.Data = null;
+                    return Ok(response);
+                }
+                else
+                {
+                    exitsData = "File excel import không có dữ liệu!";
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = exitsData;
+                    response.Data = null;
+                    return Ok(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message; ;
+                response.Data = null;
+                Console.WriteLine(ex.ToString());
+
+                return Ok(response);
+            }
+        }
+        #endregion
+        #region["Export Template"]
+        [HttpGet]
+        [Route("api/product/export_template")]
+        public async Task<IHttpActionResult> ExportTemplate()
+        {
+
+            ResponseDataDTO<string> response = new ResponseDataDTO<string>();
+            try
+            {
+                var listProduct = new List<productview>();
+                Dictionary<string, string> dicColNames = GetImportDicColumsTemplate();
+
+                string url = "";
+                string filePath = GenExcelExportFilePath(string.Format(typeof(product).Name), ref url);
+
+                ExcelExport.ExportToExcelTemplate(listProduct, dicColNames, filePath, string.Format("Sản phẩm"));
+
+                filePath = filePath.Replace("\\", "/");
+                int index = filePath.IndexOf("TempFiles");
+                filePath = filePath.Substring(index);
+                response.Code = HttpCode.OK;
+                response.Message = "Đã xuất excel thành công!";
+                response.Data = filePath;
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message; ;
+                response.Data = null;
+                Console.WriteLine(ex.ToString());
+
+                return Ok(response);
+            }
+            return Ok(response);
+        }
+
+        #endregion
 
         #region["DicColums"]
         private Dictionary<string, string> GetImportDicColums()
         {
             return new Dictionary<string, string>()
             {
-                 {"pu_code","MSP" },
+                 {"pu_code","Mã sản phẩm" },
                  {"pu_name","Tên sản phẩm"},
-                 {"pu_quantity","Số lượng"},
-                 {"pu_buy_price","Giá mua"},
-                 {"pu_sale_price","Giá bán"},
-                 {"product_category_name","Thể loại"},
-                 {"provider_name","Nhà cung cấp"},
+                 
                  {"pu_unit_name","Đơn vị"},
-                 {"pu_saleoff","Khuyễn mãi"},
-                 {"pu_short_description","Mô tả ngắn"},
-                 {"pu_create_date","Ngày tạo"},
-                 {"pu_update_date","Ngày cập nhập"},
-                 {"pu_description","Mô tả chi tiết"},
-                 {"pu_tax","Thuế"},
-                 {"pu_expired_date","Ngày hết hạn"},
-                 {"pu_weight","Cân nặng"}
+                 {"product_category_name","Nhóm sản phẩm"},
+                  {"pu_sale_price","Giá bán"},
+                 //{"pu_saleoff","Khuyễn mãi"},
+                 //{"pu_short_description","Mô tả ngắn"},
+                 //{"pu_create_date","Ngày tạo"},
+                 //{"pu_update_date","Ngày cập nhập"},
+                 //{"pu_description","Mô tả chi tiết"},
+                 //{"pu_tax","Thuế"},
+                 //{"pu_expired_date","Ngày hết hạn"},
+                 //{"pu_weight","Cân nặng"}
 
+            };
+        }
+        private Dictionary<string, string> GetImportDicColumsTemplate()
+        {
+            return new Dictionary<string, string>()
+            {
+                 {"pu_code","Mã sản phẩm" },
+                 {"pu_name","Tên sản phẩm"},
+                 {"pu_unit_name","Đơn vị"},
+                 {"product_category_name","Nhóm sản phẩm"},
+                 {"pu_sale_price","Giá bán"},
             };
         }
         #endregion

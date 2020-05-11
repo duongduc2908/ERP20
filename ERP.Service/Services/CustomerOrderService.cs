@@ -48,9 +48,9 @@ namespace ERP.Service.Services
             return this._repository.GetAllSearchCustomerOrderService(pageNumber, pageSize,  start_date,end_date, search_name);
         }
 
-        public PagedResults<customerorderview> ExportCustomerOrder(int pageNumber, int pageSize, int? payment_type_id, DateTime? start_date, DateTime? end_date, string name)
+        public PagedResults<customerorderproductview> ExportCustomerOrderProduct(int pageNumber, int pageSize, int? payment_type_id, DateTime? start_date, DateTime? end_date, string name)
         {
-            return this._repository.ExportCustomerOrder(pageNumber, pageSize,  payment_type_id,start_date, end_date, name);
+            return this._repository.ExportCustomerOrderProduct(pageNumber, pageSize,  payment_type_id,start_date, end_date, name);
         }
         public List<dropdown> GetAllPayment()
         {

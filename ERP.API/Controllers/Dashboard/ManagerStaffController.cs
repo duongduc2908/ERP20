@@ -1115,8 +1115,8 @@ namespace ERP.API.Controllers.Dashboard
                     }
                 }
                 var list = new List<staffview>();
-                //fileName = "C:/inetpub/wwwroot/coerp" + fileName;
-                fileName = "D:/ERP20/ERP.API" + fileName;
+                fileName = "C:/inetpub/wwwroot/coerp" + fileName;
+                //fileName = "D:/ERP20/ERP.API" + fileName;
                 var dataset = ExcelImport.ImportExcelXLS(fileName, true);
                 DataTable table = (DataTable)dataset.Tables[0];
                 if (table != null && table.Rows.Count > 0)
@@ -1133,21 +1133,41 @@ namespace ERP.API.Controllers.Dashboard
                     foreach (staffview i in list)
                     {
                         #region["Check tồn tại"]
-                        var us = _staffservice.GetAllIncluing(t => t.sta_username.Equals(i.sta_username)).FirstOrDefault();
-                        if (us == null)
+                        var us = _staffservice.GetAllIncluing(t => t.sta_username.Equals(i.sta_username) ).FirstOrDefault();
+                        if (us != null)
                         {
                             exitsData = "Đã có username '" + i.sta_username + "' tồn tại trong cơ sở dữ liệu!";
                             response.Code = HttpCode.NOT_FOUND;
                             response.Message = exitsData;
                             response.Error = "sta_username";
+                            return Ok(response);
+                        }
+                        var tax = _staffservice.GetAllIncluing(t => t.sta_tax_code.Equals(i.sta_tax_code)).FirstOrDefault();
+                        if (tax != null)
+                        {
+                            exitsData = "Đã có mã thuế '" + i.sta_tax_code + "' tồn tại trong cơ sở dữ liệu!";
+                            response.Code = HttpCode.NOT_FOUND;
+                            response.Message = exitsData;
+                            response.Error = "sta_tax_code";
+                            return Ok(response);
                         }
                         var dt = _staffservice.GetAllIncluing(y => y.sta_mobile.Equals(i.sta_mobile)).FirstOrDefault();
-                        if (dt == null)
+                        if (dt != null)
                         {
                             exitsData = "Đã có số điện thoại '" + i.sta_mobile + "' tồn tại trong cơ sở dữ liệu!";
                             response.Code = HttpCode.NOT_FOUND;
                             response.Message = exitsData;
                             response.Error = "sta_mobile";
+                            return Ok(response);
+                        }
+                        var cmt = _staffservice.GetAllIncluing(y => y.sta_identity_card.Equals(i.sta_identity_card)).FirstOrDefault();
+                        if (cmt != null)
+                        {
+                            exitsData = "Đã có cmt '" + i.sta_identity_card + "' tồn tại trong cơ sở dữ liệu!";
+                            response.Code = HttpCode.NOT_FOUND;
+                            response.Message = exitsData;
+                            response.Error = "sta_identity_card";
+                            return Ok(response);
                         }
                         #endregion
 
@@ -1170,12 +1190,20 @@ namespace ERP.API.Controllers.Dashboard
                         staff_create.department_id = 3;
                         staff_create.sta_working_status = 1;
                         staff_create.sta_type_contact = 1;
+                        
                         var x = _staffservice.GetLast();
                         if (x == null) staff_create.sta_code = "NV000000";
                         else staff_create.sta_code = Utilis.CreateCodeByCode("NV", x.sta_code, 8);
                         staff_create.sta_password = HashMd5.convertMD5(staff_create.sta_code);
                         staff_create.sta_created_date = DateTime.Now;
                         staff_create.sta_login = true;
+                        if (staff_create.sta_username == null)
+                        {
+                            if (x == null) staff_create.sta_username = "user00000";
+                            else staff_create.sta_username = Utilis.CreateCodeByCode("user", x.sta_code, 9);
+                        }
+                            
+
 
                         _staffservice.Create(staff_create);
                         int last_id = _staffservice.GetLast().sta_id;
@@ -1440,6 +1468,8 @@ namespace ERP.API.Controllers.Dashboard
         {
             return new Dictionary<string, string>()
             {
+                 
+
                  {"sta_username","Tài khoản đăng nhập" },
                  {"sta_fullname","Họ và tên" },
                  {"sta_mobile","SĐT"},

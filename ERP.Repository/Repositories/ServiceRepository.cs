@@ -47,12 +47,13 @@ namespace ERP.Repository.Repositories
         
         public PagedResults<serviceviewmodel> GetAllPageSearch(int pageNumber, int pageSize, string search_name)
         {
+            if (search_name != null) search_name = search_name.Trim().ToLower();
             List<serviceviewmodel> res = new List<serviceviewmodel>();
             var skipAmount = pageSize * pageNumber;
             List<service> lts_se = new List<service>();
             if(search_name != null)
             {
-                lts_se = _dbContext.services.Where(t => t.se_name.Contains(search_name)).ToList();
+                lts_se = _dbContext.services.Where(t => t.se_name.ToLower().Contains(search_name) || t.se_code.ToLower().Contains(search_name)).ToList();
             }
             else
             {

@@ -9,7 +9,6 @@ namespace ERP.Data.ModelsERP
     [Table("source")]
     public partial class source
     {
-
         [Key]
         public int src_id { get; set; }
 

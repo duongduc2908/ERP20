@@ -13,6 +13,10 @@ namespace ERP.Data.ModelsERP.ModelView.CustomerOrder
 
         public TimeSpan start_time { get; set; }
 
+        public int[] list_staff_id { get; set; }
+        
+        public int customer_order_id { get; set; }
         public TimeSpan end_time { get; set; }
+
     }
 }

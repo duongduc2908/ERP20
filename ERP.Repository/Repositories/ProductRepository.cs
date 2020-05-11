@@ -22,7 +22,6 @@ namespace ERP.Repository.Repositories
         {
             this._mapper = _mapper;
         }
-        
         public productviewmodel GetAllPageById( int id)
         {
             List<productviewmodel> res = new List<productviewmodel>();
@@ -31,9 +30,9 @@ namespace ERP.Repository.Repositories
             var product_category = _dbContext.product_category.FirstOrDefault(x => x.pc_id == results.product_category_id);
             var supplier = _dbContext.suppliers.FirstOrDefault(x => x.su_id == results.provider_id);
 
-            productview.product_category_name = product_category.pc_name;
-            productview.provider_name = supplier.su_name;
-            for(int j = 1; j< 3; j++)
+            if (product_category != null) productview.product_category_name = product_category.pc_name;
+            if (supplier != null) productview.provider_name = supplier.su_name;
+            for (int j = 1; j< 3; j++)
             {
                 if(j == results.pu_unit)
                 {
@@ -83,10 +82,9 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = totalNumberOfRecords
             };
         }
-       
         public PagedResults<productviewmodel> GetProducts(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name, int? category_id)
         {
-
+            if (search_name != null) search_name = search_name.Trim().ToLower();
             List<productviewmodel> res = new List<productviewmodel>();
             List<product> list = new List<product>();
             var skipAmount = pageSize * pageNumber;
@@ -94,7 +92,7 @@ namespace ERP.Repository.Repositories
             {
                 list = _dbContext.products.ToList();
             }
-            else list = _dbContext.products.Where(t => t.pu_name.Contains(search_name)).ToList();
+            else list = _dbContext.products.Where(t => t.pu_name.ToLower().Contains(search_name) || t.pu_code.ToLower().Contains(search_name)).ToList();
             if (category_id != null)
             {
                 list = list.Where(x => x.product_category_id == category_id).ToList();
@@ -116,9 +114,8 @@ namespace ERP.Repository.Repositories
                 var productview = _mapper.Map<productviewmodel>(i);
                 var product_category = _dbContext.product_category.FirstOrDefault(x => x.pc_id == i.product_category_id);
                 var supplier = _dbContext.suppliers.FirstOrDefault(x => x.su_id == i.provider_id);
-
-                productview.product_category_name = product_category.pc_name;
-                productview.provider_name = supplier.su_name;
+                if(product_category != null) productview.product_category_name = product_category.pc_name;
+                if(supplier !=null ) productview.provider_name = supplier.su_name;
 
                 for (int j = 1; j < EnumProduct.pu_unit.Length+1; j++)
                 {

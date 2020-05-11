@@ -111,7 +111,7 @@ namespace ERP.Repository.Repositories
         {
             if(name != null)
             {
-                name = name.Trim();
+                name = name.Trim().ToLower();
             }
             List<staff> list_res;
             List<staff> list;
@@ -133,7 +133,7 @@ namespace ERP.Repository.Repositories
             }
             if (name != null)
             {
-                list_res = list_res.Where(t => t.sta_fullname.Contains(name) || t.sta_mobile.Contains(name) || t.sta_code.Contains(name) ).ToList();
+                list_res = list_res.Where(t => t.sta_fullname.ToLower().Contains(name) || t.sta_code.Contains(name) ).ToList();
             }
             if(sta_working_status != null)
             {
@@ -188,10 +188,10 @@ namespace ERP.Repository.Repositories
                     }
                 }
                 //lấy ra thông tin loại hợp đồng 
-                
-                //var list_swt = _dbContext.staff_work_times.Where(s => s.staff_id == i.sta_id).ToList();
-                
-                //staffview.list_staff_work_time = list_swt;
+
+                var list_swt = _dbContext.staff_work_times.Where(s => s.staff_id == i.sta_id).ToList();
+
+                staffview.list_staff_work_time = list_swt;
 
 
                 //Lấy ra địa chỉ thường chú 

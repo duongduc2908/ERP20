@@ -6,7 +6,7 @@ using System.Web;
 
 namespace ERP.Data.ModelsERP.ModelView.ExportDB
 {
-    public class customerorderview
+    public class customerorderproductview
     {
         [Key]
         public int cuo_id { get; set; }
@@ -15,7 +15,14 @@ namespace ERP.Data.ModelsERP.ModelView.ExportDB
 
         [StringLength(50)]
         public string cuo_code { get; set; }
-
+        public string cu_code { get; set; }
+        public string pu_code { get; set; }
+        public string pu_name { get; set; }
+        public int? op_quantity { get; set; }
+        public int? pu_sale_price { get; set; }
+        public int? cuo_discount { get; set; }
+        public int? op_discount { get; set; }
+        public double? op_total_value { get; set; }
         public int? cuo_total_price { get; set; }
 
         public byte? cuo_status { get; set; }
@@ -24,7 +31,6 @@ namespace ERP.Data.ModelsERP.ModelView.ExportDB
         public int? customer_id { get; set; }
         public string customer_name { get; set; }
 
-        public int? cuo_discount { get; set; }
 
         public byte? cuo_payment_type { get; set; }
         public string cuo_payment_type_name { get; set; }

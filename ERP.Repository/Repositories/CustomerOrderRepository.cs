@@ -201,13 +201,16 @@ namespace ERP.Repository.Repositories
                     }
                 }
                 ship_address exists_address = _dbContext.ship_address.Where(x => x.customer_id == cu.cu_id && x.sha_flag_center == 1).FirstOrDefault();
-
-                customerview.sha_ward_now = exists_address.sha_ward;
-                customerview.sha_province_now = exists_address.sha_province;
-                customerview.sha_district_now = exists_address.sha_district;
-                customerview.sha_geocoding_now = exists_address.sha_geocoding;
-                customerview.sha_detail_now = exists_address.sha_detail;
-                customerview.sha_note_now = exists_address.sha_note;
+                if(exists_address != null)
+                {
+                    customerview.sha_ward_now = exists_address.sha_ward;
+                    customerview.sha_province_now = exists_address.sha_province;
+                    customerview.sha_district_now = exists_address.sha_district;
+                    customerview.sha_geocoding_now = exists_address.sha_geocoding;
+                    customerview.sha_detail_now = exists_address.sha_detail;
+                    customerview.sha_note_now = exists_address.sha_note;
+                }
+               
                 // lay ra dia chi khach hang 
                 var list_address = _dbContext.ship_address.Where(s => s.customer_id == cu.cu_id && s.sha_flag_center == 0).ToList();
                 List<shipaddressviewmodel> lst_add = new List<shipaddressviewmodel>();
@@ -250,7 +253,7 @@ namespace ERP.Repository.Repositories
 
                 customerview.list_customer_order_service = lst_cuo_service_his;
                 //lay ra lich su mua don hang cua khach hang
-                var list_cuo_product_history = _dbContext.customer_order.Where(s => s.customer_id == cu.cu_id && s.cuo_code.Contains("ORP")).ToList();
+                var list_cuo_product_history = _dbContext.customer_order.Where(s => s.customer_id == cu.cu_id && !s.cuo_code.Contains("ORS")).ToList();
                 List<customerorderproducthistoryviewmodel> lst_cuo_product_his = new List<customerorderproducthistoryviewmodel>();
                 foreach (customer_order s in list_cuo_product_history)
                 {
@@ -341,7 +344,7 @@ namespace ERP.Repository.Repositories
                     var product = _dbContext.products.Where(t => t.pu_id == op.product_id).FirstOrDefault();
                     x.pu_unit = product.pu_unit;
                     if(x.pu_unit != null) x.pu_unit_name = EnumProduct.pu_unit[(int)x.pu_unit - 1];
-
+                    x.pu_id = product.pu_id;
                     x.pu_name = product.pu_name;
                     x.pu_sale_price = product.pu_sale_price;
                     x.max_quantity = product.pu_quantity;
@@ -355,9 +358,10 @@ namespace ERP.Repository.Repositories
                 res.cuo_payment_status = i.cuo_payment_status;
                 res.cuo_payment_type = i.cuo_payment_type;
                 res.cuo_discount = i.cuo_discount;
-                res.cuo_address = i.cuo_address;
+                if(i.cuo_address != null) res.cuo_address = i.cuo_address;
 
-                
+
+
             }
             return res;
         }
@@ -474,7 +478,7 @@ namespace ERP.Repository.Repositories
 
             customerview.list_customer_order_service = lst_cuo_service_his;
             //lay ra lich su mua don hang cua khach hang
-            var list_cuo_product_history = _dbContext.customer_order.Where(s => s.customer_id == cu.cu_id &&s.cuo_code.Contains("ORP")).ToList();
+            var list_cuo_product_history = _dbContext.customer_order.Where(s => s.customer_id == cu.cu_id &&!s.cuo_code.Contains("ORS")).ToList();
             List<customerorderproducthistoryviewmodel> lst_cuo_product_his = new List<customerorderproducthistoryviewmodel>();
             foreach (customer_order s in list_cuo_product_history)
             {
@@ -535,7 +539,7 @@ namespace ERP.Repository.Repositories
             add.list_service = lts_add_se;
             #endregion
             //Thong tin list executor
-            #region lts _ executor
+            #region lts_executor
 
             List<executorviewmodel> lts_add_exe = new List<executorviewmodel>();
             List<executor> lts_exe = _dbContext.executors.Where(x => x.customer_order_id == i.cuo_id).ToList();
@@ -562,6 +566,7 @@ namespace ERP.Repository.Repositories
         }
         public PagedResults<customerorderviewmodel> GetAllSearch(int pageNumber, int pageSize, int? payment_type_id, DateTime? start_date, DateTime? end_date, string code)
         {
+            if (code != null) code = code.Trim().ToLower();
             List<customerorderviewmodel> res = new List<customerorderviewmodel>();
 
             var skipAmount = pageSize * pageNumber;
@@ -569,11 +574,11 @@ namespace ERP.Repository.Repositories
             List<customer_order> list = new List<customer_order>();
             if(code == null)
             {
-                list = _dbContext.customer_order.Where(x => x.cuo_code.Contains("ORP")).ToList();
+                list = _dbContext.customer_order.Where(x => !x.cuo_code.Contains("ORS")).ToList();
             }
             else
             {
-                list = _dbContext.customer_order.Where(x => x.cuo_code.Contains(code) && x.cuo_code.Contains("ORP")).ToList();
+                list = _dbContext.customer_order.Where(x => x.cuo_code.ToLower().Contains(code) && !x.cuo_code.Contains("ORS")).ToList();
             }
             if(payment_type_id !=null)
             {
@@ -633,7 +638,7 @@ namespace ERP.Repository.Repositories
         }
         public PagedResults<servicercustomerorderviewmodel> GetAllSearchCustomerOrderService(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name)
         {
-            if (search_name != null) search_name = search_name.Trim();
+            if (search_name != null) search_name = search_name.Trim().ToLower();
             List<servicercustomerorderviewmodel> res = new List<servicercustomerorderviewmodel>();
 
             var skipAmount = pageSize * pageNumber;
@@ -647,7 +652,7 @@ namespace ERP.Repository.Repositories
          
             if(search_name != null)
             {
-                lts_cuo_cu = lts_cuo_cu.Where(x => x.cu.cu_fullname.Contains(search_name) || x.cuo.cuo_code.Contains(search_name)).ToList();
+                lts_cuo_cu = lts_cuo_cu.Where(x => x.cu.cu_fullname.ToLower().Contains(search_name) || x.cuo.cuo_code.ToLower().Contains(search_name)).ToList();
             }
             if (start_date != null)
             {
@@ -946,6 +951,7 @@ namespace ERP.Repository.Repositories
             }
             #endregion
 
+            
             #region["Lay danh sach nhan su ban"]
             var list_busy = _dbContext.executors.Where(x => x.work_time == c.work_time && x.start_time <= c.start_time && x.end_time >= c.end_time).ToList();
             #endregion
@@ -961,11 +967,18 @@ namespace ERP.Repository.Repositories
                     }
                 }
             }
+            
+            
+
+            
+
             List<dropdown_salary> res = new List<dropdown_salary>();
             List<staff> list_staff_free = new List<staff>();
             foreach(staff_work_time st in lst)
             {
-                list_staff_free.Add(_dbContext.staffs.Find(st.staff_id));
+                var free = _dbContext.staffs.Where(x => x.sta_id == st.staff_id && x.sta_working_status == 1).FirstOrDefault();
+                if(free != null)
+                    list_staff_free.Add(free);
             }
             if(fullName !=null)
             {
@@ -979,6 +992,39 @@ namespace ERP.Repository.Repositories
                 dr.salary = st.sta_salary;
                 res.Add(dr);
             }
+            #region["Lấy danh sách nhân sự đang được phân công làm việc ở giờ hiện tại"]
+            if (c.customer_order_id != 0)
+            {
+                var lst_staff = (from ex in _dbContext.executors
+                                 where ex.customer_order_id == c.customer_order_id && ex.work_time == c.work_time && ex.start_time == c.start_time && ex.end_time == c.end_time
+                                 select new
+                                 {
+                                     ex.staff_id
+                                 }).ToList();
+                foreach (var i in lst_staff)
+                {
+                    dropdown_salary dr = new dropdown_salary();
+                    var t = _dbContext.staffs.Find(i.staff_id);
+                    dr.id = t.sta_id;
+                    dr.name = t.sta_fullname;
+                    dr.salary = t.sta_salary;
+                    res.Add(dr);
+
+                }
+            }
+            if (c.list_staff_id != null)
+            {
+                foreach (int _id in c.list_staff_id)
+                {
+                    var test = res.Where(x => x.id == _id).FirstOrDefault();
+                    if (test != null)
+                    {
+                        res.Remove(test);
+                    }
+                }
+            }
+
+            #endregion
             return res;
         }
 
@@ -1008,19 +1054,19 @@ namespace ERP.Repository.Repositories
             }
             return res;
         }
-        public PagedResults<customerorderview> ExportCustomerOrder(int pageNumber, int pageSize, int? payment_type_id, DateTime? start_date, DateTime? end_date, string name)
+        public PagedResults<customerorderproductview> ExportCustomerOrderProduct(int pageNumber, int pageSize, int? payment_type_id, DateTime? start_date, DateTime? end_date, string name)
         {
-            List<customerorderview> res = new List<customerorderview>();
+            List<customerorderproductview> res = new List<customerorderproductview>();
             var skipAmount = pageSize * pageNumber;
 
             List<customer_order> list = new List<customer_order>();
             if (name == null)
             {
-                list = _dbContext.customer_order.ToList();
+                list = _dbContext.customer_order.Where(x => !x.cuo_code.Contains("ORS")).ToList();
             }
             else
             {
-                list = _dbContext.customer_order.Where(x => x.cuo_code.Contains(name)).ToList();
+                list = _dbContext.customer_order.Where(x => x.cuo_code.ToLower().Contains(name) && !x.cuo_code.Contains("ORS")).ToList();
             }
             if (payment_type_id != null)
             {
@@ -1035,52 +1081,51 @@ namespace ERP.Repository.Repositories
                 end_date = end_date.Value.AddDays(1);
                 list = list.Where(x => x.cuo_date <= end_date).ToList();
             }
-            var results = list.OrderBy(t => t.cuo_id).Skip(skipAmount).Take(pageSize);
-
-            var totalNumberOfRecords = _dbContext.customer_order.Count();
+            var total = list.Count();
+            var results = list.OrderByDescending(t => t.cuo_id).Skip(skipAmount).Take(pageSize);
             foreach (customer_order i in results)
             {
-                var orderview = _mapper.Map<customerorderview>(i);
+                var orderview = _mapper.Map<customerorderproductview>(i);
                 var customer = _dbContext.customers.Find(i.customer_id);
-                if (customer != null) orderview.customer_name = customer.cu_fullname;
-                var staff = _dbContext.staffs.Find(i.staff_id);
-                if (staff != null) orderview.staff_name = staff.sta_fullname;
-                for (int j = 1; j < EnumCustomerOrder.status.Length + 1; j++)
+                if (customer != null)
                 {
-                    if (j == i.cuo_status)
-                    {
-                        orderview.cuo_status_name = EnumCustomerOrder.status[j - 1];
-                    }
+                    orderview.customer_name = customer.cu_fullname;
+                    orderview.cu_code = customer.cu_code;
+                }
+                var lts_product = (from ex in _dbContext.order_product
+                                   join od in _dbContext.products on ex.product_id equals od.pu_id
+                                   where ex.customer_order_id == i.cuo_id
+                                   select new
+                                   {
+                                       od.pu_id, od.pu_code, od.pu_name, ex.op_quantity, ex.op_discount,
+                                       ex.op_total_value,od.pu_sale_price
+                                   }).ToList();
+                foreach(var pu in lts_product)
+                {
+                    orderview.pu_code = pu.pu_code;
+                    orderview.pu_name = pu.pu_name;
+                    orderview.pu_sale_price = pu.pu_sale_price;
+                    orderview.op_quantity = pu.op_quantity;
+                    orderview.op_discount = pu.op_discount;
+                    orderview.op_total_value = pu.op_total_value;
+                    
+                    res.Add(orderview);
                 }
 
-                for (int j = 1; j < EnumCustomerOrder.cuo_payment_type.Length + 1; j++)
-                {
-                    if (j == i.cuo_payment_type)
-                    {
-                        orderview.cuo_payment_type_name = EnumCustomerOrder.cuo_payment_type[j - 1];
-                    }
-                }
-                for (int j = 1; j < EnumCustomerOrder.cuo_payment_status.Length + 1; j++)
-                {
-                    if (j == i.cuo_payment_status)
-                    {
-                        orderview.cuo_payment_status_name = EnumCustomerOrder.cuo_payment_status[j - 1];
-                    }
-                }
-                res.Add(orderview);
+               
             }
 
-            var mod = totalNumberOfRecords % pageSize;
+            var mod = total % pageSize;
 
-            var totalPageCount = (totalNumberOfRecords / pageSize) + (mod == 0 ? 0 : 1);
+            var totalPageCount = (total / pageSize) + (mod == 0 ? 0 : 1);
 
-            return new PagedResults<customerorderview>
+            return new PagedResults<customerorderproductview>
             {
                 Results = res,
                 PageNumber = pageNumber,
                 PageSize = pageSize,
                 TotalNumberOfPages = totalPageCount,
-                TotalNumberOfRecords = totalNumberOfRecords
+                TotalNumberOfRecords = total
             };
         }
 

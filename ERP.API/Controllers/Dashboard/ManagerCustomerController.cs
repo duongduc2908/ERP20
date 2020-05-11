@@ -43,11 +43,12 @@ namespace ERP.API.Controllers.Dashboard
         {
 
         }
-        public ManagerCustomerController(ICustomerPhoneService customerphoneservice,ICustomerService customerservice, IShipAddressService shipaddressservice, IMapper mapper)
+        public ManagerCustomerController(ICustomerPhoneService customerphoneservice, ISourceService sourceservice, ICustomerService customerservice, IShipAddressService shipaddressservice, IMapper mapper)
         {
             this._customerservice = customerservice;
             this._shipaddressservice = shipaddressservice;
             this._customerphoneservice = customerphoneservice;
+            this._sourceservice = sourceservice;
             this._mapper = mapper;
         }
 
@@ -590,14 +591,17 @@ namespace ERP.API.Controllers.Dashboard
                 _customerservice.Update(exists_customer,exists_customer.cu_id);
                 //save address hiện tại 
                 ship_address exists_address = _shipaddressservice.GetAllIncluing(x => x.customer_id == customer.cu_id && x.sha_flag_center == 1).FirstOrDefault();
-              
-                exists_address.sha_ward = customer.sha_ward_now;
-                exists_address.sha_province = customer.sha_province_now;
-                exists_address.sha_district = customer.sha_district_now;
-                exists_address.sha_geocoding = customer.sha_geocoding_now;
-                if(customer.sha_detail_now != null) exists_address.sha_detail = customer.sha_detail_now.Trim();
-                exists_address.sha_note = customer.sha_note_now;
-                _shipaddressservice.Update(exists_address, exists_address.sha_id);
+                if(exists_address != null)
+                {
+                    exists_address.sha_ward = customer.sha_ward_now;
+                    exists_address.sha_province = customer.sha_province_now;
+                    exists_address.sha_district = customer.sha_district_now;
+                    exists_address.sha_geocoding = customer.sha_geocoding_now;
+                    if (customer.sha_detail_now != null) exists_address.sha_detail = customer.sha_detail_now.Trim();
+                    exists_address.sha_note = customer.sha_note_now;
+                    _shipaddressservice.Update(exists_address, exists_address.sha_id);
+                }
+                
                 //Update list sdt
                 List<customer_phone> lts_cp_db = _customerphoneservice.GetAllIncluing(x => x.customer_id == customer.cu_id ).ToList();
                 List<customer_phonejson> lts_cp_v = new List<customer_phonejson>(customer.list_customer_phone);
@@ -748,6 +752,7 @@ namespace ERP.API.Controllers.Dashboard
         [Route("api/customer/import")]
         public async Task<IHttpActionResult> Import()
         {
+            List<int> list_customer_create = new List<int>();
             ResponseDataDTO<customerviewexport> response = new ResponseDataDTO<customerviewexport>();
             var exitsData = "";
             try
@@ -785,13 +790,14 @@ namespace ERP.API.Controllers.Dashboard
                     }
                 }
                 var list = new List<customerviewexport>();
-                //fileName = "C:/inetpub/wwwroot/coerp" + fileName;
-                fileName = "D:/ERP20/ERP.API" + fileName;
+                fileName = "C:/inetpub/wwwroot/coerp" + fileName;
+                //fileName = "D:/ERP20/ERP.API" + fileName;
                 var dataset = ExcelImport.ImportExcelXLS(fileName, true);
-                DataTable table = (DataTable)dataset.Tables[7];
+                DataTable table = (DataTable)dataset.Tables[0];
                 if (table != null && table.Rows.Count > 0)
                 {
-                    if (table.Columns.Count != 12)
+
+                    if (table.Columns.Count != 10)
                     {
                         exitsData = "File excel import không hợp lệ!";
                         response.Code = HttpCode.INTERNAL_SERVER_ERROR;
@@ -799,135 +805,144 @@ namespace ERP.API.Controllers.Dashboard
                         response.Data = null;
                         return Ok(response);
                     }
-                    else
+
+                    #region["Check duplicate"]
+                    for (var i = 0; i < table.Rows.Count; i++)
                     {
-                        #region["Check null"]
-                        foreach (DataRow dr in table.Rows)
+                        var Cu_code_cur = table.Rows[i]["cu_code"].ToString().Trim();
+                        for (var j = 0; j < table.Rows.Count; j++)
                         {
-                            if (dr.IsNull("cu_fullname"))
+                            if (i != j)
                             {
-                                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                                response.Message = "Họ và tên không được để trống";
-                                response.Data = null;
-                                return Ok(response);
-                            }
-                            if (dr.IsNull("cu_type"))
-                            {
-                                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                                response.Message = "Loai khach hang khong duoc de trong !";
-                                response.Data = null;
-                                return Ok(response);
-                            }
-
-                            if (dr.IsNull("cu_mobile"))
-                            {
-                                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                                response.Message = "Số điện thoại không được để trống";
-                                response.Data = null;
-                                return Ok(response);
-                            }
-
-                            if (dr.IsNull("cu_address"))
-                            {
-                                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                                response.Message = "Dia chi khong duoc de trong! ";
-                                response.Data = null;
-                                return Ok(response);
-                            }
-
-                            if (dr.IsNull("customer_group_id"))
-                            {
-                                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                                response.Message = "Nhom khach hang không được để trống";
-                                response.Data = null;
-                                return Ok(response);
-                            }
-                            if (dr.IsNull("source_id"))
-                            {
-                                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                                response.Message = "Nguon khach hang không được để trống";
-                                response.Data = null;
-                                return Ok(response);
-                            }
-                        }
-                        #endregion
-
-                        #region["Check duplicate"]
-                        for (var i = 0; i < table.Rows.Count; i++)
-                        {
-                            var sdtCur = table.Rows[i]["cu_mobile"].ToString().Trim();
-                            var emailCur = table.Rows[i]["cu_email"].ToString().Trim();
-                            for (var j = 0; j < table.Rows.Count; j++)
-                            {
-                                if (i != j)
+                                var _cuCodeCur = table.Rows[j]["cu_code"].ToString().Trim();
+                                if (Cu_code_cur.Equals(_cuCodeCur))
                                 {
-                                    var _sdtCur = table.Rows[j]["cu_mobile"].ToString().Trim();
-                                    var _emailCur = table.Rows[j]["cu_email"].ToString().Trim();
-                                    if (sdtCur.Equals(_sdtCur))
-                                    {
-                                        exitsData = "So dien thoai '" + sdtCur + "' bị lặp trong file excel!";
-                                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                                        response.Message = exitsData;
-                                        response.Data = null;
-                                        return Ok(response);
-                                    }
-                                    if (emailCur.Equals(_emailCur))
-                                    {
-                                        exitsData = "Email '" + emailCur + "' bị lặp trong file excel!";
-                                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                                        response.Message = exitsData;
-                                        response.Data = null;
-                                        return Ok(response);
-                                    }
-                                }
-                            }
-                        }
-                        #endregion
-
-                        #region["Check logic"]
-                        foreach (DataRow dr in table.Rows)
-                        {
-                            int i = 1;
-                            if (i == 2)
-                            {
-                                if (!check_type(Convert.ToInt32(dr["cu_type"])))
-                                {
-                                    exitsData = "Khong co ma phong ban trong csdl!";
+                                    exitsData = "Mã khách hàng'" + Cu_code_cur + "' bị lặp trong file excel!";
                                     response.Code = HttpCode.NOT_FOUND;
                                     response.Message = exitsData;
-                                    response.Data = null;
-                                    return Ok(response);
-                                }
-                                if (!check_group(Convert.ToInt32(dr["customer_group_id"])))
-                                {
-                                    exitsData = "Khong co ma bo phan trong csdl!";
-                                    response.Code = HttpCode.NOT_FOUND;
-                                    response.Message = exitsData;
-                                    response.Data = null;
-                                    return Ok(response);
-                                }
-                                if (!check_source(Convert.ToInt32(dr["source_id"])))
-                                {
-                                    exitsData = "Khong co ma nhom quyen trong csdl!";
-                                    response.Code = HttpCode.NOT_FOUND;
-                                    response.Message = exitsData;
-                                    response.Data = null;
+                                    response.Error = "cu_code";
                                     return Ok(response);
                                 }
                             }
-                            i++;
                         }
-                        #endregion
                     }
+                    #endregion
+
                     list = DataTableCmUtils.ToListof<customerviewexport>(table);
-                    // Gọi hàm save data
                     foreach (customerviewexport i in list)
                     {
-                        var x = _customerservice.GetLast();
-                        if(x == null) i.cu_code = Utilis.CreateCode("CU", 0, 7);
-                        else i.cu_code = Utilis.CreateCode("CU", x.cu_id, 7);
-                        i.cu_thumbnail = "/Uploads/Images/default/customer.png";
-                        //_customerservice.Create(i);
+                        #region["Check tồn tại"]
+                        var us = _customerphoneservice.GetAllIncluing(t => t.cp_phone_number.Equals(i.cu_mobile)).FirstOrDefault();
+                        if (us != null)
+                        {
+                            exitsData = "Đã có số '" + i.cu_mobile + "' tồn tại trong cơ sở dữ liệu!";
+                            response.Code = HttpCode.NOT_FOUND;
+                            response.Message = exitsData;
+                            response.Error = "cp_phone_number";
+                            return Ok(response);
+                        }
+                        #endregion
+                        var source_exits = _sourceservice.GetAllIncluing(y => y.src_name.Contains(i.source_name)).FirstOrDefault();
+                        if(source_exits == null)
+                        {
+                            exitsData = "Nguồn khách hàng '" + i.source_name + "' không tồn tại trong cơ sở dữ liệu!";
+                            response.Code = HttpCode.NOT_FOUND;
+                            response.Message = exitsData;
+                            response.Error = "source_name";
+                            return Ok(response);
+                        }
+                        i.source_id = source_exits.src_id;
+
+                        var cu_exits = _customerservice.GetAllIncluing(y => y.cu_code.Contains(i.cu_code)).FirstOrDefault();
+                        if (cu_exits != null)
+                        {
+                            exitsData = "khách hàng '" + i.cu_code + "'tồn tại trong cơ sở dữ liệu!";
+                            response.Code = HttpCode.NOT_FOUND;
+                            response.Message = exitsData;
+                            response.Error = "cu_code";
+                            return Ok(response);
+                        }
+                        #region["Create customer"]
+                        customer customer_create = new customer();
+                        customer_create = _mapper.Map<customer>(i);
+                        customer_create.cu_type = 1;
+                        customer_create.customer_group_id = 37;
+                        customer_create.cu_flag_order = 1;
+                        customer_create.cu_status = 1;
+                        customer_create.cu_flag_used = 1;
+                        //Lấy ra bản ghi cuối cùng tạo mã code 
+                        if(i.cu_code == null)
+                        {
+                            var x = _customerservice.GetLast();
+                            if (x == null) customer_create.cu_code = "KH000000";
+                            else customer_create.cu_code = Utilis.CreateCodeByCode("KH", x.cu_code, 8);
+                        }
+                        else
+                        {
+                            customer_create.cu_code = i.cu_code;
+                        }
+                        
+                        customer_create.cu_create_date = DateTime.Now;
+                        customer_create.staff_id = BaseController.get_id_current();
+                        customer_create.cu_thumbnail = "/Uploads/Images/default/customer.png";
+                        _customerservice.Create(customer_create);
+                        int last_id = _customerservice.GetLast().cu_id;
+                        list_customer_create.Add(last_id);
+                        #endregion
+
+                        #region["Xử lý địa chỉ hiện tại"]
+                        try
+                        {
+                            if (i.cu_address != null)
+                            {
+                                var dc1 = i.cu_address.Trim().Split('-');
+                                string[] diachi = new string[dc1.Length];
+                                for (int j = 0; j < dc1.Length; j++)
+                                {
+                                    diachi[j] = dc1[j];
+                                }
+                                ship_address un_create = new ship_address();
+                                if (diachi[0] != null)
+                                    un_create.sha_province = diachi[0].Trim();
+                                if (diachi[1] != null)
+                                    un_create.sha_district = diachi[1].Trim();
+                                if (diachi[2] != null)
+                                    un_create.sha_ward = diachi[2].Trim();
+                                if (diachi[3] != null)
+                                    un_create.sha_detail = diachi[3].Trim();
+                                un_create.sha_flag_center = 1;
+                                un_create.customer_id = last_id;
+                                if (_customerservice.Check_location(un_create))
+                                {
+                                    _shipaddressservice.Create(un_create);
+                                }
+                            }
+                        }
+                        catch
+                        {
+                            foreach(int cu_id in list_customer_create)
+                            {
+                                _customerservice.Delete(_customerservice.Find(cu_id));
+                            }
+                            
+                            exitsData = "Nhập lại địa chỉ khách hàng '" + i.cu_fullname + " ' !";
+                            response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                            response.Message = exitsData;
+                            response.Data = null;
+                            return Ok(response);
+                        }
+
+
+                        #endregion
+
+                        #region["Xử lý điện thoại"]
+                        customer_phone cup_create = new customer_phone();
+                        cup_create.customer_id = last_id;
+                        cup_create.cp_type = 1;
+                        cup_create.cp_phone_number = i.cu_mobile;
+                        _customerphoneservice.Create(cup_create);
+                        #endregion
+
                     }
                     exitsData = "Đã nhập dữ liệu excel thành công!";
                     response.Code = HttpCode.OK;
@@ -1090,18 +1105,16 @@ namespace ERP.API.Controllers.Dashboard
         {
             return new Dictionary<string, string>()
             {
+                 {"cu_code","Mã khách hàng"},
                  {"cu_fullname","Họ và tên "},
                  {"cu_mobile","SĐT" },
                  {"cu_email","Email"},
-                 {"cu_type_name","Loại khách hàng"},
                  {"source_name","Nguồn khách hàng"},
+                 {"cu_type_name","Loại khách hàng"},
                  {"customer_group_name","Nhóm khách hàng"},
                  {"cu_address","Địa chỉ"},
                  {"cu_birthday","Ngày sinh"},
-                 {"cu_note","Chú ý"},
-                 {"cu_flag_used_name","Sử dụng dịch vụ"},
-                 {"cu_flag_order_name","Đặt dịch vụ"},
-                 {"cu_status_name","Trạng thái"},
+                 {"cu_note","Chú ý"}
             };
         }
         #endregion

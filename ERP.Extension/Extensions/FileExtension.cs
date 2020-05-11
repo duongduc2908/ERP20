@@ -259,5 +259,73 @@ namespace ERP.Extension.Extensions
 
             return "/Uploads/Excels/Customer/" + forder + "/" + fileName;
         }
+        public static string SaveFileProductOnDiskExcel(MultipartFileData fileData, string staff_code, string forder, string time_stamp)
+        {
+            string[] chuoi;
+            var fileNametest = fileData.Headers.ContentDisposition.FileName;
+            chuoi = fileNametest.Split('.');
+            string fileName = staff_code + time_stamp + "." + chuoi[chuoi.Length - 1];
+            if (fileName.StartsWith("\"") || fileName.EndsWith("\""))
+            {
+                fileName = fileName.Trim('"');
+            }
+            if (fileName.Contains(@"/") || fileName.Contains(@"\"))
+            {
+                fileName = Path.GetFileName(fileName);
+            }
+            var newFileName = Path.Combine(HostingEnvironment.MapPath("/") + @"/Uploads/Excels/Product/" + forder + "/", fileName);
+            var fileInfo = new FileInfo(newFileName);
+            if (fileInfo.Exists)
+            {
+                fileName = fileInfo.Name.Replace(fileInfo.Extension, "");
+                fileName = fileName + (new Random().Next(0, 10000)) + fileInfo.Extension;
+
+                newFileName = Path.Combine(HostingEnvironment.MapPath("/") + @"/Uploads/Excels/Product/" + forder + "/", fileName);
+            }
+
+            if (!Directory.Exists(fileInfo.Directory.FullName))
+            {
+                Directory.CreateDirectory(fileInfo.Directory.FullName);
+            }
+
+
+            File.Move(fileData.LocalFileName, newFileName);
+
+            return "/Uploads/Excels/Product/" + forder + "/" + fileName;
+        }
+        public static string SaveFileCustomerOrderOnDiskExcel(MultipartFileData fileData, string staff_code, string forder, string time_stamp)
+        {
+            string[] chuoi;
+            var fileNametest = fileData.Headers.ContentDisposition.FileName;
+            chuoi = fileNametest.Split('.');
+            string fileName = staff_code + time_stamp + "." + chuoi[chuoi.Length - 1];
+            if (fileName.StartsWith("\"") || fileName.EndsWith("\""))
+            {
+                fileName = fileName.Trim('"');
+            }
+            if (fileName.Contains(@"/") || fileName.Contains(@"\"))
+            {
+                fileName = Path.GetFileName(fileName);
+            }
+            var newFileName = Path.Combine(HostingEnvironment.MapPath("/") + @"/Uploads/Excels/CustomerOrder/" + forder + "/", fileName);
+            var fileInfo = new FileInfo(newFileName);
+            if (fileInfo.Exists)
+            {
+                fileName = fileInfo.Name.Replace(fileInfo.Extension, "");
+                fileName = fileName + (new Random().Next(0, 10000)) + fileInfo.Extension;
+
+                newFileName = Path.Combine(HostingEnvironment.MapPath("/") + @"/Uploads/Excels/CustomerOrder/" + forder + "/", fileName);
+            }
+
+            if (!Directory.Exists(fileInfo.Directory.FullName))
+            {
+                Directory.CreateDirectory(fileInfo.Directory.FullName);
+            }
+
+
+            File.Move(fileData.LocalFileName, newFileName);
+
+            return "/Uploads/Excels/CustomerOrder/" + forder + "/" + fileName;
+        }
     }
 }
