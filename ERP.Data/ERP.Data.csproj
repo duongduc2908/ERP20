@@ -126,6 +126,7 @@
     <Compile Include="ModelsERP\ChangePasswordBindingModel.cs" />
     <Compile Include="ModelsERP\ClientMaster.cs" />
     <Compile Include="ModelsERP\company.cs" />
+    <Compile Include="ModelsERP\company_funtion.cs" />
     <Compile Include="ModelsERP\Country.cs" />
     <Compile Include="ModelsERP\customer.cs" />
     <Compile Include="ModelsERP\customer_group.cs" />
@@ -133,6 +134,9 @@
     <Compile Include="ModelsERP\customer_phone.cs" />
     <Compile Include="ModelsERP\District.cs" />
     <Compile Include="ModelsERP\executor.cs" />
+    <Compile Include="ModelsERP\ModelView\Company\companyviewmodel.cs" />
+    <Compile Include="ModelsERP\ModelView\Company\functionjson.cs" />
+    <Compile Include="ModelsERP\ModelView\Company\packagefunctionviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\CustomerGroup\piechartview.cs" />
     <Compile Include="ModelsERP\ModelView\CustomerOrder\servicejson.cs" />
     <Compile Include="ModelsERP\ModelView\CustomerOrder\work_time_view.cs" />
@@ -167,6 +171,7 @@
     <Compile Include="ModelsERP\ModelView\ExportDB\transactionview.cs" />
     <Compile Include="ModelsERP\ModelView\OrderService\orderservice_day.cs" />
     <Compile Include="ModelsERP\ModelView\OrderService\order_service_view.cs" />
+    <Compile Include="ModelsERP\ModelView\Package\packageviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Product\orderproducthistoryviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Product\orderproductviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Product\productorderviewmodel.cs" />
@@ -248,6 +253,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="ModelsERP\ModelView\NewFolder1\" />
     <Folder Include="ModelsERP\ModelView\Training\" />
     <Folder Include="SQL\" />
   </ItemGroup>

@@ -9,7 +9,6 @@ namespace ERP.Data.ModelsERP
     [Table("customer")]
     public partial class customer
     {
-
         [Key]
         public int cu_id { get; set; }
 
@@ -25,7 +24,7 @@ namespace ERP.Data.ModelsERP
         [StringLength(45)]
         public string cu_fullname { get; set; }
 
-        public byte? cu_type { get; set; }
+        public int? cu_type { get; set; }
 
         public DateTime? cu_create_date { get; set; }
 
@@ -39,18 +38,20 @@ namespace ERP.Data.ModelsERP
 
         public byte? cu_status { get; set; }
 
-        public int? source_id { get; set; }
-
         public DateTime? cu_birthday { get; set; }
 
         public int? cu_curator_id { get; set; }
-
-        public int? cu_age { get; set; }
 
         public int? staff_id { get; set; }
 
         public byte? cu_flag_used { get; set; }
 
         public byte? cu_flag_order { get; set; }
+
+        public int? cu_age { get; set; }
+
+        public int? source_id { get; set; }
+
+        public int? company_id { get; set; }
     }
 }

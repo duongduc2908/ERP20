@@ -701,7 +701,9 @@ namespace ERP.API.Controllers.Dashboard
         [Route("api/product/import")]
         public async Task<IHttpActionResult> Import()
         {
+            
             ResponseDataDTO<product> response = new ResponseDataDTO<product>();
+            List<int> lst_add = new List<int>();
             var exitsData = "";
             try
             {
@@ -726,7 +728,7 @@ namespace ERP.API.Controllers.Dashboard
                         //fileName = fileName.Replace(@"","");
 
                         string fileFormat = Utilis.GetFileFormat(fileName);
-                        if (fileFormat.Equals("xlsm") || fileFormat.Equals("xlsx"))
+                        if (fileFormat.Equals("xlsm") || fileFormat.Equals("xlsx") || fileFormat.Equals("xls"))
                         {
                             fileName = FileExtension.SaveFileProductOnDiskExcel(fileData, "test", BaseController.folder(), BaseController.get_timestamp());
                         }
@@ -773,7 +775,6 @@ namespace ERP.API.Controllers.Dashboard
                         }
                     }
                     #endregion
-
                     list = DataTableCmUtils.ToListof<productview>(table);
                     foreach (productview i in list)
                     {
@@ -787,7 +788,7 @@ namespace ERP.API.Controllers.Dashboard
                             response.Error = "pu_code";
                             return Ok(response);
                         }
-                        var dt = _productcategoryservice.GetAllIncluing(y => y.pc_name.Contains(i.product_category_name)).FirstOrDefault();
+                        var dt = _productcategoryservice.GetAllIncluing(y => y.pc_name.Trim().ToLower().Contains(i.product_category_name.Trim().ToLower())).FirstOrDefault();
                         int prc_index = 0;
                         if (dt == null)
                         {
@@ -803,19 +804,23 @@ namespace ERP.API.Controllers.Dashboard
                         int unit_index = 0;
                         for(int u =0; u<EnumProduct.pu_unit.Length; u++ )
                         {
-                            if(i.pu_unit_name.Contains(EnumProduct.pu_unit[u]))
+                            if(i.pu_unit_name != null)
                             {
-                                unit_index = u+1;
+                                if (i.pu_unit_name.Trim().ToLower().Contains(EnumProduct.pu_unit[u].Trim().ToLower()))
+                                {
+                                    unit_index = u + 1;
+                                }
                             }
+                            
                         }
-                        if(unit_index == 0)
-                        {
-                            exitsData = "Không có '" + i.pu_unit_name + "'  trong cơ sở dữ liệu!";
-                            response.Code = HttpCode.NOT_FOUND;
-                            response.Message = exitsData;
-                            response.Error = "pu_unit_name";
-                            return Ok(response);
-                        }
+                        //if(unit_index == 0)
+                        //{
+                        //    exitsData = "Không có '" + i.pu_unit_name + "'  trong cơ sở dữ liệu!";
+                        //    response.Code = HttpCode.NOT_FOUND;
+                        //    response.Message = exitsData;
+                        //    response.Error = "pu_unit_name";
+                        //    return Ok(response);
+                        //}
                         #endregion
 
                         #region["Create product"]
@@ -828,14 +833,15 @@ namespace ERP.API.Controllers.Dashboard
                         product_create.provider_id= 1;
 
                         product_create.pu_unit = Convert.ToByte(unit_index);
-                        product_create.product_category_id = prc_index;
+                        if(prc_index != 0) 
+                            product_create.product_category_id = prc_index;
                         product_create.pu_create_date = DateTime.Now;
                         product_create.pu_thumbnail = "/Uploads/Images/default/product.png";
 
 
 
                         _productservice.Create(product_create);
-                        
+                        lst_add.Add(_productservice.GetLast().pu_id);
                         #endregion
 
                     }
@@ -856,6 +862,14 @@ namespace ERP.API.Controllers.Dashboard
             }
             catch (Exception ex)
             {
+                if(lst_add!=null)
+                {
+                    foreach(int i in lst_add)
+                    {
+                        var prod = _productservice.Find(i);
+                        _productservice.Delete(prod);
+                    }
+                }
                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
                 response.Message = ex.Message; ;
                 response.Data = null;

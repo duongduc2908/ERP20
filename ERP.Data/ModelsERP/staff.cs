@@ -9,7 +9,6 @@ namespace ERP.Data.ModelsERP
     [Table("staff")]
     public partial class staff
     {
-
         [Key]
         public int sta_id { get; set; }
 
@@ -88,5 +87,7 @@ namespace ERP.Data.ModelsERP
         public string sta_identity_card_location { get; set; }
 
         public byte? sta_working_status { get; set; }
+
+        public int? company_id { get; set; }
     }
 }

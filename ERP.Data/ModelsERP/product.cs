@@ -13,10 +13,8 @@ namespace ERP.Data.ModelsERP
         [Key]
         public int pu_id { get; set; }
 
-        [StringLength(45)]
+        [StringLength(250)]
         public string pu_code { get; set; }
-
-        [StringLength(45)]
         public string pu_name { get; set; }
 
         public int? pu_quantity { get; set; }

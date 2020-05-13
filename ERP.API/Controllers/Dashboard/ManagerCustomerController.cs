@@ -43,11 +43,12 @@ namespace ERP.API.Controllers.Dashboard
         {
 
         }
-        public ManagerCustomerController(ICustomerPhoneService customerphoneservice, ISourceService sourceservice, ICustomerService customerservice, IShipAddressService shipaddressservice, IMapper mapper)
+        public ManagerCustomerController(ICustomerGroupService customergroupservice,ICustomerPhoneService customerphoneservice, ISourceService sourceservice, ICustomerService customerservice, IShipAddressService shipaddressservice, IMapper mapper)
         {
             this._customerservice = customerservice;
             this._shipaddressservice = shipaddressservice;
             this._customerphoneservice = customerphoneservice;
+            this._customergroupservice = customergroupservice;
             this._sourceservice = sourceservice;
             this._mapper = mapper;
         }
@@ -852,7 +853,16 @@ namespace ERP.API.Controllers.Dashboard
                             return Ok(response);
                         }
                         i.source_id = source_exits.src_id;
-
+                        var cg_exits = _customergroupservice.GetAllIncluing(y => y.cg_name.Contains(i.customer_group_name)).FirstOrDefault();
+                        if (cg_exits == null)
+                        {
+                            exitsData = "Nhóm khách hàng '" + i.customer_group_name + "' không tồn tại trong cơ sở dữ liệu!";
+                            response.Code = HttpCode.NOT_FOUND;
+                            response.Message = exitsData;
+                            response.Error = "source_name";
+                            return Ok(response);
+                        }
+                        i.customer_group_id = cg_exits.cg_id;
                         var cu_exits = _customerservice.GetAllIncluing(y => y.cu_code.Contains(i.cu_code)).FirstOrDefault();
                         if (cu_exits != null)
                         {
@@ -865,8 +875,19 @@ namespace ERP.API.Controllers.Dashboard
                         #region["Create customer"]
                         customer customer_create = new customer();
                         customer_create = _mapper.Map<customer>(i);
-                        customer_create.cu_type = 1;
-                        customer_create.customer_group_id = 37;
+                        for (int u = 0; u < EnumCustomer.cu_type.Length; u++)
+                        {
+                            if (i.cu_type_name != null)
+                            {
+                                if (i.cu_type_name.Trim().ToLower().Contains(EnumCustomer.cu_type[u].Trim().ToLower()))
+                                {
+                                    customer_create.cu_type=u + 1;
+
+                                }
+                            }
+
+                        }
+                        
                         customer_create.cu_flag_order = 1;
                         customer_create.cu_status = 1;
                         customer_create.cu_flag_used = 1;

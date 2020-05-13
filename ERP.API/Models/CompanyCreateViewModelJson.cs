@@ -1,19 +1,20 @@
-namespace ERP.Data.ModelsERP
-{
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
+﻿using ERP.Data.ModelsERP.ModelView.Company;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Web;
 
-    [Table("company")]
-    public partial class company
+namespace ERP.API.Models
+{
+    public class CompanyCreateViewModelJson
     {
-        [Key]
-        public int co_id { get; set; }
+        public CompanyCreateViewModelJson()
+        {
+
+        }
         [StringLength(45)]
         public string co_code { get; set; }
-
         [StringLength(250)]
         public string co_name { get; set; }
 
@@ -42,7 +43,7 @@ namespace ERP.Data.ModelsERP
         public int? co_revenue { get; set; }
 
         public double? co_price { get; set; }
-
         public int? co_duration { get; set; }
+        public List<functionjson> list_function { get; set; } 
     }
 }

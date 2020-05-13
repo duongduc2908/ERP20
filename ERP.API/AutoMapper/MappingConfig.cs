@@ -2,10 +2,12 @@
 using ERP.API.Models;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
+using ERP.Data.ModelsERP.ModelView.Company;
 using ERP.Data.ModelsERP.ModelView.Customer;
 using ERP.Data.ModelsERP.ModelView.Excutor;
 using ERP.Data.ModelsERP.ModelView.ExportDB;
 using ERP.Data.ModelsERP.ModelView.OrderService;
+using ERP.Data.ModelsERP.ModelView.Package;
 using ERP.Data.ModelsERP.ModelView.Product;
 using ERP.Data.ModelsERP.ModelView.Service;
 using ERP.Data.ModelsERP.ModelView.Sms;
@@ -151,6 +153,16 @@ namespace ERP.API.AutoMapper
             CreateMap<transaction, customertransactionviewmodel>();
             CreateMap<TransactionCreateViewModel, transaction>();
             CreateMap<TransactionUpdateViewModel, transaction>();
+
+
+            CreateMap<company, companyviewmodel>();
+            CreateMap<companyviewmodel, company>();
+
+            CreateMap<package, packageviewmodel>();
+            CreateMap<packageviewmodel, package>();
+
+            CreateMap<function, functionjson>();
+            CreateMap<functionjson, function>();
         }
 
         private void CreateMappingFromEntitiesToViewModels()

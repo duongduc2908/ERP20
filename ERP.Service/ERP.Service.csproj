@@ -72,6 +72,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AddressService.cs" />
+    <Compile Include="Services\CompanyFunctionService.cs" />
     <Compile Include="Services\CompanyService.cs" />
     <Compile Include="Services\CustomerGroupService.cs" />
     <Compile Include="Services\CustomerOrderService.cs" />
@@ -87,6 +88,7 @@
     <Compile Include="Services\FunctionService.cs" />
     <Compile Include="Services\GroupRoleService.cs" />
     <Compile Include="Services\IServices\IAddressService.cs" />
+    <Compile Include="Services\IServices\ICompanyFunctionService.cs" />
     <Compile Include="Services\IServices\ICompanyService.cs" />
     <Compile Include="Services\IServices\ICustomerGroupService.cs" />
     <Compile Include="Services\IServices\ICustomerOrderService.cs" />

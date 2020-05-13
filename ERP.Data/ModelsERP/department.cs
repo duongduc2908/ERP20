@@ -9,6 +9,7 @@ namespace ERP.Data.ModelsERP
     [Table("department")]
     public partial class department
     {
+        
 
         [Key]
         public int de_id { get; set; }
@@ -24,8 +25,6 @@ namespace ERP.Data.ModelsERP
 
         [StringLength(150)]
         public string de_manager { get; set; }
-
-        public int? company_id { get; set; }
 
         public int? de_parent_id { get; set; }
 

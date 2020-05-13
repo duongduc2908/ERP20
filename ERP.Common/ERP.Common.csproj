@@ -102,6 +102,7 @@
     <Compile Include="Constants\Enums\EnumCustomerPhone.cs" />
     <Compile Include="Constants\Enums\EnumDateWork.cs" />
     <Compile Include="Constants\Enums\EnumExecutor.cs" />
+    <Compile Include="Constants\Enums\EnumPackage.cs" />
     <Compile Include="Constants\Enums\EnumProduct.cs" />
     <Compile Include="Constants\Enums\EnumRepeatType.cs" />
     <Compile Include="Constants\Enums\EnumService.cs" />

@@ -1,13 +1,13 @@
-namespace ERP.Data.ModelsERP
-{
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
+﻿using ERP.Data.ModelsERP.ModelView.Company;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Web;
 
-    [Table("package")]
-    public partial class package
+namespace ERP.Data.ModelsERP.ModelView.Package
+{
+    public class packageviewmodel
     {
         [Key]
         public int pac_id { get; set; }
@@ -23,5 +23,7 @@ namespace ERP.Data.ModelsERP
         public double? pac_price { get; set; }
 
         public byte? pac_status { get; set; }
+        public string pac_status_name { get; set; }
+        public List<function> list_function { get; set; }
     }
 }

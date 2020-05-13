@@ -15,5 +15,9 @@ namespace ERP.Data.ModelsERP
 
         [StringLength(250)]
         public string fun_name { get; set; }
+
+        [StringLength(250)]
+        public string fun_code { get; set; }
+        public int package_id { get; set; }
     }
 }

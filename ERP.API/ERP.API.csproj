@@ -74,6 +74,9 @@
     <Reference Include="Microsoft.Owin.Cors, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.Cors.4.0.0\lib\net451\Microsoft.Owin.Cors.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="SocketIOClient, Version=0.6.26.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SocketIO4Net.Client.0.6.26\lib\net40\SocketIOClient.dll</HintPath>
@@ -104,9 +107,6 @@
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http">
     </Reference>
@@ -247,9 +247,11 @@
     <Compile Include="Controllers\Authentication\ManagerAuthenticationController.cs" />
     <Compile Include="Controllers\Dashboard\BaseController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerAddressController.cs" />
+    <Compile Include="Controllers\Dashboard\ManagerCompanyController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerCustomerGroupController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerCustomerOrderController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerFieldController.cs" />
+    <Compile Include="Controllers\Dashboard\ManagerPackageController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerServiceTimeController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerStatisticalController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerOrderProductController.cs" />
@@ -262,7 +264,6 @@
     <Compile Include="Controllers\Dashboard\ManagerUndertakenLocationController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerServiceCategoryController.cs" />
     <Compile Include="Models\ChangePasswordBindingModel.cs" />
-    <Compile Include="Controllers\Dashboard\ManagerCompanyController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerCustomerController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerDepartmentController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerEmailController.cs" />
@@ -280,8 +281,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\CompanyCreateViewModel.cs" />
-    <Compile Include="Models\CompanyUpdateViewModel.cs" />
+    <Compile Include="Models\CompanyCreateViewModelJson.cs" />
+    <Compile Include="Models\CompanyUpdateViewModelJson.cs" />
     <Compile Include="Models\CustomerCreateViewModel.cs" />
     <Compile Include="Models\CustomerCreateViewModelJson.cs" />
     <Compile Include="Models\CustomerGroupCreateViewModel.cs" />
@@ -313,6 +314,8 @@
     <Compile Include="Models\OrderProductUpdateViewModel.cs" />
     <Compile Include="Models\OrderServiceCreateViewModel.cs" />
     <Compile Include="Models\OrderServiceUpdateViewModel.cs" />
+    <Compile Include="Models\PackageCreateViewModelJson.cs" />
+    <Compile Include="Models\PackageUpdateViewModelJson.cs" />
     <Compile Include="Models\PositionCreateViewModel.cs" />
     <Compile Include="Models\PositionUpdateViewModel.cs" />
     <Compile Include="Models\ProductCreateViewModel.cs" />

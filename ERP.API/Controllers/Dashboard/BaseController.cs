@@ -7,12 +7,10 @@ using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
-using System.Net.Sockets;
 using System.Security.Claims;
 using System.Text;
 using System.Web;
 using System.Web.Http;
-using System.Web.Mvc;
 
 namespace ERP.API.Controllers.Dashboard
 {
@@ -40,14 +38,17 @@ namespace ERP.API.Controllers.Dashboard
         public string FlagActive = "1";
         public string FlagInActive = "0";
         private int inext = 0;
-        public static Socket socket;
+        public static Client socket;
         public static String ip= "localhost";
         public static String user;
         public static int PORT_NUMBER = 9999;
         public const int BUFFER_SIZE = 1024;
         public static ASCIIEncoding encoding = new ASCIIEncoding();
         #endregion
-
+        //var clientInfo = new Object();
+        //    clientInfo.customId         = data.customId;
+        //    clientInfo.clientId     = socket.id;
+        //    clients.push(clientInfo);
         public BaseController() {
             
         }

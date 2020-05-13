@@ -4,15 +4,14 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
-namespace ERP.API.Models
+namespace ERP.Data.ModelsERP.ModelView.Company
 {
-    public class CompanyCreateViewModel
+    public class companyviewmodel
     {
-        public CompanyCreateViewModel()
-        {
-
-        }
-        
+        [Key]
+        public int co_id { get; set; }
+        [StringLength(45)]
+        public string co_code { get; set; }
 
         [StringLength(250)]
         public string co_name { get; set; }
@@ -33,13 +32,14 @@ namespace ERP.API.Models
         [StringLength(250)]
         public string co_logo { get; set; }
 
-        public string co_bio { get; set; }
-
-        public byte? co_type { get; set; }
-
         public int? co_no_of_employees { get; set; }
+        public string sta_name { get; set; }
 
         public int? co_revenue { get; set; }
-        public int? package_id { get; set; }
+
+        public double? co_price { get; set; }
+
+        public int? co_duration { get; set; }
+        public List<packagefunctionviewmodel> list_package_function { get; set; }
     }
 }

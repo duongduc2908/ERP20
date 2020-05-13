@@ -29,7 +29,7 @@ namespace ERP.API.Models
         [StringLength(45)]
         public string cu_fullname { get; set; }
 
-        public byte? cu_type { get; set; }
+        public int? cu_type { get; set; }
 
         [StringLength(120)]
         public string cu_address { get; set; }

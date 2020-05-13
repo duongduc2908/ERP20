@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ERP.Data.ModelsERP.ModelView.Company;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -6,11 +7,13 @@ using System.Web;
 
 namespace ERP.API.Models
 {
-    public class CompanyUpdateViewModel
+    public class CompanyUpdateViewModelJson
     {
-        public CompanyUpdateViewModel() { }
+        public CompanyUpdateViewModelJson() { }
         [Key]
         public int co_id { get; set; }
+        [StringLength(45)]
+        public string co_code { get; set; }
 
         [StringLength(250)]
         public string co_name { get; set; }
@@ -38,6 +41,10 @@ namespace ERP.API.Models
         public int? co_no_of_employees { get; set; }
 
         public int? co_revenue { get; set; }
-        public int? package_id { get; set; }
+
+        public int? co_duration { get; set; }
+        public double? co_price { get; set; }
+        public List<functionjson> list_function { get; set; }
+
     }
 }

@@ -1,13 +1,13 @@
-namespace ERP.Data.ModelsERP
-{
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
+﻿using ERP.Data.ModelsERP.ModelView.Company;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Web;
 
-    [Table("package")]
-    public partial class package
+namespace ERP.API.Models
+{
+    public class PackageUpdateViewModelJson
     {
         [Key]
         public int pac_id { get; set; }
@@ -23,5 +23,6 @@ namespace ERP.Data.ModelsERP
         public double? pac_price { get; set; }
 
         public byte? pac_status { get; set; }
+        public List<functionjson> list_function { get; set; }
     }
 }

@@ -8,7 +8,6 @@ namespace ERP.Data.ModelsERP
 
     public partial class customer_group
     {
-
         [Key]
         public int cg_id { get; set; }
 
@@ -23,5 +22,7 @@ namespace ERP.Data.ModelsERP
         public DateTime? cg_created_date { get; set; }
 
         public int? staff_id { get; set; }
+
+        public int? company_id { get; set; }
     }
 }

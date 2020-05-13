@@ -9,13 +9,15 @@ using ERP.Data.DbContext;
 using ERP.Common.Constants;
 using ERP.Data.ModelsERP;
 using ERP.Repository.Repositories;
-using Microsoft.AspNet.Identity.Owin;
+using AutoMapper;
+using Newtonsoft.Json;
 
 namespace ERP.API.Providers
 {
     public class ApplicationOAuthProvider : OAuthAuthorizationServerProvider
     {
         private ERPDbContext _dbContext { get; set; }
+        private CompanyRepository companyres;
         //Store the base address of the web api
         //You need to change the PORT number where your WEB API service is running
         public ApplicationOAuthProvider()
@@ -30,6 +32,8 @@ namespace ERP.API.Providers
             var url_thumbnai = "";
             staff staff_user = new staff();
             staff_user = _dbContext.staffs.FirstOrDefault(t => t.sta_username.Contains(context.UserName.Trim()) && t.sta_password.Contains(hash_pass));
+            companyres = new CompanyRepository(_dbContext);
+            var company = companyres.GetById(Convert.ToInt32(staff_user.company_id),true);
             if (staff_user == null)
             {
                 context.SetError("invalid_grant", "Provided staff_username and password is incorrect");
@@ -77,8 +81,14 @@ namespace ERP.API.Providers
                     },
                     {
                         "Role", role
-                    }
-                });
+                    },
+                    {
+                        "company_id", staff_user.company_id.ToString()
+                    },
+                    {
+                        "list_package_function", JsonConvert.SerializeObject(company.list_package_function).ToString()
+        }
+                }) ;
             var ticket = new AuthenticationTicket(identity, props);
             context.Validated(ticket);
         }
