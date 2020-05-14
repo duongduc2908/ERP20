@@ -13,6 +13,6 @@ namespace ERP.Service.Services.IServices
     public interface IPositionService : IGenericService<position>
     {
         PagedResults<position> CreatePagedResults(int pageNumber, int pageSize);
-        List<dropdown> GetDropdowns();
+        List<dropdown> GetDropdowns(int company_id);
     }
 }

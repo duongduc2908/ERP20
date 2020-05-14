@@ -32,7 +32,7 @@ namespace ERP.Service.Services
         {
             return this._repository.GetById(id);
         }
-        public List<dropdown> GetAllDropDown()
+        public List<packageviewmodel> GetAllDropDown()
         {
             return this._repository.GetAllDropDown();
         }

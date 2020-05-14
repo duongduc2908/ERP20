@@ -63,9 +63,10 @@ namespace ERP.API.Controllers.Dashboard
             ResponseDataDTO<List<dropdown>> response = new ResponseDataDTO<List<dropdown>>();
             try
             {
+                int company_id = BaseController.get_company_id_current(); 
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _positionservice.GetDropdowns();
+                response.Data = _positionservice.GetDropdowns(company_id);
             }
             catch (Exception ex)
             {

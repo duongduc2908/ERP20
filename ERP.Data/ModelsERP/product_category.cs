@@ -24,5 +24,6 @@ namespace ERP.Data.ModelsERP
         public byte? pc_published { get; set; }
 
         public DateTime? pc_created_date { get; set; }
+        public int? company_id { get; set; }
     }
 }

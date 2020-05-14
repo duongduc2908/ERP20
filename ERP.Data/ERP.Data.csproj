@@ -132,6 +132,7 @@
     <Compile Include="ModelsERP\customer_group.cs" />
     <Compile Include="ModelsERP\customer_order.cs" />
     <Compile Include="ModelsERP\customer_phone.cs" />
+    <Compile Include="ModelsERP\customer_type.cs" />
     <Compile Include="ModelsERP\District.cs" />
     <Compile Include="ModelsERP\executor.cs" />
     <Compile Include="ModelsERP\ModelView\Company\companyviewmodel.cs" />
@@ -216,12 +217,14 @@
     <Compile Include="ModelsERP\product.cs" />
     <Compile Include="ModelsERP\product_category.cs" />
     <Compile Include="ModelsERP\product_order.cs" />
+    <Compile Include="ModelsERP\product_unit.cs" />
     <Compile Include="ModelsERP\project.cs" />
     <Compile Include="ModelsERP\Province.cs" />
     <Compile Include="ModelsERP\RefreshToken.cs" />
     <Compile Include="ModelsERP\service.cs" />
     <Compile Include="ModelsERP\service_category.cs" />
     <Compile Include="ModelsERP\service_time.cs" />
+    <Compile Include="ModelsERP\service_type.cs" />
     <Compile Include="ModelsERP\ship_address.cs" />
     <Compile Include="ModelsERP\sm.cs" />
     <Compile Include="ModelsERP\sms.cs" />
@@ -238,6 +241,9 @@
     <Compile Include="ModelsERP\training.cs" />
     <Compile Include="ModelsERP\training_staff.cs" />
     <Compile Include="ModelsERP\transaction.cs" />
+    <Compile Include="ModelsERP\transaction_deal_type.cs" />
+    <Compile Include="ModelsERP\transaction_evaluate.cs" />
+    <Compile Include="ModelsERP\transaction_priority.cs" />
     <Compile Include="ModelsERP\undertaken_location.cs" />
     <Compile Include="ModelsERP\Ward.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

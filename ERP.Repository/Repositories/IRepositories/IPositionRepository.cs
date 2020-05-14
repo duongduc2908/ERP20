@@ -13,6 +13,6 @@ namespace ERP.Repository.Repositories.IRepositories
     public interface IPositionRepository : IGenericRepository<position>
     {
         PagedResults<position> CreatePagedResults(int pageNumber, int pageSize);
-        List<dropdown> GetDropdowns();
+        List<dropdown> GetDropdowns(int company_id);
     }
 }

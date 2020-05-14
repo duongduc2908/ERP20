@@ -16,7 +16,7 @@ namespace ERP.Data.ModelsERP
         [StringLength(10)]
         public string se_code { get; set; }
 
-        public byte? se_type { get; set; }
+        public int? se_type { get; set; }
 
         [StringLength(100)]
         public string se_name { get; set; }
@@ -35,5 +35,6 @@ namespace ERP.Data.ModelsERP
 
         [StringLength(200)]
         public string se_note { get; set; }
+        public int? company_id { get; set; }
     }
 }

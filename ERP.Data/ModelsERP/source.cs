@@ -11,10 +11,9 @@ namespace ERP.Data.ModelsERP
     {
         [Key]
         public int src_id { get; set; }
-
         [StringLength(50)]
         public string src_name { get; set; }
-
         public string src_description { get; set; }
+        public int? company_id { get; set; }
     }
 }

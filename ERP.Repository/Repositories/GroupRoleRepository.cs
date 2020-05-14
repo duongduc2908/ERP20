@@ -39,10 +39,10 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = totalNumberOfRecords
             };
         }
-        public List<dropdown> GetDropdown()
+        public List<dropdown> GetDropdown(int company_id)
         {
             List<dropdown> res = new List<dropdown>();
-            List<group_role> lts_gr =  _dbContext.group_role.ToList();
+            List<group_role> lts_gr =  _dbContext.group_role.Where(x => x.company_id == company_id).ToList();
             foreach(group_role gr in lts_gr)
             {
                 dropdown dr = new dropdown();

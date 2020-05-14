@@ -30,5 +30,6 @@ namespace ERP.Data.ModelsERP
 
         [StringLength(250)]
         public string pos_description { get; set; }
+        public int? company_id { get; set; }
     }
 }

@@ -73,5 +73,11 @@ namespace ERP.Data.DbContext
         public virtual DbSet<staff_work_time> staff_work_times { get; set; }
         public virtual DbSet<customer_phone> customer_phones { get; set; }
         public virtual DbSet<company_funtion> company_funtion { get; set; }
+        public virtual DbSet<customer_type> customer_type { get; set; }
+        public virtual DbSet<transaction_deal_type> transaction_deal_type { get; set; }
+        public virtual DbSet<transaction_evaluate> transaction_evaluate { get; set; }
+        public virtual DbSet<transaction_priority> transaction_priority { get; set; }
+        public virtual DbSet<service_type> service_type { get; set; }
+        public virtual DbSet<product_unit> product_unit { get; set; }
     }
 }

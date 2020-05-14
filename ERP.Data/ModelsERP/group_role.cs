@@ -22,5 +22,6 @@ namespace ERP.Data.ModelsERP
         public string gr_description { get; set; }
 
         public byte? gr_status { get; set; }
+        public int? company_id { get; set; }
     }
 }

@@ -6,16 +6,15 @@ namespace ERP.Data.ModelsERP
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    public partial class service_category
+    public partial class transaction_evaluate
     {
         [Key]
-        public int sc_id { get; set; }
+        public int teval_id { get; set; }
 
-        [StringLength(50)]
-        public string sc_name { get; set; }
+        [StringLength(250)]
+        public string teval_name { get; set; }
 
-        [StringLength(500)]
-        public string sc_description { get; set; }
+        public string teval_description { get; set; }
 
         public int? company_id { get; set; }
     }

@@ -29,5 +29,6 @@ namespace ERP.Data.ModelsERP
         public int? de_parent_id { get; set; }
 
         public int? de_flag { get; set; }
+        public int? company_id { get; set; }
     }
 }

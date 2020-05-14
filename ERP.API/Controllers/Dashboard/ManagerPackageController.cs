@@ -36,7 +36,7 @@ namespace ERP.API.Controllers.Dashboard
         [Route("api/package/get_all")]
         public IHttpActionResult GetAllDropDown()
         {
-            ResponseDataDTO<List<dropdown>> response = new ResponseDataDTO<List<dropdown>>();
+            ResponseDataDTO<List<packageviewmodel>> response = new ResponseDataDTO<List<packageviewmodel>>();
             try
             {
                 response.Code = HttpCode.OK;
@@ -81,14 +81,14 @@ namespace ERP.API.Controllers.Dashboard
         #endregion
         #region["Get by id"]
         [Route("api/package/get_by_id")]
-        public IHttpActionResult GetPackages(int co_id)
+        public IHttpActionResult GetPackages(int pac_id)
         {
             ResponseDataDTO<packageviewmodel> response = new ResponseDataDTO<packageviewmodel>();
             try
             {
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _packageservice.GetById(co_id);
+                response.Data = _packageservice.GetById(pac_id);
             }
             catch (Exception ex)
             {
@@ -350,12 +350,12 @@ namespace ERP.API.Controllers.Dashboard
         #region["Delete"]
         [HttpDelete]
         [Route("api/package/delete")]
-        public IHttpActionResult Delete(int co_id)
+        public IHttpActionResult Delete(int pac_id)
         {
             ResponseDataDTO<package> response = new ResponseDataDTO<package>();
             try
             {
-                var staffDeleted = _packageservice.Find(co_id);
+                var staffDeleted = _packageservice.Find(pac_id);
                 if (staffDeleted != null)
                 {
                     _packageservice.Delete(staffDeleted);

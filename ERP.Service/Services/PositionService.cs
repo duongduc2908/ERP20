@@ -23,9 +23,9 @@ namespace ERP.Service.Services
         {
             return this._repository.CreatePagedResults(pageNumber, pageSize);
         }
-        public List<dropdown> GetDropdowns()
+        public List<dropdown> GetDropdowns(int company_id)
         {
-            return this._repository.GetDropdowns();
+            return this._repository.GetDropdowns(company_id);
         }
     }
 }

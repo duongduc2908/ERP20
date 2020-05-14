@@ -92,17 +92,20 @@ namespace ERP.Repository.Repositories
             packageview.list_function = lts_fun;
             return packageview;
         }
-        public List<dropdown> GetAllDropDown()
+        public List<packageviewmodel> GetAllDropDown()
         {
-            List<dropdown> res = new List<dropdown>();
-            var list_pa = _dbContext.packages.ToList();
-            foreach (var co in list_pa)
+            List<packageviewmodel> res = new List<packageviewmodel>();
+            var results = _dbContext.packages.ToList();
+            foreach (package pa in results)
             {
-                dropdown dr = new dropdown();
-                dr.id = co.pac_id;
-                dr.name = co.pac_name;
-                res.Add(dr);
+                packageviewmodel packageview = _mapper.Map<packageviewmodel>(pa);
+                if (packageview.pac_status != 0 || packageview.pac_status != null)
+                    packageview.pac_status_name = EnumPackage.pac_status[Convert.ToInt32(packageview.pac_status) - 1];
+                List<function> lts_fun = _dbContext.functions.Where(x => x.package_id == pa.pac_id).ToList();
+                packageview.list_function = lts_fun;
+                res.Add(packageview);
             }
+
             return res;
         }
     }

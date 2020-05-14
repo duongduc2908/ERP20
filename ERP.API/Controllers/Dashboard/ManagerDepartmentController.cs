@@ -48,6 +48,7 @@ namespace ERP.API.Controllers.Dashboard
             ResponseDataDTO<IEnumerable<department>> response = new ResponseDataDTO<IEnumerable<department>>();
             try
             {
+                int company_id = BaseController.get_company_id_current();
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
                 response.Data = _departmentservice.GetAll();
@@ -92,9 +93,10 @@ namespace ERP.API.Controllers.Dashboard
             ResponseDataDTO<List<dropdown>> response = new ResponseDataDTO<List<dropdown>>();
             try
             {
+                int company_id = BaseController.get_company_id_current();
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _departmentservice.Get_Level_One();
+                response.Data = _departmentservice.Get_Level_One(company_id);
             }
             catch (Exception ex)
             {

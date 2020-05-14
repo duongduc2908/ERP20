@@ -41,6 +41,7 @@ namespace ERP.API.Controllers.Dashboard
             ResponseDataDTO<IEnumerable<group_role>> response = new ResponseDataDTO<IEnumerable<group_role>>();
             try
             {
+               
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
                 response.Data = _group_roleservice.GetAll();
@@ -63,9 +64,10 @@ namespace ERP.API.Controllers.Dashboard
             ResponseDataDTO<List<dropdown>> response = new ResponseDataDTO<List<dropdown>>();
             try
             {
+                int company_id = BaseController.get_company_id_current();
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _group_roleservice.GetDropdown();
+                response.Data = _group_roleservice.GetDropdown(company_id);
             }
             catch (Exception ex)
             {

@@ -19,19 +19,20 @@ namespace ERP.Data.ModelsERP
 
         public int? tra_rate { get; set; }
 
-        public byte? tra_type { get; set; }
+        public int? tra_type { get; set; }
 
         public DateTime? tra_datetime { get; set; }
 
         [StringLength(50)]
         public string tra_result { get; set; }
 
-        public byte? tra_priority { get; set; }
+        public int? tra_priority { get; set; }
 
         public int? staff_id { get; set; }
 
         public int? customer_id { get; set; }
 
         public byte? tra_status { get; set; }
+        public int? company_id { get; set; }
     }
 }

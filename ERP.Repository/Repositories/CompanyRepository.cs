@@ -98,7 +98,7 @@ namespace ERP.Repository.Repositories
                     pac_f.pac_code = fun.Key.pac_code;
                     lts_pac_f.Add(pac_f);
                 }
-                companyview.list_package_function = lts_pac_f;
+                companyview.list_function = lts_pac_f;
                 res.Add(companyview);
             }
 
@@ -162,7 +162,7 @@ namespace ERP.Repository.Repositories
                 pac_f.pac_code = fun.Key.pac_code;
                 lts_pac_f.Add(pac_f);
             }
-            companyview.list_package_function = lts_pac_f;
+            companyview.list_function = lts_pac_f;
             return companyview;
         }
         public List<dropdown> GetAllDropDown()

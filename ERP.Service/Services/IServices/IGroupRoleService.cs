@@ -13,6 +13,6 @@ namespace ERP.Service.Services.IServices
     public interface IGroupRoleService : IGenericService<group_role>
     {
         PagedResults<group_role> CreatePagedResults(int pageNumber, int pageSize);
-        List<dropdown> GetDropdown();
+        List<dropdown> GetDropdown(int company_id);
     }
 }

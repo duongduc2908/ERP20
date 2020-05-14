@@ -16,6 +16,6 @@ namespace ERP.Repository.Repositories.IRepositories
         PagedResults<package> CreatePagedResults(int pageNumber, int pageSize);
         PagedResults<packageviewmodel> GetAllSearch(int pageNumber, int pageSize, string search_name);
         packageviewmodel GetById(int id);
-        List<dropdown> GetAllDropDown();
+        List<packageviewmodel> GetAllDropDown();
     }
 }

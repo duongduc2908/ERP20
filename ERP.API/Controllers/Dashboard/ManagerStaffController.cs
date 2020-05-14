@@ -116,9 +116,10 @@ namespace ERP.API.Controllers.Dashboard
             ResponseDataDTO<PagedResults<staffviewmodel>> response = new ResponseDataDTO<PagedResults<staffviewmodel>>();
             try
             {
+                int company_id = BaseController.get_company_id_current();
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _staffservice.GetAllPageSearch(pageNumber, pageSize, status, start_date, end_date, name, sta_working_status);
+                response.Data = _staffservice.GetAllPageSearch(pageNumber, pageSize, status, start_date, end_date, name, sta_working_status, company_id);
             }
             catch (Exception ex)
             {
@@ -384,6 +385,7 @@ namespace ERP.API.Controllers.Dashboard
                 staff_create.sta_password = HashMd5.convertMD5(sta_pass);
                 pass_word = staff_create.sta_password;
                 staff_create.sta_created_date = DateTime.Now;
+                staff_create.company_id = BaseController.get_company_id_current();
                 //Lần đầu đăng nhập login == true
                 staff_create.sta_login = true;
                 // save new staff

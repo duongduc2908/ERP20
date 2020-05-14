@@ -62,6 +62,8 @@ namespace ERP.API.Providers
                 identity.AddClaim(new Claim(ClaimTypes.Email, staff_user.sta_email));
             }
             identity.AddClaim(new Claim("Id", staff_user.sta_id.ToString()));
+            if (staff_user.company_id != null)
+                identity.AddClaim(new Claim("CompanyId", staff_user.company_id.ToString()));
             var props = new AuthenticationProperties(new Dictionary<string, string>
                 {
                     {
@@ -86,7 +88,7 @@ namespace ERP.API.Providers
                         "company_id", staff_user.company_id.ToString()
                     },
                     {
-                        "list_package_function", JsonConvert.SerializeObject(company.list_package_function).ToString()
+                        "list_package_function", JsonConvert.SerializeObject(company.list_function).ToString()
         }
                 }) ;
             var ticket = new AuthenticationTicket(identity, props);

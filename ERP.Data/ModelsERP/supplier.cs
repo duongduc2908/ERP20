@@ -31,5 +31,6 @@ namespace ERP.Data.ModelsERP
         public string su_phone { get; set; }
 
         public int? supplier_type_id { get; set; }
+        public int? company_id { get; set; }
     }
 }

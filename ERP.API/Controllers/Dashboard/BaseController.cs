@@ -25,6 +25,7 @@ namespace ERP.API.Controllers.Dashboard
         public string Ft_RecordCount = "123456000";
         public string Ft_WhereClause = "";
         public static int current_id;
+        public static int companyid_current;
         public string Hethong = "";
         public string FolderUploadTest = "";
         public static string SubPath = "";
@@ -148,11 +149,20 @@ namespace ERP.API.Controllers.Dashboard
         public static int get_id_current()
         {
             var lst_claims = ClaimsPrincipal.Current.Identities.First().Claims.ToList();
-            if (lst_claims.Count() == 4)
+            if (lst_claims.Count() == 5)
             {
                 current_id = int.Parse( lst_claims[3].Value);
             }
             return current_id;
+        }
+        public static int get_company_id_current()
+        {
+            var lst_claims = ClaimsPrincipal.Current.Identities.First().Claims.ToList();
+            if (lst_claims.Count() == 5)
+            {
+                companyid_current = int.Parse(lst_claims[4].Value);
+            }
+            return companyid_current;
         }
         public static string get_timestamp()
         {

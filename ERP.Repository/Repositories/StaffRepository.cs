@@ -107,8 +107,9 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = total
             };
         }
-        public PagedResults<staffviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? status, DateTime? start_date, DateTime? end_date, string name,int? sta_working_status)
+        public PagedResults<staffviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? status, DateTime? start_date, DateTime? end_date, string name,int? sta_working_status,int company_id)
         {
+            
             if(name != null)
             {
                 name = name.Trim().ToLower();
@@ -119,9 +120,9 @@ namespace ERP.Repository.Repositories
             var skipAmount = pageSize * pageNumber;
             if(status == null)
             {
-                list_res = _dbContext.staffs.ToList();
+                list_res = _dbContext.staffs.Where(x =>  x.company_id == company_id).ToList();
             }
-            else list_res = _dbContext.staffs.Where(x => x.sta_status == status).ToList();
+            else list_res = _dbContext.staffs.Where(x => x.sta_status == status && x.company_id == company_id).ToList();
             if (start_date != null)
             {
                 list_res = list_res.Where(x => x.sta_created_date >= start_date).ToList();
