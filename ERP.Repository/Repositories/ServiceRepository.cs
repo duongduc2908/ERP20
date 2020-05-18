@@ -45,19 +45,20 @@ namespace ERP.Repository.Repositories
             };
         }
         
-        public PagedResults<serviceviewmodel> GetAllPageSearch(int pageNumber, int pageSize, string search_name)
+        public PagedResults<serviceviewmodel> GetAllPageSearch(int pageNumber, int pageSize, string search_name,int company_id )
         {
+
             if (search_name != null) search_name = search_name.Trim().ToLower();
             List<serviceviewmodel> res = new List<serviceviewmodel>();
             var skipAmount = pageSize * pageNumber;
             List<service> lts_se = new List<service>();
             if(search_name != null)
             {
-                lts_se = _dbContext.services.Where(t => t.se_name.ToLower().Contains(search_name) || t.se_code.ToLower().Contains(search_name)).ToList();
+                lts_se = _dbContext.services.Where(t => (t.se_name.ToLower().Contains(search_name) || t.se_code.ToLower().Contains(search_name)) && t.company_id == company_id).ToList();
             }
             else
             {
-                lts_se = _dbContext.services.ToList();
+                lts_se = _dbContext.services.Where(t => t.company_id == company_id).ToList();
             }
             var total = lts_se.Count();
 
@@ -92,7 +93,7 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = total
             };
         }
-        public PagedResults<serviceinforviewmodel> GetAllPageInforService(int pageNumber, int pageSize, string search_name)
+        public PagedResults<serviceinforviewmodel> GetAllPageInforService(int pageNumber, int pageSize, string search_name, int company_id)
         {
             if (search_name != null)
             {
@@ -103,11 +104,11 @@ namespace ERP.Repository.Repositories
             List<service> list = new List<service>();
             if (search_name == null)
             {
-                list = _dbContext.services.ToList();
+                list = _dbContext.services.Where(x => x.company_id == company_id).ToList();
             }
             else
             {
-                list = _dbContext.services.Where(x => x.se_code.Contains(search_name) || x.se_name.Contains(search_name)).ToList();
+                list = _dbContext.services.Where(x => (x.se_code.Contains(search_name) || x.se_name.Contains(search_name)) && x.company_id == company_id).ToList();
             }
            
             var totalNumberOfRecords = list.Count();
@@ -136,17 +137,17 @@ namespace ERP.Repository.Repositories
             };
         }
 
-        public List<dropdown> GetType()
+        public List<dropdown> GetType(int company_id)
         {
 
             List<dropdown> res = new List<dropdown>();
-            for (int i = 1; i < EnumService.se_type.Length+1; i++)
+            var list_type = _dbContext.service_type.Where(x => x.company_id == company_id).ToList();
+            foreach (var co in list_type)
             {
-                dropdown pu = new dropdown();
-                pu.id = i;
-                pu.name = EnumService.se_type[i - 1];
-
-                res.Add(pu);
+                dropdown dr = new dropdown();
+                dr.id = co.styp_id;
+                dr.name = co.styp_name;
+                res.Add(dr);
             }
             return res;
         }
@@ -165,11 +166,11 @@ namespace ERP.Repository.Repositories
             if (x != null) serviceview.service_category_name = x.sc_name;
             return serviceview;
         }
-        public List<dropdown> GetAllDropdown()
+        public List<dropdown> GetAllDropdown(int company_id)
         {
 
             List<dropdown> res = new List<dropdown>();
-            List<service> lts_se = _dbContext.services.ToList();
+            List<service> lts_se = _dbContext.services.Where(x => x.company_id == company_id).ToList();
             foreach(service se in lts_se)
             {
                 dropdown pu = new dropdown();

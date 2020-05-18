@@ -123,6 +123,11 @@
     <Compile Include="Identity\AppIdentityClaims.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="DbContext\ERPDbContext.cs" />
+    <Compile Include="ModelsERP\attachment.cs" />
+    <Compile Include="ModelsERP\bank.cs" />
+    <Compile Include="ModelsERP\bank_branch.cs" />
+    <Compile Include="ModelsERP\bank_category.cs" />
+    <Compile Include="ModelsERP\bonus_staff.cs" />
     <Compile Include="ModelsERP\ChangePasswordBindingModel.cs" />
     <Compile Include="ModelsERP\ClientMaster.cs" />
     <Compile Include="ModelsERP\company.cs" />
@@ -233,6 +238,7 @@
     <Compile Include="ModelsERP\social.cs" />
     <Compile Include="ModelsERP\source.cs" />
     <Compile Include="ModelsERP\staff.cs" />
+    <Compile Include="ModelsERP\staff_brank.cs" />
     <Compile Include="ModelsERP\staff_work_time.cs" />
     <Compile Include="ModelsERP\supplier.cs" />
     <Compile Include="ModelsERP\supplier_type.cs" />

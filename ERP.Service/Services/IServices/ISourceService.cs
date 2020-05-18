@@ -17,6 +17,6 @@ namespace ERP.Service.Services.IServices
         PagedResults<source> GetAllPageById(int pageNumber, int pageSize, int id);
         PagedResults<source> GetSources(string search_name);
         List<statisticrevenueviewmodel> GetRevenueSource(int staff_id);
-        List<dropdown> GetAllDropdown();
+        List<dropdown> GetAllDropdown(int company_id);
     }
 }

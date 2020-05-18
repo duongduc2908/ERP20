@@ -80,7 +80,7 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = totalNumberOfRecords
             };
         }
-        public PagedResults<customerorderviewmodel> ResultStatisticsCustomerOrder(int pageNumber, int pageSize, int staff_id, bool month, bool week, bool day)
+        public PagedResults<customerorderviewmodel> ResultStatisticsCustomerOrder(int pageNumber, int pageSize, int staff_id, bool month, bool week, bool day,int company_id)
         {
             List<customerorderviewmodel> res = new List<customerorderviewmodel>();
             var skipAmount = pageSize * pageNumber;
@@ -89,7 +89,7 @@ namespace ERP.Repository.Repositories
             if (week) datetimesearch = Utilis.GetFirstDayOfWeek(DateTime.Now);
             if (day) datetimesearch = DateTime.Now;
 
-            var list = _dbContext.customer_order.Where(i => i.cuo_date <= DateTime.Now && i.cuo_date >= datetimesearch && i.staff_id == staff_id).OrderBy(t => t.cuo_id).Skip(skipAmount).Take(pageSize);
+            var list = _dbContext.customer_order.Where(i => (i.cuo_date <= DateTime.Now && i.cuo_date >= datetimesearch && i.staff_id == staff_id) && i.company_id == company_id).OrderBy(t => t.cuo_id).Skip(skipAmount).Take(pageSize);
 
             var total = _dbContext.customer_order.Count();
             var results = list.ToList();
@@ -564,7 +564,7 @@ namespace ERP.Repository.Repositories
             #endregion
             return add;
         }
-        public PagedResults<customerorderviewmodel> GetAllSearch(int pageNumber, int pageSize, int? payment_type_id, DateTime? start_date, DateTime? end_date, string code)
+        public PagedResults<customerorderviewmodel> GetAllSearch(int pageNumber, int pageSize, int? payment_type_id, DateTime? start_date, DateTime? end_date, string code, int company_id)
         {
             if (code != null) code = code.Trim().ToLower();
             List<customerorderviewmodel> res = new List<customerorderviewmodel>();
@@ -574,11 +574,11 @@ namespace ERP.Repository.Repositories
             List<customer_order> list = new List<customer_order>();
             if(code == null)
             {
-                list = _dbContext.customer_order.Where(x => !x.cuo_code.Contains("ORS")).ToList();
+                list = _dbContext.customer_order.Where(x => !x.cuo_code.Contains("ORS") && x.company_id == company_id).ToList();
             }
             else
             {
-                list = _dbContext.customer_order.Where(x => x.cuo_code.ToLower().Contains(code) && !x.cuo_code.Contains("ORS")).ToList();
+                list = _dbContext.customer_order.Where(x => (x.cuo_code.ToLower().Contains(code) && !x.cuo_code.Contains("ORS")) && x.company_id == company_id).ToList();
             }
             if(payment_type_id !=null)
             {
@@ -636,7 +636,7 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = total
             };
         }
-        public PagedResults<servicercustomerorderviewmodel> GetAllSearchCustomerOrderService(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name)
+        public PagedResults<servicercustomerorderviewmodel> GetAllSearchCustomerOrderService(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name, int company_id)
         {
             if (search_name != null) search_name = search_name.Trim().ToLower();
             List<servicercustomerorderviewmodel> res = new List<servicercustomerorderviewmodel>();
@@ -644,7 +644,7 @@ namespace ERP.Repository.Repositories
             var skipAmount = pageSize * pageNumber;
             var lts_cuo_cu = (from cuo in _dbContext.customer_order
                               join cu in _dbContext.customers on cuo.customer_id equals cu.cu_id
-                              where cuo.cuo_code.Contains("ORS")
+                              where cuo.cuo_code.Contains("ORS") && cuo.company_id == company_id
                               select new
                               {
                                   cuo,cu
@@ -652,7 +652,7 @@ namespace ERP.Repository.Repositories
          
             if(search_name != null)
             {
-                lts_cuo_cu = lts_cuo_cu.Where(x => x.cu.cu_fullname.ToLower().Contains(search_name) || x.cuo.cuo_code.ToLower().Contains(search_name)).ToList();
+                lts_cuo_cu = lts_cuo_cu.Where(x => (x.cu.cu_fullname.ToLower().Contains(search_name) || x.cuo.cuo_code.ToLower().Contains(search_name))).ToList();
             }
             if (start_date != null)
             {
@@ -918,7 +918,7 @@ namespace ERP.Repository.Repositories
             }
             return res;
         }
-        public List<dropdown_salary> Get_staff_free(work_time_view c, string fullName)
+        public List<dropdown_salary> Get_staff_free(work_time_view c, string fullName,int company_id)
         {
             string thu = EnumDateWork.get_str(c.work_time.DayOfWeek.ToString());
             List<staff_time_detail> lst_time = new List<staff_time_detail>();
@@ -976,7 +976,7 @@ namespace ERP.Repository.Repositories
             List<staff> list_staff_free = new List<staff>();
             foreach(staff_work_time st in lst)
             {
-                var free = _dbContext.staffs.Where(x => x.sta_id == st.staff_id && x.sta_working_status == 1).FirstOrDefault();
+                var free = _dbContext.staffs.Where(x => x.sta_id == st.staff_id && x.sta_working_status == 1 && x.company_id == company_id).FirstOrDefault();
                 if(free != null)
                     list_staff_free.Add(free);
             }
@@ -1045,7 +1045,7 @@ namespace ERP.Repository.Repositories
         public List<dropdown> GetAllStatus()
         {
             List<dropdown> res = new List<dropdown>();
-            for (int i = 1; i < 4; i++)
+            for (int i = 1; i < EnumCustomerOrder.status.Length+1; i++)
             {
                 dropdown dr = new dropdown();
                 dr.id = i;
@@ -1054,7 +1054,7 @@ namespace ERP.Repository.Repositories
             }
             return res;
         }
-        public PagedResults<customerorderproductview> ExportCustomerOrderProduct(int pageNumber, int pageSize, int? payment_type_id, DateTime? start_date, DateTime? end_date, string name)
+        public PagedResults<customerorderproductview> ExportCustomerOrderProduct(int pageNumber, int pageSize, int? payment_type_id, DateTime? start_date, DateTime? end_date, string name,int company_id)
         {
             List<customerorderproductview> res = new List<customerorderproductview>();
             var skipAmount = pageSize * pageNumber;
@@ -1062,11 +1062,11 @@ namespace ERP.Repository.Repositories
             List<customer_order> list = new List<customer_order>();
             if (name == null)
             {
-                list = _dbContext.customer_order.Where(x => !x.cuo_code.Contains("ORS")).ToList();
+                list = _dbContext.customer_order.Where(x => !x.cuo_code.Contains("ORS") && x.company_id == company_id).ToList();
             }
             else
             {
-                list = _dbContext.customer_order.Where(x => x.cuo_code.ToLower().Contains(name) && !x.cuo_code.Contains("ORS")).ToList();
+                list = _dbContext.customer_order.Where(x => x.cuo_code.ToLower().Contains(name) && !x.cuo_code.Contains("ORS") && x.company_id == company_id).ToList();
             }
             if (payment_type_id != null)
             {

@@ -13,6 +13,6 @@ namespace ERP.Repository.Repositories.IRepositories
     public interface IServiceCategoryRepository : IGenericRepository<service_category>
     {
         PagedResults<service_category> CreatePagedResults(int pageNumber, int pageSize);
-        List<dropdown> GetAllName();
+        List<dropdown> GetAllName(int company_id);
     }
 }

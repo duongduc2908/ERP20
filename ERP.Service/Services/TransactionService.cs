@@ -25,38 +25,38 @@ namespace ERP.Service.Services
         {
             return this._repository.CreatePagedResults(pageNumber, pageSize);
         }
-        public PagedResults<transactionviewmodel> GetAllPageSearch(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name)
+        public PagedResults<transactionviewmodel> GetAllPageSearch(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name,int company_id)
         {
-            return this._repository.GetAllPageSearch(pageNumber:pageNumber, pageSize:pageSize,start_date, end_date, search_name);
+            return this._repository.GetAllPageSearch(pageNumber:pageNumber, pageSize:pageSize,start_date, end_date, search_name,company_id);
         }
       
-        public List<dropdown> GetTransactionType()
+        public List<dropdown> GetTransactionType(int company_id)
         {
-            return this._repository.GetTransactionType();
+            return this._repository.GetTransactionType(company_id);
         }
-        public List<dropdown> GetTransactionPriority()
+        public List<dropdown> GetTransactionPriority(int company_id)
         {
-            return this._repository.GetTransactionPriority();
+            return this._repository.GetTransactionPriority(company_id);
         }
-        public List<dropdown> GetTransactionStatus()
+        public List<dropdown> GetTransactionStatus(int company_id)
         {
-            return this._repository.GetTransactionStatus();
+            return this._repository.GetTransactionStatus(company_id);
         }
         public transactionviewmodel GetById(int tra_id)
         {
             return this._repository.GetById(tra_id);
         }
-        public List<dropdown> GetTransactionRate()
+        public List<dropdown> GetTransactionRate(int company_id)
         {
-            return this._repository.GetTransactionRate();
+            return this._repository.GetTransactionRate(company_id);
         }
-        public List<transactionstatisticrateviewmodel> GetTransactionStatisticRate(int staff_id)
+        public List<transactionstatisticrateviewmodel> GetTransactionStatisticRate(int staff_id, int company_id)
         {
-            return this._repository.GetTransactionStatisticRate(staff_id);
+            return this._repository.GetTransactionStatisticRate(staff_id,company_id);
         }
-        public PagedResults<transactionview> ExportTransaction(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name)
+        public PagedResults<transactionview> ExportTransaction(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name,int company_id)
         {
-            return this._repository.ExportTransaction(pageNumber: pageNumber, pageSize: pageSize,start_date, end_date, search_name);
+            return this._repository.ExportTransaction(pageNumber: pageNumber, pageSize: pageSize,start_date, end_date, search_name, company_id);
         }
     }
 }

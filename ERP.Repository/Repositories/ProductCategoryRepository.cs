@@ -16,11 +16,11 @@ namespace ERP.Repository.Repositories
         public ProductCategoryRepository(ERPDbContext dbContext) : base(dbContext)
         {
         }
-        public List<dropdown> GetAllName()
+        public List<dropdown> GetAllName(int company_id)
         {
             List<dropdown> lst_res = new List<dropdown>();
-            var list = _dbContext.product_category.ToList();
-            foreach (product_category p in list) {
+            var list = _dbContext.product_category.Where(x => x.company_id == company_id).ToList();
+            foreach (var p in list) {
                 dropdown dr = new dropdown();
                 dr.id = p.pc_id;
                 dr.name = p.pc_name;

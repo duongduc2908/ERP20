@@ -14,10 +14,10 @@ namespace ERP.Repository.Repositories.IRepositories
     public interface IServiceRepository : IGenericRepository<service>
     {
         PagedResults<service> CreatePagedResults(int pageNumber, int pageSize);
-        PagedResults<serviceviewmodel> GetAllPageSearch(int pageNumber, int pageSize, string search_name);
+        PagedResults<serviceviewmodel> GetAllPageSearch(int pageNumber, int pageSize, string search_name, int comapny_id);
         serviceviewmodel GetById(int se_id);
-        List<dropdown> GetAllDropdown();
-        PagedResults<serviceinforviewmodel> GetAllPageInforService(int pageNumber, int pageSize, string search_name);
-        List<dropdown> GetType();
+        List<dropdown> GetAllDropdown(int comapny_id);
+        PagedResults<serviceinforviewmodel> GetAllPageInforService(int pageNumber, int pageSize, string search_name, int comapny_id);
+        List<dropdown> GetType(int comapny_id);
     }
 }

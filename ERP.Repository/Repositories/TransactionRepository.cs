@@ -297,31 +297,33 @@ namespace ERP.Repository.Repositories
             transactionview.customer = res;
             return transactionview;
         }
-        public List<dropdown> GetTransactionType()
+        public List<dropdown> GetTransactionType(int company_id)
         {
             List<dropdown> res = new List<dropdown>();
-            for (int i = 1; i < EnumTransaction.tra_type.Length + 1; i++)
+            var list_type = _dbContext.transaction_deal_type.Where(x => x.company_id == company_id).ToList();
+            foreach (var co in list_type)
             {
                 dropdown dr = new dropdown();
-                dr.id = i;
-                dr.name = EnumTransaction.tra_type[i - 1];
+                dr.id = co.trand_id;
+                dr.name = co.trand_name;
                 res.Add(dr);
             }
             return res;
         }
-        public List<dropdown> GetTransactionPriority()
+        public List<dropdown> GetTransactionPriority(int company_id)
         {
             List<dropdown> res = new List<dropdown>();
-            for (int i = 1; i < EnumTransaction.tra_priority.Length + 1; i++)
+            var list_priority = _dbContext.transaction_priority.Where(x => x.company_id == company_id).ToList();
+            foreach (var co in list_priority)
             {
                 dropdown dr = new dropdown();
-                dr.id = i;
-                dr.name = EnumTransaction.tra_priority[i - 1];
+                dr.id = co.tpro_id;
+                dr.name = co.tpro_name;
                 res.Add(dr);
             }
             return res;
         }
-        public List<dropdown> GetTransactionStatus()
+        public List<dropdown> GetTransactionStatus(int company_id)
         {
             List<dropdown> res = new List<dropdown>();
             for (int i = 1; i < EnumTransaction.tra_status.Length + 1; i++)
@@ -333,19 +335,20 @@ namespace ERP.Repository.Repositories
             }
             return res;
         }
-        public List<dropdown> GetTransactionRate()
+        public List<dropdown> GetTransactionRate(int company_id)
         {
             List<dropdown> res = new List<dropdown>();
-            for (int i = 1; i < EnumTransaction.tra_rate.Length + 1; i++)
+            var list_transaction_evaluate  = _dbContext.transaction_evaluate.Where(x => x.company_id == company_id).ToList();
+            foreach (var co in list_transaction_evaluate)
             {
                 dropdown dr = new dropdown();
-                dr.id = i;
-                dr.name = EnumTransaction.tra_rate[i - 1];
+                dr.id = co.teval_id;
+                dr.name = co.teval_name;
                 res.Add(dr);
             }
             return res;
         }
-        public PagedResults<transactionviewmodel> GetAllPageSearch(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name)
+        public PagedResults<transactionviewmodel> GetAllPageSearch(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name, int company_id)
         {
             if (search_name != null) search_name = search_name.Trim().ToLower();
             List<transactionviewmodel> res = new List<transactionviewmodel>();
@@ -353,8 +356,8 @@ namespace ERP.Repository.Repositories
 
             var skipAmount = pageSize * pageNumber;
 
-            if (search_name == null) list = _dbContext.transactions.ToList();
-            else list = _dbContext.transactions.Where(i => i.tra_title.ToLower().Contains(search_name) || i.tra_result.ToLower().Contains(search_name)).ToList();
+            if (search_name == null) list = _dbContext.transactions.Where(x => x.company_id == company_id).ToList();
+            else list = _dbContext.transactions.Where(i => (i.tra_title.ToLower().Contains(search_name) || i.tra_result.ToLower().Contains(search_name)) && i.company_id == company_id).ToList();
             if (start_date != null)
             {
                 list = list.Where(x => x.tra_datetime >= start_date).ToList();
@@ -515,15 +518,15 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = totalNumberOfRecords
             };
         }
-        public PagedResults<transactionview> ExportTransaction(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name)
+        public PagedResults<transactionview> ExportTransaction(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name, int company_id)
         {
             List<transactionview> res = new List<transactionview>();
             List<transaction> list = new List<transaction>();
 
             var skipAmount = pageSize * pageNumber;
 
-            if (search_name == null) list = _dbContext.transactions.ToList();
-            else list = _dbContext.transactions.Where(i => i.tra_title.Contains(search_name) || i.tra_result.Contains(search_name)).ToList();
+            if (search_name == null) list = _dbContext.transactions.Where(i => i.company_id == company_id).ToList();
+            else list = _dbContext.transactions.Where(i => (i.tra_title.Contains(search_name) || i.tra_result.Contains(search_name)) && i.company_id == company_id).ToList();
             if (start_date != null)
             {
                 list = list.Where(x => x.tra_datetime >= start_date).ToList();
@@ -585,7 +588,7 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = totalNumberOfRecords
             };
         }
-        public List<transactionstatisticrateviewmodel> GetTransactionStatisticRate(int staff_id)
+        public List<transactionstatisticrateviewmodel> GetTransactionStatisticRate(int staff_id, int company_id)
         {
             List<transactionstatisticrateviewmodel> res = new List<transactionstatisticrateviewmodel>();
             //Kiểm tra admin , user 
@@ -595,21 +598,23 @@ namespace ERP.Repository.Repositories
             {
                 if (user.group_role_id == 1)
                 {
-                    for (int i = 1; i < EnumTransaction.tra_rate.Length + 1; i++)
+                    var lts_rate = _dbContext.transaction_evaluate.Where(x => x.company_id == company_id).ToList();
+                    foreach (var r in lts_rate)
                     {
                         transactionstatisticrateviewmodel add = new transactionstatisticrateviewmodel();
-                        add.cg_name = EnumTransaction.tra_rate[i - 1];
-                        add.number = _dbContext.transactions.Where(t => t.tra_rate == i).Count();
+                        add.cg_name =r.teval_name;
+                        add.number = _dbContext.transactions.Where(t => t.tra_rate == r.teval_id && t.company_id == company_id).Count();
                         res.Add(add);
                     }
                 }
                 else
                 {
-                    for (int i = 1; i < EnumTransaction.tra_rate.Length + 1; i++)
+                    var lts_rate = _dbContext.transaction_evaluate.Where(x => x.company_id == company_id).ToList();
+                    foreach (var r in lts_rate)
                     {
                         transactionstatisticrateviewmodel add = new transactionstatisticrateviewmodel();
-                        add.cg_name = EnumTransaction.tra_rate[i - 1];
-                        add.number = _dbContext.transactions.Where(t => t.tra_rate == i && t.staff_id == user.sta_id).Count();
+                        add.cg_name = r.teval_name;
+                        add.number = _dbContext.transactions.Where(t => t.tra_rate == r.teval_id && t.staff_id == user.sta_id && t.company_id == company_id).Count();
                         res.Add(add);
                     }
                 }

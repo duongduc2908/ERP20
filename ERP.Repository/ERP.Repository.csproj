@@ -479,6 +479,7 @@
     <Compile Include="Repositories\CustomerOrderRepository.cs" />
     <Compile Include="Repositories\CustomerPhoneRepository.cs" />
     <Compile Include="Repositories\CustomerRepository.cs" />
+    <Compile Include="Repositories\CustomerTypeRepository.cs" />
     <Compile Include="Repositories\DepartmentRepository.cs" />
     <Compile Include="Repositories\EmailRepository.cs" />
     <Compile Include="Repositories\EmailStrategyRepository.cs" />
@@ -496,6 +497,7 @@
     <Compile Include="Repositories\IRepositories\ICustomerOrderRepository.cs" />
     <Compile Include="Repositories\IRepositories\ICustomerPhoneRepository.cs" />
     <Compile Include="Repositories\IRepositories\ICustomerRepository.cs" />
+    <Compile Include="Repositories\IRepositories\ICustomerTypeRepository.cs" />
     <Compile Include="Repositories\IRepositories\IDepartmentRepository.cs" />
     <Compile Include="Repositories\IRepositories\IEmailRepository.cs" />
     <Compile Include="Repositories\IRepositories\IEmailStrategyRepository.cs" />

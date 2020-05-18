@@ -36,9 +36,9 @@ namespace ERP.Service.Services
         {
             return this._repository.GetRevenueSource(staff_id);
         }
-        public List<dropdown> GetAllDropdown()
+        public List<dropdown> GetAllDropdown(int company_id)
         {
-            return this._repository.GetAllDropdown();
+            return this._repository.GetAllDropdown(company_id);
         }
 
     }

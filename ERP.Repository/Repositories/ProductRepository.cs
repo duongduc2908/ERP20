@@ -82,7 +82,7 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = totalNumberOfRecords
             };
         }
-        public PagedResults<productviewmodel> GetProducts(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name, int? category_id)
+        public PagedResults<productviewmodel> GetProducts(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name, int? category_id, int company_id)
         {
             if (search_name != null) search_name = search_name.Trim().ToLower();
             List<productviewmodel> res = new List<productviewmodel>();
@@ -90,9 +90,9 @@ namespace ERP.Repository.Repositories
             var skipAmount = pageSize * pageNumber;
             if(search_name == null)
             {
-                list = _dbContext.products.ToList();
+                list = _dbContext.products.Where(t => t.company_id == company_id).ToList();
             }
-            else list = _dbContext.products.Where(t => t.pu_name.ToLower().Contains(search_name) || t.pu_code.ToLower().Contains(search_name)).ToList();
+            else list = _dbContext.products.Where(t => (t.pu_name.ToLower().Contains(search_name) || t.pu_code.ToLower().Contains(search_name)) && t.company_id == company_id).ToList();
             if (category_id != null)
             {
                 list = list.Where(x => x.product_category_id == category_id).ToList();
@@ -161,7 +161,7 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = total
             };
         }
-        public PagedResults<productview> ExportProduct(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name, int? category_id)
+        public PagedResults<productview> ExportProduct(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name, int? category_id,int company_id)
         {
 
             List<productview> res = new List<productview>();
@@ -170,9 +170,9 @@ namespace ERP.Repository.Repositories
             var skipAmount = pageSize * pageNumber;
             if (search_name == null)
             {
-                list = _dbContext.products.ToList();
+                list = _dbContext.products.Where(t => t.company_id == company_id).ToList();
             }
-            else list = _dbContext.products.Where(t => t.pu_name.Contains(search_name)).ToList();
+            else list = _dbContext.products.Where(t => t.pu_name.Contains(search_name) && t.company_id == company_id).ToList();
             if (category_id != null)
             {
                 list = list.Where(x => x.product_category_id == category_id).ToList();
@@ -221,17 +221,17 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = total
             };
         }
-        public List<dropdown> GetUnit()
+        public List<dropdown> GetUnit(int company_id)
         {
 
             List<dropdown> res = new List<dropdown>();
-            for(int i = 1; i < EnumProduct.pu_unit.Length+1; i++)
+            List<product_unit> lts_s = _dbContext.product_unit.Where(x => x.company_id == company_id).ToList();
+            foreach (var so in lts_s)
             {
-                dropdown pu = new dropdown();
-                pu.id = i;
-                pu.name = EnumProduct.pu_unit[i-1];
-                
-                res.Add(pu);
+                dropdown dr = new dropdown();
+                dr.id = so.puni_id;
+                dr.name = so.puni_name;
+                res.Add(dr);
             }
             return res;
         }

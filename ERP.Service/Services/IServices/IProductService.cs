@@ -17,8 +17,8 @@ namespace ERP.Service.Services.IServices
         productviewmodel GetAllPageById( int id);
         
        
-        PagedResults<productviewmodel> GetProducts(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name, int? category_id);
-        PagedResults<productview> ExportProduct(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name, int? category_id);
-        List<dropdown> GetUnit();
+        PagedResults<productviewmodel> GetProducts(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name, int? category_id, int company_id);
+        PagedResults<productview> ExportProduct(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name, int? category_id, int company_id);
+        List<dropdown> GetUnit(int company_id);
     }
 }

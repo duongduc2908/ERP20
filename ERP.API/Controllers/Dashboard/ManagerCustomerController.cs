@@ -61,9 +61,10 @@ namespace ERP.API.Controllers.Dashboard
             ResponseDataDTO<List<dropdown>> response = new ResponseDataDTO<List<dropdown>>();
             try
             {
+                int company_id = BaseController.get_company_id_current();
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _customerservice.GetAllDropdown();
+                response.Data = _customerservice.GetAllDropdown(company_id);
             }
             catch (Exception ex)
             {
@@ -105,9 +106,10 @@ namespace ERP.API.Controllers.Dashboard
             ResponseDataDTO<PagedResults<customeraddressviewmodel>> response = new ResponseDataDTO<PagedResults<customeraddressviewmodel>>();
             try
             {
+                int company_id = BaseController.get_company_id_current();
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _customerservice.GetCustomerByCurator(pageSize,pageNumber,cu_curator_id,search_name);
+                response.Data = _customerservice.GetCustomerByCurator(pageSize,pageNumber,cu_curator_id,search_name,company_id);
             }
             catch (Exception ex)
             {
@@ -225,9 +227,10 @@ namespace ERP.API.Controllers.Dashboard
             ResponseDataDTO<PagedResults<customerviewmodel>> response = new ResponseDataDTO<PagedResults<customerviewmodel>>();
             try
             {
+                int company_id = BaseController.get_company_id_current();
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _customerservice.GetAllPageSearch(pageNumber, pageSize, source_id, cu_type, customer_group_id,start_date,end_date, name);
+                response.Data = _customerservice.GetAllPageSearch(pageNumber, pageSize, source_id, cu_type, customer_group_id,start_date,end_date, name,company_id);
             }
             catch (Exception ex)
             {
@@ -248,9 +251,10 @@ namespace ERP.API.Controllers.Dashboard
             ResponseDataDTO<PagedResults<smscustomerviewmodel>> response = new ResponseDataDTO<PagedResults<smscustomerviewmodel>>();
             try
             {
+                int company_id = BaseController.get_company_id_current();
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _customerservice.GetAllPageSearchSms(pageNumber, pageSize, source_id, cu_type, customer_group_id, name);
+                response.Data = _customerservice.GetAllPageSearchSms(pageNumber, pageSize, source_id, cu_type, customer_group_id, name,company_id);
             }
             catch (Exception ex)
             {
@@ -271,9 +275,10 @@ namespace ERP.API.Controllers.Dashboard
             ResponseDataDTO<PagedResults<servicesearchcustomerviewmodel>> response = new ResponseDataDTO<PagedResults<servicesearchcustomerviewmodel>>();
             try
             {
+                int company_id = BaseController.get_company_id_current();
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _customerservice.GetAllPageSearchService(pageNumber, pageSize, source_id, cu_type, customer_group_id, name);
+                response.Data = _customerservice.GetAllPageSearchService(pageNumber, pageSize, source_id, cu_type, customer_group_id, name,company_id);
             }
             catch (Exception ex)
             {
@@ -296,10 +301,10 @@ namespace ERP.API.Controllers.Dashboard
             ResponseDataDTO<List<dropdown>> response = new ResponseDataDTO<List<dropdown>>();
             try
             {
-
+                int company_id = BaseController.get_company_id_current();
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _customerservice.GetAllType();
+                response.Data = _customerservice.GetAllType(company_id);
             }
             catch (Exception ex)
             {
@@ -431,6 +436,7 @@ namespace ERP.API.Controllers.Dashboard
                 
                 customer_create.cu_create_date = DateTime.Now;
                 customer_create.staff_id = BaseController.get_id_current();
+                customer_create.company_id = BaseController.get_company_id_current();
                 customer_create.cu_thumbnail = "/Uploads/Images/default/customer.png";
                 // save new customer
                 _customerservice.Create(customer_create);
@@ -836,6 +842,7 @@ namespace ERP.API.Controllers.Dashboard
                         var us = _customerphoneservice.GetAllIncluing(t => t.cp_phone_number.Equals(i.cu_mobile)).FirstOrDefault();
                         if (us != null)
                         {
+                            Delete_Customer(list_customer_create);
                             exitsData = "Đã có số '" + i.cu_mobile + "' tồn tại trong cơ sở dữ liệu!";
                             response.Code = HttpCode.NOT_FOUND;
                             response.Message = exitsData;
@@ -846,6 +853,7 @@ namespace ERP.API.Controllers.Dashboard
                         var source_exits = _sourceservice.GetAllIncluing(y => y.src_name.Contains(i.source_name)).FirstOrDefault();
                         if(source_exits == null)
                         {
+                            Delete_Customer(list_customer_create);
                             exitsData = "Nguồn khách hàng '" + i.source_name + "' không tồn tại trong cơ sở dữ liệu!";
                             response.Code = HttpCode.NOT_FOUND;
                             response.Message = exitsData;
@@ -856,6 +864,7 @@ namespace ERP.API.Controllers.Dashboard
                         var cg_exits = _customergroupservice.GetAllIncluing(y => y.cg_name.Contains(i.customer_group_name)).FirstOrDefault();
                         if (cg_exits == null)
                         {
+                            Delete_Customer(list_customer_create);
                             exitsData = "Nhóm khách hàng '" + i.customer_group_name + "' không tồn tại trong cơ sở dữ liệu!";
                             response.Code = HttpCode.NOT_FOUND;
                             response.Message = exitsData;
@@ -866,6 +875,7 @@ namespace ERP.API.Controllers.Dashboard
                         var cu_exits = _customerservice.GetAllIncluing(y => y.cu_code.Contains(i.cu_code)).FirstOrDefault();
                         if (cu_exits != null)
                         {
+                            Delete_Customer(list_customer_create);
                             exitsData = "khách hàng '" + i.cu_code + "'tồn tại trong cơ sở dữ liệu!";
                             response.Code = HttpCode.NOT_FOUND;
                             response.Message = exitsData;
@@ -905,6 +915,7 @@ namespace ERP.API.Controllers.Dashboard
                         
                         customer_create.cu_create_date = DateTime.Now;
                         customer_create.staff_id = BaseController.get_id_current();
+                        customer_create.company_id = BaseController.get_company_id_current();
                         customer_create.cu_thumbnail = "/Uploads/Images/default/customer.png";
                         _customerservice.Create(customer_create);
                         int last_id = _customerservice.GetLast().cu_id;
@@ -1013,6 +1024,17 @@ namespace ERP.API.Controllers.Dashboard
             bool res = _sourceservice.Exist(x => x.src_id == _id);
             return res;
         }
+        private void Delete_Customer(List<int> lst_add)
+        {
+            if (lst_add != null)
+            {
+                foreach (int i in lst_add)
+                {
+                    var cu = _customerservice.Find(i);
+                    _customerservice.Delete(cu);
+                }
+            }
+        }
         #endregion
 
         #region["Export Excel"]
@@ -1023,10 +1045,11 @@ namespace ERP.API.Controllers.Dashboard
             ResponseDataDTO<string> response = new ResponseDataDTO<string>();
             try
             {
+                int company_id = BaseController.get_company_id_current();
                 var listStaff = new List<customerviewexport>();
 
                 //Đưa ra danh sách staff trong trang nào đó 
-                var objRT_Mst_Staff = _customerservice.ExportCustomer(pageNumber, pageSize, source_id, cu_type, customer_group_id,start_date,end_date, name);
+                var objRT_Mst_Staff = _customerservice.ExportCustomer(pageNumber, pageSize, source_id, cu_type, customer_group_id,start_date,end_date, name,company_id);
                 if (objRT_Mst_Staff != null)
                 {
                     listStaff.AddRange(objRT_Mst_Staff.Results);
@@ -1101,6 +1124,7 @@ namespace ERP.API.Controllers.Dashboard
             return Ok(response);
         }
         #endregion
+
         #region["DicColums"]
         private Dictionary<string, string> GetImportDicColums()
         {

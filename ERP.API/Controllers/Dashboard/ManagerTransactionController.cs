@@ -45,9 +45,10 @@ namespace ERP.API.Controllers.Dashboard
             ResponseDataDTO<PagedResults<transactionviewmodel>> response = new ResponseDataDTO<PagedResults<transactionviewmodel>>();
             try
             {
+                int company_id = BaseController.get_company_id_current();
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _transactionservice.GetAllPageSearch(pageNumber: pageNumber, pageSize: pageSize,start_date,end_date, search_name: search_name);
+                response.Data = _transactionservice.GetAllPageSearch(pageNumber: pageNumber, pageSize: pageSize,start_date,end_date, search_name: search_name,company_id);
             }
             catch (Exception ex)
             {
@@ -89,9 +90,10 @@ namespace ERP.API.Controllers.Dashboard
             ResponseDataDTO<List<dropdown>> response = new ResponseDataDTO<List<dropdown>>();
             try
             {
+                int company_id = BaseController.get_company_id_current();
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _transactionservice.GetTransactionType();
+                response.Data = _transactionservice.GetTransactionType(company_id);
             }
             catch (Exception ex)
             {
@@ -111,9 +113,10 @@ namespace ERP.API.Controllers.Dashboard
             ResponseDataDTO<List<dropdown>> response = new ResponseDataDTO<List<dropdown>>();
             try
             {
+                int company_id = BaseController.get_company_id_current();
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _transactionservice.GetTransactionPriority();
+                response.Data = _transactionservice.GetTransactionPriority(company_id);
             }
             catch (Exception ex)
             {
@@ -133,9 +136,10 @@ namespace ERP.API.Controllers.Dashboard
             ResponseDataDTO<List<dropdown>> response = new ResponseDataDTO<List<dropdown>>();
             try
             {
+                int company_id = BaseController.get_company_id_current();
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _transactionservice.GetTransactionStatus();
+                response.Data = _transactionservice.GetTransactionStatus(company_id);
             }
             catch (Exception ex)
             {
@@ -155,9 +159,10 @@ namespace ERP.API.Controllers.Dashboard
             ResponseDataDTO<List<dropdown>> response = new ResponseDataDTO<List<dropdown>>();
             try
             {
+                int company_id = BaseController.get_company_id_current();
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _transactionservice.GetTransactionRate();
+                response.Data = _transactionservice.GetTransactionRate(company_id);
             }
             catch (Exception ex)
             {
@@ -202,7 +207,7 @@ namespace ERP.API.Controllers.Dashboard
 
                 // mapping view model to entity
                 var createTransaction = _mapper.Map<transaction>(transactionCreateViewModel);
-
+                createTransaction.company_id = BaseController.get_company_id_current();
 
                 // save new product
                 _transactionservice.Create(createTransaction);
@@ -361,9 +366,9 @@ namespace ERP.API.Controllers.Dashboard
             try
             {
                 var listTransaction = new List<transactionview>();
-
+                int company_id = BaseController.get_company_id_current();
                 //Đưa ra danh sách staff trong trang nào đó 
-                var objRT_Mst_Transaction = _transactionservice.ExportTransaction(pageNumber: pageNumber, pageSize: pageSize,start_date,end_date, search_name);
+                var objRT_Mst_Transaction = _transactionservice.ExportTransaction(pageNumber: pageNumber, pageSize: pageSize,start_date,end_date, search_name,company_id);
                 if (objRT_Mst_Transaction != null)
                 {
                     listTransaction.AddRange(objRT_Mst_Transaction.Results);

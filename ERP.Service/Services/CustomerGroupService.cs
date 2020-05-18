@@ -21,9 +21,9 @@ namespace ERP.Service.Services
             this._repository = repository;
         }
 
-        public PagedResults<customergroupviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? cg_id, string name)
+        public PagedResults<customergroupviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? cg_id, string name,int company_id)
         {
-            return this._repository.GetAllPageSearch(pageNumber, pageSize, cg_id, name);
+            return this._repository.GetAllPageSearch(pageNumber, pageSize, cg_id, name, company_id);
         }
         public List<piechartview> GetPieChart()
         {
@@ -41,9 +41,9 @@ namespace ERP.Service.Services
         {
             return this._repository.GetRevenueCustomerGroup(staff_id);
         }
-        public List<dropdown> GetAllDropdown()
+        public List<dropdown> GetAllDropdown(int company_id)
         {
-            return this._repository.GetAllDropdown();
+            return this._repository.GetAllDropdown(company_id);
         }
         
     }

@@ -40,25 +40,25 @@ namespace ERP.Service.Services
         {
             return this._repository.GetAllPageByGroup(pageNumber, pageSize, customer_group_id);
         }
-        public PagedResults<customerviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, DateTime? start_date, DateTime? end_date, string name)
+        public PagedResults<customerviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, DateTime? start_date, DateTime? end_date, string name,int company_id)
         {
-            return this._repository.GetAllPageSearch(pageNumber, pageSize, source_id, cu_type, customer_group_id,start_date,end_date, name);
+            return this._repository.GetAllPageSearch(pageNumber, pageSize, source_id, cu_type, customer_group_id,start_date,end_date, name,company_id);
         }
-        public PagedResults<customeraddressviewmodel> GetCustomerByCurator(int pageSize, int pageNumber, int? cu_curator_id, string search_name)
+        public PagedResults<customeraddressviewmodel> GetCustomerByCurator(int pageSize, int pageNumber, int? cu_curator_id, string search_name, int company_id)
         {
-            return this._repository.GetCustomerByCurator(pageSize, pageNumber, cu_curator_id,search_name);
+            return this._repository.GetCustomerByCurator(pageSize, pageNumber, cu_curator_id,search_name,company_id);
         }
         public bool Check_location(ship_address sa)
         {
             return this._repository.Check_location(sa);
         }
-        public PagedResults<smscustomerviewmodel> GetAllPageSearchSms(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, string name)
+        public PagedResults<smscustomerviewmodel> GetAllPageSearchSms(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, string name, int company_id)
         {
-            return this._repository.GetAllPageSearchSms(pageNumber, pageSize, source_id, cu_type, customer_group_id, name);
+            return this._repository.GetAllPageSearchSms(pageNumber, pageSize, source_id, cu_type, customer_group_id, name,company_id);
         }
-        public PagedResults<servicesearchcustomerviewmodel> GetAllPageSearchService(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, string name)
+        public PagedResults<servicesearchcustomerviewmodel> GetAllPageSearchService(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, string name, int company_id)
         {
-            return this._repository.GetAllPageSearchService(pageNumber, pageSize, source_id, cu_type, customer_group_id,name);
+            return this._repository.GetAllPageSearchService(pageNumber, pageSize, source_id, cu_type, customer_group_id,name,company_id);
         }
        
         public customerviewmodel GetInfor(int cu_id)
@@ -74,17 +74,17 @@ namespace ERP.Service.Services
         {
             return this._repository.GetInforCustomerTransaction(cu_id);
         }
-        public List<dropdown> GetAllType()
+        public List<dropdown> GetAllType(int company_id)
         {
-            return this._repository.GetAllType();
+            return this._repository.GetAllType(company_id);
         }
-        public List<dropdown> GetAllDropdown()
+        public List<dropdown> GetAllDropdown(int company_id)
         {
-            return this._repository.GetAllDropdown();
+            return this._repository.GetAllDropdown(company_id);
         }
-        public PagedResults<customerviewexport> ExportCustomer(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, DateTime? start_date, DateTime? end_date, string name)
+        public PagedResults<customerviewexport> ExportCustomer(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, DateTime? start_date, DateTime? end_date, string name, int company_id)
         {
-            return this._repository.ExportCustomer(pageNumber, pageSize, source_id, cu_type, customer_group_id,start_date, end_date, name);
+            return this._repository.ExportCustomer(pageNumber, pageSize, source_id, cu_type, customer_group_id,start_date, end_date, name,company_id);
         }
 
     }

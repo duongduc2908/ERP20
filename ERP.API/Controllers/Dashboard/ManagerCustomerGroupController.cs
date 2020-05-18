@@ -42,9 +42,10 @@ namespace ERP.API.Controllers.Dashboard
             ResponseDataDTO<PagedResults<customergroupviewmodel>> response = new ResponseDataDTO<PagedResults<customergroupviewmodel>>();
             try
             {
+                int company_id = BaseController.get_company_id_current();
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _customer_groupservice.GetAllPageSearch(pageNumber, pageSize, cg_id, name);
+                response.Data = _customer_groupservice.GetAllPageSearch(pageNumber, pageSize, cg_id, name,company_id);
             }
             catch (Exception ex)
             {
@@ -87,9 +88,10 @@ namespace ERP.API.Controllers.Dashboard
             ResponseDataDTO<List<dropdown>> response = new ResponseDataDTO<List<dropdown>>();
             try
             {
+                int company_id = BaseController.get_company_id_current();
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _customer_groupservice.GetAllDropdown();
+                response.Data = _customer_groupservice.GetAllDropdown(company_id);
             }
             catch (Exception ex)
             {
@@ -125,29 +127,7 @@ namespace ERP.API.Controllers.Dashboard
             return Ok(response);
         }
 
-        [HttpGet]
-        [Route("api/customer-groups/all")]
-        public IHttpActionResult GetAll()
-        {
-            ResponseDataDTO<IEnumerable<customer_group>> response = new ResponseDataDTO<IEnumerable<customer_group>>();
-            try
-            {
-                response.Code = HttpCode.OK;
-                response.Message = MessageResponse.SUCCESS;
-                response.Data = _customer_groupservice.GetAll();
-            }
-            catch (Exception ex)
-            {
-                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = ex.Message;
-                response.Data = null;
-
-                Console.WriteLine(ex.ToString());
-            }
-
-            return Ok(response);
-        }
-
+       
         #region [Create]
         [HttpPost]
         [Route("api/customer-group/create")]
@@ -216,8 +196,8 @@ namespace ERP.API.Controllers.Dashboard
                 }
                 else create_customer_group.cg_thumbnail = fileName;
 
-                
 
+                create_customer_group.company_id = BaseController.get_company_id_current();
                 // save new product
                 _customer_groupservice.Create(create_customer_group);
                 // return response

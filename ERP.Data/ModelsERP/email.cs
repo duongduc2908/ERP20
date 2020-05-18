@@ -36,7 +36,5 @@ namespace ERP.Data.ModelsERP
         public string ema_note { get; set; }
 
         public int? company_id { get; set; }
-
-        public virtual company company { get; set; }
     }
 }

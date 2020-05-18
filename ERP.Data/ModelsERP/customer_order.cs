@@ -50,6 +50,7 @@ namespace ERP.Data.ModelsERP
         public string cuo_infor_time { get; set; }
         [StringLength(150)]
         public string cuo_color_show { get; set; }
+        public int? company_id { get; set; }
 
     }
 }

@@ -80,17 +80,13 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = totalNumberOfRecords
             };
         }
-        public List<dropdown> GetAllName()
+        public List<dropdown> GetAllName(int company_id)
         {
 
             List<dropdown> res = new List<dropdown>();
 
-
-            var list = _dbContext.suppliers.OrderBy(t => t.su_id).ToList();
-            var totalNumberOfRecords = list.Count();
-
-            var results = list.ToList();
-            foreach (supplier i in results)
+            var list = _dbContext.suppliers.Where(x=>x.company_id == company_id).ToList();
+            foreach (supplier i in list)
             {
                 var dr = new dropdown();
                 dr.id = i.su_id;

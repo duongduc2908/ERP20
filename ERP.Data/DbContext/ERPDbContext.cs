@@ -79,5 +79,11 @@ namespace ERP.Data.DbContext
         public virtual DbSet<transaction_priority> transaction_priority { get; set; }
         public virtual DbSet<service_type> service_type { get; set; }
         public virtual DbSet<product_unit> product_unit { get; set; }
+        public virtual DbSet<attachment> attachments { get; set; }
+        public virtual DbSet<bank> banks { get; set; }
+        public virtual DbSet<bank_branch> bank_branch { get; set; }
+        public virtual DbSet<bank_category> bank_category { get; set; }
+        public virtual DbSet<bonus_staff> bonus_staff { get; set; }
+        public virtual DbSet<staff_brank> staff_brank { get; set; }
     }
 }

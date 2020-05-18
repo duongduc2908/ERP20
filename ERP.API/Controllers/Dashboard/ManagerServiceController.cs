@@ -45,9 +45,10 @@ namespace ERP.API.Controllers.Dashboard
             ResponseDataDTO<List<dropdown>> response = new ResponseDataDTO<List<dropdown>>();
             try
             {
+                int company_id = BaseController.get_company_id_current();
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _serviceservice.GetAllDropdown();
+                response.Data = _serviceservice.GetAllDropdown(company_id);
             }
             catch (Exception ex)
             {
@@ -84,28 +85,7 @@ namespace ERP.API.Controllers.Dashboard
             return Ok(response);
         }
         
-        //[HttpGet]
-        //[Route("api/service/search")]
-        //public IHttpActionResult GetAllPageSearch(int pageSize, int pageNumber,string search_name)
-        //{
-        //    ResponseDataDTO<PagedResults<serviceviewmodel>> response = new ResponseDataDTO<PagedResults<serviceviewmodel>>();
-        //    try
-        //    {
-        //        response.Code = HttpCode.OK;
-        //        response.Message = MessageResponse.SUCCESS;
-        //        response.Data = _serviceservice.GetAllPageSearch(pageNumber, pageSize,search_name);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-        //        response.Message = ex.Message;
-        //        response.Data = null;
-
-        //        Console.WriteLine(ex.ToString());
-        //    }
-
-        //    return Ok(response);
-        //}
+       
 
         [HttpGet]
         [Route("api/service/get_by_id")]
@@ -137,9 +117,10 @@ namespace ERP.API.Controllers.Dashboard
             ResponseDataDTO<PagedResults<serviceviewmodel>> response = new ResponseDataDTO<PagedResults<serviceviewmodel>>();
             try
             {
+                int company_id = BaseController.get_company_id_current();
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _serviceservice.GetAllPageSearch(pageNumber, pageSize, search_name);
+                response.Data = _serviceservice.GetAllPageSearch(pageNumber, pageSize, search_name,company_id);
             }
             catch (Exception ex)
             {
@@ -159,9 +140,10 @@ namespace ERP.API.Controllers.Dashboard
             ResponseDataDTO<List<dropdown>> response = new ResponseDataDTO<List<dropdown>>();
             try
             {
+                int company_id = BaseController.get_company_id_current();
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _serviceservice.GetType();
+                response.Data = _serviceservice.GetType(company_id);
             }
             catch (Exception ex)
             {
@@ -206,6 +188,7 @@ namespace ERP.API.Controllers.Dashboard
                
                 // mapping view model to entity
                 var createdservice = _mapper.Map<service>(serviceCreateViewModel);
+                createdservice.company_id = BaseController.get_company_id_current();
                 //Tạo mã 
                 var x = _serviceservice.GetLast();
                 if (x == null) createdservice.se_code = "DV000000";

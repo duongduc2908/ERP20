@@ -15,6 +15,6 @@ namespace ERP.Repository.Repositories.IRepositories
         PagedResults<supplier> GetAllPage(int pageNumber, int pageSize);
         PagedResults<supplier> GetAllPageById(int pageNumber, int pageSize, int id);
         PagedResults<supplier> GetSupliers(string search_name);
-        List<dropdown> GetAllName();
+        List<dropdown> GetAllName(int company_id);
     }
 }

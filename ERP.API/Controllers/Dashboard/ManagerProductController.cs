@@ -93,9 +93,10 @@ namespace ERP.API.Controllers.Dashboard
             ResponseDataDTO<List<dropdown>> response = new ResponseDataDTO<List<dropdown>> ();
             try
             {
+                int company_id = BaseController.get_company_id_current();
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _productservice.GetUnit();
+                response.Data = _productservice.GetUnit(company_id);
             }
             catch (Exception ex)
             {
@@ -138,9 +139,10 @@ namespace ERP.API.Controllers.Dashboard
             ResponseDataDTO<PagedResults<productviewmodel>> response = new ResponseDataDTO<PagedResults<productviewmodel>>();
             try
             {
+                int company_id = BaseController.get_company_id_current();
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _productservice.GetProducts(pageNumber:pageNumber, pageSize:pageSize, search_name:search_name, category_id:category_id,start_date: start_date, end_date:end_date);
+                response.Data = _productservice.GetProducts(pageNumber,pageSize,start_date,end_date,search_name,category_id,company_id);
             }
             catch (Exception ex)
             {
@@ -324,7 +326,7 @@ namespace ERP.API.Controllers.Dashboard
                     createdproduct.pu_thumbnail = "/Uploads/Images/default/product.png";
                 }
                 else createdproduct.pu_thumbnail = fileName;
-
+                createdproduct.company_id = BaseController.get_company_id_current();
                 // save new product
                 _productservice.Create(createdproduct);
                 // return response
@@ -653,10 +655,11 @@ namespace ERP.API.Controllers.Dashboard
             ResponseDataDTO<string> response = new ResponseDataDTO<string>();
             try
             {
+                int company_id = BaseController.get_company_id_current();
                 var listProduct = new List<productview>();
 
                 //Đưa ra danh sách staff trong trang nào đó 
-                var objRT_Mst_Product = _productservice.ExportProduct(pageNumber, pageSize, start_date,end_date, search_name, category_id);
+                var objRT_Mst_Product = _productservice.ExportProduct(pageNumber, pageSize, start_date,end_date, search_name, category_id,company_id);
                 if (objRT_Mst_Product != null)
                 {
                     listProduct.AddRange(objRT_Mst_Product.Results);
@@ -773,6 +776,14 @@ namespace ERP.API.Controllers.Dashboard
                                 }
                             }
                         }
+                        if(table.Rows[i]["product_category_name"]==null)
+                        {
+                            exitsData = "Nhóm sản phẩm không được để trống!";
+                            response.Code = HttpCode.NOT_FOUND;
+                            response.Message = exitsData;
+                            response.Error = "product_category_name";
+                            return Ok(response);
+                        }
                     }
                     #endregion
                     list = DataTableCmUtils.ToListof<productview>(table);
@@ -782,6 +793,7 @@ namespace ERP.API.Controllers.Dashboard
                         var us = _productservice.GetAllIncluing(t => t.pu_code.Equals(i.pu_code)).FirstOrDefault();
                         if (us != null)
                         {
+                            Delete_product(lst_add);
                             exitsData = "Đã có mã '" + i.pu_code + "' tồn tại trong cơ sở dữ liệu!";
                             response.Code = HttpCode.NOT_FOUND;
                             response.Message = exitsData;
@@ -792,10 +804,13 @@ namespace ERP.API.Controllers.Dashboard
                         int prc_index = 0;
                         if (dt == null)
                         {
-                            product_category prc = new product_category();
-                            prc.pc_name = i.product_category_name;
-                            _productcategoryservice.Create(prc);
-                            prc_index = _productcategoryservice.GetLast().pc_id;
+                            if(i.product_category_name!=null)
+                            {
+                                product_category prc = new product_category();
+                                prc.pc_name = i.product_category_name;
+                                _productcategoryservice.Create(prc);
+                                prc_index = _productcategoryservice.GetLast().pc_id;
+                            }
                         }
                         else
                         {
@@ -838,7 +853,7 @@ namespace ERP.API.Controllers.Dashboard
                         product_create.pu_create_date = DateTime.Now;
                         product_create.pu_thumbnail = "/Uploads/Images/default/product.png";
 
-
+                        product_create.company_id = BaseController.get_company_id_current();
 
                         _productservice.Create(product_create);
                         lst_add.Add(_productservice.GetLast().pu_id);
@@ -949,6 +964,20 @@ namespace ERP.API.Controllers.Dashboard
                  {"product_category_name","Nhóm sản phẩm"},
                  {"pu_sale_price","Giá bán"},
             };
+        }
+        #endregion
+
+        #region["function common"]
+        private void Delete_product(List<int> lst_add)
+        {
+            if (lst_add != null)
+            {
+                foreach (int i in lst_add)
+                {
+                    var prod = _productservice.Find(i);
+                    _productservice.Delete(prod);
+                }
+            }
         }
         #endregion
         #region dispose

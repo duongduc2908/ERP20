@@ -22,6 +22,7 @@ namespace ERP.Repository.Repositories
     public class CustomerRepository : GenericRepository<customer>, ICustomerRepository
     {
         private readonly IMapper _mapper;
+
         public CustomerRepository(ERPDbContext dbContext,IMapper _mapper) : base(dbContext)
         {
             this._mapper = _mapper;
@@ -166,7 +167,7 @@ namespace ERP.Repository.Repositories
 
         }
         
-        public PagedResults<customerviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, DateTime? start_date, DateTime? end_date, string name)
+        public PagedResults<customerviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, DateTime? start_date, DateTime? end_date, string name,int company_id)
         {
             if (name != null) name = name.Trim().ToLower();
             List<customer> list;
@@ -174,9 +175,9 @@ namespace ERP.Repository.Repositories
             var skipAmount = pageSize * pageNumber;
             if (name == null)
             {
-                list = _dbContext.customers.ToList();
+                list = _dbContext.customers.Where(x => x.company_id == company_id).ToList();
             }
-            else list = _dbContext.customers.Where(x => x.cu_fullname.ToLower().Contains(name) || x.cu_code.ToLower().Contains(name)  ).ToList();
+            else list = _dbContext.customers.Where(x => (x.cu_fullname.ToLower().Contains(name) || x.cu_code.ToLower().Contains(name))&& x.company_id == company_id).ToList();
             if (source_id != null)
             {
                 list = list.Where(x => x.source_id == source_id).ToList();
@@ -396,7 +397,7 @@ namespace ERP.Repository.Repositories
             };
 
         }
-        public PagedResults<customeraddressviewmodel> GetCustomerByCurator(int pageSize, int pageNumber, int? cu_curator_id, string search_name)
+        public PagedResults<customeraddressviewmodel> GetCustomerByCurator(int pageSize, int pageNumber, int? cu_curator_id, string search_name,int company_id)
         {
             if (search_name != null) search_name = search_name.Trim();
             List<customer> list;
@@ -404,9 +405,9 @@ namespace ERP.Repository.Repositories
             var skipAmount = pageSize * pageNumber;
             if (search_name == null)
             {
-                list = _dbContext.customers.ToList();
+                list = _dbContext.customers.Where(x => x.company_id == company_id).ToList();
             }
-            else list = _dbContext.customers.Where(x => x.cu_fullname.Contains(search_name)).ToList();
+            else list = _dbContext.customers.Where(x => x.cu_fullname.Contains(search_name) && x.company_id == company_id).ToList();
             if (cu_curator_id != null)
             {
                 list = list.Where(x => x.cu_curator_id == cu_curator_id).ToList();
@@ -466,7 +467,7 @@ namespace ERP.Repository.Repositories
 
         }
         
-        public PagedResults<servicesearchcustomerviewmodel> GetAllPageSearchService(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, string name)
+        public PagedResults<servicesearchcustomerviewmodel> GetAllPageSearchService(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, string name, int company_id)
         {
             if (name != null) name = name.Trim();
             List<customer> list;
@@ -474,9 +475,9 @@ namespace ERP.Repository.Repositories
             var skipAmount = pageSize * pageNumber;
             if (name == null)
             {
-                list = _dbContext.customers.ToList();
+                list = _dbContext.customers.Where(x=> x.company_id == company_id).ToList();
             }
-            else list = _dbContext.customers.Where(x => x.cu_fullname.Contains(name)).ToList();
+            else list = _dbContext.customers.Where(x => x.cu_fullname.Contains(name)&& x.company_id == company_id).ToList();
             if (source_id != null)
             {
                 list = list.Where(x => x.source_id == source_id).ToList();
@@ -542,91 +543,33 @@ namespace ERP.Repository.Repositories
             };
 
         }
-        public PagedResults<smscustomerviewmodel> GetAllPageSearchSms(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, string name)
+        public PagedResults<smscustomerviewmodel> GetAllPageSearchSms(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, string name,int company_id)
         {
-            if (name != null) name = name.Trim();
-
+            if (name != null) name = name.Trim().ToLower();
+            List<customer> list;
             List<smscustomerviewmodel> res = new List<smscustomerviewmodel>();
             var skipAmount = pageSize * pageNumber;
+            if (name == null)
+            {
+                list = _dbContext.customers.Where(x => x.company_id == company_id).ToList();
+            }
+            else list = _dbContext.customers.Where(x => (x.cu_fullname.ToLower().Contains(name) || x.cu_code.ToLower().Contains(name)) && x.company_id == company_id).ToList();
+            if (source_id != null)
+            {
+                list = list.Where(x => x.source_id == source_id).ToList();
+            }
+            if (cu_type != null)
+            {
+                list = list.Where(x => x.cu_type == cu_type).ToList();
+            }
+            if (customer_group_id != null)
+            {
+                list = list.Where(x => x.customer_group_id == customer_group_id).ToList();
+            }
+            var total = list.Count();
 
-            var list = _dbContext.customers.OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
+            var results = list.OrderByDescending(t => t.cu_id).Skip(skipAmount).Take(pageSize);
 
-            /**24TH**/
-            #region [24 case]
-            int check_source_id = 0;
-            int check_type = 0;
-            int check_group_id = 0;
-            int check_name = 0;
-            if (source_id != null) { check_source_id = 1; }
-            if (cu_type != null) { check_type = 1; }
-            if (customer_group_id != null) { check_group_id = 1; }
-            if (name != null) { check_name = 1; }
-
-
-            if (check_source_id == 0 && check_type == 0 && check_group_id == 0 && check_name == 1)
-            {
-                list = _dbContext.customers.Where(t => (t.cu_fullname.Contains(name)  || t.cu_email.Contains(name) || t.cu_code.Contains(name))).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }
-            if (check_source_id == 0 && check_type == 0 && check_group_id == 1 && check_name == 0)
-            {
-                list = _dbContext.customers.Where(t => t.customer_group_id == customer_group_id).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }
-            if (check_source_id == 0 && check_type == 0 && check_group_id == 1 && check_name == 1)
-            {
-                list = _dbContext.customers.Where(t => (t.cu_fullname.Contains(name)  || t.cu_email.Contains(name) || t.cu_code.Contains(name)) && t.customer_group_id == customer_group_id).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }
-            if (check_source_id == 0 && check_type == 1 && check_group_id == 0 && check_name == 0)
-            {
-                list = _dbContext.customers.Where(t => t.cu_type == cu_type).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }
-            if (check_source_id == 0 && check_type == 1 && check_group_id == 0 && check_name == 1)
-            {
-                list = _dbContext.customers.Where(t => t.cu_type == cu_type).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }
-            if (check_source_id == 0 && check_type == 1 && check_group_id == 1 && check_name == 0)
-            {
-                list = _dbContext.customers.Where(t => t.cu_type == cu_type && t.customer_group_id == customer_group_id).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }
-            if (check_source_id == 0 && check_type == 1 && check_group_id == 1 && check_name == 1)
-            {
-                list = _dbContext.customers.Where(t => t.cu_type == cu_type && t.customer_group_id == customer_group_id && t.cu_fullname.Contains(name)).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }
-            if (check_source_id == 1 && check_type == 0 && check_group_id == 0 && check_name == 0)
-            {
-                list = _dbContext.customers.Where(t => t.source_id == source_id).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }
-            if (check_source_id == 1 && check_type == 0 && check_group_id == 0 && check_name == 1)
-            {
-                list = _dbContext.customers.Where(t => t.source_id == source_id && t.cu_fullname.Contains(name)).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }
-            if (check_source_id == 1 && check_type == 0 && check_group_id == 1 && check_name == 0)
-            {
-                list = _dbContext.customers.Where(t => t.source_id == source_id && t.customer_group_id == customer_group_id).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }
-            if (check_source_id == 1 && check_type == 0 && check_group_id == 1 && check_name == 1)
-            {
-                list = _dbContext.customers.Where(t => t.source_id == source_id && (t.cu_fullname.Contains(name) || t.cu_email.Contains(name) || t.cu_code.Contains(name)) && t.customer_group_id == customer_group_id).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }
-            if (check_source_id == 1 && check_type == 1 && check_group_id == 0 && check_name == 0)
-            {
-                list = _dbContext.customers.Where(t => t.source_id == source_id && t.cu_type == cu_type).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }
-            if (check_source_id == 1 && check_type == 1 && check_group_id == 0 && check_name == 1)
-            {
-                list = _dbContext.customers.Where(t => t.source_id == source_id && t.cu_type == cu_type).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }
-            if (check_source_id == 1 && check_type == 1 && check_group_id == 1 && check_name == 0)
-            {
-                list = _dbContext.customers.Where(t => t.source_id == source_id && t.cu_type == cu_type && t.customer_group_id == customer_group_id).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }
-            if (check_source_id == 1 && check_type == 1 && check_group_id == 1 && check_name == 1)
-            {
-                list = _dbContext.customers.Where(t => t.source_id == source_id && t.cu_type == cu_type && t.customer_group_id == customer_group_id && t.cu_fullname.Contains(name)).OrderBy(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            }
-            #endregion
-            var total = _dbContext.customers.Count();
-
-            var results = list.ToList();
             foreach (customer i in results)
             {
                 var customerview = _mapper.Map<smscustomerviewmodel>(i);
@@ -879,23 +822,23 @@ namespace ERP.Repository.Repositories
 
             return res;
         }
-        public List<dropdown> GetAllType()
+        public List<dropdown> GetAllType(int company_id)
         {
 
             List<dropdown> res = new List<dropdown>();
-
-            for (int i = 1; i < 3; i++)
+            List<customer_type> lts_s = _dbContext.customer_type.Where(x => x.company_id == company_id).ToList();
+            foreach(customer_type i in  lts_s)
             {
                 dropdown pu = new dropdown();
-                pu.id = i;
-                pu.name = EnumCustomer.cu_type[i-1];
+                pu.id = i.cut_id;
+                pu.name = i.cut_name;
 
                 res.Add(pu);
             }
             return res;
 
         }
-        public PagedResults<customerviewexport> ExportCustomer(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, DateTime? start_date, DateTime? end_date, string name)
+        public PagedResults<customerviewexport> ExportCustomer(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, DateTime? start_date, DateTime? end_date, string name,int company_id)
         {
             if (name != null) name = name.Trim();
             List<customer> list;
@@ -903,9 +846,9 @@ namespace ERP.Repository.Repositories
             var skipAmount = pageSize * pageNumber;
             if (name == null)
             {
-                list = _dbContext.customers.ToList();
+                list = _dbContext.customers.Where(x => x.company_id == company_id).ToList();
             }
-            else list = _dbContext.customers.Where(x => x.cu_fullname.Contains(name) || x.cu_code.Contains(name) || x.cu_email.Contains(name) || x.cu_note.Contains(name)).ToList();
+            else list = _dbContext.customers.Where(x => (x.cu_fullname.Contains(name) || x.cu_code.Contains(name) || x.cu_email.Contains(name) || x.cu_note.Contains(name)) && x.company_id == company_id).ToList();
             if (source_id != null)
             {
                 list = list.Where(x => x.source_id == source_id).ToList();
@@ -1099,10 +1042,10 @@ namespace ERP.Repository.Repositories
             
             return res;
         }
-        public List<dropdown> GetAllDropdown()
+        public List<dropdown> GetAllDropdown(int company_id)
         {
             List<dropdown> res = new List<dropdown>();
-            List<customer> lts_s = _dbContext.customers.ToList();
+            List<customer> lts_s = _dbContext.customers.Where(x => x.company_id == company_id).ToList();
             foreach (customer cg in lts_s)
             {
                 dropdown dr = new dropdown();

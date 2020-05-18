@@ -19,9 +19,9 @@ namespace ERP.Service.Services
             this._repository = repository;
         }
 
-        public List<dropdown> GetAllName()
+        public List<dropdown> GetAllName(int company_id)
         {
-            return this._repository.GetAllName();
+            return this._repository.GetAllName(company_id);
         }
     }
 }

@@ -1198,6 +1198,7 @@ namespace ERP.API.Controllers.Dashboard
                         else staff_create.sta_code = Utilis.CreateCodeByCode("NV", x.sta_code, 8);
                         staff_create.sta_password = HashMd5.convertMD5(staff_create.sta_code);
                         staff_create.sta_created_date = DateTime.Now;
+                        staff_create.company_id = BaseController.get_company_id_current();
                         staff_create.sta_login = true;
                         if (staff_create.sta_username == null)
                         {

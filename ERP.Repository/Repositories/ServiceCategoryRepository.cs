@@ -43,10 +43,10 @@ namespace ERP.Repository.Repositories
             };
         }
         
-        public List<dropdown> GetAllName()
+        public List<dropdown> GetAllName(int company_id)
         {
             List<dropdown> lst_res = new List<dropdown>();
-            var list = _dbContext.service_category.ToList();
+            var list = _dbContext.service_category.Where(x => x.company_id == company_id).ToList();
             foreach (service_category s in list)
             {
                 dropdown dr = new dropdown();

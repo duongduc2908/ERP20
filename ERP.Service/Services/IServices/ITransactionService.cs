@@ -15,13 +15,13 @@ namespace ERP.Service.Services.IServices
     public interface ITransactionService : IGenericService<transaction>
     {
         PagedResults<transaction> CreatePagedResults(int pageNumber, int pageSize);
-        PagedResults<transactionviewmodel> GetAllPageSearch(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name);
-        PagedResults<transactionview> ExportTransaction(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name);
-        List<dropdown> GetTransactionType();
+        PagedResults<transactionviewmodel> GetAllPageSearch(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name,int company_id);
+        PagedResults<transactionview> ExportTransaction(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name, int company_id);
+        List<dropdown> GetTransactionType(int company_id);
         transactionviewmodel GetById(int tra_id);
-        List<dropdown> GetTransactionPriority();
-        List<dropdown> GetTransactionStatus();
-        List<dropdown> GetTransactionRate();
-        List<transactionstatisticrateviewmodel> GetTransactionStatisticRate(int staff_id);
+        List<dropdown> GetTransactionPriority(int company_id);
+        List<dropdown> GetTransactionStatus(int company_id);
+        List<dropdown> GetTransactionRate(int company_id);
+        List<transactionstatisticrateviewmodel> GetTransactionStatisticRate(int staff_id, int company_id);
     }
 }

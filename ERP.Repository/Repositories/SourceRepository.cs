@@ -133,10 +133,10 @@ namespace ERP.Repository.Repositories
 
             return res;
         }
-        public List<dropdown> GetAllDropdown()
+        public List<dropdown> GetAllDropdown(int company_id)
         {
             List<dropdown> res = new List<dropdown>();
-            List<source> lts_s = _dbContext.sources.ToList();
+            List<source> lts_s = _dbContext.sources.Where(x => x.company_id == company_id).ToList();
             foreach(source so in lts_s)
             {
                 dropdown dr = new dropdown();

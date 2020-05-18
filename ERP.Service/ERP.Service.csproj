@@ -78,6 +78,7 @@
     <Compile Include="Services\CustomerOrderService.cs" />
     <Compile Include="Services\CustomerPhoneService.cs" />
     <Compile Include="Services\CustomerService.cs" />
+    <Compile Include="Services\CustomerTypeService.cs" />
     <Compile Include="Services\DepartmentService.cs" />
     <Compile Include="Services\EmailService.cs" />
     <Compile Include="Services\EmailStrategyService.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="Services\IServices\ICustomerOrderService.cs" />
     <Compile Include="Services\IServices\ICustomerPhoneService.cs" />
     <Compile Include="Services\IServices\ICustomerService.cs" />
+    <Compile Include="Services\IServices\ICustomerTypeService.cs" />
     <Compile Include="Services\IServices\IDepartmentService.cs" />
     <Compile Include="Services\IServices\IEmailService.cs" />
     <Compile Include="Services\IServices\IEmailStrategyService.cs" />

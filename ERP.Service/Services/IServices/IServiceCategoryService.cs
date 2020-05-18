@@ -13,6 +13,6 @@ namespace ERP.Service.Services.IServices
     public interface IServiceCategoryService : IGenericService<service_category>
     {
         PagedResults<service_category> CreatePagedResults(int pageNumber, int pageSize);
-        List<dropdown> GetAllName();
+        List<dropdown> GetAllName(int company_id);
     }
 }

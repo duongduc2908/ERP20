@@ -21,7 +21,7 @@ namespace ERP.Repository.Repositories
         {
             this._mapper = _mapper;
         }
-        public PagedResults<customergroupviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? cg_id, string name)
+        public PagedResults<customergroupviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? cg_id, string name,int company_id)
         {
             if (name != null) name = name.Trim();
             List<customergroupviewmodel> res = new List<customergroupviewmodel>();
@@ -30,9 +30,9 @@ namespace ERP.Repository.Repositories
             var skipAmount = pageSize * pageNumber;
             if(cg_id == null)
             {
-                list_res = _dbContext.customer_group.ToList();
+                list_res = _dbContext.customer_group.Where(x => x.company_id == company_id).ToList();
             }
-            else list_res = _dbContext.customer_group.Where(x => x.cg_id == cg_id).ToList();
+            else list_res = _dbContext.customer_group.Where(x => x.cg_id == cg_id && x.company_id == company_id).ToList();
             if(name != null) list_res = _dbContext.customer_group.Where(x => x.cg_name.Contains(name)).ToList();
             
             var total = list_res.Count();
@@ -151,10 +151,10 @@ namespace ERP.Repository.Repositories
             
             return res;
         }
-        public List<dropdown> GetAllDropdown()
+        public List<dropdown> GetAllDropdown(int company_id)
         {
             List<dropdown> res = new List<dropdown>();
-            List<customer_group> lts_s = _dbContext.customer_group.ToList();
+            List<customer_group> lts_s = _dbContext.customer_group.Where(x => x.company_id == company_id).ToList();
             foreach (customer_group cg in lts_s)
             {
                 dropdown dr = new dropdown();

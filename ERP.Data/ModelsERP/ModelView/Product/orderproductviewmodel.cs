@@ -13,7 +13,7 @@ namespace ERP.Data.ModelsERP.ModelView
         public int? op_quantity { get; set; }
 
         public byte? op_status { get; set; }
-        public byte? pu_unit { get; set; }
+        public int? pu_unit { get; set; }
 
         public string pu_code { get; set; }
         public string pu_name { get; set; }

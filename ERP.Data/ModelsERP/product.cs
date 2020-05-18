@@ -49,6 +49,7 @@ namespace ERP.Data.ModelsERP
 
         [StringLength(200)]
         public string pu_thumbnail { get; set; }
+        public int? company_id { get; set; }
 
     }
 }

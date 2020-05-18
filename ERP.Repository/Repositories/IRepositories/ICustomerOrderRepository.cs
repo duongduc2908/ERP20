@@ -20,15 +20,16 @@ namespace ERP.Repository.Repositories.IRepositories
         customerordermodelview GetAllOrderById(int id);
         servicercustomerorderviewmodel GetAllOrderServiceById(int id);
         List<order_service_view> GetServiceByDay(int id, DateTime start_date, DateTime to_date);
-        List<dropdown_salary> Get_staff_free(work_time_view c, string fullName);
-        PagedResults<customerorderviewmodel> GetAllSearch(int pageNumber, int pageSize, int? payment_type_id, DateTime? start_date, DateTime? end_date, string name);
+        PagedResults<customerorderviewmodel> GetAllSearch(int pageNumber, int pageSize, int? payment_type_id, DateTime? start_date, DateTime? end_date, string name, int company_id);
+        PagedResults<servicercustomerorderviewmodel> GetAllSearchCustomerOrderService(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name, int company_id);
+        PagedResults<customerorderproductview> ExportCustomerOrderProduct(int pageNumber, int pageSize, int? payment_type_id, DateTime? start_date, DateTime? end_date, string name, int company_id);
 
-        PagedResults<servicercustomerorderviewmodel> GetAllSearchCustomerOrderService(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name);
-        PagedResults<customerorderproductview> ExportCustomerOrderProduct(int pageNumber, int pageSize, int? payment_type_id, DateTime? start_date, DateTime? end_date, string name);
-        PagedResults<customerorderviewmodel> ResultStatisticsCustomerOrder(int pageNumber, int pageSize, int staff_id, bool month, bool week, bool day);
+        PagedResults<customerorderviewmodel> ResultStatisticsCustomerOrder(int pageNumber, int pageSize, int staff_id, bool month, bool week, bool day, int company_id);
         List<dropdown> GetAllPayment();
+        List<dropdown_salary> Get_staff_free(work_time_view c, string fullName, int company_id);
         statisticsbyrevenueviewmodel ResultStatisticsByRevenue(int staff_id);
         List<revenue> ResultStatisticByMonth(int staff_id);
+
         List<dropdown> GetAllStatus();
     }
 }

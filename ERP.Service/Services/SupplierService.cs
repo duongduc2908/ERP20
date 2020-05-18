@@ -26,9 +26,9 @@ namespace ERP.Service.Services
         {
             return this._repository.GetAllPageById(pageNumber, pageSize, id);
         }
-        public List<dropdown> GetAllName()
+        public List<dropdown> GetAllName(int company_id)
         {
-            return this._repository.GetAllName();
+            return this._repository.GetAllName(company_id);
         }
 
 

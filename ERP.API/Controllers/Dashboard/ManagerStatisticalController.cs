@@ -43,10 +43,11 @@ namespace ERP.API.Controllers.Dashboard
             ResponseDataDTO<PagedResults<customerorderviewmodel>> response = new ResponseDataDTO<PagedResults<customerorderviewmodel>>();
             try
             {
+                int company_id = BaseController.get_company_id_current();
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
 
-                response.Data = _customerorderservice.ResultStatisticsCustomerOrder(pageNumber:pageNumber, pageSize:pageSize, staff_id,month,week,day);
+                response.Data = _customerorderservice.ResultStatisticsCustomerOrder(pageNumber: pageNumber, pageSize: pageSize, staff_id, month, week, day, company_id);
             }
             catch (Exception ex)
             {
@@ -178,9 +179,10 @@ namespace ERP.API.Controllers.Dashboard
             try
             {
                 int staff_id = BaseController.get_id_current();
+                int company_id = BaseController.get_company_id_current();
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _transactionservice.GetTransactionStatisticRate(staff_id);
+                response.Data = _transactionservice.GetTransactionStatisticRate(staff_id,company_id);
             }
             catch (Exception ex)
             {

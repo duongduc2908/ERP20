@@ -165,9 +165,10 @@ namespace ERP.API.Controllers.Dashboard
             ResponseDataDTO<PagedResults<customerorderviewmodel>> response = new ResponseDataDTO<PagedResults<customerorderviewmodel>>();
             try
             {
+                int company_id = BaseController.get_company_id_current();
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _customer_orderservice.GetAllSearch(pageNumber: pageNumber, pageSize: pageSize, payment_type_id: payment_type_id, start_date, end_date, code);
+                response.Data = _customer_orderservice.GetAllSearch(pageNumber: pageNumber, pageSize: pageSize, payment_type_id: payment_type_id, start_date, end_date, code,company_id);
             }
             catch (Exception ex)
             {
@@ -188,9 +189,10 @@ namespace ERP.API.Controllers.Dashboard
             ResponseDataDTO<PagedResults<servicercustomerorderviewmodel>> response = new ResponseDataDTO<PagedResults<servicercustomerorderviewmodel>>();
             try
             {
+                int company_id = BaseController.get_company_id_current();
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _customer_orderservice.GetAllSearchCustomerOrderService(pageNumber: pageNumber, pageSize: pageSize, start_date, end_date, search_name);
+                response.Data = _customer_orderservice.GetAllSearchCustomerOrderService(pageNumber: pageNumber, pageSize: pageSize, start_date, end_date, search_name,company_id);
             }
             catch (Exception ex)
             {
@@ -233,9 +235,10 @@ namespace ERP.API.Controllers.Dashboard
             ResponseDataDTO<List<dropdown_salary>> response = new ResponseDataDTO<List<dropdown_salary>>();
             try
             {
+                int company_id = BaseController.get_company_id_current();
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _customer_orderservice.Get_staff_free(c, fullName);
+                response.Data = _customer_orderservice.Get_staff_free(c, fullName,company_id);
             }
             catch (Exception ex)
             {
@@ -684,6 +687,7 @@ namespace ERP.API.Controllers.Dashboard
                 customer_orderCreateViewModel.cuo_date = DateTime.Now;
                 // mapping view model to entity
                 var createdcustomer_order = _mapper.Map<customer_order>(customer_orderCreateViewModel);
+                createdcustomer_order.company_id = BaseController.get_company_id_current();
                 var op_last1 = _customer_orderservice.GetLast();
                 if (op_last1 == null) createdcustomer_order.cuo_code = Utilis.CreateCode("ORP", 0, 7);
                 else createdcustomer_order.cuo_code = Utilis.CreateCode("ORP", op_last1.cuo_id, 7);
@@ -1104,6 +1108,7 @@ namespace ERP.API.Controllers.Dashboard
                 customer_order_service.cuo_discount = c.cuo_discount;
                 customer_order_service.cuo_color_show = c.cuo_color_show;
                 customer_order_service.cuo_date = DateTime.Now;
+                customer_order_service.company_id = BaseController.get_company_id_current();
                 customer_order_service.cuo_infor_time =c.cuo_infor_time;
                 customer_order_service.cuo_address = c.cuo_address;
 
@@ -1111,6 +1116,7 @@ namespace ERP.API.Controllers.Dashboard
                 var op_temp = _customer_orderservice.GetLast();
                 if (op_temp == null) customer_order_service.cuo_code = "ORS00000";
                 else customer_order_service.cuo_code = Utilis.CreateCodeByCode("ORS", op_temp.cuo_code, 8);
+
                 // save new customer_order
                 _customer_orderservice.Create(customer_order_service);
                 var op_last = _customer_orderservice.GetLast();
@@ -2351,10 +2357,11 @@ namespace ERP.API.Controllers.Dashboard
             ResponseDataDTO<string> response = new ResponseDataDTO<string>();
             try
             {
+                int company_id = BaseController.get_company_id_current();
                 var list_customer_order = new List<customerorderproductview>();
 
                 //Đưa ra danh sách staff trong trang nào đó 
-                var objRT_Mst_Customer_Order = _customer_orderservice.ExportCustomerOrderProduct(pageNumber, pageSize, payment_type_id, start_date, end_date, name);
+                var objRT_Mst_Customer_Order = _customer_orderservice.ExportCustomerOrderProduct(pageNumber, pageSize, payment_type_id, start_date, end_date, name,company_id);
                 if (objRT_Mst_Customer_Order != null)
                 {
                     list_customer_order.AddRange(objRT_Mst_Customer_Order.Results);
@@ -2519,6 +2526,7 @@ namespace ERP.API.Controllers.Dashboard
                             cuo_create.cuo_code = cuo_create.cuo_code.ToUpper();
                             cuo_create.customer_id = us.cu_id;
                             cuo_create.staff_id = BaseController.get_id_current();
+                            cuo_create.company_id= BaseController.get_company_id_current();
                             cuo_create.cuo_payment_status = 1;
                             cuo_create.cuo_payment_type = 1;
                             cuo_create.cuo_ship_tax = 0;

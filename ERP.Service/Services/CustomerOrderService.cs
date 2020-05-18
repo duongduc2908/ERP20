@@ -39,31 +39,31 @@ namespace ERP.Service.Services
             return this._repository.GetServiceByDay(id, start_date, to_date);
         }
        
-        public PagedResults<customerorderviewmodel> GetAllSearch(int pageNumber, int pageSize, int? payment_type_id, DateTime? start_date, DateTime? end_date, string name)
+        public PagedResults<customerorderviewmodel> GetAllSearch(int pageNumber, int pageSize, int? payment_type_id, DateTime? start_date, DateTime? end_date, string name,int company_id)
         {
-            return this._repository.GetAllSearch(pageNumber, pageSize,  payment_type_id,start_date,end_date, name);
+            return this._repository.GetAllSearch(pageNumber, pageSize,  payment_type_id,start_date,end_date, name, company_id);
         }
-         public PagedResults<servicercustomerorderviewmodel> GetAllSearchCustomerOrderService(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name)
+         public PagedResults<servicercustomerorderviewmodel> GetAllSearchCustomerOrderService(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name,int company_id)
         {
-            return this._repository.GetAllSearchCustomerOrderService(pageNumber, pageSize,  start_date,end_date, search_name);
+            return this._repository.GetAllSearchCustomerOrderService(pageNumber, pageSize,  start_date,end_date, search_name, company_id);
         }
 
-        public PagedResults<customerorderproductview> ExportCustomerOrderProduct(int pageNumber, int pageSize, int? payment_type_id, DateTime? start_date, DateTime? end_date, string name)
+        public PagedResults<customerorderproductview> ExportCustomerOrderProduct(int pageNumber, int pageSize, int? payment_type_id, DateTime? start_date, DateTime? end_date, string name,int company_id)
         {
-            return this._repository.ExportCustomerOrderProduct(pageNumber, pageSize,  payment_type_id,start_date, end_date, name);
+            return this._repository.ExportCustomerOrderProduct(pageNumber, pageSize,  payment_type_id,start_date, end_date, name, company_id);
         }
         public List<dropdown> GetAllPayment()
         {
             return this._repository.GetAllPayment();
         }
-        public List<dropdown_salary> Get_staff_free(work_time_view c, string fullName)
+        public List<dropdown_salary> Get_staff_free(work_time_view c, string fullName,int company_id)
         {
-            return this._repository.Get_staff_free(c, fullName);
+            return this._repository.Get_staff_free(c, fullName,company_id);
         }
         
-        public PagedResults<customerorderviewmodel> ResultStatisticsCustomerOrder(int pageNumber, int pageSize, int staff_id, bool month, bool week, bool day)
+        public PagedResults<customerorderviewmodel> ResultStatisticsCustomerOrder(int pageNumber, int pageSize, int staff_id, bool month, bool week, bool day,int company_id)
         {
-            return this._repository.ResultStatisticsCustomerOrder(pageNumber, pageSize, staff_id,month,  week, day);
+            return this._repository.ResultStatisticsCustomerOrder(pageNumber, pageSize, staff_id,month,  week, day, company_id);
         }
         
         public statisticsbyrevenueviewmodel ResultStatisticsByRevenue(int staff_id)

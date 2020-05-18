@@ -40,10 +40,10 @@ namespace ERP.API.Controllers.Dashboard
             ResponseDataDTO<List<dropdown>> response = new ResponseDataDTO<List<dropdown>>();
             try
             {
-                
+                int company_id = BaseController.get_company_id_current();
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _product_categoryservice.GetAllName();
+                response.Data = _product_categoryservice.GetAllName(company_id);
             }
             catch (Exception ex)
             {
