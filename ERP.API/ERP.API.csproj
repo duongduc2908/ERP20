@@ -94,6 +94,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Http.Cors, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Cors.5.2.7\lib\net45\System.Web.Http.Cors.dll</HintPath>
     </Reference>
@@ -247,11 +248,16 @@
     <Compile Include="Controllers\Authentication\ManagerAuthenticationController.cs" />
     <Compile Include="Controllers\Dashboard\BaseController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerAddressController.cs" />
+    <Compile Include="Controllers\Dashboard\ManagerBankBranchController.cs" />
+    <Compile Include="Controllers\Dashboard\ManagerBankCategoryController.cs" />
+    <Compile Include="Controllers\Dashboard\ManagerBankController.cs" />
+    <Compile Include="Controllers\Dashboard\ManagerBonusStaffController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerCompanyController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerCustomerGroupController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerCustomerOrderController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerFieldController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerPackageController.cs" />
+    <Compile Include="Controllers\Dashboard\ManagerRelativesStaffController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerServiceTimeController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerStatisticalController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerOrderProductController.cs" />
@@ -440,6 +446,10 @@
     <Folder Include="Views\Base\" />
     <Folder Include="Views\Default\" />
     <Folder Include="Views\ManagerAddress\" />
+    <Folder Include="Views\ManagerBankBranch\" />
+    <Folder Include="Views\ManagerBankCategory\" />
+    <Folder Include="Views\ManagerBank\" />
+    <Folder Include="Views\ManagerBonusStaff\" />
     <Folder Include="Views\ManagerCompany\" />
     <Folder Include="Views\ManagerCustomerGroup\" />
     <Folder Include="Views\ManagerCustomerOrder\" />
@@ -456,6 +466,7 @@
     <Folder Include="Views\ManagerPosition\" />
     <Folder Include="Views\ManagerProductCategory\" />
     <Folder Include="Views\ManagerProduct\" />
+    <Folder Include="Views\ManagerRelativesStaff\" />
     <Folder Include="Views\ManagerServiceTime\" />
     <Folder Include="Views\ManagerService\" />
     <Folder Include="Views\ManagerSmsStrategy\" />

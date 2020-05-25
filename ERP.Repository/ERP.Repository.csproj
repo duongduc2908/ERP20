@@ -471,7 +471,12 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\AddressRepository.cs" />
+    <Compile Include="Repositories\AttachmentsRepository.cs" />
     <Compile Include="Repositories\AuthenticationRepository.cs" />
+    <Compile Include="Repositories\BankBranchRepository.cs" />
+    <Compile Include="Repositories\BankCategoryRepository.cs" />
+    <Compile Include="Repositories\BankRepository.cs" />
+    <Compile Include="Repositories\BonusStaffRepository.cs" />
     <Compile Include="Repositories\ClientMasterRepository.cs" />
     <Compile Include="Repositories\CompanyFuntionRepository.cs" />
     <Compile Include="Repositories\CompanyRepository.cs" />
@@ -491,6 +496,11 @@
     <Compile Include="Repositories\FunctionSettingRepository.cs" />
     <Compile Include="Repositories\GroupRoleRepository.cs" />
     <Compile Include="Repositories\IRepositories\IAddressRepository.cs" />
+    <Compile Include="Repositories\IRepositories\IAttachmentsRepository.cs" />
+    <Compile Include="Repositories\IRepositories\IBankBranchRepository.cs" />
+    <Compile Include="Repositories\IRepositories\IBankCategoryRepository.cs" />
+    <Compile Include="Repositories\IRepositories\IBankRepository.cs" />
+    <Compile Include="Repositories\IRepositories\IBonusStaffRepository.cs" />
     <Compile Include="Repositories\IRepositories\ICompanyFunctionRepository.cs" />
     <Compile Include="Repositories\IRepositories\ICompanyRepository.cs" />
     <Compile Include="Repositories\IRepositories\ICustomerGroupRepository.cs" />
@@ -517,6 +527,7 @@
     <Compile Include="Repositories\IRepositories\IProductOrderRepository.cs" />
     <Compile Include="Repositories\IRepositories\IProductRepository.cs" />
     <Compile Include="Repositories\IRepositories\IProjectRepository.cs" />
+    <Compile Include="Repositories\IRepositories\IRelativesStaffRepository.cs" />
     <Compile Include="Repositories\IRepositories\IServiceCategoryRepository.cs" />
     <Compile Include="Repositories\IRepositories\IServiceRepository.cs" />
     <Compile Include="Repositories\IRepositories\IServiceTimeRepository.cs" />
@@ -526,6 +537,7 @@
     <Compile Include="Repositories\IRepositories\ISmsTemplateRepository.cs" />
     <Compile Include="Repositories\IRepositories\ISocialRepository.cs" />
     <Compile Include="Repositories\IRepositories\ISourceRepository.cs" />
+    <Compile Include="Repositories\IRepositories\IStaffBrankRepository.cs" />
     <Compile Include="Repositories\IRepositories\IStaffRepository.cs" />
     <Compile Include="Repositories\IRepositories\IStaffWorkTimeRepository.cs" />
     <Compile Include="Repositories\IRepositories\ISupplierRepository.cs" />
@@ -544,6 +556,7 @@
     <Compile Include="Repositories\ProductOrderRepository.cs" />
     <Compile Include="Repositories\ProductRepository.cs" />
     <Compile Include="Repositories\ProjectRepository.cs" />
+    <Compile Include="Repositories\RelativesStaffRepository.cs" />
     <Compile Include="Repositories\ServiceCategoryRepository.cs" />
     <Compile Include="Repositories\ServiceRepository.cs" />
     <Compile Include="Repositories\ServiceTimeRepository.cs" />
@@ -553,6 +566,7 @@
     <Compile Include="Repositories\SmsTemplateRepository.cs" />
     <Compile Include="Repositories\SocialRepository.cs" />
     <Compile Include="Repositories\SourceRepository.cs" />
+    <Compile Include="Repositories\StaffBrankRepository.cs" />
     <Compile Include="Repositories\StaffRepository.cs" />
     <Compile Include="Repositories\StaffWorkTimeRepository.cs" />
     <Compile Include="Repositories\SupplierRepository.cs" />

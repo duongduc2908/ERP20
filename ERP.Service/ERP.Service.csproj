@@ -72,6 +72,11 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AddressService.cs" />
+    <Compile Include="Services\AttachmentsService.cs" />
+    <Compile Include="Services\BankBranchService.cs" />
+    <Compile Include="Services\BankCategoryService.cs" />
+    <Compile Include="Services\BankService.cs" />
+    <Compile Include="Services\BonusStaffService.cs" />
     <Compile Include="Services\CompanyFunctionService.cs" />
     <Compile Include="Services\CompanyService.cs" />
     <Compile Include="Services\CustomerGroupService.cs" />
@@ -89,6 +94,11 @@
     <Compile Include="Services\FunctionService.cs" />
     <Compile Include="Services\GroupRoleService.cs" />
     <Compile Include="Services\IServices\IAddressService.cs" />
+    <Compile Include="Services\IServices\IAttachmentsService.cs" />
+    <Compile Include="Services\IServices\IBankBranchService.cs" />
+    <Compile Include="Services\IServices\IBankCategoryService.cs" />
+    <Compile Include="Services\IServices\IBankService.cs" />
+    <Compile Include="Services\IServices\IBonusStaffService.cs" />
     <Compile Include="Services\IServices\ICompanyFunctionService.cs" />
     <Compile Include="Services\IServices\ICompanyService.cs" />
     <Compile Include="Services\IServices\ICustomerGroupService.cs" />
@@ -115,6 +125,7 @@
     <Compile Include="Services\IServices\IProductOrderService.cs" />
     <Compile Include="Services\IServices\IProductService.cs" />
     <Compile Include="Services\IServices\IProjectService.cs" />
+    <Compile Include="Services\IServices\IRelativesStaffService.cs" />
     <Compile Include="Services\IServices\IServiceCategoryService.cs" />
     <Compile Include="Services\IServices\IServiceService.cs" />
     <Compile Include="Services\IServices\IServiceTimeService.cs" />
@@ -124,6 +135,7 @@
     <Compile Include="Services\IServices\ISmsTemplateService.cs" />
     <Compile Include="Services\IServices\ISocialService.cs" />
     <Compile Include="Services\IServices\ISourceService.cs" />
+    <Compile Include="Services\IServices\IStaffBrankService.cs" />
     <Compile Include="Services\IServices\IStaffService.cs" />
     <Compile Include="Services\IServices\IStaffWorkTimeService.cs" />
     <Compile Include="Services\IServices\ISupplierService.cs" />
@@ -142,6 +154,7 @@
     <Compile Include="Services\ProductOrderService.cs" />
     <Compile Include="Services\ProductService.cs" />
     <Compile Include="Services\ProjectService.cs" />
+    <Compile Include="Services\RelativesStaffService.cs" />
     <Compile Include="Services\ServiceCategoryService.cs" />
     <Compile Include="Services\ServiceService.cs" />
     <Compile Include="Services\ServiceTimeService.cs" />
@@ -151,6 +164,7 @@
     <Compile Include="Services\SmsTemplateService.cs" />
     <Compile Include="Services\SocialService.cs" />
     <Compile Include="Services\SourceService.cs" />
+    <Compile Include="Services\StaffBrankService.cs" />
     <Compile Include="Services\StaffService.cs" />
     <Compile Include="Services\StaffWorkTimeService.cs" />
     <Compile Include="Services\SupplierService.cs" />

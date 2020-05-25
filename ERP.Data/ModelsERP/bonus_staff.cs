@@ -28,6 +28,5 @@ namespace ERP.Data.ModelsERP
 
         public int? staff_id { get; set; }
 
-        public virtual staff staff { get; set; }
     }
 }

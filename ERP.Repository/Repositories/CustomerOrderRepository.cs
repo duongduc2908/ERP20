@@ -564,7 +564,7 @@ namespace ERP.Repository.Repositories
             #endregion
             return add;
         }
-        public PagedResults<customerorderviewmodel> GetAllSearch(int pageNumber, int pageSize, int? payment_type_id, DateTime? start_date, DateTime? end_date, string code, int company_id)
+        public PagedResults<customerorderviewmodel> GetAllSearch(int pageNumber, int pageSize, int? payment_type_id,int? cuo_status, DateTime? start_date, DateTime? end_date, string code, int company_id)
         {
             if (code != null) code = code.Trim().ToLower();
             List<customerorderviewmodel> res = new List<customerorderviewmodel>();
@@ -583,6 +583,10 @@ namespace ERP.Repository.Repositories
             if(payment_type_id !=null)
             {
                 list = list.Where(x => x.cuo_payment_type == payment_type_id).ToList();
+            }
+            if (cuo_status != null)
+            {
+                list = list.Where(x => x.cuo_status == cuo_status).ToList();
             }
             if (start_date != null)
             {

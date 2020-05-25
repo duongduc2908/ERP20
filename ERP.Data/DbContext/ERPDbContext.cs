@@ -25,6 +25,7 @@ namespace ERP.Data.DbContext
         {
             return new ERPDbContext();
         }
+        public virtual DbSet<relatives_staff> relatives_staff { get; set; }
         public virtual DbSet<ClientMaster> ClientMasters { get; set; }
         public virtual DbSet<company> companies { get; set; }
         public virtual DbSet<customer> customers { get; set; }

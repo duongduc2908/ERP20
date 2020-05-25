@@ -20,7 +20,7 @@ namespace ERP.Common.Constants
             return isEmail;
         }
         public static bool IsNumber(string pText)
-        {
+        { 
             Regex regex = new Regex(@"^[-+]?[0-9]*\.?[0-9]+$");
             return regex.IsMatch(pText);
         }

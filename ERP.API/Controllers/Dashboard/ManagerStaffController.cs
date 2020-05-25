@@ -42,13 +42,22 @@ namespace ERP.API.Controllers.Dashboard
         private readonly IUndertakenLocationService _undertakenlocationService;
         private readonly ITrainingStaffService _trainingStaffService;
         private readonly ITrainingService _trainingService;
+
+        private readonly IStaffBrankService _staffbankService;
+        private readonly IRelativesStaffService _relativesstaffService;
+        private readonly IBonusStaffService _bonusstaffService;
+        private readonly IBankBranchService _bankbranchService;
+        private readonly IAttachmentsService _attachmentService;
+
+       
+
         private readonly IMapper _mapper;
         private static string pass_word;
         private static List<string> list_email;
         private static List<string> list_pass;
         private static List<string> list_username;
         public ManagerstaffsController() { }
-        public ManagerstaffsController(ITrainingService trainingService, IStaffWorkTimeService staffworktimeService, ITrainingStaffService trainingStaffService, ICustomerService customerservice, IStaffService staffservice, IMapper mapper, IDepartmentService departmentService, IGroupRoleService groupRoleService, IPositionService positionService, IUndertakenLocationService undertakenlocationService, ISocialService socialService)
+        public ManagerstaffsController(IAttachmentsService attachmentService ,IBankBranchService bankbranchService,IBonusStaffService bonusstaffService ,IRelativesStaffService relativesstaffService,IStaffBrankService staffbankService,ITrainingService trainingService, IStaffWorkTimeService staffworktimeService, ITrainingStaffService trainingStaffService, ICustomerService customerservice, IStaffService staffservice, IMapper mapper, IDepartmentService departmentService, IGroupRoleService groupRoleService, IPositionService positionService, IUndertakenLocationService undertakenlocationService, ISocialService socialService)
         {
             this._staffservice = staffservice;
             this._mapper = mapper;
@@ -61,6 +70,11 @@ namespace ERP.API.Controllers.Dashboard
             this._trainingStaffService = trainingStaffService;
             this._staffworktimeService = staffworktimeService;
             this._trainingService = trainingService;
+            this._staffbankService = staffbankService;
+            this._relativesstaffService = relativesstaffService;
+            this._bonusstaffService = bonusstaffService;
+            this._bankbranchService = bankbranchService;
+            this._attachmentService = attachmentService;
         }
 
         #region methods
@@ -200,7 +214,7 @@ namespace ERP.API.Controllers.Dashboard
 
         [HttpPost]
         [Route("api/staff/create")]
-        public async Task<IHttpActionResult> CreateStaff([FromBody] StaffCreateViewModelJson create_staff)
+        public async Task<IHttpActionResult> Create([FromBody] StaffCreateViewModelJson create_staff)
         {
             ResponseDataDTO<staff> response = new ResponseDataDTO<staff>();
             try
@@ -208,7 +222,13 @@ namespace ERP.API.Controllers.Dashboard
                 var staff = create_staff;
 
                 #region["Check null"]
-
+                if (staff.sta_code == null || staff.sta_code.Trim() == "")
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Mã nhân sự không được để trống";
+                    response.Error = "sta_code";
+                    return Ok(response);
+                }
                 if (staff.sta_fullname == null || staff.sta_fullname.Trim() == "")
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
@@ -265,6 +285,14 @@ namespace ERP.API.Controllers.Dashboard
 
                 #endregion
                 //Kiểm tra các trường rằng buộc
+                if (check_code(staff.sta_code.Trim()))
+                {
+                    response.Code = HttpCode.NOT_FOUND;
+                    response.Message = "Đã có mã nhân sự '" + staff.sta_code + " ' trong hệ thống.";
+                    response.Error = "sta_code";
+
+                    return Ok(response);
+                }
                 if (check_username(staff.sta_username.Trim()))
                 {
                     response.Code = HttpCode.NOT_FOUND;
@@ -333,6 +361,7 @@ namespace ERP.API.Controllers.Dashboard
                 //Thong tin chung 
 
                 staff_create.sta_type_contact = staff.sta_type_contact;
+                staff_create.sta_code = staff.sta_code.Trim();
                 staff_create.sta_fullname = staff.sta_fullname.Trim();
                 staff_create.group_role_id = staff.group_role_id;
                 staff_create.sta_status = staff.sta_status;
@@ -358,6 +387,8 @@ namespace ERP.API.Controllers.Dashboard
                 staff_create.sta_birthday = staff.sta_birthday;
                 staff_create.sta_working_status = staff.sta_working_status;
                 staff_create.sta_end_work_date = staff.sta_end_work_date;
+                staff_create.sta_social_insurance = staff.sta_social_insurance;
+                staff_create.sta_health_card = staff.sta_health_card;
                 //Thong tin lien he
                 if (staff.sta_mobile != null) staff_create.sta_mobile = staff.sta_mobile.Trim();
                 if (staff.sta_email != null) staff_create.sta_email = staff.sta_email.Trim();
@@ -369,9 +400,7 @@ namespace ERP.API.Controllers.Dashboard
                 staff_create.sta_identity_card_location = staff.sta_identity_card_location;
 
                 //Lấy ra bản ghi cuối cùng tạo mã code 
-                var x = _staffservice.GetLast();
-                if (x == null) staff_create.sta_code = "NV000000";
-                else staff_create.sta_code = Utilis.CreateCodeByCode("NV", x.sta_code, 8);
+                
                 string sta_pass = "";
                 if (staff.sta_type_contact == 0)
                 {
@@ -435,6 +464,8 @@ namespace ERP.API.Controllers.Dashboard
                         create_training_staff.staff_id = staff_last.sta_id;
                         create_training_staff.training_id = Convert.ToInt32(tr.tn_id);
                         create_training_staff.ts_evaluate = tr.ts_evaluate;
+                        create_training_staff.comment = tr.comment;
+                        create_training_staff.achieved = tr.achieved;
                         _trainingStaffService.Create(create_training_staff);
                     }
                     else
@@ -454,6 +485,8 @@ namespace ERP.API.Controllers.Dashboard
                         create_training_staff.staff_id = staff_last.sta_id;
                         create_training_staff.training_id = tr_last.tn_id;
                         create_training_staff.ts_evaluate = tr.ts_evaluate;
+                        create_training_staff.comment = tr.comment;
+                        create_training_staff.achieved = tr.achieved;
                         _trainingStaffService.Create(create_training_staff);
                     }
 
@@ -472,7 +505,53 @@ namespace ERP.API.Controllers.Dashboard
                     address.unl_flag_center = 0;
                     _undertakenlocationService.Create(address);
                 }
-
+                //save bank
+                foreach (staff_bankjson b in staff.list_bank)
+                {
+                    staff_brank create = new staff_brank();
+                    create.staff_id = staff_last.sta_id;
+                    create.bank_branch_id = b.bank_branch_id;
+                    create.stb_account = b.stb_account;
+                    create.stb_fullname = b.stb_fullname;
+                    create.stb_note = b.stb_note;
+                    _staffbankService.Create(create);
+                }
+                //Save relatives_staff -- Thông tin gia đình 
+                foreach (relatives_staffjson re in staff.list_relatives)
+                {
+                    relatives_staff create = new relatives_staff();
+                    create.staff_id = staff_last.sta_id;
+                    create.rels_address = re.rels_address;
+                    create.rels_fullname = re.rels_fullname;
+                    create.rels_phone = re.rels_phone;
+                    create.rels_relatives = re.rels_relatives;
+                    _relativesstaffService.Create(create);
+                }
+                //save bonus staff
+                foreach (bonus_staffjson bo in staff.list_bonus)
+                {
+                    bonus_staff create = _mapper.Map<bonus_staff>(bo);
+                    create.staff_id = staff_last.sta_id;
+                    create.bos_content = bo.bos_content;
+                    create.bos_note = bo.bos_note;
+                    create.bos_reason = bo.bos_reason;
+                    create.bos_time = bo.bos_time;
+                    create.bos_title = bo.bos_title;
+                    create.bos_type = bo.bos_type;
+                    create.bos_value = bo.bos_value;
+                    _bonusstaffService.Create(create);
+                }
+                //save file 
+                foreach (attachmentjson at in staff.list_attachments)
+                {
+                    attachment create = new attachment();
+                    create.staff_id = staff_last.sta_id;
+                    create.ast_description = at.ast_description;
+                    create.ast_filename = at.ast_filename;
+                    create.ast_link = at.ast_link;
+                    create.ast_note = at.ast_note;
+                    _attachmentService.Create(create);
+                }
                 // return response
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
@@ -491,7 +570,7 @@ namespace ERP.API.Controllers.Dashboard
         }
         [HttpPut]
         [Route("api/staff/update")]
-        public async Task<IHttpActionResult> UpdateStaff([FromBody] StaffUpdateViewModelJson update_staff)
+        public async Task<IHttpActionResult> Update([FromBody] StaffUpdateViewModelJson update_staff)
         {
             ResponseDataDTO<staff> response = new ResponseDataDTO<staff>();
             try
@@ -500,7 +579,13 @@ namespace ERP.API.Controllers.Dashboard
                 var staff = update_staff;
                 staff existstaff = _staffservice.Find(staff.sta_id);
                 #region["Check null"]
-
+                if (staff.sta_code == null || staff.sta_code.Trim() == "")
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Mã nhân sự không được để trống";
+                    response.Error = "sta_code";
+                    return Ok(response);
+                }
                 if (staff.sta_fullname == null || staff.sta_fullname.Trim() == "")
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
@@ -564,6 +649,13 @@ namespace ERP.API.Controllers.Dashboard
                     response.Error = "sta_username";
                     return Ok(response);
                 }
+                if (check_code_update(staff.sta_code.Trim(), staff.sta_id))
+                {
+                    response.Code = HttpCode.NOT_FOUND;
+                    response.Message = "Đã có mã người dùng '" + staff.sta_code + " ' trong hệ thống.";
+                    response.Error = "sta_code";
+                    return Ok(response);
+                }
                 if (staff.sta_type_contact == 0)
                 {
 
@@ -623,6 +715,7 @@ namespace ERP.API.Controllers.Dashboard
                 //Update 
                 //Thong tin chung 
                 existstaff.sta_type_contact = staff.sta_type_contact;
+                existstaff.sta_code = staff.sta_code.Trim();
                 existstaff.sta_fullname = staff.sta_fullname.Trim();
                 existstaff.group_role_id = staff.group_role_id;
                 existstaff.sta_status = staff.sta_status;
@@ -641,6 +734,8 @@ namespace ERP.API.Controllers.Dashboard
                 existstaff.sta_birthday = staff.sta_birthday;
                 existstaff.sta_working_status = staff.sta_working_status;
                 existstaff.sta_end_work_date = staff.sta_end_work_date;
+                existstaff.sta_health_card = staff.sta_health_card;
+                existstaff.sta_social_insurance = staff.sta_social_insurance;
                 //Thong tin lien he
                 if (staff.sta_mobile != null) existstaff.sta_mobile = staff.sta_mobile.Trim();
                 if (staff.sta_email != null) existstaff.sta_email = staff.sta_email.Trim();
@@ -774,6 +869,8 @@ namespace ERP.API.Controllers.Dashboard
                                 _trainingService.Update(exist_tr, exist_tr.tn_id);
                                 training_staff exist_tr_s = _trainingStaffService.GetAllIncluing(x =>x.training_id == _id && x.staff_id == update_staff.sta_id).FirstOrDefault();
                                 exist_tr_s.ts_evaluate = tr_f.ts_evaluate;
+                                exist_tr_s.comment = tr_f.comment;
+                                exist_tr_s.achieved = tr_f.achieved;
                                 _trainingStaffService.Update(exist_tr_s, exist_tr_s.ts_id);
                                 lts_training_staff_db.Remove(tr);
                                 temp = 1;
@@ -787,6 +884,8 @@ namespace ERP.API.Controllers.Dashboard
                             create_trs.staff_id = staff.sta_id;
                             create_trs.training_id = _id;
                             create_trs.ts_evaluate = tr_f.ts_evaluate;
+                            create_trs.comment = tr_f.comment;
+                            create_trs.achieved = tr_f.achieved;
                             _trainingStaffService.Create(create_trs);
                         }
 
@@ -810,6 +909,8 @@ namespace ERP.API.Controllers.Dashboard
                         create_trs.staff_id = staff.sta_id;
                         create_trs.training_id = tr_last.tn_id;
                         create_trs.ts_evaluate = tr_f.ts_evaluate;
+                        create_trs.comment = tr_f.comment;
+                        create_trs.achieved = tr_f.achieved;
                         _trainingStaffService.Create(create_trs);
                     }
                 }
@@ -863,7 +964,189 @@ namespace ERP.API.Controllers.Dashboard
                     _undertakenlocationService.Delete(ul_d);
                 }
 
+                //Update list bank
+                List<staff_brank> lts_staff_brank_db = _staffbankService.GetAllIncluing(x => x.staff_id == staff.sta_id).ToList();
+                List<staff_bankjson> lts_bank_v = new List<staff_bankjson>(staff.list_bank);
+                foreach (staff_bankjson tr_f in lts_bank_v)
+                {
+                    if (Utilis.IsNumber(tr_f.stb_id))
+                    {
+                        int temp = 0;
+                        int _id = Convert.ToInt32(tr_f.stb_id);
+                        foreach (staff_brank tr in lts_staff_brank_db)
+                        {
+                            if (tr.bank_branch_id == _id)
+                            {
+                                //update
+                                //bank_branch exist = _bankbranchService.Find(tr.bank_branch_id); -- không cần update bank_branch
+                                staff_brank exist = _staffbankService.GetAllIncluing(x => x.bank_branch_id == _id && x.staff_id == update_staff.sta_id).FirstOrDefault();
+                                exist.stb_account = tr_f.stb_account;
+                                exist.stb_fullname = tr_f.stb_fullname;
+                                exist.stb_note = tr_f.stb_note;
+                                exist.bank_branch_id = tr_f.bank_branch_id;
+                                _staffbankService.Update(exist, exist.stb_id);
+                                lts_staff_brank_db.Remove(tr);
+                                temp = 1;
+                                break;
+                            }
+                        }
+                        if (temp == 0)
+                        {
+                            //Khi view trả về những cái chọn mà k có trong db thì thêm phần này 
+                            staff_brank create = new staff_brank();
+                            create.bank_branch_id = tr_f.bank_branch_id;
+                            create.stb_account = tr_f.stb_account;
+                            create.stb_fullname = tr_f.stb_fullname;
+                            create.stb_note = tr_f.stb_note;
+                            create.staff_id = update_staff.sta_id;
+                            _staffbankService.Create(create);
+                        }
 
+                    }
+                    else
+                    {
+                        //Create bank_branch 
+                        
+                        //Create staff_bank
+                        
+                    }
+                }
+                foreach (staff_brank trs in lts_staff_brank_db)
+                {
+                    _staffbankService.Delete(trs);
+                }
+
+                //Update list_relatives
+                List<relatives_staff> lts_rs_db = _relativesstaffService.GetAllIncluing(x => x.staff_id == staff.sta_id).ToList();
+                List<relatives_staffjson> lts_rs_v = new List<relatives_staffjson>(staff.list_relatives);
+                foreach (relatives_staffjson ul_f in lts_rs_v)
+                {
+                    if (Utilis.IsNumber(ul_f.rels_id))
+                    {
+                        int _id = Convert.ToInt32(ul_f.rels_id);
+                        foreach (relatives_staff ul in lts_rs_db)
+                        {
+                            if (ul.rels_id == _id)
+                            {
+                                //update
+                                relatives_staff exist = _relativesstaffService.Find(_id);
+                                exist.rels_address = ul_f.rels_address;
+                                exist.rels_fullname = ul_f.rels_fullname;
+                                exist.rels_phone = ul_f.rels_phone;
+                                exist.rels_relatives = ul_f.rels_relatives;
+                               
+                                _relativesstaffService.Update(exist, exist.rels_id);
+                                lts_rs_db.Remove(_relativesstaffService.Find(ul.rels_id));
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //Create
+                        relatives_staff create = new relatives_staff();
+                        create.rels_address = ul_f.rels_address;
+                        create.rels_fullname = ul_f.rels_fullname;
+                        create.rels_phone = ul_f.rels_phone;
+                        create.rels_relatives = ul_f.rels_relatives;
+                        create.staff_id = staff.sta_id;
+                        _relativesstaffService.Create(create);
+                    }
+                }
+                foreach (relatives_staff ul_d in lts_rs_db)
+                {
+                    _relativesstaffService.Delete(ul_d);
+                }
+
+                //update bonus_staff
+                List<bonus_staff> lts_bo_db = _bonusstaffService.GetAllIncluing(x => x.staff_id == staff.sta_id).ToList();
+                List<bonus_staffjson> lts_bo_v = new List<bonus_staffjson>(staff.list_bonus);
+                foreach (bonus_staffjson ul_f in lts_bo_v)
+                {
+                    if (Utilis.IsNumber(ul_f.bos_id))
+                    {
+                        int _id = Convert.ToInt32(ul_f.bos_id);
+                        foreach (bonus_staff ul in lts_bo_db)
+                        {
+                            if (ul.bos_id == _id)
+                            {
+                                //update
+                                bonus_staff exist = _bonusstaffService.Find(_id);
+                                exist.bos_content = ul_f.bos_content;
+                                exist.bos_note = ul_f.bos_note;
+                                exist.bos_reason = ul_f.bos_reason;
+                                exist.bos_time = ul_f.bos_time;
+                                exist.bos_title = ul_f.bos_title;
+                                exist.bos_type = ul_f.bos_type;
+                                exist.bos_value = ul_f.bos_value;
+
+                                _bonusstaffService.Update(exist, exist.bos_id);
+                                lts_bo_db.Remove(_bonusstaffService.Find(ul.bos_id));
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //Create
+                        bonus_staff create = new bonus_staff();
+                        create.bos_content = ul_f.bos_content;
+                        create.bos_note = ul_f.bos_note;
+                        create.bos_reason = ul_f.bos_reason;
+                        create.bos_time = ul_f.bos_time;
+                        create.bos_title = ul_f.bos_title;
+                        create.bos_type = ul_f.bos_type;
+                        create.bos_value = ul_f.bos_value;
+                        create.staff_id = staff.sta_id;
+                        _bonusstaffService.Create(create);
+                    }
+                }
+                foreach (bonus_staff ul_d in lts_bo_db)
+                {
+                    _bonusstaffService.Delete(ul_d);
+                }
+                //update lisst _ attchment
+                
+                List<attachment> lts_at_db = _attachmentService.GetAllIncluing(x => x.staff_id == staff.sta_id).ToList();
+                List<attachmentjson> lts_at_v = new List<attachmentjson>(staff.list_attachments);
+                foreach (attachmentjson ul_f in lts_at_v)
+                {
+                    if (Utilis.IsNumber(ul_f.ast_id))
+                    {
+                        int _id = Convert.ToInt32(ul_f.ast_id);
+                        foreach (attachment ul in lts_at_db)
+                        {
+                            if (ul.ast_id == _id)
+                            {
+                                //update
+                                attachment exist = _attachmentService.Find(_id);
+                                exist.ast_description = ul_f.ast_description;
+                                exist.ast_filename = ul_f.ast_filename;
+                                exist.ast_link = ul_f.ast_link;
+                                exist.ast_note = ul_f.ast_note;
+
+                                _attachmentService.Update(exist, exist.ast_id);
+                                lts_at_db.Remove(_attachmentService.Find(ul.ast_id));
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //Create
+                        attachment create = new attachment();
+                        create.ast_description = ul_f.ast_description;
+                        create.ast_filename = ul_f.ast_filename;
+                        create.ast_link = ul_f.ast_link;
+                        create.ast_note = ul_f.ast_note;
+                        create.staff_id = staff.sta_id;
+                        _attachmentService.Create(create);
+                    }
+                }
+                foreach (attachment ul_d in lts_at_db)
+                {
+                    _attachmentService.Delete(ul_d);
+                }
                 // return response
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
@@ -1074,6 +1357,46 @@ namespace ERP.API.Controllers.Dashboard
             }
         }
         #endregion
+        #region["Update File"]
+        [HttpPut]
+        [Route("api/attachment/update_file")]
+        public async Task<IHttpActionResult> UpdateFile()
+        {
+            ResponseDataDTO<string> response = new ResponseDataDTO<string>();
+            try
+            {
+                var path = Path.GetTempPath();
+
+                if (!Request.Content.IsMimeMultipartContent("form-data"))
+                {
+                    throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.UnsupportedMediaType));
+                }
+
+                MultipartFormDataStreamProvider streamProvider = new MultipartFormDataStreamProvider(path);
+
+                await Request.Content.ReadAsMultipartAsync(streamProvider);
+                // save file
+                string fileName = "";
+                
+                foreach (MultipartFileData fileData in streamProvider.FileData)
+                {
+                    fileName = FileExtension.SaveFileOnDiskStaff(fileData);
+                }
+                
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = fileName;
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+                return Ok(response);
+            }
+        }
+        #endregion
 
         #region["Import Excel"]
         [HttpPost]
@@ -1123,7 +1446,7 @@ namespace ERP.API.Controllers.Dashboard
                 DataTable table = (DataTable)dataset.Tables[0];
                 if (table != null && table.Rows.Count > 0)
                 {
-                    if (table.Columns.Count != 16)
+                    if (table.Columns.Count != 17)
                     {
                         exitsData = "File excel import không hợp lệ!";
                         response.Code = HttpCode.INTERNAL_SERVER_ERROR;
@@ -1132,16 +1455,25 @@ namespace ERP.API.Controllers.Dashboard
                         return Ok(response);
                     }
                     list = DataTableCmUtils.ToListof<staffview>(table);
-                    foreach (staffview i in list)
+                    foreach(staffview i in list)
                     {
                         #region["Check tồn tại"]
-                        var us = _staffservice.GetAllIncluing(t => t.sta_username.Equals(i.sta_username) ).FirstOrDefault();
+                        var us = _staffservice.GetAllIncluing(t => t.sta_username.Equals(i.sta_username)).FirstOrDefault();
                         if (us != null)
                         {
                             exitsData = "Đã có username '" + i.sta_username + "' tồn tại trong cơ sở dữ liệu!";
                             response.Code = HttpCode.NOT_FOUND;
                             response.Message = exitsData;
                             response.Error = "sta_username";
+                            return Ok(response);
+                        }
+                        var code = _staffservice.GetAllIncluing(t => t.sta_code.Equals(i.sta_code)).FirstOrDefault();
+                        if (us != null)
+                        {
+                            exitsData = "Đã có ma '" + i.sta_code + "' tồn tại trong cơ sở dữ liệu!";
+                            response.Code = HttpCode.NOT_FOUND;
+                            response.Message = exitsData;
+                            response.Error = "sta_code";
                             return Ok(response);
                         }
                         var tax = _staffservice.GetAllIncluing(t => t.sta_tax_code.Equals(i.sta_tax_code)).FirstOrDefault();
@@ -1172,6 +1504,10 @@ namespace ERP.API.Controllers.Dashboard
                             return Ok(response);
                         }
                         #endregion
+                    }
+                    foreach (staffview i in list)
+                    {
+                       
 
                         #region["Create staff"]
                         staff staff_create = new staff();
@@ -1194,8 +1530,7 @@ namespace ERP.API.Controllers.Dashboard
                         staff_create.sta_type_contact = 1;
                         
                         var x = _staffservice.GetLast();
-                        if (x == null) staff_create.sta_code = "NV000000";
-                        else staff_create.sta_code = Utilis.CreateCodeByCode("NV", x.sta_code, 8);
+                        staff_create.sta_code = i.sta_code;
                         staff_create.sta_password = HashMd5.convertMD5(staff_create.sta_code);
                         staff_create.sta_created_date = DateTime.Now;
                         staff_create.company_id = BaseController.get_company_id_current();
@@ -1454,7 +1789,7 @@ namespace ERP.API.Controllers.Dashboard
                  {"sta_start_work_date","Ngày vào làm"},
                  {"sta_end_work_date","Ngày nghỉ việc"},
                  {"sta_reason_to_end_work","Lý do nghỉ việc"},
-                 {"sta_type_contact_name","Chức danh"},
+                 {"sta_type_contact_name","Lọa hợp đồng"},
                  {"sta_birthday","Ngày sinh"},
                  {"sta_identity_card","CMT"},
                  {"sta_identity_card_date","Ngày cấp"},
@@ -1471,8 +1806,8 @@ namespace ERP.API.Controllers.Dashboard
         {
             return new Dictionary<string, string>()
             {
-                 
 
+                {"sta_code","Mã nhân viên" },
                  {"sta_username","Tài khoản đăng nhập" },
                  {"sta_fullname","Họ và tên" },
                  {"sta_mobile","SĐT"},
@@ -1516,12 +1851,25 @@ namespace ERP.API.Controllers.Dashboard
             bool res = _staffservice.Exist(x => x.sta_username == _username);
             return res;
         }
+        private bool check_code(string code)
+        {
+            bool res = _staffservice.Exist(x => x.sta_code == code);
+            return res;
+        }
         private bool check_username_update(string _username, int sta_id)
         {
             List<staff> lts_st = _staffservice.GetAllIncluing().ToList();
             staff update = _staffservice.Find(sta_id);
             lts_st.Remove(update);
             bool res = lts_st.Exists(x => x.sta_username == _username);
+            return res;
+        }
+        private bool check_code_update(string code, int sta_id)
+        {
+            List<staff> lts_st = _staffservice.GetAllIncluing().ToList();
+            staff update = _staffservice.Find(sta_id);
+            lts_st.Remove(update);
+            bool res = lts_st.Exists(x => x.sta_code == code);
             return res;
         }
         private bool check_email(string _email)

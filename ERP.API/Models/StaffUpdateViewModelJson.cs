@@ -12,6 +12,7 @@ namespace ERP.API.Models
     public class StaffUpdateViewModelJson
     {
         public int sta_id { get; set; }
+        public string sta_code { get; set; }
         //Thông tin thời gian loại hợp đồng partime hay fulltime 9 trường 
         public List<staff_work_timejson> list_staff_work_time { get; set; }
 
@@ -122,9 +123,18 @@ namespace ERP.API.Models
 
         [StringLength(50)]
         public string unl_geocoding_now { get; set; }
+        [StringLength(50)]
+        public string sta_health_card { get; set; }
+
+        [StringLength(50)]
+        public string sta_social_insurance { get; set; }
         //Danh sách đào tạo 
         public List<stafftrainingjson> list_training { get; set; }
         //Danh sách địa chỉ làm việc 
         public List<staffundertaken_locationjson> list_undertaken_location { get; set; }
+        public List<staff_bankjson> list_bank { get; set; }
+        public List<relatives_staffjson> list_relatives { get; set; }
+        public List<bonus_staffjson> list_bonus { get; set; }
+        public List<attachmentjson> list_attachments { get; set; }
     }
 }

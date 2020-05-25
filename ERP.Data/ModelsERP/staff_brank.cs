@@ -22,9 +22,5 @@ namespace ERP.Data.ModelsERP
         public string stb_note { get; set; }
 
         public int? staff_id { get; set; }
-
-        public virtual bank_branch bank_branch { get; set; }
-
-        public virtual staff staff { get; set; }
     }
 }

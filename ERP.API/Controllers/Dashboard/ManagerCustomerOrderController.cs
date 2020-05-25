@@ -160,7 +160,7 @@ namespace ERP.API.Controllers.Dashboard
 
         [HttpGet]
         [Route("api/customer-orders/search")]
-        public IHttpActionResult GetAllSearch(int pageNumber, int pageSize, int? payment_type_id, DateTime? start_date, DateTime? end_date, string code)
+        public IHttpActionResult GetAllSearch(int pageNumber, int pageSize, int? payment_type_id,int? cuo_status, DateTime? start_date, DateTime? end_date, string code)
         {
             ResponseDataDTO<PagedResults<customerorderviewmodel>> response = new ResponseDataDTO<PagedResults<customerorderviewmodel>>();
             try
@@ -168,7 +168,7 @@ namespace ERP.API.Controllers.Dashboard
                 int company_id = BaseController.get_company_id_current();
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _customer_orderservice.GetAllSearch(pageNumber: pageNumber, pageSize: pageSize, payment_type_id: payment_type_id, start_date, end_date, code,company_id);
+                response.Data = _customer_orderservice.GetAllSearch(pageNumber: pageNumber, pageSize: pageSize, payment_type_id: payment_type_id, cuo_status,  start_date, end_date, code,company_id);
             }
             catch (Exception ex)
             {

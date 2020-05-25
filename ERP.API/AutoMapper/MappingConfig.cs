@@ -11,6 +11,7 @@ using ERP.Data.ModelsERP.ModelView.Package;
 using ERP.Data.ModelsERP.ModelView.Product;
 using ERP.Data.ModelsERP.ModelView.Service;
 using ERP.Data.ModelsERP.ModelView.Sms;
+using ERP.Data.ModelsERP.ModelView.Staff;
 using ERP.Data.ModelsERP.ModelView.Statistics;
 using ERP.Data.ModelsERP.ModelView.StatisticStaff;
 using ERP.Data.ModelsERP.ModelView.Transaction;
@@ -39,7 +40,33 @@ namespace ERP.API.AutoMapper
             CreateMap< staff, staffview>();
             CreateMap<staffview, staff>();
             CreateMap< staff, servicestaffviewmodel>();
-            
+
+
+            CreateMap<staff_bankviewmodel, staff_brank>();
+            CreateMap<staff_brank, staff_bankviewmodel>();
+
+            CreateMap<relatives_staffviewmodel, relatives_staff>();
+            CreateMap<relatives_staff, relatives_staffviewmodel>();
+
+
+            CreateMap<bonus_staffviewmodel, bonus_staff>();
+            CreateMap<bonus_staff, bonus_staffviewmodel>();
+
+             CreateMap<attachmentviewmodel, attachment>();
+            CreateMap<attachment, attachmentviewmodel>();
+
+            CreateMap<staff_bankjson, staff_brank>();
+            CreateMap<staff_brank, staff_bankjson>();
+
+            CreateMap<relatives_staffjson, relatives_staff>();
+            CreateMap<relatives_staff, relatives_staffjson>();
+
+
+            CreateMap<bonus_staffjson, bonus_staff>();
+            CreateMap<bonus_staff, bonus_staffjson>();
+
+            CreateMap<attachmentjson, attachment>();
+            CreateMap<attachment, attachmentjson>();
 
             CreateMap<CustomerCreateViewModel, customer>();
             CreateMap<CustomerUpdateViewModel, customer>();

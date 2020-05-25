@@ -39,9 +39,9 @@ namespace ERP.Service.Services
             return this._repository.GetServiceByDay(id, start_date, to_date);
         }
        
-        public PagedResults<customerorderviewmodel> GetAllSearch(int pageNumber, int pageSize, int? payment_type_id, DateTime? start_date, DateTime? end_date, string name,int company_id)
+        public PagedResults<customerorderviewmodel> GetAllSearch(int pageNumber, int pageSize, int? payment_type_id,int? cuo_status, DateTime? start_date, DateTime? end_date, string name,int company_id)
         {
-            return this._repository.GetAllSearch(pageNumber, pageSize,  payment_type_id,start_date,end_date, name, company_id);
+            return this._repository.GetAllSearch(pageNumber, pageSize,  payment_type_id, cuo_status,start_date, end_date, name, company_id);
         }
          public PagedResults<servicercustomerorderviewmodel> GetAllSearchCustomerOrderService(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name,int company_id)
         {

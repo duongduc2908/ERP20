@@ -20,7 +20,5 @@ namespace ERP.Data.ModelsERP
         public string ast_description { get; set; }
 
         public string ast_note { get; set; }
-
-        public virtual staff staff { get; set; }
     }
 }

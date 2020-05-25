@@ -18,6 +18,7 @@ namespace ERP.Data.ModelsERP.ModelView
 
         //Thông tin chung 
         public int sta_id { get; set; }
+        public string sta_code { get; set; }
 
         [StringLength(120)]
         public string sta_thumbnai { get; set; }
@@ -82,6 +83,11 @@ namespace ERP.Data.ModelsERP.ModelView
         public string sta_traffic { get; set; }
 
         public int? sta_salary { get; set; }
+        [StringLength(50)]
+        public string sta_health_card { get; set; }
+
+        [StringLength(50)]
+        public string sta_social_insurance { get; set; }
 
         [StringLength(100)]
         public string sta_tax_code { get; set; }
@@ -129,6 +135,10 @@ namespace ERP.Data.ModelsERP.ModelView
         public List<stafftraningviewmodel> list_training { get; set; }
         //Danh sách địa chỉ làm việc 
         public List<undertakenlocationviewmodel> list_undertaken_location { get; set; }
+        public List<staff_bankviewmodel> list_bank { get; set; }
+        public List<relatives_staffviewmodel> list_relatives { get; set; }
+        public List<bonus_staffviewmodel> list_bonus { get; set; }
+        public List<attachmentviewmodel> list_attachments { get; set; }
         //Các trường bổ sung trong view search
         public string sta_sex_name { get; set; }
         public string position_name { get; set; }

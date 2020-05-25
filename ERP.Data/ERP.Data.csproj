@@ -195,10 +195,18 @@
     <Compile Include="ModelsERP\ModelView\Sms\smsstrategyviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Sms\smstemplatemodelview.cs" />
     <Compile Include="ModelsERP\ModelView\Sms\smstemplatestrategyviewmodel.cs" />
+    <Compile Include="ModelsERP\ModelView\Staff\attachmentjson.cs" />
+    <Compile Include="ModelsERP\ModelView\Staff\attachmentviewmodel.cs" />
+    <Compile Include="ModelsERP\ModelView\Staff\bonus_staffjson.cs" />
+    <Compile Include="ModelsERP\ModelView\Staff\bonus_staffviewmodel.cs" />
+    <Compile Include="ModelsERP\ModelView\Staff\relatives_staffjson.cs" />
+    <Compile Include="ModelsERP\ModelView\Staff\relatives_staffviewmodel.cs" />
+    <Compile Include="ModelsERP\ModelView\Staff\staff_bankjson.cs" />
     <Compile Include="ModelsERP\ModelView\Staff\stafftrainingjson.cs" />
     <Compile Include="ModelsERP\ModelView\Staff\stafftraningviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Staff\staffundertaken_locationjson.cs" />
     <Compile Include="ModelsERP\ModelView\Staff\staffviewmodel.cs" />
+    <Compile Include="ModelsERP\ModelView\Staff\staff_bankviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Staff\staff_time.cs" />
     <Compile Include="ModelsERP\ModelView\Staff\staff_time_detail.cs" />
     <Compile Include="ModelsERP\ModelView\Staff\staff_work_timejson.cs" />
@@ -226,6 +234,7 @@
     <Compile Include="ModelsERP\project.cs" />
     <Compile Include="ModelsERP\Province.cs" />
     <Compile Include="ModelsERP\RefreshToken.cs" />
+    <Compile Include="ModelsERP\relatives_staff.cs" />
     <Compile Include="ModelsERP\service.cs" />
     <Compile Include="ModelsERP\service_category.cs" />
     <Compile Include="ModelsERP\service_time.cs" />
@@ -265,6 +274,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="ModelsERP\ModelView\Bank\" />
     <Folder Include="ModelsERP\ModelView\NewFolder1\" />
     <Folder Include="ModelsERP\ModelView\Training\" />
     <Folder Include="SQL\" />

@@ -228,7 +228,7 @@ namespace ERP.Repository.Repositories
                               where ex.staff_id == staffview.sta_id
                               select new
                               {
-                                  od.tn_id, od.tn_name,od.tn_purpose,od.tn_start_date,od.tn_end_date,od.tn_content,od.tn_code,ex.ts_evaluate
+                                  od.tn_id, od.tn_name,od.tn_purpose,od.tn_start_date,od.tn_end_date,od.tn_content,od.tn_code,ex.ts_evaluate,ex.achieved,ex.comment
                               }).ToList();
                 if(lts_cg != null)
                 {
@@ -244,6 +244,9 @@ namespace ERP.Repository.Repositories
                         tr.tn_code = lts_cg[j].tn_code;
                         tr.ts_evaluate = lts_cg[j].ts_evaluate;
                         if(tr.ts_evaluate != null) tr.ts_evaluate_name = EnumTraningStaff.ts_evaluate[Convert.ToInt32(tr.ts_evaluate) - 1];
+                        tr.achieved = lts_cg[j].achieved;
+                        if (tr.achieved != null) tr.achieved_name = EnumTraningStaff.achieved[Convert.ToInt32(tr.achieved) - 1];
+                        tr.comment = lts_cg[j].comment;
 
                         res_training.Add(tr);
                     }
@@ -263,6 +266,64 @@ namespace ERP.Repository.Repositories
                 }
                 staffview.list_undertaken_location = lst_add;
 
+                //lấy ra danh sách ngân hàng 
+                var list_staff_bank = _dbContext.staff_brank.Where(s => s.staff_id == i.sta_id ).ToList();
+                List<staff_bankviewmodel> lst_sb_add = new List<staff_bankviewmodel>();
+                foreach (staff_brank s in list_staff_bank)
+                {
+                    staff_bankviewmodel add = _mapper.Map<staff_bankviewmodel>(s);
+                    var bank_branch = _dbContext.bank_branch.Find(add.bank_branch_id);
+                    if(bank_branch != null)
+                    {
+                        add.bank_branch_id = bank_branch.bbr_id;
+                        add.bank_branch_name = bank_branch.bbr_name;
+                        var bankk = _dbContext.banks.Find(bank_branch.bank_id);
+                        if(bankk != null)
+                        {
+                            add.bank_id = bankk.ba_id;
+                            add.bank_name = bankk.ba_name;
+                            var bank_categoryy = _dbContext.bank_category.Find(bankk.bank_category_id);
+                            if (bank_categoryy != null)
+                            {
+                                add.bank_category_id = bank_categoryy.bac_id;
+                                add.bank_category_name = bank_categoryy.bac_name;
+
+                            }
+                        }
+                    }
+
+                    lst_sb_add.Add(add);
+                }
+                staffview.list_bank = lst_sb_add;
+                //Lấy ra danh sách thông tin gia đình
+                var list_relatives_staff = _dbContext.relatives_staff.Where(s => s.staff_id == i.sta_id).ToList();
+                List<relatives_staffviewmodel> lst_rs_add = new List<relatives_staffviewmodel>();
+                foreach (relatives_staff s in list_relatives_staff)
+                {
+                    relatives_staffviewmodel add = _mapper.Map<relatives_staffviewmodel>(s);
+
+                    lst_rs_add.Add(add);
+                }
+                staffview.list_relatives = lst_rs_add;
+                //Lấy ra thông tin khen thưởng kỉ luật 
+                var list_bonus_staff = _dbContext.bonus_staff.Where(s => s.staff_id == i.sta_id).ToList();
+                List<bonus_staffviewmodel> lst_bo_add = new List<bonus_staffviewmodel>();
+                foreach (bonus_staff s in list_bonus_staff)
+                {
+                    bonus_staffviewmodel add = _mapper.Map<bonus_staffviewmodel>(s);
+                    add.bos_type_name = EnumBonusStaff.bos_type[Convert.ToInt32(add.bos_type) - 1];
+                    lst_bo_add.Add(add);
+                }
+                staffview.list_bonus = lst_bo_add;
+                //Lấy ra thông tin khen thưởng kỉ luật 
+                var list_attachments = _dbContext.attachments.Where(s => s.staff_id == i.sta_id).ToList();
+                List<attachmentviewmodel> lst_at_add = new List<attachmentviewmodel>();
+                foreach (attachment at in list_attachments)
+                {
+                    attachmentviewmodel add = _mapper.Map<attachmentviewmodel>(at);
+                    lst_at_add.Add(add);
+                }
+                staffview.list_attachments = lst_at_add;
                 res.Add(staffview);
             }
 
@@ -408,7 +469,9 @@ namespace ERP.Repository.Repositories
                               od.tn_end_date,
                               od.tn_content,
                               od.tn_code,
-                              ex.ts_evaluate
+                              ex.ts_evaluate,
+                              ex.achieved,
+                              ex.comment
                           }).ToList();
             if (lts_cg != null)
             {
@@ -423,6 +486,10 @@ namespace ERP.Repository.Repositories
                     tr.tn_content = lts_cg[j].tn_content;
                     tr.tn_code = lts_cg[j].tn_code;
                     tr.ts_evaluate = lts_cg[j].ts_evaluate;
+                    tr.achieved = lts_cg[j].achieved;
+                    if(tr.achieved != null)tr.achieved_name = EnumTraningStaff.achieved[Convert.ToInt32(tr.achieved) - 1];
+                    tr.comment = lts_cg[j].comment;
+
                     res_training.Add(tr);
                 }
                 staffview.list_training = res_training;
@@ -440,6 +507,64 @@ namespace ERP.Repository.Repositories
                 lst_add.Add(add);
             }
             staffview.list_undertaken_location = lst_add;
+            //lấy ra danh sách ngân hàng 
+            var list_staff_bank = _dbContext.staff_brank.Where(s => s.staff_id == i.sta_id).ToList();
+            List<staff_bankviewmodel> lst_sb_add = new List<staff_bankviewmodel>();
+            foreach (staff_brank s in list_staff_bank)
+            {
+                staff_bankviewmodel add = _mapper.Map<staff_bankviewmodel>(s);
+                var bank_branch = _dbContext.bank_branch.Find(add.bank_branch_id);
+                if (bank_branch != null)
+                {
+                    add.bank_branch_id = bank_branch.bbr_id;
+                    add.bank_branch_name = bank_branch.bbr_name;
+                    var bankk = _dbContext.banks.Find(bank_branch.bank_id);
+                    if (bankk != null)
+                    {
+                        add.bank_id = bankk.ba_id;
+                        add.bank_name = bankk.ba_name;
+                        var bank_categoryy = _dbContext.bank_category.Find(bankk.bank_category_id);
+                        if (bank_categoryy != null)
+                        {
+                            add.bank_category_id = bank_categoryy.bac_id;
+                            add.bank_category_name = bank_categoryy.bac_name;
+
+                        }
+                    }
+                }
+
+                lst_sb_add.Add(add);
+            }
+            staffview.list_bank = lst_sb_add;
+            //Lấy ra danh sách thông tin gia đình
+            var list_relatives_staff = _dbContext.relatives_staff.Where(s => s.staff_id == i.sta_id).ToList();
+            List<relatives_staffviewmodel> lst_rs_add = new List<relatives_staffviewmodel>();
+            foreach (relatives_staff s in list_relatives_staff)
+            {
+                relatives_staffviewmodel add = _mapper.Map<relatives_staffviewmodel>(s);
+
+                lst_rs_add.Add(add);
+            }
+            staffview.list_relatives = lst_rs_add;
+            //Lấy ra thông tin khen thưởng kỉ luật 
+            var list_bonus_staff = _dbContext.bonus_staff.Where(s => s.staff_id == i.sta_id).ToList();
+            List<bonus_staffviewmodel> lst_bo_add = new List<bonus_staffviewmodel>();
+            foreach (bonus_staff s in list_bonus_staff)
+            {
+                bonus_staffviewmodel add = _mapper.Map<bonus_staffviewmodel>(s);
+                add.bos_type_name = EnumBonusStaff.bos_type[Convert.ToInt32(add.bos_type) - 1];
+                lst_bo_add.Add(add);
+            }
+            staffview.list_bonus = lst_bo_add;
+            //Danh sach file
+            var list_attachments = _dbContext.attachments.Where(s => s.staff_id == i.sta_id).ToList();
+            List<attachmentviewmodel> lst_at_add = new List<attachmentviewmodel>();
+            foreach (attachment at in list_attachments)
+            {
+                attachmentviewmodel add = _mapper.Map<attachmentviewmodel>(at);
+                lst_at_add.Add(add);
+            }
+            staffview.list_attachments = lst_at_add;
             return staffview;
             
         }

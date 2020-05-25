@@ -9,7 +9,6 @@ namespace ERP.Data.ModelsERP
     [Table("staff")]
     public partial class staff
     {
-
         [Key]
         public int sta_id { get; set; }
 
@@ -77,7 +76,7 @@ namespace ERP.Data.ModelsERP
         [StringLength(50)]
         public string sta_traffic { get; set; }
 
-        public int sta_salary { get; set; }
+        public int? sta_salary { get; set; }
 
         [StringLength(100)]
         public string sta_tax_code { get; set; }
@@ -93,5 +92,10 @@ namespace ERP.Data.ModelsERP
 
         public bool? sta_oke { get; set; }
 
+        [StringLength(50)]
+        public string sta_health_card { get; set; }
+
+        [StringLength(50)]
+        public string sta_social_insurance { get; set; }
     }
 }
