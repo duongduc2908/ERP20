@@ -56,6 +56,7 @@ namespace ERP.API.Controllers.Dashboard
         private static List<string> list_email;
         private static List<string> list_pass;
         private static List<string> list_username;
+        private static List<string> list_file_name;
         public ManagerstaffsController() { }
         public ManagerstaffsController(IAttachmentsService attachmentService ,IBankBranchService bankbranchService,IBonusStaffService bonusstaffService ,IRelativesStaffService relativesstaffService,IStaffBrankService staffbankService,ITrainingService trainingService, IStaffWorkTimeService staffworktimeService, ITrainingStaffService trainingStaffService, ICustomerService customerservice, IStaffService staffservice, IMapper mapper, IDepartmentService departmentService, IGroupRoleService groupRoleService, IPositionService positionService, IUndertakenLocationService undertakenlocationService, ISocialService socialService)
         {
@@ -410,7 +411,8 @@ namespace ERP.API.Controllers.Dashboard
                 {
                     sta_pass = Utilis.MakeRandomPassword(8);
                 }
-
+                staff_create.comment = staff.comment;
+                staff_create.achieved = staff.achieved;
                 staff_create.sta_password = HashMd5.convertMD5(sta_pass);
                 pass_word = staff_create.sta_password;
                 staff_create.sta_created_date = DateTime.Now;
@@ -464,8 +466,6 @@ namespace ERP.API.Controllers.Dashboard
                         create_training_staff.staff_id = staff_last.sta_id;
                         create_training_staff.training_id = Convert.ToInt32(tr.tn_id);
                         create_training_staff.ts_evaluate = tr.ts_evaluate;
-                        create_training_staff.comment = tr.comment;
-                        create_training_staff.achieved = tr.achieved;
                         _trainingStaffService.Create(create_training_staff);
                     }
                     else
@@ -485,8 +485,6 @@ namespace ERP.API.Controllers.Dashboard
                         create_training_staff.staff_id = staff_last.sta_id;
                         create_training_staff.training_id = tr_last.tn_id;
                         create_training_staff.ts_evaluate = tr.ts_evaluate;
-                        create_training_staff.comment = tr.comment;
-                        create_training_staff.achieved = tr.achieved;
                         _trainingStaffService.Create(create_training_staff);
                     }
 
@@ -744,6 +742,8 @@ namespace ERP.API.Controllers.Dashboard
                 existstaff.sta_identity_card_date = staff.sta_identity_card_date;
                 existstaff.sta_identity_card_date_end = staff.sta_identity_card_date_end;
                 existstaff.sta_identity_card_location = staff.sta_identity_card_location;
+                existstaff.comment = staff.comment;
+                existstaff.achieved = staff.achieved;
 
                 // save new staff
                 _staffservice.Update(existstaff, staff.sta_id);
@@ -869,8 +869,6 @@ namespace ERP.API.Controllers.Dashboard
                                 _trainingService.Update(exist_tr, exist_tr.tn_id);
                                 training_staff exist_tr_s = _trainingStaffService.GetAllIncluing(x =>x.training_id == _id && x.staff_id == update_staff.sta_id).FirstOrDefault();
                                 exist_tr_s.ts_evaluate = tr_f.ts_evaluate;
-                                exist_tr_s.comment = tr_f.comment;
-                                exist_tr_s.achieved = tr_f.achieved;
                                 _trainingStaffService.Update(exist_tr_s, exist_tr_s.ts_id);
                                 lts_training_staff_db.Remove(tr);
                                 temp = 1;
@@ -884,8 +882,6 @@ namespace ERP.API.Controllers.Dashboard
                             create_trs.staff_id = staff.sta_id;
                             create_trs.training_id = _id;
                             create_trs.ts_evaluate = tr_f.ts_evaluate;
-                            create_trs.comment = tr_f.comment;
-                            create_trs.achieved = tr_f.achieved;
                             _trainingStaffService.Create(create_trs);
                         }
 
@@ -909,8 +905,6 @@ namespace ERP.API.Controllers.Dashboard
                         create_trs.staff_id = staff.sta_id;
                         create_trs.training_id = tr_last.tn_id;
                         create_trs.ts_evaluate = tr_f.ts_evaluate;
-                        create_trs.comment = tr_f.comment;
-                        create_trs.achieved = tr_f.achieved;
                         _trainingStaffService.Create(create_trs);
                     }
                 }
@@ -1005,10 +999,16 @@ namespace ERP.API.Controllers.Dashboard
                     }
                     else
                     {
-                        //Create bank_branch 
-                        
+
+
                         //Create staff_bank
-                        
+                        staff_brank create = new staff_brank();
+                        create.bank_branch_id = tr_f.bank_branch_id;
+                        create.stb_account = tr_f.stb_account;
+                        create.stb_fullname = tr_f.stb_fullname;
+                        create.stb_note = tr_f.stb_note;
+                        create.staff_id = update_staff.sta_id;
+                        _staffbankService.Create(create);
                     }
                 }
                 foreach (staff_brank trs in lts_staff_brank_db)
@@ -1382,7 +1382,7 @@ namespace ERP.API.Controllers.Dashboard
                 {
                     fileName = FileExtension.SaveFileOnDiskStaff(fileData);
                 }
-                
+                list_file_name.Add(fileName);
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
                 response.Data = fileName;

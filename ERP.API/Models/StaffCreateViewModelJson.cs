@@ -126,6 +126,10 @@ namespace ERP.API.Models
 
         [StringLength(50)]
         public string sta_social_insurance { get; set; }
+
+        public byte? achieved { get; set; }
+        [StringLength(50)]
+        public string comment { get; set; }
         //Danh sách đào tạo 
         public List<stafftrainingjson> list_training { get; set; }
         //Danh sách địa chỉ làm việc 

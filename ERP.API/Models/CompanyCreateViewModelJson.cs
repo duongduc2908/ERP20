@@ -44,6 +44,7 @@ namespace ERP.API.Models
 
         public double? co_price { get; set; }
         public int? co_duration { get; set; }
+        public int? co_discount { get; set; }
         public List<functionjson> list_function { get; set; } 
     }
 }

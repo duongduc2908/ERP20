@@ -47,8 +47,10 @@ namespace ERP.Repository.Repositories
         public List<dropdown> GetAllDropDown()
         {
             List<dropdown> res = new List<dropdown>();
-            var list_company = _dbContext.bank_category.ToList();
-            foreach (var co in list_company)
+            List<bank_category> list_res = new List<bank_category>();
+            
+            list_res = _dbContext.bank_category.ToList();
+            foreach (var co in list_res)
             {
                 dropdown dr = new dropdown();
                 //Do something

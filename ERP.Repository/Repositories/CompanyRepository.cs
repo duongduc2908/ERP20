@@ -82,7 +82,7 @@ namespace ERP.Repository.Repositories
                                      join co_f in _dbContext.company_funtion on co.co_id equals co_f.company_id
                                      join f in _dbContext.functions on co_f.fun_id equals f.fun_id
                                      join p in _dbContext.packages on f.package_id equals p.pac_id
-                                     group new { f, p } by new { f.fun_name, f.fun_id,f.fun_code,p.pac_id, p.pac_name,p.pac_code} into temp
+                                     group new { f, p } by new { f.fun_name, f.fun_id,f.fun_code,p.pac_id, p.pac_name,p.pac_code,f.fun_price} into temp
                                      select temp
                                      ).ToList();
                 List<packagefunctionviewmodel> lts_pac_f = new List<packagefunctionviewmodel>();
@@ -95,7 +95,7 @@ namespace ERP.Repository.Repositories
                     pac_f.fun_id = fun.Key.fun_id;
                     pac_f.pac_id = fun.Key.pac_id;
                     pac_f.fun_code = fun.Key.fun_code;
-                    pac_f.pac_code = fun.Key.pac_code;
+                    pac_f.fun_price = fun.Key.fun_price;
                     lts_pac_f.Add(pac_f);
                 }
                 companyview.list_function = lts_pac_f;
@@ -146,7 +146,7 @@ namespace ERP.Repository.Repositories
                                  join co_f in _dbContext.company_funtion on co.co_id equals co_f.company_id
                                  join f in _dbContext.functions on co_f.fun_id equals f.fun_id
                                  join p in _dbContext.packages on f.package_id equals p.pac_id
-                                 group new { f, p } by new { f.fun_name, f.fun_id,f.fun_code, p.pac_id, p.pac_name,p.pac_code } into temp
+                                 group new { f, p } by new { f.fun_name, f.fun_id,f.fun_code, p.pac_id, p.pac_name,p.pac_code ,f.fun_price} into temp
                                  select temp
                                  ).ToList();
             List<packagefunctionviewmodel> lts_pac_f = new List<packagefunctionviewmodel>();
@@ -160,6 +160,7 @@ namespace ERP.Repository.Repositories
                 pac_f.pac_id = fun.Key.pac_id;
                 pac_f.fun_code = fun.Key.fun_code;
                 pac_f.pac_code = fun.Key.pac_code;
+                pac_f.fun_price = fun.Key.fun_price;
                 lts_pac_f.Add(pac_f);
             }
             companyview.list_function = lts_pac_f;

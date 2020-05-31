@@ -26,9 +26,5 @@ namespace ERP.Data.ModelsERP.ModelView.Staff
         public string tn_purpose { get; set; }
         public int? ts_evaluate { get; set; }
         public string ts_evaluate_name { get; set; }
-        public byte? achieved { get; set; }
-        public string achieved_name { get; set; }
-        [StringLength(50)]
-        public string comment { get; set; }
     }
 }

@@ -109,55 +109,106 @@ namespace ERP.API.Controllers.Dashboard
             return Ok(response);
         }
         */
-        [HttpPost]
-        [Route("api/bank/create")]
+        //[HttpPost]
+        //[Route("api/bank/create")]
 
-        public async Task<IHttpActionResult> Create()
-        {
+        //public async Task<IHttpActionResult> Create()
+        //{
 
 
-            ResponseDataDTO<string> response = new ResponseDataDTO<string>();
-            try
-            {
+        //    ResponseDataDTO<string> response = new ResponseDataDTO<string>();
+        //    try
+        //    {
 
-                string json = string.Empty;
+        //        string json = string.Empty;
                 
-                // read json string from file
-                using (StreamReader reader = new StreamReader("D:/ERP20/ERP.API/Uploads/bankList.txt"))
-                {
-                    json = reader.ReadToEnd();
-                }
+        //        // read json string from file
+        //        using (StreamReader reader = new StreamReader("D:/ERP20/ERP.API/Uploads/bankList.txt"))
+        //        {
+        //            json = reader.ReadToEnd();
+        //        }
 
-                JavaScriptSerializer jss = new JavaScriptSerializer();
+        //        JavaScriptSerializer jss = new JavaScriptSerializer();
 
-                // convert json string to dynamic type
-                var obj = jss.Deserialize<dynamic>(json);
+        //        // convert json string to dynamic type
+        //        var obj = jss.Deserialize<dynamic>(json);
 
-                foreach(var js in obj)
-                {
-                    bank_category bc = new bank_category();
-                    bc.bac_name = js["TenLoaiNganHang"];
-                    bc.bac_id = Convert.ToInt32(js["Loai"]);
-                    _bankcategoryservice.Create(bc);
+        //        foreach(var js in obj)
+        //        {
+        //            bank_category bc = new bank_category();
+        //            bc.bac_name = js["TenLoaiNganHang"];
+        //            //bc.bac_id = Convert.ToInt32(js["Loai"]);
+        //            _bankcategoryservice.Create(bc);
+        //            var _id = _bankcategoryservice.GetLast().bac_id;
+        //            foreach (var ba in js["bankList"])
+        //            {
+        //                bank create_ba = new bank();
+        //                create_ba.ba_code = ba["MaNganHang"];
+        //                //create_ba.ba_id = Convert.ToInt32(ba["MaNganHang"]);
+        //                create_ba.ba_name = ba["TenNH"];
+        //                create_ba.bank_category_id = _id;
+        //                _bankservice.Create(create_ba);
+        //                try
+        //                {
+        //                    var id = _bankservice.GetLast().ba_id;
+        //                    foreach (var ba_br in ba["province"])
+        //                    {
+        //                        bank_branch create_ba_br = new bank_branch();
+        //                        create_ba_br.bank_id = id;
+        //                        //create_ba_br.bbr_id =Convert.ToInt32(ba_br["Code"]);
+        //                        create_ba_br.province_id = Convert.ToInt32(ba_br["Code"]);
+        //                        foreach (var bb in ba_br["branch"])
+        //                        {
+        //                            create_ba_br.bbr_name = bb["TenChiNhanh"];
+        //                            create_ba_br.bbr_code = bb["MaChiNhanh"];
+        //                            create_ba_br.bbr_address = bb["DiaChi"];
+        //                            try
+        //                            {
+        //                                _bankbranchservice.Create(create_ba_br);
+        //                            }
+        //                            catch(Exception exx)
+        //                            {
+        //                                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+        //                                response.Message = bb["TenChiNhanh"];
+        //                                response.Data = null;
 
-                }
-                // return response
-                response.Code = HttpCode.OK;
-                response.Message = MessageResponse.SUCCESS;
-                response.Data = "Thanh cong";
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = ex.Message;
-                response.Data = null;
-                Console.WriteLine(ex.ToString());
+        //                                return Ok(response);
+        //                            }
+        //                        }
 
-                return Ok(response);
-            }
+        //                    }
+        //                }
+        //                catch (Exception ec)
+        //                {
+        //                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+        //                    response.Message = "sai provice";
+        //                    response.Data = null;
 
-        }
+        //                    return Ok(response);
+        //                }
+                        
+
+
+        //            }
+
+        //        }
+        //        // return response
+        //        response.Code = HttpCode.OK;
+        //        response.Message = MessageResponse.SUCCESS;
+        //        response.Data = "Thanh cong";
+        //        return Ok(response);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+        //        response.Message = ex.Message;
+        //        response.Data = null;
+        //        Console.WriteLine(ex.ToString());
+
+        //        return Ok(response);
+        //    }
+
+        //}
 
 
         [HttpPut]

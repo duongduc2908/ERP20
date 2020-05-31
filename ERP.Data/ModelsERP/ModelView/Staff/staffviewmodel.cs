@@ -131,6 +131,11 @@ namespace ERP.Data.ModelsERP.ModelView
 
         [StringLength(50)]
         public string unl_geocoding_now { get; set; }
+
+        public byte? achieved { get; set; }
+        public string achieved_name { get; set; }
+        [StringLength(50)]
+        public string comment { get; set; }
         //Danh sách đào tạo 
         public List<stafftraningviewmodel> list_training { get; set; }
         //Danh sách địa chỉ làm việc 

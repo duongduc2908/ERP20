@@ -19,5 +19,6 @@ namespace ERP.Data.ModelsERP
         [StringLength(250)]
         public string fun_code { get; set; }
         public int package_id { get; set; }
+        public double? fun_price { get; set; }
     }
 }

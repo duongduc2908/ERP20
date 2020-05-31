@@ -8,7 +8,6 @@ namespace ERP.Data.ModelsERP
 
     public partial class bank_branch
     {
-        
         [Key]
         public int bbr_id { get; set; }
 

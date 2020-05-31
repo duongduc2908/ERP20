@@ -153,6 +153,8 @@ namespace ERP.Repository.Repositories
                 department de = _dbContext.departments.Where(x => x.de_id == i.department_id).FirstOrDefault();
                 position po = _dbContext.positions.Where(x => x.pos_id == i.position_id).FirstOrDefault();
                 group_role gr = _dbContext.group_role.Where(x => x.gr_id == i.group_role_id).FirstOrDefault();
+                
+                if (staffview.achieved != null) staffview.achieved_name = EnumTraningStaff.achieved[Convert.ToInt32(staffview.achieved) - 1];
                 if(de != null)
                 {
                     staffview.department_name = de.de_name;
@@ -228,7 +230,7 @@ namespace ERP.Repository.Repositories
                               where ex.staff_id == staffview.sta_id
                               select new
                               {
-                                  od.tn_id, od.tn_name,od.tn_purpose,od.tn_start_date,od.tn_end_date,od.tn_content,od.tn_code,ex.ts_evaluate,ex.achieved,ex.comment
+                                  od.tn_id, od.tn_name,od.tn_purpose,od.tn_start_date,od.tn_end_date,od.tn_content,od.tn_code,ex.ts_evaluate
                               }).ToList();
                 if(lts_cg != null)
                 {
@@ -244,9 +246,7 @@ namespace ERP.Repository.Repositories
                         tr.tn_code = lts_cg[j].tn_code;
                         tr.ts_evaluate = lts_cg[j].ts_evaluate;
                         if(tr.ts_evaluate != null) tr.ts_evaluate_name = EnumTraningStaff.ts_evaluate[Convert.ToInt32(tr.ts_evaluate) - 1];
-                        tr.achieved = lts_cg[j].achieved;
-                        if (tr.achieved != null) tr.achieved_name = EnumTraningStaff.achieved[Convert.ToInt32(tr.achieved) - 1];
-                        tr.comment = lts_cg[j].comment;
+                        
 
                         res_training.Add(tr);
                     }
@@ -391,6 +391,7 @@ namespace ERP.Repository.Repositories
             department de = _dbContext.departments.Where(x => x.de_id == i.department_id).FirstOrDefault();
             position po = _dbContext.positions.Where(x => x.pos_id == i.position_id).FirstOrDefault();
             group_role gr = _dbContext.group_role.Where(x => x.gr_id == i.group_role_id).FirstOrDefault();
+            if (staffview.achieved != null) staffview.achieved_name = EnumTraningStaff.achieved[Convert.ToInt32(staffview.achieved) - 1];
             if (de != null)
             {
                 staffview.department_name = de.de_name;
@@ -470,8 +471,7 @@ namespace ERP.Repository.Repositories
                               od.tn_content,
                               od.tn_code,
                               ex.ts_evaluate,
-                              ex.achieved,
-                              ex.comment
+                              
                           }).ToList();
             if (lts_cg != null)
             {
@@ -486,9 +486,9 @@ namespace ERP.Repository.Repositories
                     tr.tn_content = lts_cg[j].tn_content;
                     tr.tn_code = lts_cg[j].tn_code;
                     tr.ts_evaluate = lts_cg[j].ts_evaluate;
-                    tr.achieved = lts_cg[j].achieved;
-                    if(tr.achieved != null)tr.achieved_name = EnumTraningStaff.achieved[Convert.ToInt32(tr.achieved) - 1];
-                    tr.comment = lts_cg[j].comment;
+                    tr.ts_evaluate = lts_cg[j].ts_evaluate;
+                    if (tr.ts_evaluate != null) tr.ts_evaluate_name = EnumTraningStaff.ts_evaluate[Convert.ToInt32(tr.ts_evaluate) - 1];
+
 
                     res_training.Add(tr);
                 }

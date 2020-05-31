@@ -13,10 +13,10 @@ namespace ERP.Data.ModelsERP
 
         public string rels_fullname { get; set; }
 
-        [StringLength(10)]
+        [StringLength(50)]
         public string rels_relatives { get; set; }
 
-        [StringLength(10)]
+        [StringLength(15)]
         public string rels_phone { get; set; }
 
         public string rels_address { get; set; }

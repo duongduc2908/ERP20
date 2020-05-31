@@ -173,7 +173,7 @@ namespace ERP.API.Controllers.Dashboard
                 company_create.co_target = company.co_target.Trim();
                 company_create.co_price = company.co_price;
                 company_create.co_duration = company.co_duration;
-                company_create.co_duration = company.co_duration;
+                company_create.co_discount= company.co_discount;
                 company_create.co_no_of_employees = BaseController.get_id_current();
                 if (company.co_description != null) company_create.co_description = company.co_description.Trim();
                 if (company.co_revenue != null) company_create.co_revenue = company.co_revenue;
@@ -282,7 +282,7 @@ namespace ERP.API.Controllers.Dashboard
                 company_exists.co_target = company.co_target.Trim();
                 company_exists.co_price = company.co_price;
                 company_exists.co_duration = company.co_duration;
-                company_exists.co_duration = company.co_duration;
+                company_exists.co_discount = company.co_discount;
                 company_exists.co_no_of_employees = BaseController.get_id_current();
                 if (company.co_description != null) company_exists.co_description = company.co_description.Trim();
                 if (company.co_revenue != null) company_exists.co_revenue = company.co_revenue;
@@ -315,6 +315,7 @@ namespace ERP.API.Controllers.Dashboard
                             company_funtion create_trs = new company_funtion();
                             create_trs.fun_id = _id;
                             create_trs.company_id = company.co_id;
+
                             _companyfunctionservice.Create(create_trs);
                         }
 

@@ -40,6 +40,7 @@ namespace ERP.Data.ModelsERP.ModelView.Company
         public double? co_price { get; set; }
 
         public int? co_duration { get; set; }
+        public int? co_discount { get; set; }
         public List<packagefunctionviewmodel> list_function { get; set; }
     }
 }

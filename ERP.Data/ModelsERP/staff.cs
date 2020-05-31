@@ -97,5 +97,8 @@ namespace ERP.Data.ModelsERP
 
         [StringLength(50)]
         public string sta_social_insurance { get; set; }
+
+        public byte? achieved { get; set; }
+        public string comment { get; set; }
     }
 }

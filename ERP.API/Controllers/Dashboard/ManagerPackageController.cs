@@ -183,6 +183,7 @@ namespace ERP.API.Controllers.Dashboard
                     function fun_create = new function();
                     fun_create.fun_name = fun.fun_name;
                     fun_create.fun_code = fun.fun_code;
+                    fun_create.fun_price = fun.fun_price;
                     fun_create.package_id = package_last_id;
                         
                     _functionservice.Create(fun_create);
@@ -316,14 +317,23 @@ namespace ERP.API.Controllers.Dashboard
                             function create_fun = new function();
                             create_fun.fun_name = tr_f.fun_name;
                             create_fun.fun_code = tr_f.fun_code;
+                            create_fun.fun_price = tr_f.fun_price;
                             create_fun.package_id = package.pac_id;
 
                            
                             _functionservice.Create(create_fun);
                         }
-
                     }
+                    else
+                    {
+                        function create_fun = new function();
+                        create_fun.fun_name = tr_f.fun_name;
+                        create_fun.fun_code = tr_f.fun_code;
+                        create_fun.package_id = package.pac_id;
 
+
+                        _functionservice.Create(create_fun);
+                    }
                 }
                 foreach (function trs in lts_function_db)
                 {

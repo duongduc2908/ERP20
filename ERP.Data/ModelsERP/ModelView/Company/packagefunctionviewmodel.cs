@@ -22,5 +22,7 @@ namespace ERP.Data.ModelsERP.ModelView.Company
 
         [StringLength(250)]
         public string fun_code { get; set; }
+
+        public double? fun_price { get; set; }
     }
 }

@@ -9,7 +9,6 @@ namespace ERP.Data.ModelsERP
     [Table("bank")]
     public partial class bank
     {
-        
 
         [Key]
         public int ba_id { get; set; }

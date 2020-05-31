@@ -46,8 +46,14 @@ namespace ERP.Repository.Repositories
         public List<dropdown> GetAllDropDown(int? id)
         {
             List<dropdown> res = new List<dropdown>();
-            var list_company = _dbContext.banks.Where(x => x.bank_category_id == id).ToList();
-            foreach (var co in list_company)
+            List<bank> list_res = new List<bank>();
+            if (id != null)
+            {
+                list_res = _dbContext.banks.Where(x => x.bank_category_id == id ).ToList();
+            }
+            else list_res = _dbContext.banks.ToList();
+           
+            foreach (var co in list_res)
             {
                 dropdown dr = new dropdown();
                 //Do something
