@@ -357,6 +357,17 @@ namespace ERP.API.Controllers.Dashboard
                     response.Error = "sta_mobile";
                     return Ok(response);
                 }
+                if(staff.sta_identity_card != null)
+                {
+                    if (check_card(staff.sta_identity_card, null))
+                    {
+                        response.Code = HttpCode.NOT_FOUND;
+                        response.Message = "Đã có số chứng minh thư người dùng '" + staff.sta_identity_card + " ' trong hệ thống.";
+                        response.Error = "sta_identity_card";
+                        return Ok(response);
+                    }
+                }
+                
                 //Save staff to database
                 staff staff_create = new staff();
                 //Thong tin chung 
@@ -528,7 +539,7 @@ namespace ERP.API.Controllers.Dashboard
                 //save bonus staff
                 foreach (bonus_staffjson bo in staff.list_bonus)
                 {
-                    bonus_staff create = _mapper.Map<bonus_staff>(bo);
+                    bonus_staff create = new bonus_staff();
                     create.staff_id = staff_last.sta_id;
                     create.bos_content = bo.bos_content;
                     create.bos_note = bo.bos_note;
@@ -710,6 +721,18 @@ namespace ERP.API.Controllers.Dashboard
                     response.Error = "sta_mobile";
                     return Ok(response);
                 }
+                if(staff.sta_identity_card != null)
+                {
+                    if (check_card(staff.sta_identity_card, staff.sta_id))
+                    {
+                        response.Code = HttpCode.NOT_FOUND;
+                        response.Message = "Đã có chứng minh thư người dùng '" + staff.sta_mobile + " ' trong hệ thống.";
+                        response.Error = "sta_identity_card";
+                        return Ok(response);
+                    }
+                }
+                
+
                 //Update 
                 //Thong tin chung 
                 existstaff.sta_type_contact = staff.sta_type_contact;
@@ -1382,7 +1405,6 @@ namespace ERP.API.Controllers.Dashboard
                 {
                     fileName = FileExtension.SaveFileOnDiskStaff(fileData);
                 }
-                list_file_name.Add(fileName);
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
                 response.Data = fileName;
@@ -1892,6 +1914,23 @@ namespace ERP.API.Controllers.Dashboard
         {
             bool res = _staffservice.Exist(x => x.sta_mobile == _phone && _phone != null);
             return res;
+        }
+        private bool check_card(string _card, int? id = null)
+        {
+            if(id == null)
+            {
+                bool res = _staffservice.Exist(x => x.sta_identity_card == _card && _card != null);
+                return res;
+            }
+            else
+            {
+                List<staff> lts_st = _staffservice.GetAllIncluing().ToList();
+                staff update = _staffservice.Find(id);
+                lts_st.Remove(update);
+                bool res = lts_st.Exists(x => x.sta_mobile == _card && _card != null);
+                return res;
+            }
+            
         }
         private bool check_phone_update(string _phone, int sta_id)
         {
