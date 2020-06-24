@@ -44,7 +44,7 @@ namespace ERP.Repository.Repositories
             };
         }
 
-        public List<dropdown> GetAllDropDown(int? id)
+        public List<dropdown> GetAllDropDown(int? id, string search)
         {
             List<dropdown> res = new List<dropdown>();
             List<bank_branch> list_res = new List<bank_branch>();
@@ -53,6 +53,10 @@ namespace ERP.Repository.Repositories
                 list_res = _dbContext.bank_branch.Where(x => x.bank_id == id).ToList();
             }
             else list_res = _dbContext.bank_branch.ToList();
+            if(search != null)
+            {
+                list_res = _dbContext.bank_branch.Where(x => x.bbr_name.Trim().ToLower().Contains(search.Trim().ToLower())).ToList();
+            }
             
             foreach (var co in list_res)
             {

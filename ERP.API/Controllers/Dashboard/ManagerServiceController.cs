@@ -182,10 +182,16 @@ namespace ERP.API.Controllers.Dashboard
                     se_description = Convert.ToString(streamProvider.FormData["se_description"]),
                     service_category_id = Convert.ToInt32(streamProvider.FormData["service_category_id"]),
                     se_price = Convert.ToInt32(streamProvider.FormData["se_price"]),
-                    se_saleoff = Convert.ToInt32(streamProvider.FormData["se_saleoff"]),
                     se_type = Convert.ToByte(streamProvider.FormData["se_type"]),
                 };
-               
+                if (streamProvider.FormData["se_saleoff"] == null || streamProvider.FormData["se_saleoff"] == "" || streamProvider.FormData["se_saleoff"] == "null")
+                {
+                    serviceCreateViewModel.se_saleoff = null;
+                }
+                else
+                {
+                    serviceCreateViewModel.se_saleoff = Convert.ToInt32(streamProvider.FormData["se_saleoff"]);
+                }
                 // mapping view model to entity
                 var createdservice = _mapper.Map<service>(serviceCreateViewModel);
                 createdservice.company_id = BaseController.get_company_id_current();
@@ -250,9 +256,15 @@ namespace ERP.API.Controllers.Dashboard
                 existservice.se_description = Convert.ToString(streamProvider.FormData["se_description"]);
                 existservice.service_category_id = Convert.ToInt32(streamProvider.FormData["service_category_id"]);
                 existservice.se_price = Convert.ToInt32(streamProvider.FormData["se_price"]);
-                existservice.se_saleoff = Convert.ToInt32(streamProvider.FormData["se_saleoff"]);
                 existservice.se_type = Convert.ToByte(streamProvider.FormData["se_type"]);
-
+                if (streamProvider.FormData["se_saleoff"] == null || streamProvider.FormData["se_saleoff"] == "" || streamProvider.FormData["se_saleoff"] == "null")
+                {
+                    existservice.se_saleoff = null;
+                }
+                else
+                {
+                    existservice.se_saleoff = Convert.ToInt32(streamProvider.FormData["se_saleoff"]);
+                }
                 // save file
                 string fileName = "";
                 if (streamProvider.FileData.Count > 0)

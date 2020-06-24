@@ -80,21 +80,44 @@ namespace ERP.API.Controllers.Dashboard
 
         #region methods
 
+        //[HttpGet]
+        //[Route("api/staffs/all")]
+        //public IHttpActionResult Getstaffs()
+        //{
+        //    ResponseDataDTO<IEnumerable<staff>> response = new ResponseDataDTO<IEnumerable<staff>>();
+        //    try
+        //    {
+        //        response.Code = HttpCode.OK;
+        //        response.Message = MessageResponse.SUCCESS;
+        //        response.Data = _staffservice.GetAll();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+        //        response.Message = ex.Message;
+        //        response.Data = null;
+
+        //        Console.WriteLine(ex.ToString());
+        //    }
+
+        //    return Ok(response);
+        //}
         [HttpGet]
-        [Route("api/staffs/all")]
-        public IHttpActionResult Getstaffs()
+        [Route("api/staff/getall")]
+        public IHttpActionResult GetAllName()
         {
-            ResponseDataDTO<IEnumerable<staff>> response = new ResponseDataDTO<IEnumerable<staff>>();
+            ResponseDataDTO<List<dropdown>> response = new ResponseDataDTO<List<dropdown>>();
             try
             {
+                int company_id = BaseController.get_company_id_current();
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _staffservice.GetAll();
+                response.Data = _staffservice.GetAllDropdown(company_id);
             }
             catch (Exception ex)
             {
                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = ex.Message;
+                response.Message = MessageResponse.FAIL;
                 response.Data = null;
 
                 Console.WriteLine(ex.ToString());
@@ -357,7 +380,7 @@ namespace ERP.API.Controllers.Dashboard
                     response.Error = "sta_mobile";
                     return Ok(response);
                 }
-                if(staff.sta_identity_card != null)
+                if(staff.sta_identity_card != null )
                 {
                     if (check_card(staff.sta_identity_card, null))
                     {
@@ -424,8 +447,8 @@ namespace ERP.API.Controllers.Dashboard
                 }
                 staff_create.comment = staff.comment;
                 staff_create.achieved = staff.achieved;
+                pass_word = sta_pass;
                 staff_create.sta_password = HashMd5.convertMD5(sta_pass);
-                pass_word = staff_create.sta_password;
                 staff_create.sta_created_date = DateTime.Now;
                 staff_create.company_id = BaseController.get_company_id_current();
                 //Lần đầu đăng nhập login == true
@@ -1917,17 +1940,19 @@ namespace ERP.API.Controllers.Dashboard
         }
         private bool check_card(string _card, int? id = null)
         {
-            if(id == null)
+            _card = _card.Trim();
+            if (id == null)
             {
-                bool res = _staffservice.Exist(x => x.sta_identity_card == _card && _card != null);
+                bool res = _staffservice.Exist(x => x.sta_identity_card == _card && _card != null && _card != "" );
                 return res;
             }
             else
             {
+               
                 List<staff> lts_st = _staffservice.GetAllIncluing().ToList();
                 staff update = _staffservice.Find(id);
                 lts_st.Remove(update);
-                bool res = lts_st.Exists(x => x.sta_mobile == _card && _card != null);
+                bool res = lts_st.Exists(x => x.sta_mobile == _card && _card != null && _card != "");
                 return res;
             }
             
@@ -2064,13 +2089,14 @@ namespace ERP.API.Controllers.Dashboard
             {
                 // Sử dụng thuật toán trong stack hay hon nhưng chưa có thời gian 
                 var assignment = staff_update;
-                List<customer> lts_cus = _customerservice.GetAllIncluing(x => x.cu_curator_id == null).ToList();
+                var company_current_id = BaseController.get_company_id_current();
+                List<customer> lts_cus = _customerservice.GetAllIncluing(x => x.cu_curator_id == null && x.company_id == company_current_id).ToList();
                 Stack<customer> myStack = new Stack<customer>(lts_cus);
                 int total_customer = lts_cus.Count(); // so luong khach hang 
                 int number = assignment.list_staff_id.Length; //So luong satff
                 int skip = total_customer / number;
                 int mod = total_customer % number;
-                if (assignment.customer_group_id == 0)
+                if (assignment.customer_group_id == 0 && assignment.cu_type_id == 0)
                 {
                     if (number < total_customer)
                     {
@@ -2118,7 +2144,19 @@ namespace ERP.API.Controllers.Dashboard
                 }
                 else
                 {
-                    lts_cus = lts_cus.Where(x => x.customer_group_id == assignment.customer_group_id).ToList();
+                    if(assignment.customer_group_id == 0)
+                    {
+                        lts_cus = lts_cus.ToList();
+                    }
+                    else
+                    {
+                        lts_cus = lts_cus.Where(x => x.customer_group_id == assignment.customer_group_id).ToList();
+                    }
+                    if(assignment.cu_type_id != 0)
+                    {
+                        lts_cus = lts_cus.Where(x => x.cu_type == assignment.cu_type_id).ToList();
+                    }
+                    
                     myStack = new Stack<customer>(lts_cus);
                     total_customer = lts_cus.Count();
                     skip = total_customer / number;

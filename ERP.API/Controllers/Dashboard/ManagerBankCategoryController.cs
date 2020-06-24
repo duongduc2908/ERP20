@@ -38,14 +38,14 @@ namespace ERP.API.Controllers.Dashboard
         #region methods
         [HttpGet]
         [Route("api/bank_category/getall")]
-        public IHttpActionResult GetAllName()
+        public IHttpActionResult GetAllName(string search)
         {
             ResponseDataDTO<List<dropdown>> response = new ResponseDataDTO<List<dropdown>>();
             try
             {
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _bankcategoryservice.GetAllDropDown();
+                response.Data = _bankcategoryservice.GetAllDropDown(search);
             }
             catch (Exception ex)
             {

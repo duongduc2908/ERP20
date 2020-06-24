@@ -758,5 +758,18 @@ namespace ERP.Repository.Repositories
             }
             return true;
         }
+        public List<dropdown> GetAllDropdown(int company_id)
+        {
+            List<dropdown> res = new List<dropdown>();
+            List<staff> lts_s = _dbContext.staffs.Where(x => x.company_id == company_id).ToList();
+            foreach (staff so in lts_s)
+            {
+                dropdown dr = new dropdown();
+                dr.id = so.sta_id;
+                dr.name = so.sta_fullname;
+                res.Add(dr);
+            }
+            return res;
+        }
     }
 }

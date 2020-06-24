@@ -26,5 +26,6 @@ namespace ERP.Repository.Repositories.IRepositories
         bool Check_location(undertaken_location un);
         List<dropdown> GetInforManager();
         statisticstaffviewmodel GetInfor(int staff_id);
+        List<dropdown> GetAllDropdown(int company_id);
     }
 }

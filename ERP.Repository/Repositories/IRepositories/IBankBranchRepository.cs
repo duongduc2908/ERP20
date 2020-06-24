@@ -10,6 +10,6 @@ namespace ERP.Repository.Repositories.IRepositories
     public interface IBankBranchRepository : IGenericRepository<bank_branch>
     {
         PagedResults<bank_branch> CreatePagedResults(int pageNumber, int pageSize);
-        List<dropdown> GetAllDropDown(int? id);
+        List<dropdown> GetAllDropDown(int? id, string search);
     }
 }

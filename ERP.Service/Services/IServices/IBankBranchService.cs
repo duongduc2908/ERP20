@@ -9,6 +9,6 @@ namespace ERP.Service.Services.IServices
     public interface IBankBranchService : IGenericService<bank_branch>
     {
         PagedResults<bank_branch> CreatePagedResults(int pageNumber, int pageSize);
-        List<dropdown> GetAllDropDown(int? id);
+        List<dropdown> GetAllDropDown(int? id,string name);
     }
 }

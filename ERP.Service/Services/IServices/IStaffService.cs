@@ -28,5 +28,6 @@ namespace ERP.Service.Services.IServices
        
         List<dropdown> GetInforManager();
         statisticstaffviewmodel GetInfor(int staff_id);
+        List<dropdown> GetAllDropdown(int company_id);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using ERP.Common.GenericService;
 using ERP.Data.ModelsERP;
+using ERP.Data.ModelsERP.ModelView;
 using ERP.Repository.Repositories.IRepositories;
 using ERP.Service.Services.IServices;
 using System;
@@ -16,5 +17,10 @@ namespace ERP.Service.Services
         {
             this._repository = repository;
         }
+        public List<dropdown> GetAllDropdown(int company_id)
+        {
+            return this._repository.GetAllDropdown(company_id);
+        }
+
     }
 }

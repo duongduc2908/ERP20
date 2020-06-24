@@ -42,7 +42,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>bin\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -255,6 +255,7 @@
     <Compile Include="Controllers\Dashboard\ManagerCompanyController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerCustomerGroupController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerCustomerOrderController.cs" />
+    <Compile Include="Controllers\Dashboard\ManagerCustomerTypeController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerFieldController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerPackageController.cs" />
     <Compile Include="Controllers\Dashboard\ManagerRelativesStaffController.cs" />
@@ -487,6 +488,7 @@
     <Folder Include="Views\ManagerCompany\" />
     <Folder Include="Views\ManagerCustomerGroup\" />
     <Folder Include="Views\ManagerCustomerOrder\" />
+    <Folder Include="Views\ManagerCustomerType\" />
     <Folder Include="Views\ManagerCustomer\" />
     <Folder Include="Views\ManagerDashboard\" />
     <Folder Include="Views\ManagerDepartment\" />

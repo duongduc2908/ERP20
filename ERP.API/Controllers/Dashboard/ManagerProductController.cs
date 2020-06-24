@@ -253,10 +253,11 @@ namespace ERP.API.Controllers.Dashboard
                     pu_unit = Convert.ToByte(streamProvider.FormData["pu_unit"]),
 
                 };
+                DateTime? newdate = null;
                 //Kiem tra cac truong con lại 
                 if (streamProvider.FormData["pu_update_date"] == null)
                 {
-                    productCreateViewModel.pu_update_date = null;
+                    productCreateViewModel.pu_update_date = newdate;
                 }
                 else
                 {
@@ -264,14 +265,14 @@ namespace ERP.API.Controllers.Dashboard
                 }
                 if (streamProvider.FormData["pu_expired_date"] == null || streamProvider.FormData["pu_expired_date"] == "")
                 {
-                    productCreateViewModel.pu_expired_date = null;
+                    productCreateViewModel.pu_expired_date = newdate;
                 }
                 else
                 {
                     productCreateViewModel.pu_expired_date = Convert.ToDateTime(streamProvider.FormData["pu_expired_date"]);
                 }
                 
-                if (streamProvider.FormData["pu_saleoff"] == null || streamProvider.FormData["pu_saleoff"] == "null")
+                if (streamProvider.FormData["pu_saleoff"] == null || streamProvider.FormData["pu_saleoff"] == "" || streamProvider.FormData["pu_saleoff"] == "null")
                 {
                     productCreateViewModel.pu_saleoff = null;
                 }
@@ -280,7 +281,7 @@ namespace ERP.API.Controllers.Dashboard
                     productCreateViewModel.pu_saleoff = Convert.ToInt32(streamProvider.FormData["pu_saleoff"]);
                 }
 
-                if (streamProvider.FormData["pu_weight"] == null)
+                if (streamProvider.FormData["pu_weight"] == null || streamProvider.FormData["pu_weight"] == "" || streamProvider.FormData["pu_weight"] == "null")
                 {
                     productCreateViewModel.pu_weight = null;
                 }
@@ -289,7 +290,7 @@ namespace ERP.API.Controllers.Dashboard
                     productCreateViewModel.pu_weight = Convert.ToInt32(streamProvider.FormData["pu_weight"]);
                 }
 
-                if (streamProvider.FormData["pu_description"] == null)
+                if (streamProvider.FormData["pu_description"] == null || streamProvider.FormData["pu_description"] == "" || streamProvider.FormData["pu_description"] == "null")
                 {
                     productCreateViewModel.pu_description = null;
                 }
@@ -298,7 +299,7 @@ namespace ERP.API.Controllers.Dashboard
                     productCreateViewModel.pu_description = Convert.ToString(streamProvider.FormData["pu_description"]);
                 }
 
-                if (streamProvider.FormData["pu_short_description"] == null)
+                if (streamProvider.FormData["pu_short_description"] == null || streamProvider.FormData["pu_short_description"] == "" || streamProvider.FormData["pu_short_description"] == "null")
                 {
                     productCreateViewModel.pu_short_description = null;
                 }
@@ -480,18 +481,16 @@ namespace ERP.API.Controllers.Dashboard
                     productUpdateViewModel.pu_expired_date = Convert.ToDateTime(streamProvider.FormData["pu_expired_date"]);
                 }
 
-                if (streamProvider.FormData["pu_saleoff"] == null || streamProvider.FormData["pu_saleoff"] == "null")
+                if (streamProvider.FormData["pu_saleoff"] == null || streamProvider.FormData["pu_saleoff"] == "")
                 {
-                    
                     productUpdateViewModel.pu_saleoff = null;
-                    
                 }
                 else
                 {
                     productUpdateViewModel.pu_saleoff = Convert.ToInt32(streamProvider.FormData["pu_saleoff"]);
                 }
 
-                if (streamProvider.FormData["pu_weight"] == null || streamProvider.FormData["pu_weight"] == "null")
+                if (streamProvider.FormData["pu_weight"] == null || streamProvider.FormData["pu_weight"] == "")
                 {
                     productUpdateViewModel.pu_weight = null;
                 }
@@ -500,7 +499,7 @@ namespace ERP.API.Controllers.Dashboard
                     productUpdateViewModel.pu_weight = Convert.ToInt32(streamProvider.FormData["pu_weight"]);
                 }
 
-                if (streamProvider.FormData["pu_description"] == null)
+                if (streamProvider.FormData["pu_description"] == null || streamProvider.FormData["pu_description"] == "")
                 {
                     productUpdateViewModel.pu_description = null;
                 }
@@ -509,7 +508,7 @@ namespace ERP.API.Controllers.Dashboard
                     productUpdateViewModel.pu_description = Convert.ToString(streamProvider.FormData["pu_description"]);
                 }
 
-                if (streamProvider.FormData["pu_short_description"] == null)
+                if (streamProvider.FormData["pu_short_description"] == null || streamProvider.FormData["pu_short_description"] == "")
                 {
                     productUpdateViewModel.pu_short_description = null;
                 }

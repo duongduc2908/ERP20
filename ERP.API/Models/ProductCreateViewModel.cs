@@ -11,8 +11,6 @@ namespace ERP.API.Models
     {
         public ProductCreateViewModel() { }
 
-        
-
         [StringLength(45)]
         public string pu_code { get; set; }
 

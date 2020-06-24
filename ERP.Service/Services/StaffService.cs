@@ -66,6 +66,10 @@ namespace ERP.Service.Services
         {
             return this._repository.GetInfor(staff_id);
         }
+        public List<dropdown> GetAllDropdown(int company_id)
+        {
+            return this._repository.GetAllDropdown(company_id);
+        }
 
         
     }

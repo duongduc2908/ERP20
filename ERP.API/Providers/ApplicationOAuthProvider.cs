@@ -31,7 +31,9 @@ namespace ERP.API.Providers
             var hash_pass = HashMd5.convertMD5(context.Password.Trim());
             var url_thumbnai = "";
             staff staff_user = new staff();
+            group_role gr_role = new group_role();
             staff_user = _dbContext.staffs.FirstOrDefault(t => t.sta_username.Contains(context.UserName.Trim()) && t.sta_password.Contains(hash_pass));
+            gr_role = _dbContext.group_role.FirstOrDefault(t => t.gr_id==staff_user.group_role_id);
             companyres = new CompanyRepository(_dbContext);
             var company = companyres.GetById(Convert.ToInt32(staff_user.company_id),true);
             if (staff_user == null)
@@ -49,7 +51,7 @@ namespace ERP.API.Providers
                 url_thumbnai = staff_user.sta_thumbnai;
             }
             var role="";
-            if (staff_user.group_role_id == 1)
+            if (gr_role.gr_name.Contains("admin"))
             {
                 role = Roles.ADMIN;
             }
