@@ -33,7 +33,7 @@ namespace ERP.Repository.Repositories
                 list_res = _dbContext.customer_group.Where(x => x.company_id == company_id).ToList();
             }
             else list_res = _dbContext.customer_group.Where(x => x.cg_id == cg_id && x.company_id == company_id).ToList();
-            if(name != null) list_res = _dbContext.customer_group.Where(x => x.cg_name.Contains(name)).ToList();
+            if(name != null) list_res = list_res.Where(x => x.cg_name.ToLower().Contains(name.ToLower())).ToList();
             
             var total = list_res.Count();
             list = list_res.OrderByDescending(t => t.cg_id).Skip(skipAmount).Take(pageSize).ToList();

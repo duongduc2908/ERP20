@@ -32,7 +32,7 @@ namespace ERP.API.Providers
             var url_thumbnai = "";
             staff staff_user = new staff();
             group_role gr_role = new group_role();
-            staff_user = _dbContext.staffs.FirstOrDefault(t => t.sta_username.Contains(context.UserName.Trim()) && t.sta_password.Contains(hash_pass));
+            staff_user = _dbContext.staffs.FirstOrDefault(t => t.sta_username.Equals(context.UserName.Trim()) && t.sta_password.Contains(hash_pass));
             gr_role = _dbContext.group_role.FirstOrDefault(t => t.gr_id==staff_user.group_role_id);
             companyres = new CompanyRepository(_dbContext);
             var company = companyres.GetById(Convert.ToInt32(staff_user.company_id),true);
@@ -41,12 +41,17 @@ namespace ERP.API.Providers
                 context.SetError("invalid_grant", "Provided staff_username and password is incorrect");
                 return;
             }
-            else if(staff_user.sta_status == 0)
+            else if(staff_user.sta_status == 2)
             {
                 context.SetError("Error", "Tài khoản đã bị khóa.");
                 return;
             }
-            if(staff_user.sta_thumbnai != null)
+            else if(staff_user.sta_working_status == 2)
+            {
+                context.SetError("Error", "Nhân sự đã nghỉ việc.");
+                return;
+            }
+            if (staff_user.sta_thumbnai != null)
             {
                 url_thumbnai = staff_user.sta_thumbnai;
             }

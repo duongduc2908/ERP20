@@ -296,7 +296,7 @@ namespace ERP.API.Controllers.Dashboard
                 // mapping view model to entity
                 var update_customer_group = _mapper.Map<customer_group>(customerGroupUpdateViewModel);
                 // save file
-
+                update_customer_group.company_id = BaseController.get_company_id_current();
 
 
                 // save new product

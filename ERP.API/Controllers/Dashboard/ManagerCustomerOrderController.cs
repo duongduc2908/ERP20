@@ -691,7 +691,7 @@ namespace ERP.API.Controllers.Dashboard
                 var op_last1 = _customer_orderservice.GetLast();
                 if (op_last1 == null) createdcustomer_order.cuo_code = Utilis.CreateCode("ORP", 0, 7);
                 else createdcustomer_order.cuo_code = Utilis.CreateCode("ORP", op_last1.cuo_id, 7);
-
+                createdcustomer_order.company_id = BaseController.get_company_id_current();
                 // save new customer_order
                 _customer_orderservice.Create(createdcustomer_order);
                 var op_last = _customer_orderservice.GetLast();
@@ -1116,7 +1116,7 @@ namespace ERP.API.Controllers.Dashboard
                 var op_temp = _customer_orderservice.GetLast();
                 if (op_temp == null) customer_order_service.cuo_code = "ORS00000";
                 else customer_order_service.cuo_code = Utilis.CreateCodeByCode("ORS", op_temp.cuo_code, 8);
-
+                customer_order_service.company_id = BaseController.get_company_id_current();
                 // save new customer_order
                 _customer_orderservice.Create(customer_order_service);
                 var op_last = _customer_orderservice.GetLast();
@@ -1600,6 +1600,7 @@ namespace ERP.API.Controllers.Dashboard
                 customer_order_service.cuo_color_show = c.cuo_color_show;
                 customer_order_service.cuo_infor_time = c.cuo_infor_time;
                 customer_order_service.cuo_address = c.cuo_address;
+                customer_order_service.company_id = BaseController.get_company_id_current();
                 // save new customer_order
                 _customer_orderservice.Update(customer_order_service, customer_order_service.cuo_id);
                 #region update service time
@@ -1662,6 +1663,7 @@ namespace ERP.API.Controllers.Dashboard
                             order_service create_trs = new order_service();
                             create_trs.customer_order_id = c.cuo_id;
                             create_trs.service_id = _id;
+
                             _orderserviceservice.Create(create_trs);
                         }
 
@@ -2151,7 +2153,7 @@ namespace ERP.API.Controllers.Dashboard
                 existscustomerorder.cuo_discount = c.cuo_discount;
                 existscustomerorder.cuo_status = c.cuo_status;
                 existscustomerorder.cuo_address = c.cuo_address;
-
+                existscustomerorder.company_id = BaseController.get_company_id_current();
 
 
 
@@ -2179,7 +2181,6 @@ namespace ERP.API.Controllers.Dashboard
 
 
                     var createdorderproduct = _mapper.Map<order_product>(orderCreateViewModel);
-
                     _order_productservice.Create(createdorderproduct);
                 }
 
@@ -2437,6 +2438,7 @@ namespace ERP.API.Controllers.Dashboard
             return Ok(response);
         }
         #endregion
+
         #region["Import"] 
         [HttpPost]
         [Route("api/customer_order_product/import")]
@@ -2479,7 +2481,7 @@ namespace ERP.API.Controllers.Dashboard
                     }
                 }
                 var list = new List<customerorderproductview>();
-                fileName = "C:/inetpub/wwwroot/coerp" + fileName;
+                fileName = "D:/coerp" + fileName;
                 //fileName = "D:/ERP20/ERP.API" + fileName;
                 var dataset = ExcelImport.ImportExcelXLS(fileName, true);
                 DataTable table = (DataTable)dataset.Tables[0];
@@ -2591,6 +2593,7 @@ namespace ERP.API.Controllers.Dashboard
             }
         }
         #endregion
+
         #region["DicColums"]
         private Dictionary<string, string> GetImportDicColums()
         {

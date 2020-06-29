@@ -14,7 +14,7 @@ namespace ERP.API.Models
         [StringLength(10)]
         public string se_code { get; set; }
 
-        public byte? se_type { get; set; }
+        public int? se_type { get; set; }
 
         [StringLength(100)]
         public string se_name { get; set; }

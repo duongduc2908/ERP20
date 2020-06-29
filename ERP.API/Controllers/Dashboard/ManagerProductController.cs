@@ -523,7 +523,7 @@ namespace ERP.API.Controllers.Dashboard
                 
                 // mapping view model to entity
                 var updatedproduct = _mapper.Map<product>(productUpdateViewModel);
-
+                updatedproduct.company_id = BaseController.get_company_id_current();
 
 
                 // update product
@@ -698,6 +698,7 @@ namespace ERP.API.Controllers.Dashboard
             return Ok(response);
         }
         #endregion
+
         #region["Import Excel"]
         [HttpPost]
         [Route("api/product/import")]
@@ -742,7 +743,7 @@ namespace ERP.API.Controllers.Dashboard
                     }
                 }
                 var list = new List<productview>();
-                fileName = "C:/inetpub/wwwroot/coerp" + fileName;
+                fileName = "D:/coerp" + fileName;
                 //fileName = "D:/ERP20/ERP.API" + fileName;
                 var dataset = ExcelImport.ImportExcelXLS(fileName, true);
                 DataTable table = (DataTable)dataset.Tables[0];
@@ -893,6 +894,7 @@ namespace ERP.API.Controllers.Dashboard
             }
         }
         #endregion
+
         #region["Export Template"]
         [HttpGet]
         [Route("api/product/export_template")]
@@ -979,6 +981,7 @@ namespace ERP.API.Controllers.Dashboard
             }
         }
         #endregion
+
         #region dispose
 
         protected override void Dispose(bool disposing)

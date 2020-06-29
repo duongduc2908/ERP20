@@ -189,6 +189,13 @@ namespace ERP.Repository.Repositories
             //lay ra thong tin khach hang 
             var cus = _dbContext.customers.Where(c => c.cu_id == tran.customer_id).FirstOrDefault();
             var customerview = _mapper.Map<transactioncustomerviewmodel>(cus);
+            //Lay ra so dien thoai
+            var cu_mobile = _dbContext.customer_phones.Where(x => x.customer_id == cus.cu_id && x.cp_type == 1).FirstOrDefault();
+            if (cu_mobile != null) customerview.cu_mobile =cu_mobile.cp_phone_number;
+
+            //Lay ra dia chi 
+            var cu_address = _dbContext.ship_address.Where(x => x.customer_id == cus.cu_id && x.sha_flag_center == 1).FirstOrDefault();
+            if (cu_address != null) customerview.cu_address = String.Concat(cu_address.sha_detail, "-", cu_address.sha_ward, "-", cu_address.sha_district, "-", cu_address.sha_province);
             var sources = _dbContext.sources.FirstOrDefault(x => x.src_id == cus.source_id);
             var customergroup = _dbContext.customer_group.FirstOrDefault(x => x.cg_id == cus.customer_group_id);
             var curator = _dbContext.staffs.Find(customerview.cu_curator_id);
@@ -285,7 +292,7 @@ namespace ERP.Repository.Repositories
                     }
 
                     add.cuo_address = cuo.cuo_address;
-
+                    add.cuo_date = cuo.cuo_date;
                     add.op_total_value = ord.op_total_value;
                     list_add_order_product.Add(add);
                 }

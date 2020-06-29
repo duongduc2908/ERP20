@@ -80,28 +80,6 @@ namespace ERP.API.Controllers.Dashboard
 
         #region methods
 
-        //[HttpGet]
-        //[Route("api/staffs/all")]
-        //public IHttpActionResult Getstaffs()
-        //{
-        //    ResponseDataDTO<IEnumerable<staff>> response = new ResponseDataDTO<IEnumerable<staff>>();
-        //    try
-        //    {
-        //        response.Code = HttpCode.OK;
-        //        response.Message = MessageResponse.SUCCESS;
-        //        response.Data = _staffservice.GetAll();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-        //        response.Message = ex.Message;
-        //        response.Data = null;
-
-        //        Console.WriteLine(ex.ToString());
-        //    }
-
-        //    return Ok(response);
-        //}
         [HttpGet]
         [Route("api/staff/getall")]
         public IHttpActionResult GetAllName()
@@ -390,7 +368,27 @@ namespace ERP.API.Controllers.Dashboard
                         return Ok(response);
                     }
                 }
-                
+                if (staff.sta_health_card != null)
+                {
+                    if (check_health_card(staff.sta_health_card, null))
+                    {
+                        response.Code = HttpCode.NOT_FOUND;
+                        response.Message = "Đã có số bảo hiểm xã hội người dùng '" + staff.sta_health_card + " ' trong hệ thống.";
+                        response.Error = "sta_health_card";
+                        return Ok(response);
+                    }
+                }
+                if (staff.sta_tax_code!=null)
+                {
+                    if (check_tax_code(staff.sta_tax_code))
+                    {
+                        response.Code = HttpCode.NOT_FOUND;
+                        response.Message = "Đã có mã số thuế người dùng '" + staff.sta_tax_code + " ' trong hệ thống.";
+                        response.Error = "sta_tax_code";
+                        return Ok(response);
+                    }
+                }
+
                 //Save staff to database
                 staff staff_create = new staff();
                 //Thong tin chung 
@@ -744,17 +742,36 @@ namespace ERP.API.Controllers.Dashboard
                     response.Error = "sta_mobile";
                     return Ok(response);
                 }
-                if(staff.sta_identity_card != null)
+                if (staff.sta_health_card != null)
+                {
+                    if (check_health_card(staff.sta_health_card, staff.sta_id))
+                    {
+                        response.Code = HttpCode.NOT_FOUND;
+                        response.Message = "Đã có số bảo hiểm xã hội người dùng '" + staff.sta_health_card + " ' trong hệ thống.";
+                        response.Error = "sta_health_card";
+                        return Ok(response);
+                    }
+                }
+                if (staff.sta_identity_card != null)
                 {
                     if (check_card(staff.sta_identity_card, staff.sta_id))
                     {
                         response.Code = HttpCode.NOT_FOUND;
-                        response.Message = "Đã có chứng minh thư người dùng '" + staff.sta_mobile + " ' trong hệ thống.";
+                        response.Message = "Đã có chứng minh thư người dùng '" + staff.sta_identity_card + " ' trong hệ thống.";
                         response.Error = "sta_identity_card";
                         return Ok(response);
                     }
                 }
-                
+                if (staff.sta_tax_code != null)
+                {
+                    if (check_tax_code(staff.sta_tax_code, staff.sta_id))
+                    {
+                        response.Code = HttpCode.NOT_FOUND;
+                        response.Message = "Đã có mã số thuế người dùng '" + staff.sta_tax_code + " ' trong hệ thống.";
+                        response.Error = "sta_tax_code";
+                        return Ok(response);
+                    }
+                }
 
                 //Update 
                 //Thong tin chung 
@@ -1485,7 +1502,7 @@ namespace ERP.API.Controllers.Dashboard
                     }
                 }
                 var list = new List<staffview>();
-                fileName = "C:/inetpub/wwwroot/coerp" + fileName;
+                fileName = "D:/coerp" + fileName;
                 //fileName = "D:/ERP20/ERP.API" + fileName;
                 var dataset = ExcelImport.ImportExcelXLS(fileName, true);
                 DataTable table = (DataTable)dataset.Tables[0];
@@ -1938,6 +1955,26 @@ namespace ERP.API.Controllers.Dashboard
             bool res = _staffservice.Exist(x => x.sta_mobile == _phone && _phone != null);
             return res;
         }
+
+        private bool check_health_card(string _card, int? id = null)
+        {
+            _card = _card.Trim();
+            if (id == null)
+            {
+                bool res = _staffservice.Exist(x => x.sta_health_card == _card && _card != null && _card != "");
+                return res;
+            }
+            else
+            {
+
+                List<staff> lts_st = _staffservice.GetAllIncluing().ToList();
+                staff update = _staffservice.Find(id);
+                lts_st.Remove(update);
+                bool res = lts_st.Exists(x => x.sta_health_card == _card && _card != null && _card != "");
+                return res;
+            }
+
+        }
         private bool check_card(string _card, int? id = null)
         {
             _card = _card.Trim();
@@ -1952,10 +1989,29 @@ namespace ERP.API.Controllers.Dashboard
                 List<staff> lts_st = _staffservice.GetAllIncluing().ToList();
                 staff update = _staffservice.Find(id);
                 lts_st.Remove(update);
-                bool res = lts_st.Exists(x => x.sta_mobile == _card && _card != null && _card != "");
+                bool res = lts_st.Exists(x => x.sta_identity_card == _card && _card != null && _card != "");
                 return res;
             }
             
+        }
+        private bool check_tax_code(string _tax_code,int? id = null)
+        {
+            _tax_code = _tax_code.Trim();
+            if (id == null)
+            {
+                bool res = _staffservice.Exist(x => x.sta_tax_code == _tax_code && _tax_code != null && _tax_code != "");
+                return res;
+            }
+            else
+            {
+
+                List<staff> lts_st = _staffservice.GetAllIncluing().ToList();
+                staff update = _staffservice.Find(id);
+                lts_st.Remove(update);
+                bool res = lts_st.Exists(x => x.sta_tax_code == _tax_code && _tax_code != null && _tax_code != "");
+                return res;
+            }
+
         }
         private bool check_phone_update(string _phone, int sta_id)
         {

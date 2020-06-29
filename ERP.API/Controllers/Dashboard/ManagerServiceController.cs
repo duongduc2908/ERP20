@@ -182,7 +182,7 @@ namespace ERP.API.Controllers.Dashboard
                     se_description = Convert.ToString(streamProvider.FormData["se_description"]),
                     service_category_id = Convert.ToInt32(streamProvider.FormData["service_category_id"]),
                     se_price = Convert.ToInt32(streamProvider.FormData["se_price"]),
-                    se_type = Convert.ToByte(streamProvider.FormData["se_type"]),
+                    se_type = Convert.ToInt32(streamProvider.FormData["se_type"]),
                 };
                 if (streamProvider.FormData["se_saleoff"] == null || streamProvider.FormData["se_saleoff"] == "" || streamProvider.FormData["se_saleoff"] == "null")
                 {
@@ -256,7 +256,7 @@ namespace ERP.API.Controllers.Dashboard
                 existservice.se_description = Convert.ToString(streamProvider.FormData["se_description"]);
                 existservice.service_category_id = Convert.ToInt32(streamProvider.FormData["service_category_id"]);
                 existservice.se_price = Convert.ToInt32(streamProvider.FormData["se_price"]);
-                existservice.se_type = Convert.ToByte(streamProvider.FormData["se_type"]);
+                existservice.se_type = Convert.ToInt32(streamProvider.FormData["se_type"]);
                 if (streamProvider.FormData["se_saleoff"] == null || streamProvider.FormData["se_saleoff"] == "" || streamProvider.FormData["se_saleoff"] == "null")
                 {
                     existservice.se_saleoff = null;

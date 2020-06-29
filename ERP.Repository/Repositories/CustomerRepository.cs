@@ -477,7 +477,7 @@ namespace ERP.Repository.Repositories
             {
                 list = _dbContext.customers.Where(x=> x.company_id == company_id).ToList();
             }
-            else list = _dbContext.customers.Where(x => x.cu_fullname.Contains(name)&& x.company_id == company_id).ToList();
+            else list = _dbContext.customers.Where(x => x.cu_fullname.ToLower().Contains(name.ToLower())&& x.company_id == company_id).ToList();
             if (source_id != null)
             {
                 list = list.Where(x => x.source_id == source_id).ToList();

@@ -797,7 +797,7 @@ namespace ERP.API.Controllers.Dashboard
                     }
                 }
                 var list = new List<customerviewexport>();
-                fileName = "C:/inetpub/wwwroot/coerp" + fileName;
+                fileName = "D:/coerp" + fileName;
                 //fileName = "D:/ERP20/ERP.API" + fileName;
                 var dataset = ExcelImport.ImportExcelXLS(fileName, true);
                 DataTable table = (DataTable)dataset.Tables[0];
