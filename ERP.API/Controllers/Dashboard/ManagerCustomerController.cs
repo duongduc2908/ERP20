@@ -431,8 +431,8 @@ namespace ERP.API.Controllers.Dashboard
                
                 //Lấy ra bản ghi cuối cùng tạo mã code 
                 var x = _customerservice.GetLast();
-                if (x == null) customer_create.cu_code = "KH000000";
-                else customer_create.cu_code = Utilis.CreateCodeByCode("KH", x.cu_code, 8);
+                if (x == null) customer_create.cu_code = "KH00000";
+                else customer_create.cu_code = Utilis.CreateCodeByCode("KH", x.cu_code, 7);
                 
                 customer_create.cu_create_date = DateTime.Now;
                 customer_create.staff_id = BaseController.get_id_current();

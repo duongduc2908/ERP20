@@ -15,7 +15,7 @@ namespace ERP.Service.Services.IServices
     public interface ICustomerGroupService : IGenericService<customer_group>
     {
         PagedResults<customergroupviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? cg_id, string name,int company_id);
-        List<piechartview> GetPieChart();
+        List<piechartview> GetPieChart(int commpanyid);
 
         bool CheckUniqueName(string name,int id);
         List<statisticrevenueviewmodel> GetRevenueCustomerGroup(int staff_id);

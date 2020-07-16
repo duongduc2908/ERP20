@@ -25,9 +25,9 @@ namespace ERP.Service.Services
         {
             return this._repository.CreatePagedResults(pageNumber, pageSize);
         }
-        public PagedResults<transactionviewmodel> GetAllPageSearch(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name,int company_id)
+        public PagedResults<transactionviewmodel> GetAllPageSearch(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name,int company_id, int curr_id)
         {
-            return this._repository.GetAllPageSearch(pageNumber:pageNumber, pageSize:pageSize,start_date, end_date, search_name,company_id);
+            return this._repository.GetAllPageSearch(pageNumber:pageNumber, pageSize:pageSize,start_date, end_date, search_name,company_id,curr_id);
         }
       
         public List<dropdown> GetTransactionType(int company_id)

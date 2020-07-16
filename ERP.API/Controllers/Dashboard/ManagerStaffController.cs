@@ -22,6 +22,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.Security;
@@ -580,6 +581,7 @@ namespace ERP.API.Controllers.Dashboard
                     create.ast_filename = at.ast_filename;
                     create.ast_link = at.ast_link;
                     create.ast_note = at.ast_note;
+                   
                     _attachmentService.Create(create);
                 }
                 // return response
@@ -1183,11 +1185,22 @@ namespace ERP.API.Controllers.Dashboard
                             {
                                 //update
                                 attachment exist = _attachmentService.Find(_id);
+                                //Nếu ảnh cũ khác ảnh mới thì xóa ảnh cũ
+                                if (exist.ast_link != ul_f.ast_link)
+                                {
+                                    var file_old = Path.Combine(HostingEnvironment.MapPath("/"),exist.ast_link);
+                                    //file_old = "D:/ERP20/ERP.API" + file_old;
+                                    file_old = "D:/coerp" + file_old;
+                                    if (File.Exists(file_old))
+                                    {
+                                        File.Delete(file_old);
+                                    }
+                                }
                                 exist.ast_description = ul_f.ast_description;
                                 exist.ast_filename = ul_f.ast_filename;
                                 exist.ast_link = ul_f.ast_link;
                                 exist.ast_note = ul_f.ast_note;
-
+                               
                                 _attachmentService.Update(exist, exist.ast_id);
                                 lts_at_db.Remove(_attachmentService.Find(ul.ast_id));
                                 break;
@@ -1208,6 +1221,13 @@ namespace ERP.API.Controllers.Dashboard
                 }
                 foreach (attachment ul_d in lts_at_db)
                 {
+                    //Xóa file đính kèm
+                    var file_old = Path.Combine(HostingEnvironment.MapPath("/"), ul_d.ast_link);
+                    file_old = "D:/coerp" + file_old;
+                    if (File.Exists(file_old))
+                    {
+                        File.Delete(file_old);
+                    }
                     _attachmentService.Delete(ul_d);
                 }
                 // return response
@@ -1250,10 +1270,8 @@ namespace ERP.API.Controllers.Dashboard
                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
                 response.Message = ex.Message;
                 response.Data = null;
-
                 return Ok(response);
             }
-
         }
 
         [HttpDelete]
@@ -1420,6 +1438,7 @@ namespace ERP.API.Controllers.Dashboard
             }
         }
         #endregion
+
         #region["Update File"]
         [HttpPut]
         [Route("api/attachment/update_file")]
@@ -1530,7 +1549,7 @@ namespace ERP.API.Controllers.Dashboard
                             return Ok(response);
                         }
                         var code = _staffservice.GetAllIncluing(t => t.sta_code.Equals(i.sta_code)).FirstOrDefault();
-                        if (us != null)
+                        if (code != null)
                         {
                             exitsData = "Đã có ma '" + i.sta_code + "' tồn tại trong cơ sở dữ liệu!";
                             response.Code = HttpCode.NOT_FOUND;
@@ -1538,14 +1557,15 @@ namespace ERP.API.Controllers.Dashboard
                             response.Error = "sta_code";
                             return Ok(response);
                         }
-                        var tax = _staffservice.GetAllIncluing(t => t.sta_tax_code.Equals(i.sta_tax_code)).FirstOrDefault();
-                        if (tax != null)
+                        if (i.sta_tax_code != null)
                         {
-                            exitsData = "Đã có mã thuế '" + i.sta_tax_code + "' tồn tại trong cơ sở dữ liệu!";
-                            response.Code = HttpCode.NOT_FOUND;
-                            response.Message = exitsData;
-                            response.Error = "sta_tax_code";
-                            return Ok(response);
+                            if (check_tax_code(i.sta_tax_code))
+                            {
+                                response.Code = HttpCode.NOT_FOUND;
+                                response.Message = "Đã có mã số thuế người dùng '" + i.sta_tax_code + " ' trong hệ thống.";
+                                response.Error = "sta_tax_code";
+                                return Ok(response);
+                            }
                         }
                         var dt = _staffservice.GetAllIncluing(y => y.sta_mobile.Equals(i.sta_mobile)).FirstOrDefault();
                         if (dt != null)
@@ -2147,6 +2167,13 @@ namespace ERP.API.Controllers.Dashboard
                 var assignment = staff_update;
                 var company_current_id = BaseController.get_company_id_current();
                 List<customer> lts_cus = _customerservice.GetAllIncluing(x => x.cu_curator_id == null && x.company_id == company_current_id).ToList();
+                if (lts_cus == null || lts_cus.Count() == 0)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Tất cả khách hàng đã có người phụ trách!";
+                    response.Data = null;
+                    return Ok(response);
+                }
                 Stack<customer> myStack = new Stack<customer>(lts_cus);
                 int total_customer = lts_cus.Count(); // so luong khach hang 
                 int number = assignment.list_staff_id.Length; //So luong satff
@@ -2212,7 +2239,6 @@ namespace ERP.API.Controllers.Dashboard
                     {
                         lts_cus = lts_cus.Where(x => x.cu_type == assignment.cu_type_id).ToList();
                     }
-                    
                     myStack = new Stack<customer>(lts_cus);
                     total_customer = lts_cus.Count();
                     skip = total_customer / number;
@@ -2260,6 +2286,13 @@ namespace ERP.API.Controllers.Dashboard
                         }
                     }
 
+                }
+                if (lts_cus == null || lts_cus.Count() == 0)
+                {
+                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                    response.Message = "Tất cả khách hàng theo điều kiện đã có người phụ trách!";
+                    response.Data = null;
+                    return Ok(response);
                 }
                 // return response
                 response.Code = HttpCode.OK;

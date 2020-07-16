@@ -15,7 +15,7 @@ namespace ERP.Service.Services.IServices
     public interface ITransactionService : IGenericService<transaction>
     {
         PagedResults<transaction> CreatePagedResults(int pageNumber, int pageSize);
-        PagedResults<transactionviewmodel> GetAllPageSearch(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name,int company_id);
+        PagedResults<transactionviewmodel> GetAllPageSearch(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name,int company_id,int curr_id);
         PagedResults<transactionview> ExportTransaction(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name, int company_id);
         List<dropdown> GetTransactionType(int company_id);
         transactionviewmodel GetById(int tra_id);

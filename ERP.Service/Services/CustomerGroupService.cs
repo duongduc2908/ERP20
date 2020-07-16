@@ -25,9 +25,9 @@ namespace ERP.Service.Services
         {
             return this._repository.GetAllPageSearch(pageNumber, pageSize, cg_id, name, company_id);
         }
-        public List<piechartview> GetPieChart()
+        public List<piechartview> GetPieChart(int companyid)
         {
-            return this._repository.GetPieChart();
+            return this._repository.GetPieChart(companyid);
         }
         public bool CheckUniqueName(string name,int id)
         {

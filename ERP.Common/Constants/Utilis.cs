@@ -90,7 +90,7 @@ namespace ERP.Common.Constants
         {
             string res = "";
             int length_code = code.Length;
-            string number = code_input.Substring(length_code);
+            string number = code_input.Trim().Substring(length_code);
             int count = Convert.ToInt32(number);
             int temp_id = count + 1;
             int id_lenght = 0;

@@ -111,9 +111,10 @@ namespace ERP.API.Controllers.Dashboard
             ResponseDataDTO<List<piechartview>> response = new ResponseDataDTO<List<piechartview>>();
             try
             {
+                int companny_id = BaseController.get_company_id_current();
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _customer_groupservice.GetPieChart();
+                response.Data = _customer_groupservice.GetPieChart(companny_id);
             }
             catch (Exception ex)
             {

@@ -410,6 +410,8 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Uploads\Files\Staffs\NV00085.jpg" />
+    <Content Include="Uploads\Files\Staffs\NV00085422.jpg" />
     <Content Include="Uploads\Images\default\bh-6.png" />
     <Content Include="Uploads\Images\default\db-6.png" />
     <Content Include="Uploads\Images\default\fb-6.png" />

@@ -68,14 +68,14 @@ namespace ERP.Extension.Extensions
                 fileName = Path.GetFileName(fileName);
             }
 
-            var newFileName = Path.Combine(HostingEnvironment.MapPath("/") + @"/Uploads/Images/Staffs", fileName);
+            var newFileName = Path.Combine(HostingEnvironment.MapPath("/") + @"/Uploads/Files/Staffs", fileName);
             var fileInfo = new FileInfo(newFileName);
             if (fileInfo.Exists)
             {
                 fileName = fileInfo.Name.Replace(fileInfo.Extension, "");
                 fileName = fileName + (new Random().Next(0, 10000)) + fileInfo.Extension;
 
-                newFileName = Path.Combine(HostingEnvironment.MapPath("/") + @"/Uploads/Images/Staffs", fileName);
+                newFileName = Path.Combine(HostingEnvironment.MapPath("/") + @"/Uploads/Files/Staffs", fileName);
             }
 
             if (!Directory.Exists(fileInfo.Directory.FullName))
@@ -86,7 +86,7 @@ namespace ERP.Extension.Extensions
 
             File.Move(fileData.LocalFileName, newFileName);
 
-            return "/Uploads/Images/Staffs/" + fileName;
+            return "/Uploads/Files/Staffs/" + fileName;
         }
         #endregion
         public static string SaveFileStaffOnDisk(MultipartFileData fileData, string staff_code)

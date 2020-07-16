@@ -71,10 +71,10 @@ namespace ERP.Repository.Repositories
             customer_group_view.staff_name = staffview.sta_fullname;
             return customer_group_view;
         }
-        public List<piechartview> GetPieChart()
+        public List<piechartview> GetPieChart(int company_id)
         {
             List<piechartview> res = new List<piechartview>();
-            var lts_cg = _dbContext.customer_group.OrderBy(i => i.cg_id).ToList();
+            var lts_cg = _dbContext.customer_group.Where(x=>x.company_id==company_id).OrderBy(i => i.cg_id).ToList();
             foreach(customer_group cg in lts_cg)
             {
                 piechartview view = new piechartview();

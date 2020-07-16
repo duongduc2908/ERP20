@@ -355,25 +355,51 @@ namespace ERP.Repository.Repositories
             }
             return res;
         }
-        public PagedResults<transactionviewmodel> GetAllPageSearch(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name, int company_id)
+        public PagedResults<transactionviewmodel> GetAllPageSearch(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name, int company_id, int curr_id)
         {
             if (search_name != null) search_name = search_name.Trim().ToLower();
             List<transactionviewmodel> res = new List<transactionviewmodel>();
             List<transaction> list = new List<transaction>();
 
             var skipAmount = pageSize * pageNumber;
+            //Lấy ra thằng hiện tại đang làm việc 
+            var user_curr = _dbContext.staffs.Find(curr_id);
+            if (user_curr != null)
+            { 
+                var role = _dbContext.group_role.Where(x => x.gr_id == user_curr.group_role_id).FirstOrDefault();
+                if(role.gr_name.Contains("admin"))
+                {
+                 
+                    if (search_name == null) list = _dbContext.transactions.Where(x => x.company_id == company_id).ToList();
+                    else list = _dbContext.transactions.Where(i => (i.tra_title.ToLower().Contains(search_name) || i.tra_result.ToLower().Contains(search_name)) && i.company_id == company_id).ToList();
+                    if (start_date != null)
+                    {
+                        list = list.Where(x => x.tra_datetime >= start_date).ToList();
+                    }
+                    if (end_date != null)
+                    {
+                        end_date = end_date.Value.AddDays(1);
+                        list = list.Where(x => x.tra_datetime <= end_date).ToList();
+                    }
+                }
+                else
+                {
 
-            if (search_name == null) list = _dbContext.transactions.Where(x => x.company_id == company_id).ToList();
-            else list = _dbContext.transactions.Where(i => (i.tra_title.ToLower().Contains(search_name) || i.tra_result.ToLower().Contains(search_name)) && i.company_id == company_id).ToList();
-            if (start_date != null)
-            {
-                list = list.Where(x => x.tra_datetime >= start_date).ToList();
+                    if (search_name == null) list = _dbContext.transactions.Where(x => x.company_id == company_id && x.staff_id == curr_id).ToList();
+                    else list = _dbContext.transactions.Where(i => (i.tra_title.ToLower().Contains(search_name) || i.tra_result.ToLower().Contains(search_name)) && i.company_id == company_id && i.staff_id==curr_id).ToList();
+                    if (start_date != null)
+                    {
+                        list = list.Where(x => x.tra_datetime >= start_date).ToList();
+                    }
+                    if (end_date != null)
+                    {
+                        end_date = end_date.Value.AddDays(1);
+                        list = list.Where(x => x.tra_datetime <= end_date).ToList();
+                    }
+                }
+                
             }
-            if (end_date != null)
-            {
-                end_date = end_date.Value.AddDays(1);
-                list = list.Where(x => x.tra_datetime <= end_date).ToList();
-            }
+
             var totalNumberOfRecords = list.Count();
             var results = list.OrderBy(t => t.tra_id).Skip(skipAmount).Take(pageSize);
 

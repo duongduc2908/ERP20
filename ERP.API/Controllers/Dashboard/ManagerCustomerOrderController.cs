@@ -2179,7 +2179,6 @@ namespace ERP.API.Controllers.Dashboard
                     orderCreateViewModel.product_id = i.pu_id;
                     orderCreateViewModel.op_total_value = i.op_total_value;
 
-
                     var createdorderproduct = _mapper.Map<order_product>(orderCreateViewModel);
                     _order_productservice.Create(createdorderproduct);
                 }
@@ -2223,6 +2222,7 @@ namespace ERP.API.Controllers.Dashboard
                 int cuo_id = Convert.ToInt32(streamProvider.FormData["cuo_id"]);
                 var cuo_update = _customer_orderservice.Find(cuo_id);
                 cuo_update.cuo_status = Convert.ToByte(streamProvider.FormData["cuo_status"]);
+                cuo_update.company_id = BaseController.get_company_id_current();
                 // update address
                 _customer_orderservice.Update(cuo_update, cuo_id);
                 // return response

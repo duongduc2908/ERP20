@@ -45,10 +45,11 @@ namespace ERP.API.Controllers.Dashboard
             ResponseDataDTO<PagedResults<transactionviewmodel>> response = new ResponseDataDTO<PagedResults<transactionviewmodel>>();
             try
             {
+                int curr_id = BaseController.get_id_current();
                 int company_id = BaseController.get_company_id_current();
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _transactionservice.GetAllPageSearch(pageNumber: pageNumber, pageSize: pageSize,start_date,end_date, search_name: search_name,company_id);
+                response.Data = _transactionservice.GetAllPageSearch(pageNumber: pageNumber, pageSize: pageSize,start_date,end_date, search_name: search_name,company_id, curr_id);
             }
             catch (Exception ex)
             {
