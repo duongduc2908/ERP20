@@ -35,6 +35,7 @@ namespace ERP.Data.ModelsERP.ModelView.Transaction
 
         public int? customer_id { get; set; }
         public string customer_name { get; set; }
+        public string customer_phone { get; set; }
 
         public byte? tra_status { get; set; }
         public string tra_status_name { get; set; }

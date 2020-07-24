@@ -24,7 +24,6 @@ namespace ERP.Repository.Repositories
         }
         public productviewmodel GetAllPageById( int id)
         {
-            List<productviewmodel> res = new List<productviewmodel>();
             var results = _dbContext.products.Where(i => i.pu_id == id).FirstOrDefault();
             var productview = _mapper.Map<productviewmodel>(results);
             var product_category = _dbContext.product_category.FirstOrDefault(x => x.pc_id == results.product_category_id);

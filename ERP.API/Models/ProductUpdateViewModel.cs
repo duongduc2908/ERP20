@@ -37,7 +37,7 @@ namespace ERP.API.Models
         [Column(TypeName = "text")]
         public string pu_description { get; set; }
 
-        public byte? pu_unit { get; set; }
+        public int? pu_unit { get; set; }
 
         public int? product_category_id { get; set; }
 

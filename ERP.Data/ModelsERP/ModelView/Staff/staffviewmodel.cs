@@ -1,4 +1,5 @@
-﻿using ERP.Data.ModelsERP.ModelView.Staff;
+﻿using ERP.Data.ModelsERP.ModelView.DeviceStaff;
+using ERP.Data.ModelsERP.ModelView.Staff;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -151,5 +152,7 @@ namespace ERP.Data.ModelsERP.ModelView
         public string group_role_name { get; set; }
         public string status_name { get; set; }
         public string sta_working_status_name { get; set; }
+        // Danh sách vật tư
+        public List<device_staff_viewmodel> list_devices { get; set; }
     }
 }

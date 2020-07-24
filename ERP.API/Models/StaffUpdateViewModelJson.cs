@@ -141,5 +141,6 @@ namespace ERP.API.Models
         public List<relatives_staffjson> list_relatives { get; set; }
         public List<bonus_staffjson> list_bonus { get; set; }
         public List<attachmentjson> list_attachments { get; set; }
+        public List<DeviceStaffUpdateViewModel> list_devices { get; set; }
     }
 }

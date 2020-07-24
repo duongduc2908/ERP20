@@ -7,6 +7,7 @@ using ERP.Data;
 using ERP.Data.DbContext;
 using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
+using ERP.Data.ModelsERP.ModelView.DeviceStaff;
 using ERP.Data.ModelsERP.ModelView.ExportDB;
 using ERP.Data.ModelsERP.ModelView.Staff;
 using ERP.Data.ModelsERP.ModelView.StatisticStaff;
@@ -222,7 +223,46 @@ namespace ERP.Repository.Repositories
                     staffview.unl_detail_now = address_now.unl_detail;
                     staffview.unl_note_now = address_now.unl_note;
                 }
-               
+                // Lấy ra danh sách devices
+                List<device_staff_viewmodel> res_device_staff = new List<device_staff_viewmodel>();
+                var lts_des = (from ex in _dbContext.device_staff
+                              join od in _dbContext.devices on ex.device_id equals od.dev_id
+                              where ex.staff_id == staffview.sta_id
+                              select new
+                              {
+                                  od.dev_id,
+                                  od.dev_name,
+                                  od.dev_unit,
+                                  od.dev_note,
+                                  ex.des_quantity,
+                                  ex.des_status,
+                                  ex.device_id,
+                                  ex.des_date
+                              }).ToList();
+                if (lts_des != null)
+                {
+                    for (int j = 0; j < lts_des.Count; j++)
+                    {
+                        device_staff_viewmodel tr = new device_staff_viewmodel();
+                        tr.device_id = lts_des[j].device_id;
+                        tr.device_name = lts_des[j].dev_name;
+                        tr.des_note = lts_des[j].dev_note;
+                        tr.des_quantity = lts_des[j].des_quantity;
+                        tr.des_status = lts_des[j].des_status;
+                        tr.des_date = lts_des[j].des_date;
+                        tr.staff_name = staffview.sta_fullname;
+                        tr.dev_unit = lts_des[j].dev_unit;
+                        for (int k = 1; k < EnumDevice.dev_unit.Length + 1; k++)
+                        {
+                            if (k == lts_des[k].dev_unit)
+                            {
+                                tr.dev_unit_name = EnumDevice.dev_unit[k - 1];
+                            }
+                        }
+                        res_device_staff.Add(tr);
+                    }
+                    staffview.list_devices = res_device_staff;
+                }
                 //Lấy ra danh sách training
                 List<stafftraningviewmodel> res_training = new List<stafftraningviewmodel>();
                 var lts_cg = (from ex in _dbContext.training_staffs
@@ -455,7 +495,46 @@ namespace ERP.Repository.Repositories
                 staffview.unl_detail_now = address_now.unl_detail;
                 staffview.unl_note_now = address_now.unl_note;
             }
-
+            // Lấy ra danh sách devices
+            List<device_staff_viewmodel> res_device_staff = new List<device_staff_viewmodel>();
+            var lts_des = (from ex in _dbContext.device_staff
+                           join od in _dbContext.devices on ex.device_id equals od.dev_id
+                           where ex.staff_id == staffview.sta_id
+                           select new
+                           {
+                               od.dev_id,
+                               od.dev_name,
+                               od.dev_unit,
+                               od.dev_note,
+                               ex.des_quantity,
+                               ex.des_status,
+                               ex.device_id,
+                               ex.des_date
+                           }).ToList();
+            if (lts_des != null)
+            {
+                for (int j = 0; j < lts_des.Count; j++)
+                {
+                    device_staff_viewmodel tr = new device_staff_viewmodel();
+                    tr.device_id = lts_des[j].device_id;
+                    tr.device_name = lts_des[j].dev_name;
+                    tr.des_note = lts_des[j].dev_note;
+                    tr.des_quantity = lts_des[j].des_quantity;
+                    tr.des_status = lts_des[j].des_status;
+                    tr.des_date = lts_des[j].des_date;
+                    tr.staff_name = staffview.sta_fullname;
+                    tr.dev_unit = lts_des[j].dev_unit;
+                    for (int k = 1; k < EnumDevice.dev_unit.Length + 1; k++)
+                    {
+                        if (k == lts_des[k].dev_unit)
+                        {
+                            tr.dev_unit_name = EnumDevice.dev_unit[k - 1];
+                        }
+                    }
+                    res_device_staff.Add(tr);
+                }
+                staffview.list_devices = res_device_staff;
+            }
             //Lấy ra danh sách training
             List<stafftraningviewmodel> res_training = new List<stafftraningviewmodel>();
             var lts_cg = (from ex in _dbContext.training_staffs

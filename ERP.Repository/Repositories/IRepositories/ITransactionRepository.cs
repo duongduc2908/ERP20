@@ -15,7 +15,7 @@ namespace ERP.Repository.Repositories.IRepositories
     public interface ITransactionRepository : IGenericRepository<transaction>
     {
         PagedResults<transaction> CreatePagedResults(int pageNumber, int pageSize);
-        PagedResults<transactionviewmodel> GetAllPageSearch(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name, int company_id, int curr_id);
+        PagedResults<transactionviewmodel> GetAllPageSearch(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name, int company_id, int curr_id, int? tra_rate);
         PagedResults<transactionview> ExportTransaction(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name, int company_id);
         List<dropdown> GetTransactionType(int company_id);
         transactionviewmodel GetById(int tra_id);

@@ -242,15 +242,13 @@ namespace ERP.API.Controllers.Dashboard
                 ProductCreateViewModel productCreateViewModel = new ProductCreateViewModel
                 {
                     pu_name = Convert.ToString(streamProvider.FormData["pu_name"]).Trim(),
-
                     pu_quantity = Convert.ToInt32(streamProvider.FormData["pu_quantity"]),
                     pu_buy_price = Convert.ToInt32(streamProvider.FormData["pu_buy_price"]),
                     pu_sale_price = Convert.ToInt32(streamProvider.FormData["pu_sale_price"]),
-                    
                     product_category_id = Convert.ToInt32(streamProvider.FormData["product_category_id"]),
                     provider_id= Convert.ToInt32(streamProvider.FormData["provider_id"]),
                     pu_tax = Convert.ToInt32(streamProvider.FormData["pu_tax"]),
-                    pu_unit = Convert.ToByte(streamProvider.FormData["pu_unit"]),
+                    pu_unit = Convert.ToInt32(streamProvider.FormData["pu_unit"]),
 
                 };
                 DateTime? newdate = null;
@@ -442,7 +440,7 @@ namespace ERP.API.Controllers.Dashboard
                     product_category_id = Convert.ToInt32(streamProvider.FormData["product_category_id"]),
                     provider_id = Convert.ToInt32(streamProvider.FormData["provider_id"]),
                     pu_tax = Convert.ToInt32(streamProvider.FormData["pu_tax"]),
-                    pu_unit = Convert.ToByte(streamProvider.FormData["pu_unit"]),
+                    pu_unit = Convert.ToInt32(streamProvider.FormData["pu_unit"]),
 
                 };
                 //Lấy ra dữ liệu cũ 
@@ -847,7 +845,7 @@ namespace ERP.API.Controllers.Dashboard
                         product_create.pu_tax= 0;
                         product_create.provider_id= 1;
 
-                        product_create.pu_unit = Convert.ToByte(unit_index);
+                        product_create.pu_unit = Convert.ToInt32(unit_index);
                         if(prc_index != 0) 
                             product_create.product_category_id = prc_index;
                         product_create.pu_create_date = DateTime.Now;

@@ -4,6 +4,7 @@ using ERP.Data.ModelsERP;
 using ERP.Data.ModelsERP.ModelView;
 using ERP.Data.ModelsERP.ModelView.Company;
 using ERP.Data.ModelsERP.ModelView.Customer;
+using ERP.Data.ModelsERP.ModelView.Device;
 using ERP.Data.ModelsERP.ModelView.Excutor;
 using ERP.Data.ModelsERP.ModelView.ExportDB;
 using ERP.Data.ModelsERP.ModelView.OrderService;
@@ -15,10 +16,6 @@ using ERP.Data.ModelsERP.ModelView.Staff;
 using ERP.Data.ModelsERP.ModelView.Statistics;
 using ERP.Data.ModelsERP.ModelView.StatisticStaff;
 using ERP.Data.ModelsERP.ModelView.Transaction;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace ERP.API.AutoMapper
 {
@@ -176,6 +173,7 @@ namespace ERP.API.AutoMapper
             CreateMap<EmailStrategyUpdateViewModel, email_strategy>();
 
             CreateMap<transaction, transactionviewmodel>();
+            CreateMap<transactionviewmodel, transaction>();
             CreateMap<transaction, transactionview>();
             CreateMap<transaction, customertransactionviewmodel>();
             CreateMap<TransactionCreateViewModel, transaction>();
@@ -184,6 +182,12 @@ namespace ERP.API.AutoMapper
 
             CreateMap<company, companyviewmodel>();
             CreateMap<companyviewmodel, company>();
+
+            CreateMap<device, deviceviewmodel>();
+            CreateMap<deviceviewmodel, device>();
+
+            CreateMap<DeviceStaffCreateViewModel, device_staff>();
+            CreateMap<DeviceStaffUpdateViewModel, device_staff>();
 
             CreateMap<package, packageviewmodel>();
             CreateMap<packageviewmodel, package>();

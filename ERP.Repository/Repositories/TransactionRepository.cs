@@ -355,91 +355,103 @@ namespace ERP.Repository.Repositories
             }
             return res;
         }
-        public PagedResults<transactionviewmodel> GetAllPageSearch(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name, int company_id, int curr_id)
+        public PagedResults<transactionviewmodel> GetAllPageSearch(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name, int company_id, int curr_id, int? tra_rate)
         {
             if (search_name != null) search_name = search_name.Trim().ToLower();
             List<transactionviewmodel> res = new List<transactionviewmodel>();
-            List<transaction> list = new List<transaction>();
-
+            var list = (from tra in _dbContext.transactions
+                        join cu in _dbContext.customers on tra.customer_id equals cu.cu_id
+                        join cu_ph in _dbContext.customer_phones on cu.cu_id equals cu_ph.customer_id
+                        where cu_ph.cp_type == 1 && tra.company_id == company_id
+                        select new
+                        {
+                            tra,
+                            cu.cu_fullname,
+                            cu_ph.cp_phone_number
+                        }).ToList();
             var skipAmount = pageSize * pageNumber;
             //Lấy ra thằng hiện tại đang làm việc 
             var user_curr = _dbContext.staffs.Find(curr_id);
+
             if (user_curr != null)
-            { 
+            {
+               
                 var role = _dbContext.group_role.Where(x => x.gr_id == user_curr.group_role_id).FirstOrDefault();
                 if(role.gr_name.Contains("admin"))
                 {
-                 
-                    if (search_name == null) list = _dbContext.transactions.Where(x => x.company_id == company_id).ToList();
-                    else list = _dbContext.transactions.Where(i => (i.tra_title.ToLower().Contains(search_name) || i.tra_result.ToLower().Contains(search_name)) && i.company_id == company_id).ToList();
+                    if (search_name != null) list = list.Where(x => x.tra.tra_title.ToLower().Contains(search_name)
+                                                                || x.tra.tra_result.ToLower().Contains(search_name)
+                                                                || x.cu_fullname.ToLower().Contains(search_name)
+                                                                || x.cp_phone_number.ToLower().Contains(search_name)
+                                                                ).ToList();
                     if (start_date != null)
                     {
-                        list = list.Where(x => x.tra_datetime >= start_date).ToList();
+                        list = list.Where(x => x.tra.tra_datetime >= start_date).ToList();
                     }
                     if (end_date != null)
                     {
                         end_date = end_date.Value.AddDays(1);
-                        list = list.Where(x => x.tra_datetime <= end_date).ToList();
+                        list = list.Where(x => x.tra.tra_datetime <= end_date).ToList();
                     }
                 }
                 else
                 {
 
-                    if (search_name == null) list = _dbContext.transactions.Where(x => x.company_id == company_id && x.staff_id == curr_id).ToList();
-                    else list = _dbContext.transactions.Where(i => (i.tra_title.ToLower().Contains(search_name) || i.tra_result.ToLower().Contains(search_name)) && i.company_id == company_id && i.staff_id==curr_id).ToList();
+
+                    list = list.Where(x => x.tra.staff_id == curr_id).ToList();
+                    if (search_name != null) list = list.Where(x => x.tra.tra_title.ToLower().Contains(search_name)
+                                                                || x.tra.tra_result.ToLower().Contains(search_name)
+                                                                || x.cu_fullname.ToLower().Contains(search_name)
+                                                                || x.cp_phone_number.ToLower().Contains(search_name)
+                                                                ).ToList();
                     if (start_date != null)
                     {
-                        list = list.Where(x => x.tra_datetime >= start_date).ToList();
+                        list = list.Where(x => x.tra.tra_datetime >= start_date).ToList();
                     }
                     if (end_date != null)
                     {
                         end_date = end_date.Value.AddDays(1);
-                        list = list.Where(x => x.tra_datetime <= end_date).ToList();
+                        list = list.Where(x => x.tra.tra_datetime <= end_date).ToList();
                     }
                 }
                 
             }
 
             var totalNumberOfRecords = list.Count();
-            var results = list.OrderBy(t => t.tra_id).Skip(skipAmount).Take(pageSize);
+            var results = list.OrderBy(t => t.tra.tra_id).Skip(skipAmount).Take(pageSize);
 
 
-            foreach (transaction i in results)
+            foreach (var i in results)
             {
+                transaction tra = i.tra;
 
-                var transactionview = _mapper.Map<transactionviewmodel>(i);
+                var transactionview = _mapper.Map<transactionviewmodel>(tra);
+                transactionview.customer_phone = i.cp_phone_number;
+                transactionview.customer_name = i.cu_fullname;
                 //Bat theo Enums
                 for (int j = 1; j < EnumTransaction.tra_type.Length + 1; j++)
                 {
-                    if (j == i.tra_type)
+                    if (j == i.tra.tra_type)
                     {
                         transactionview.tra_type_name = EnumTransaction.tra_type[j - 1];
                     }
                 }
-                for (int j = 1; j < EnumTransaction.tra_priority.Length + 1; j++)
-                {
-                    if (j == i.tra_priority)
-                    {
-                        transactionview.tra_priority_name = EnumTransaction.tra_priority[j - 1];
-                    }
-                }
+                var tra_priority = _dbContext.transaction_priority.Where(x => x.tpro_id == i.tra.tra_priority).FirstOrDefault();
+                if (tra_priority != null) transactionview.tra_priority_name = tra_priority.tpro_name;
+                
                 for (int j = 1; j < EnumTransaction.tra_status.Length + 1; j++)
                 {
-                    if (j == i.tra_status)
+                    if (j == i.tra.tra_status)
                     {
                         transactionview.tra_status_name = EnumTransaction.tra_status[j - 1];
                     }
                 }
-                for (int j = 1; j < EnumTransaction.tra_rate.Length + 1; j++)
-                {
-                    if (j == i.tra_rate)
-                    {
-                        transactionview.tra_rate_name = EnumTransaction.tra_rate[j - 1];
-                    }
-                }
+
+                var tra_val = _dbContext.transaction_evaluate.Where(x => x.teval_id == i.tra.tra_rate).FirstOrDefault();
+                if (tra_val != null) transactionview.tra_rate_name = tra_val.teval_name;
+                
                 //Bat cac truong tra ve id 
-                transactionview.staff_name = _dbContext.staffs.Where(s => s.sta_id == i.staff_id).FirstOrDefault().sta_fullname;
-                transactionview.customer_name = _dbContext.customers.Where(s => s.cu_id == i.customer_id).FirstOrDefault().cu_fullname;
+                transactionview.staff_name = _dbContext.staffs.Where(s => s.sta_id == i.tra.staff_id).FirstOrDefault().sta_fullname;
 
                 //Lay ra thong tin khach hang 
                 //#region customer

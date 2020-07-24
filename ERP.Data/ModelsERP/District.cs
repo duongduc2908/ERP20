@@ -9,34 +9,15 @@ namespace ERP.Data.ModelsERP
     [Table("District")]
     public partial class District
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public District()
-        {
-            Wards = new HashSet<Ward>();
-        }
-
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
 
-        [StringLength(250)]
+        [StringLength(200)]
         public string Name { get; set; }
 
         [StringLength(50)]
         public string Type { get; set; }
 
-        [StringLength(50)]
-        public string LatiLongTude { get; set; }
-
-        public int ProvinceId { get; set; }
-
-        public int? SortOrder { get; set; }
-
-        public bool? IsPublished { get; set; }
-
-        public bool? IsDeleted { get; set; }
-
-        public virtual Province Province { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Ward> Wards { get; set; }
+        public int? ProvinceId { get; set; }
     }
 }

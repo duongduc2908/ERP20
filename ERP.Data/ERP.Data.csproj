@@ -119,6 +119,8 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ModelsERP\device.cs" />
+    <Compile Include="ModelsERP\device_staff.cs" />
     <Compile Include="Dto\ResponseDataDTO.cs" />
     <Compile Include="Identity\AppIdentityClaims.cs" />
     <Compile Include="Migrations\Configuration.cs" />
@@ -138,7 +140,9 @@
     <Compile Include="ModelsERP\customer_order.cs" />
     <Compile Include="ModelsERP\customer_phone.cs" />
     <Compile Include="ModelsERP\customer_type.cs" />
+    <Compile Include="ModelsERP\device_unit.cs" />
     <Compile Include="ModelsERP\District.cs" />
+    <Compile Include="ModelsERP\District2.cs" />
     <Compile Include="ModelsERP\executor.cs" />
     <Compile Include="ModelsERP\ModelView\Company\companyviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Company\functionjson.cs" />
@@ -166,6 +170,8 @@
     <Compile Include="ModelsERP\ModelView\Customer\customer_phonejson.cs" />
     <Compile Include="ModelsERP\ModelView\Customer\customer_phoneviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\Customer\customer_ship_addressjson.cs" />
+    <Compile Include="ModelsERP\ModelView\DeviceStaff\device_staff_viewmodel.cs" />
+    <Compile Include="ModelsERP\ModelView\Device\deviceviewmodel.cs" />
     <Compile Include="ModelsERP\ModelView\dropdown_salary.cs" />
     <Compile Include="ModelsERP\ModelView\Excutor\executorjson.cs" />
     <Compile Include="ModelsERP\ModelView\Excutor\executorviewmodel.cs" />
@@ -233,6 +239,7 @@
     <Compile Include="ModelsERP\product_unit.cs" />
     <Compile Include="ModelsERP\project.cs" />
     <Compile Include="ModelsERP\Province.cs" />
+    <Compile Include="ModelsERP\Province1.cs" />
     <Compile Include="ModelsERP\RefreshToken.cs" />
     <Compile Include="ModelsERP\relatives_staff.cs" />
     <Compile Include="ModelsERP\service.cs" />
@@ -261,6 +268,7 @@
     <Compile Include="ModelsERP\transaction_priority.cs" />
     <Compile Include="ModelsERP\undertaken_location.cs" />
     <Compile Include="ModelsERP\Ward.cs" />
+    <Compile Include="ModelsERP\Ward2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -274,9 +282,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="ModelsERP\ModelView\Bank\" />
-    <Folder Include="ModelsERP\ModelView\NewFolder1\" />
-    <Folder Include="ModelsERP\ModelView\Training\" />
     <Folder Include="SQL\" />
   </ItemGroup>
   <PropertyGroup>

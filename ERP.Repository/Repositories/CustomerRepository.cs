@@ -213,12 +213,12 @@ namespace ERP.Repository.Repositories
                 if (staff_cu != null) customerview.staff_name = staff_cu.sta_fullname;
                 if (sources != null) customerview.source_name = sources.src_name;
                 if (customergroup != null) customerview.customer_group_name = customergroup.cg_name;
-
-                for (int j = 1; j < EnumCustomer.cu_type.Length+1; j++)
+                var list_customer_type = _dbContext.customer_type.ToList();
+                foreach(customer_type j in list_customer_type)
                 {
-                    if (j == i.cu_type)
+                    if (j.cut_id == i.cu_type)
                     {
-                        customerview.cu_type_name = EnumCustomer.cu_type[j-1];
+                        customerview.cu_type_name = j.cut_name;
                     }
                 }
                 for (int j = 1; j < EnumCustomer.cu_flag_order.Length + 1; j++)

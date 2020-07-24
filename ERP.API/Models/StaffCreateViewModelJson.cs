@@ -1,4 +1,5 @@
 ﻿using ERP.Data.ModelsERP;
+using ERP.Data.ModelsERP.ModelView.DeviceStaff;
 using ERP.Data.ModelsERP.ModelView.Staff;
 using System;
 using System.Collections.Generic;
@@ -138,6 +139,8 @@ namespace ERP.API.Models
         public List<relatives_staffjson> list_relatives { get; set; }
         public List<bonus_staffjson> list_bonus{ get; set; }
         public List<attachmentjson> list_attachments{ get; set; }
+        // Danh sách vật tư
+        public List<DeviceStaffCreateViewModel> list_devices { get; set; }
 
 
     }

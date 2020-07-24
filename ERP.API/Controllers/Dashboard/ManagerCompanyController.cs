@@ -33,6 +33,7 @@ namespace ERP.API.Controllers.Dashboard
         }
 
         #region methods
+
         #region["GetAll"]
         [HttpGet]
         [Route("api/company/get_all")]
@@ -57,6 +58,7 @@ namespace ERP.API.Controllers.Dashboard
             return Ok(response);
         }
         #endregion
+
         #region["Search"]
         [HttpGet]
         [Route("api/company/search")]
@@ -81,6 +83,7 @@ namespace ERP.API.Controllers.Dashboard
             return Ok(response);
         }
         #endregion
+
         #region["Get by id"]
         [Route("api/company/get_by_id")]
         public IHttpActionResult GetCompanys(int co_id)
@@ -104,6 +107,7 @@ namespace ERP.API.Controllers.Dashboard
             return Ok(response);
         }
         #endregion
+
         #region["Create"]
         [HttpPost]
         [Route("api/company/create")]
@@ -151,6 +155,7 @@ namespace ERP.API.Controllers.Dashboard
                     return Ok(response);
                 }
                 #endregion
+
                 #region["Kiểm tra rằng buộc "]
                 var temp = _companyservice.GetAllIncluing(t => t.co_name.ToLower().Equals(company.co_name.Trim().ToLower()));
                 if (temp.Count() != 0)
@@ -183,6 +188,7 @@ namespace ERP.API.Controllers.Dashboard
                 else company_create.co_code = Utilis.CreateCodeByCode("CT", x.co_code, 6);
                 _companyservice.Create(company_create);
                 #endregion
+
                 #region["Save function to database"]
                 int company_last_id = _companyservice.GetLast().co_id;
                 foreach (functionjson fun in company.list_function)
@@ -213,6 +219,7 @@ namespace ERP.API.Controllers.Dashboard
 
         }
         #endregion
+
         #region["Update"]
         [HttpPut]
         [Route("api/company/update")]
@@ -222,6 +229,7 @@ namespace ERP.API.Controllers.Dashboard
             try
             {
                 var company = update_company;
+
                 #region["Check null"]
 
                 if (company.co_name == null || company.co_name.Trim() == "")
@@ -260,6 +268,7 @@ namespace ERP.API.Controllers.Dashboard
                     return Ok(response);
                 }
                 #endregion
+
                 #region["Kiểm tra rằng buộc "]
                 if (check_name_update(company.co_name.Trim(), company.co_id))
                 {
@@ -288,6 +297,7 @@ namespace ERP.API.Controllers.Dashboard
                 if (company.co_revenue != null) company_exists.co_revenue = company.co_revenue;
                 _companyservice.Update(company_exists, company_exists.co_id);
                 #endregion
+
                 #region["Update function to database"]
                 //update function 
                 //Xóa bản ghi cũ update cái mới 
@@ -344,6 +354,7 @@ namespace ERP.API.Controllers.Dashboard
 
         }
         #endregion
+
         #region["Delete"]
         [HttpDelete]
         [Route("api/company/delete")]
@@ -386,6 +397,7 @@ namespace ERP.API.Controllers.Dashboard
             }
         }
         #endregion
+
         #region dispose
 
         protected override void Dispose(bool disposing)

@@ -24,7 +24,7 @@ namespace ERP.Data.ModelsERP.ModelView
         [StringLength(45)]
         public string cu_fullname { get; set; }
 
-        public byte? cu_type { get; set; }
+        public int? cu_type { get; set; }
 
         public DateTime? cu_create_date { get; set; }
 

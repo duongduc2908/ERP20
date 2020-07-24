@@ -43,7 +43,7 @@ namespace ERP.API.Controllers.Dashboard
         private readonly IUndertakenLocationService _undertakenlocationService;
         private readonly ITrainingStaffService _trainingStaffService;
         private readonly ITrainingService _trainingService;
-
+        private readonly IDeviceStaffService _deviceStaffService;
         private readonly IStaffBrankService _staffbankService;
         private readonly IRelativesStaffService _relativesstaffService;
         private readonly IBonusStaffService _bonusstaffService;
@@ -59,7 +59,7 @@ namespace ERP.API.Controllers.Dashboard
         private static List<string> list_username;
         private static List<string> list_file_name;
         public ManagerstaffsController() { }
-        public ManagerstaffsController(IAttachmentsService attachmentService ,IBankBranchService bankbranchService,IBonusStaffService bonusstaffService ,IRelativesStaffService relativesstaffService,IStaffBrankService staffbankService,ITrainingService trainingService, IStaffWorkTimeService staffworktimeService, ITrainingStaffService trainingStaffService, ICustomerService customerservice, IStaffService staffservice, IMapper mapper, IDepartmentService departmentService, IGroupRoleService groupRoleService, IPositionService positionService, IUndertakenLocationService undertakenlocationService, ISocialService socialService)
+        public ManagerstaffsController(IAttachmentsService attachmentService ,IBankBranchService bankbranchService,IBonusStaffService bonusstaffService ,IRelativesStaffService relativesstaffService,IStaffBrankService staffbankService,ITrainingService trainingService, IStaffWorkTimeService staffworktimeService, ITrainingStaffService trainingStaffService, ICustomerService customerservice, IStaffService staffservice, IMapper mapper, IDepartmentService departmentService, IGroupRoleService groupRoleService, IPositionService positionService, IUndertakenLocationService undertakenlocationService, ISocialService socialService, IDeviceStaffService deviceStaffService)
         {
             this._staffservice = staffservice;
             this._mapper = mapper;
@@ -77,6 +77,7 @@ namespace ERP.API.Controllers.Dashboard
             this._bonusstaffService = bonusstaffService;
             this._bankbranchService = bankbranchService;
             this._attachmentService = attachmentService;
+            this._deviceStaffService = deviceStaffService;
         }
 
         #region methods
@@ -287,6 +288,7 @@ namespace ERP.API.Controllers.Dashboard
                 }
 
                 #endregion
+
                 //Kiểm tra các trường rằng buộc
                 if (check_code(staff.sta_code.Trim()))
                 {
@@ -489,8 +491,14 @@ namespace ERP.API.Controllers.Dashboard
                 address_now.unl_note = staff.unl_note_now;
                 address_now.unl_flag_center = 2;
                 _undertakenlocationService.Create(address_now);
+                //Save list device
+                foreach (DeviceStaffCreateViewModel des in create_staff.list_devices)
+                {
+                    var device_staff_create = _mapper.Map<device_staff>(des);
+                    device_staff_create.staff_id = staff_last.sta_id;
+                    _deviceStaffService.Create(device_staff_create);
+                }
                 //Save list training và training sftaff
-
                 foreach (stafftrainingjson tr in staff.list_training)
                 {
                     if (Utilis.IsNumber(tr.tn_id))
@@ -736,7 +744,6 @@ namespace ERP.API.Controllers.Dashboard
                         }
                     }
                 }
-
                 if (check_phone_update(staff.sta_mobile, staff.sta_id))
                 {
                     response.Code = HttpCode.NOT_FOUND;
@@ -814,7 +821,6 @@ namespace ERP.API.Controllers.Dashboard
                 _staffservice.Update(existstaff, staff.sta_id);
 
                 //save staff_work_time
-
                 List<staff_work_time> lts_sw_db = _staffworktimeService.GetAllIncluing(x => x.staff_id == staff.sta_id).ToList();
                 List<staff_work_timejson> lts_sw_v = new List<staff_work_timejson>(staff.list_staff_work_time);
                 foreach (staff_work_timejson ul_f in lts_sw_v)
@@ -852,7 +858,6 @@ namespace ERP.API.Controllers.Dashboard
                 {
                     _staffworktimeService.Delete(ul_d);
                 }
-
 
                 //save address thường trú 
                 undertaken_location exist_address_permanent = _undertakenlocationService.GetAllIncluing(x => x.staff_id == staff.sta_id && x.unl_flag_center == 1).FirstOrDefault();
@@ -977,6 +982,19 @@ namespace ERP.API.Controllers.Dashboard
                 {
                     _trainingStaffService.Delete(trs);
                 }
+
+                //update list_decives
+                foreach (DeviceStaffUpdateViewModel des in staff.list_devices)
+                {
+                    var device_staff_create = _mapper.Map<device_staff>(des);
+                    device_staff_create.des_id = staff.sta_id;
+                    _deviceStaffService.Create(device_staff_create);
+                }
+                List<device_staff> lst_device_staff_db = _deviceStaffService.GetAllIncluing(x => x.staff_id == staff.sta_id).ToList();
+                foreach(device_staff des in lst_device_staff_db)
+                {
+                    _deviceStaffService.Delete(des);
+                }    
                 //update list_undertaken_location
                 List<undertaken_location> lts_ul_db = _undertakenlocationService.GetAllIncluing(x => x.staff_id == staff.sta_id && x.unl_flag_center == 0).ToList();
                 List<staffundertaken_locationjson> lts_ul_v = new List<staffundertaken_locationjson>(staff.list_undertaken_location);

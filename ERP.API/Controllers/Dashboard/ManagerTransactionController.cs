@@ -40,7 +40,7 @@ namespace ERP.API.Controllers.Dashboard
         #region[method]
         [HttpGet]
         [Route("api/transactions/search")]
-        public IHttpActionResult GetAllPageSearch(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name)
+        public IHttpActionResult GetAllPageSearch(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name, int? tra_rate)
         {
             ResponseDataDTO<PagedResults<transactionviewmodel>> response = new ResponseDataDTO<PagedResults<transactionviewmodel>>();
             try
@@ -49,7 +49,7 @@ namespace ERP.API.Controllers.Dashboard
                 int company_id = BaseController.get_company_id_current();
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _transactionservice.GetAllPageSearch(pageNumber: pageNumber, pageSize: pageSize,start_date,end_date, search_name: search_name,company_id, curr_id);
+                response.Data = _transactionservice.GetAllPageSearch(pageNumber: pageNumber, pageSize: pageSize,start_date,end_date, search_name: search_name,company_id, curr_id,tra_rate);
             }
             catch (Exception ex)
             {

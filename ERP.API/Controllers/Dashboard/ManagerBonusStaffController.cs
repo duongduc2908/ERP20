@@ -30,6 +30,8 @@ namespace ERP.API.Controllers.Dashboard
         }
 
         #region methods
+
+        #region["GetAll"]
         [HttpGet]
         [Route("api/bonus_staff/getall")]
         public IHttpActionResult GetAllName()
@@ -52,52 +54,9 @@ namespace ERP.API.Controllers.Dashboard
 
             return Ok(response);
         }
-        /*
-        [HttpGet]
-        [Route("api/bonus_staff/search")]
-        public IHttpActionResult Getcompanys(int pageNumber, int pageSize, string search_name)
-        {
-            ResponseDataDTO<PagedResults<bonus_staff>> response = new ResponseDataDTO<PagedResults<bonus_staff>>();
-            try
-            {
-                response.Code = HttpCode.OK;
-                response.Message = MessageResponse.SUCCESS;
-                response.Data = _bonusstaffservice.GetAllSearch(pageNumber, pageSize, search_name);
-            }
-            catch (Exception ex)
-            {
-                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = MessageResponse.FAIL;
-                response.Data = null;
+        #endregion
 
-                Console.WriteLine(ex.ToString());
-            }
-
-            return Ok(response);
-        }
-        [HttpGet]
-        [Route("api/bonus_staff/get_by_id")]
-        public IHttpActionResult GetById(int bos_id)
-        {
-            ResponseDataDTO<bonus_staff> response = new ResponseDataDTO<bonus_staff>();
-            try
-            {
-                response.Code = HttpCode.OK;
-                response.Message = MessageResponse.SUCCESS;
-                response.Data = _bonusstaffservice.GetById(bos_id);
-            }
-            catch (Exception ex)
-            {
-                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = MessageResponse.FAIL;
-                response.Data = null;
-
-                Console.WriteLine(ex.ToString());
-            }
-
-            return Ok(response);
-        }
-        */
+        #region["Create"]
         [HttpPost]
         [Route("api/bonus_staff/create")]
 
@@ -127,7 +86,7 @@ namespace ERP.API.Controllers.Dashboard
                 create_bonus_staff.bos_reason = Convert.ToString(streamProvider.FormData["bos_reason"]);
                 create_bonus_staff.staff_id = BaseController.get_id_current();
 
-                
+
                 // save new bonus_staff
                 _bonusstaffservice.Create(create_bonus_staff);
                 // return response
@@ -148,7 +107,9 @@ namespace ERP.API.Controllers.Dashboard
 
         }
 
+        #endregion
 
+        #region["Update"]
         [HttpPut]
         [Route("api/bonus_staff/update")]
 
@@ -196,7 +157,9 @@ namespace ERP.API.Controllers.Dashboard
                 return Ok(response);
             }
         }
+        #endregion
 
+        #region["Delete"]
         [HttpDelete]
         [Route("api/bonus_staff/delete")]
         public IHttpActionResult Deletebonus_staff(int bos_id)
@@ -237,6 +200,8 @@ namespace ERP.API.Controllers.Dashboard
                 return Ok(response);
             }
         }
+        #endregion
+
         #endregion
     }
 }

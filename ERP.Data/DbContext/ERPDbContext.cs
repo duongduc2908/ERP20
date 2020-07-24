@@ -86,5 +86,9 @@ namespace ERP.Data.DbContext
         public virtual DbSet<bank_category> bank_category { get; set; }
         public virtual DbSet<bonus_staff> bonus_staff { get; set; }
         public virtual DbSet<staff_brank> staff_brank { get; set; }
+        public virtual DbSet<device> devices { get; set; }
+        public virtual DbSet<device_staff> device_staff { get; set; }
+        public virtual DbSet<device_unit> device_unit { get; set; }
+
     }
 }
