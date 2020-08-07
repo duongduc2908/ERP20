@@ -32,5 +32,6 @@ namespace ERP.API.Models
         public int? service_category_id { get; set; }
         [StringLength(200)]
         public string se_note { get; set; }
+        public int? se_unit { get; set; }
     }
 }

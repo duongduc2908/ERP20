@@ -21,7 +21,7 @@ namespace ERP.Service.Services.IServices
         PagedResults<staffviewmodel> GetAllPage(int pageNumber, int pageSize);
         PagedResults<staffviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int ? status,DateTime ? start_date, DateTime ? end_date, string name, int? sta_working_status, int company_id);
         //PagedResults<servicestaffviewmodel> GetAllPageSearchStaffFree(int pageNumber, int pageSize,DateTime ? start_date, DateTime ? end_date);
-        PagedResults<staffview> ExportStaff(int pageNumber, int pageSize, int? status, DateTime? start_date, DateTime? end_date, string name, int? sta_working_status);
+        PagedResults<staffview> ExportStaff(int pageNumber, int pageSize, int? status, DateTime? start_date, DateTime? end_date, string name, int? sta_working_status,int? companyid);
         staffviewmodel GetInforById(int id);
         bool Check_location(undertaken_location un);  
         PagedResults<staffviewmodel> GetAllActive(int pageNumber, int pageSize, int status);

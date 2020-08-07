@@ -13,7 +13,7 @@ namespace ERP.Service.Services.IServices
     public interface ITrainingService : IGenericService<training>
     {
         PagedResults<training> CreatePagedResults(int pageNumber, int pageSize);
-        PagedResults<training> GetAllSearch(int pageNumber, int pageSize,string search_name);
+        PagedResults<training> GetAllSearch(int pageNumber, int pageSize,string search_name, DateTime? start_date, DateTime? end_date);
         training GetById(int tn_id);
         List<dropdown> GetAllName();
 

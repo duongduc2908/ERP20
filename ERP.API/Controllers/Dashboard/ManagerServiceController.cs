@@ -85,8 +85,6 @@ namespace ERP.API.Controllers.Dashboard
             return Ok(response);
         }
         
-       
-
         [HttpGet]
         [Route("api/service/get_by_id")]
         public IHttpActionResult GetById(int se_id)
@@ -157,6 +155,29 @@ namespace ERP.API.Controllers.Dashboard
             return Ok(response);
         }
 
+        [Route("api/service/get_unit")]
+        public IHttpActionResult GetUnit()
+        {
+            ResponseDataDTO<List<dropdown>> response = new ResponseDataDTO<List<dropdown>>();
+            try
+            {
+                int company_id = BaseController.get_company_id_current();
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = _serviceservice.GetUnit(company_id);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = ex.Message;
+                response.Data = null;
+
+                Console.WriteLine(ex.ToString());
+            }
+
+            return Ok(response);
+        }
+
         [HttpPost]
         [Route("api/service/create")]
         public async Task<IHttpActionResult> Createservice()
@@ -183,6 +204,7 @@ namespace ERP.API.Controllers.Dashboard
                     service_category_id = Convert.ToInt32(streamProvider.FormData["service_category_id"]),
                     se_price = Convert.ToInt32(streamProvider.FormData["se_price"]),
                     se_type = Convert.ToInt32(streamProvider.FormData["se_type"]),
+                    se_unit = Convert.ToInt32(streamProvider.FormData["se_unit"])
                 };
                 if (streamProvider.FormData["se_saleoff"] == null || streamProvider.FormData["se_saleoff"] == "" || streamProvider.FormData["se_saleoff"] == "null")
                 {
@@ -257,6 +279,7 @@ namespace ERP.API.Controllers.Dashboard
                 existservice.service_category_id = Convert.ToInt32(streamProvider.FormData["service_category_id"]);
                 existservice.se_price = Convert.ToInt32(streamProvider.FormData["se_price"]);
                 existservice.se_type = Convert.ToInt32(streamProvider.FormData["se_type"]);
+                existservice.se_unit = Convert.ToInt32(streamProvider.FormData["se_unit"]);
                 if (streamProvider.FormData["se_saleoff"] == null || streamProvider.FormData["se_saleoff"] == "" || streamProvider.FormData["se_saleoff"] == "null")
                 {
                     existservice.se_saleoff = null;

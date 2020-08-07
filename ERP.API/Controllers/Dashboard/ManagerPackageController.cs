@@ -290,6 +290,7 @@ namespace ERP.API.Controllers.Dashboard
                
                 _packageservice.Update(package_exists, package_exists.pac_id);
                 #endregion
+
                 #region["Update function to database"]
                 //update function 
                 //Xóa bản ghi cũ update cái mới 

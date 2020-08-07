@@ -14,7 +14,8 @@ namespace ERP.Data.ModelsERP.ModelView.CustomerOrder
         [StringLength(10)]
         public string se_code { get; set; }
 
-        public byte? se_type { get; set; }
+        public int? se_type { get; set; }
+        public int? se_unit { get; set; }
 
         [StringLength(100)]
         public string se_name { get; set; }
@@ -33,5 +34,6 @@ namespace ERP.Data.ModelsERP.ModelView.CustomerOrder
 
         [StringLength(200)]
         public string se_note { get; set; }
+        public int? os_quantity { get; set; }
     }
 }

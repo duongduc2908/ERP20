@@ -984,17 +984,18 @@ namespace ERP.API.Controllers.Dashboard
                 }
 
                 //update list_decives
-                foreach (DeviceStaffUpdateViewModel des in staff.list_devices)
-                {
-                    var device_staff_create = _mapper.Map<device_staff>(des);
-                    device_staff_create.des_id = staff.sta_id;
-                    _deviceStaffService.Create(device_staff_create);
-                }
+                
                 List<device_staff> lst_device_staff_db = _deviceStaffService.GetAllIncluing(x => x.staff_id == staff.sta_id).ToList();
                 foreach(device_staff des in lst_device_staff_db)
                 {
                     _deviceStaffService.Delete(des);
-                }    
+                }
+                foreach (DeviceStaffUpdateViewModel des in staff.list_devices)
+                {
+                    var device_staff_create = _mapper.Map<device_staff>(des);
+                    device_staff_create.staff_id = staff.sta_id;
+                    _deviceStaffService.Create(device_staff_create);
+                }
                 //update list_undertaken_location
                 List<undertaken_location> lts_ul_db = _undertakenlocationService.GetAllIncluing(x => x.staff_id == staff.sta_id && x.unl_flag_center == 0).ToList();
                 List<staffundertaken_locationjson> lts_ul_v = new List<staffundertaken_locationjson>(staff.list_undertaken_location);
@@ -1539,8 +1540,8 @@ namespace ERP.API.Controllers.Dashboard
                     }
                 }
                 var list = new List<staffview>();
-                fileName = "D:/coerp" + fileName;
-                //fileName = "D:/ERP20/ERP.API" + fileName;
+                fileName = "D:/DeployERP" + fileName;
+                // fileName = "D:/ERP20/ERP.API" + fileName;
                 var dataset = ExcelImport.ImportExcelXLS(fileName, true);
                 DataTable table = (DataTable)dataset.Tables[0];
                 if (table != null && table.Rows.Count > 0)
@@ -1797,9 +1798,10 @@ namespace ERP.API.Controllers.Dashboard
             ResponseDataDTO<string> response = new ResponseDataDTO<string>();
             try
             {
+                int companyid = BaseController.get_company_id_current();
                 var listStaff = new List<staffview>();
                 //Đưa ra danh sách staff trong trang nào đó 
-                var objRT_Mst_Staff = _staffservice.ExportStaff(pageNumber, pageSize, status, start_date, end_date, name, sta_working_status);
+                var objRT_Mst_Staff = _staffservice.ExportStaff(pageNumber, pageSize, status, start_date, end_date, name, sta_working_status, companyid);
                 if (objRT_Mst_Staff != null)
                 {
                     listStaff.AddRange(objRT_Mst_Staff.Results);

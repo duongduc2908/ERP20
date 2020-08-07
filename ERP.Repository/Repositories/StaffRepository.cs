@@ -254,7 +254,7 @@ namespace ERP.Repository.Repositories
                         tr.dev_unit = lts_des[j].dev_unit;
                         for (int k = 1; k < EnumDevice.dev_unit.Length + 1; k++)
                         {
-                            if (k == lts_des[k].dev_unit)
+                            if (k == lts_des[j].dev_unit)
                             {
                                 tr.dev_unit_name = EnumDevice.dev_unit[k - 1];
                             }
@@ -526,7 +526,7 @@ namespace ERP.Repository.Repositories
                     tr.dev_unit = lts_des[j].dev_unit;
                     for (int k = 1; k < EnumDevice.dev_unit.Length + 1; k++)
                     {
-                        if (k == lts_des[k].dev_unit)
+                        if (k == lts_des[j].dev_unit)
                         {
                             tr.dev_unit_name = EnumDevice.dev_unit[k - 1];
                         }
@@ -714,7 +714,7 @@ namespace ERP.Repository.Repositories
             
             return res;
         }
-        public PagedResults<staffview> ExportStaff(int pageNumber, int pageSize, int? status, DateTime? start_date, DateTime? end_date, string name, int? sta_working_status)
+        public PagedResults<staffview> ExportStaff(int pageNumber, int pageSize, int? status, DateTime? start_date, DateTime? end_date, string name, int? sta_working_status,int? companyid)
         {
             if (name != null)
             {
@@ -726,9 +726,9 @@ namespace ERP.Repository.Repositories
             var skipAmount = pageSize * pageNumber;
             if (status == null)
             {
-                list_res = _dbContext.staffs.ToList();
+                list_res = _dbContext.staffs.Where(x=>x.company_id == companyid).ToList();
             }
-            else list_res = _dbContext.staffs.Where(x => x.sta_status == status).ToList();
+            else list_res = _dbContext.staffs.Where(x => x.sta_status == status&&x.company_id==companyid).ToList();
             if (start_date != null)
             {
                 list_res = list_res.Where(x => x.sta_created_date >= start_date).ToList();

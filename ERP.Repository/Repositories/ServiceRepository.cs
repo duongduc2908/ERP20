@@ -63,19 +63,17 @@ namespace ERP.Repository.Repositories
             var total = lts_se.Count();
 
             var results = lts_se.OrderByDescending(t => t.se_id).Skip(skipAmount).Take(pageSize);
+            var list_service_type = _dbContext.service_type.ToList();
             foreach (service i in results)
             {
                 serviceviewmodel serviceview = _mapper.Map<serviceviewmodel>(i);
-                for (int j = 1; j < EnumService.se_type.Length + 1; j++)
-                {
-                    if (j == i.se_type)
-                    {
-                        serviceview.se_type_name = EnumService.se_type[j - 1];
-                    }
-                }
+
+                var servicetype = _dbContext.service_type.Find(i.se_type);
+                serviceview.se_type_name = servicetype.styp_name;
                 var x = _dbContext.service_category.Find(i.service_category_id);
                 if (x != null) serviceview.service_category_name = x.sc_name;
-
+                var serviceunit = _dbContext.service_unit.Find(i.se_unit);
+                serviceview.se_unit_name = serviceunit.suni_name;
 
                 res.Add(serviceview);
             }
@@ -120,6 +118,10 @@ namespace ERP.Repository.Repositories
                 var add = _mapper.Map<serviceinforviewmodel>(s);
                 var category = _dbContext.service_category.Find(s.service_category_id);
                 add.service_category_name = category.sc_name;
+                var servicetype = _dbContext.service_type.Find(s.se_type);
+                add.se_type_name = servicetype.styp_name;
+                var serviceunit = _dbContext.service_unit.Find(s.se_unit);
+                add.se_unit_name = serviceunit.suni_name;
                 res.Add(add);
             }
 
@@ -151,19 +153,30 @@ namespace ERP.Repository.Repositories
             }
             return res;
         }
+        public List<dropdown> GetUnit(int company_id)
+        {
+
+            List<dropdown> res = new List<dropdown>();
+            var list_type = _dbContext.service_unit.Where(x => x.company_id == company_id).ToList();
+            foreach (var co in list_type)
+            {
+                dropdown dr = new dropdown();
+                dr.id = co.suni_id;
+                dr.name = co.suni_name;
+                res.Add(dr);
+            }
+            return res;
+        }
         public serviceviewmodel GetById(int se_id)
         {
             service i = _dbContext.services.Find(se_id);
             serviceviewmodel serviceview = _mapper.Map<serviceviewmodel>(i);
-            for (int j = 1; j < EnumService.se_type.Length + 1; j++)
-            {
-                if (j == i.se_type)
-                {
-                    serviceview.se_type_name = EnumService.se_type[j - 1];
-                }
-            }
-            var x = _dbContext.service_category.Find(i.service_category_id);
-            if (x != null) serviceview.service_category_name = x.sc_name;
+            var category = _dbContext.service_category.Find(i.service_category_id);
+            serviceview.service_category_name = category.sc_name;
+            var servicetype = _dbContext.service_type.Find(i.se_type);
+            serviceview.se_type_name = servicetype.styp_name;
+            var serviceunit = _dbContext.service_unit.Find(i.se_unit);
+            serviceview.se_unit_name = serviceunit.suni_name;
             return serviceview;
         }
         public List<dropdown> GetAllDropdown(int company_id)

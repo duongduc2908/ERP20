@@ -62,14 +62,14 @@ namespace ERP.API.Controllers.Dashboard
         }
         [HttpGet]
         [Route("api/training/search")]
-        public IHttpActionResult Getcompanys(int pageNumber, int pageSize, string search_name)
+        public IHttpActionResult Getcompanys(int pageNumber, int pageSize, string search_name ,DateTime? start_date, DateTime? end_date)
         {
             ResponseDataDTO<PagedResults<training>> response = new ResponseDataDTO<PagedResults<training>>();
             try
             {
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _trainingservice.GetAllSearch(pageNumber,pageSize,search_name);
+                response.Data = _trainingservice.GetAllSearch(pageNumber,pageSize,search_name, start_date, end_date);
             }
             catch (Exception ex)
             {
@@ -130,7 +130,8 @@ namespace ERP.API.Controllers.Dashboard
                 create_training.tn_start_date = Convert.ToDateTime(streamProvider.FormData["tn_start_date"]);
                 create_training.tn_end_date = Convert.ToDateTime(streamProvider.FormData["tn_end_date"]);
                 create_training.tn_purpose = Convert.ToString(streamProvider.FormData["tn_purpose"]);
-
+                create_training.tn_create_date = DateTime.Now;
+                create_training.tn_create_staff_name = BaseController.get_infor_current(fullname:true);
                 //Tạo mã code
                 var x = _trainingservice.GetLast();
                 if (x == null) create_training.tn_code = "DT000000";

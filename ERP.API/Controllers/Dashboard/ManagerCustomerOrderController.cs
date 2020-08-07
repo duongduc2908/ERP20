@@ -1121,7 +1121,6 @@ namespace ERP.API.Controllers.Dashboard
                 _customer_orderservice.Create(customer_order_service);
                 var op_last = _customer_orderservice.GetLast();
                 //service time 
-                //service time 
                 #region create service time
                 ServiceTimeCreateViewModel serviceTimeCreate = new ServiceTimeCreateViewModel();
                 serviceTimeCreate.customer_order_id = op_last.cuo_id;
@@ -1161,6 +1160,7 @@ namespace ERP.API.Controllers.Dashboard
                         order_service create_order_service = new order_service();
                         create_order_service.customer_order_id = op_last.cuo_id;
                         create_order_service.service_id = Convert.ToInt32(se.se_id);
+                        create_order_service.os_quantity = Convert.ToInt32(se.os_quantity);
                         _orderserviceservice.Create(create_order_service);
                     }
                     else
@@ -1173,7 +1173,7 @@ namespace ERP.API.Controllers.Dashboard
                         create_service.se_price = se.se_price;
                         create_service.se_saleoff = se.se_saleoff;
                         create_service.se_type = se.se_type;
-
+                        create_service.se_unit = se.se_unit;
 
                         var t = _serviceservice.GetLast();
                         if (t == null) create_service.se_code = "DV000000";
@@ -1184,6 +1184,7 @@ namespace ERP.API.Controllers.Dashboard
                         order_service create_order_service = new order_service();
                         create_order_service.customer_order_id = op_last.cuo_id;
                         create_order_service.service_id = se_last.se_id;
+                        create_order_service.os_quantity = Convert.ToInt32(se.os_quantity);
                         _orderserviceservice.Create(create_order_service);
                     }
 
@@ -1663,7 +1664,7 @@ namespace ERP.API.Controllers.Dashboard
                             order_service create_trs = new order_service();
                             create_trs.customer_order_id = c.cuo_id;
                             create_trs.service_id = _id;
-
+                            create_trs.os_quantity = tr_f.os_quantity;
                             _orderserviceservice.Create(create_trs);
                         }
 
@@ -1679,7 +1680,7 @@ namespace ERP.API.Controllers.Dashboard
                         create_service.se_price = tr_f.se_price;
                         create_service.se_saleoff = tr_f.se_saleoff;
                         create_service.se_type = tr_f.se_type;
-
+                        create_service.se_unit = tr_f.se_unit;
 
                         var t = _serviceservice.GetLast();
                         if (t == null) create_service.se_code = "DV000000";
@@ -1690,6 +1691,7 @@ namespace ERP.API.Controllers.Dashboard
                         order_service create_trs = new order_service();
                         create_trs.customer_order_id = c.cuo_id;
                         create_trs.service_id = tr_last.se_id;
+                        create_trs.os_quantity = tr_f.os_quantity;
                         _serviceservice.Create(tr_last);
                     }
                 }

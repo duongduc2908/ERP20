@@ -36,6 +36,10 @@ namespace ERP.Service.Services
         {
             return this._repository.GetType(company_id);
         }
+        public List<dropdown> GetUnit(int company_id)
+        {
+            return this._repository.GetUnit(company_id);
+        }
         public serviceviewmodel GetById(int se_id)
         {
             return this._repository.GetById(se_id);

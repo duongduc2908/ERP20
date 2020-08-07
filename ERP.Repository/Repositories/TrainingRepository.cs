@@ -40,7 +40,7 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = totalNumberOfRecords
             };
         }
-        public PagedResults<training> GetAllSearch(int pageNumber, int pageSize, string search_name)
+        public PagedResults<training> GetAllSearch(int pageNumber, int pageSize, string search_name, DateTime? start_date, DateTime? end_date)
         {
             if (search_name != null)
             {
@@ -54,7 +54,15 @@ namespace ERP.Repository.Repositories
                 list_res = _dbContext.trainings.ToList();
             }
             else list_res = _dbContext.trainings.Where(x => x.tn_name.ToLower().Contains(search_name)|| x.tn_code.ToLower().Contains(search_name)).ToList();
-            
+            if (start_date != null)
+            {
+                list_res = list_res.Where(x => x.tn_create_date >= start_date).ToList();
+            }
+            if (end_date != null)
+            {
+                end_date = end_date.Value.AddDays(1);
+                list_res = list_res.Where(x => x.tn_create_date <= end_date).ToList();
+            }
             var total = list_res.Count();
             list = list_res.OrderByDescending(t => t.tn_id).Skip(skipAmount).Take(pageSize).ToList();
 

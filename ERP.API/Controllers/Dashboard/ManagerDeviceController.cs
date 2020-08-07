@@ -55,10 +55,36 @@ namespace ERP.API.Controllers.Dashboard
         }
         #endregion
 
+        #region["GetUnit"]
+        [HttpGet]
+        [Route("api/device/get_unit")]
+        public IHttpActionResult GetUnit()
+        {
+            ResponseDataDTO<List<dropdown>> response = new ResponseDataDTO<List<dropdown>>();
+            try
+            {
+                int company_id = BaseController.get_company_id_current();
+                response.Code = HttpCode.OK;
+                response.Message = MessageResponse.SUCCESS;
+                response.Data = _deviceservice.GetUnint(company_id);
+            }
+            catch (Exception ex)
+            {
+                response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                response.Message = MessageResponse.FAIL;
+                response.Data = null;
+
+                Console.WriteLine(ex.ToString());
+            }
+
+            return Ok(response);
+        }
+        #endregion
+
         #region["Search"]
         [HttpGet]
         [Route("api/device/search")]
-        public IHttpActionResult GetDevices(int pageNumber, int pageSize, string search_name)
+        public IHttpActionResult GetDevices(int pageNumber, int pageSize, string search_name, DateTime? start_date, DateTime? end_date)
         {
             ResponseDataDTO<PagedResults<deviceviewmodel>> response = new ResponseDataDTO<PagedResults<deviceviewmodel>>();
             try
@@ -66,7 +92,7 @@ namespace ERP.API.Controllers.Dashboard
                 int compnay_id = BaseController.get_company_id_current();
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _deviceservice.GetAllSearch(pageNumber, pageSize, search_name, compnay_id);
+                response.Data = _deviceservice.GetAllSearch(pageNumber, pageSize, search_name, compnay_id, start_date, end_date);
             }
             catch (Exception ex)
             {
@@ -123,6 +149,16 @@ namespace ERP.API.Controllers.Dashboard
                     response.Message = "Tên vật tư không được để trống";
                     response.Error = "dev_name";
                     return Ok(response);
+                }
+                else
+                {
+                    if (check_exits_name(device.dev_name.Trim(),create:true,device_id:null))
+                    {
+                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                        response.Message = "Tên vật tư đã tồn tại";
+                        response.Error = "dev_name";
+                        return Ok(response);
+                    }
                 }
                 if (device.dev_unit == null)
                 {
@@ -185,18 +221,21 @@ namespace ERP.API.Controllers.Dashboard
                     response.Error = "dev_name";
                     return Ok(response);
                 }
+                else
+                {
+                    if (check_exits_name(device.dev_name.Trim(), create: false,device_id: update_device.dev_id))
+                    {
+                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
+                        response.Message = "Tên vật tư đã tồn tại";
+                        response.Error = "dev_name";
+                        return Ok(response);
+                    }
+                }
                 if (device.dev_unit == null)
                 {
                     response.Code = HttpCode.INTERNAL_SERVER_ERROR;
                     response.Message = "Đơn vị không được để trống";
                     response.Error = "dev_unit";
-                    return Ok(response);
-                }
-                if (device.dev_salary == null)
-                {
-                    response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                    response.Message = "Đơn giá không được để trống";
-                    response.Error = "dev_salary";
                     return Ok(response);
                 }
 
@@ -274,6 +313,24 @@ namespace ERP.API.Controllers.Dashboard
         }
         #endregion
 
+        #endregion
+
+        #region["function common"]
+        bool check_exits_name(string name, int? device_id, bool create=true)
+        {
+            device x = new device();
+            if (create && device_id==null)
+            {
+                 x = _deviceservice.GetAllIncluing(t => t.dev_name.ToLower().Contains(name.ToLower())).FirstOrDefault();
+            }
+            else
+            {
+                x = _deviceservice.GetAllIncluing(t => t.dev_name.ToLower().Contains(name.ToLower()) && t.dev_id !=device_id).FirstOrDefault();
+            }
+            if (x != null)
+                return true;
+            return false;
+        }
         #endregion
 
         #region dispose

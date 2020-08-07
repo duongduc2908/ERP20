@@ -40,9 +40,9 @@ namespace ERP.Service.Services
         {
             return this._repository.GetAllPageSearch(pageNumber, pageSize, status, start_date, end_date, name, sta_working_status,company_id);
         }
-        public PagedResults<staffview> ExportStaff(int pageNumber, int pageSize, int? status, DateTime? start_date, DateTime? end_date, string name, int? sta_working_status)
+        public PagedResults<staffview> ExportStaff(int pageNumber, int pageSize, int? status, DateTime? start_date, DateTime? end_date, string name, int? sta_working_status,int? companyid)
         {
-            return this._repository.ExportStaff(pageNumber, pageSize, status, start_date, end_date, name, sta_working_status);
+            return this._repository.ExportStaff(pageNumber, pageSize, status, start_date, end_date, name, sta_working_status, companyid);
         }
         public staffviewmodel GetInforById(int id)
         {

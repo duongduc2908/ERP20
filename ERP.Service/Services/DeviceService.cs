@@ -28,14 +28,19 @@ namespace ERP.Service.Services
             return this._repository.GetAllDropDown(company_id);
         }
 
-        public PagedResults<deviceviewmodel> GetAllSearch(int pageNumber, int pageSize, string search_name, int compnay_id)
+        public PagedResults<deviceviewmodel> GetAllSearch(int pageNumber, int pageSize, string search_name, int compnay_id, DateTime? start_date, DateTime? end_date)
         {
-            return this._repository.GetAllSearch(pageNumber, pageSize,search_name,compnay_id);
+            return this._repository.GetAllSearch(pageNumber, pageSize,search_name,compnay_id,start_date,end_date);
         }
 
         public deviceviewmodel GetById(int dev_id)
         {
-            throw new NotImplementedException();
+            return this._repository.GetById(dev_id);
+        }
+
+        public List<dropdown> GetUnint(int company_id)
+        {
+            return this._repository.GetUnint(company_id);
         }
     }
 }

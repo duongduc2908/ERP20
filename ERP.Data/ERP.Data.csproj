@@ -246,6 +246,7 @@
     <Compile Include="ModelsERP\service_category.cs" />
     <Compile Include="ModelsERP\service_time.cs" />
     <Compile Include="ModelsERP\service_type.cs" />
+    <Compile Include="ModelsERP\service_unit.cs" />
     <Compile Include="ModelsERP\ship_address.cs" />
     <Compile Include="ModelsERP\sm.cs" />
     <Compile Include="ModelsERP\sms.cs" />

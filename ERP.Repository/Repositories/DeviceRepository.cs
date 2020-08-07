@@ -38,7 +38,7 @@ namespace ERP.Repository.Repositories
             }
             return res;
         }
-        public PagedResults<deviceviewmodel> GetAllSearch(int pageNumber, int pageSize, string search_name, int company_id)
+        public PagedResults<deviceviewmodel> GetAllSearch(int pageNumber, int pageSize, string search_name, int company_id, DateTime? start_date, DateTime? end_date)
         {
             if (search_name != null) search_name = search_name.Trim().ToLower();
             List<deviceviewmodel> res = new List<deviceviewmodel>();
@@ -48,7 +48,16 @@ namespace ERP.Repository.Repositories
             {
                 list = _dbContext.devices.Where(t => t.company_id == company_id).ToList();
             }
-            else list = _dbContext.devices.Where(t => (t.dev_name.ToLower().Contains(search_name) || t.dev_code.ToLower().Contains(search_name)) && t.company_id == company_id).ToList();
+            else list = _dbContext.devices.Where(t => t.dev_name.ToLower().Contains(search_name) && t.company_id == company_id).ToList();
+            if (start_date != null)
+            {
+                list = list.Where(x => x.dev_create_date >= start_date).ToList();
+            }
+            if (end_date != null)
+            {
+                end_date = end_date.Value.AddDays(1);
+                list = list.Where(x => x.dev_create_date <= end_date).ToList();
+            }
             var total = list.Count();
 
             var results = list.OrderByDescending(t => t.dev_id).Skip(skipAmount).Take(pageSize);
@@ -93,7 +102,7 @@ namespace ERP.Repository.Repositories
 
             return deviceview;
         }
-        public List<dropdown> GetUnit(int company_id)
+        public List<dropdown> GetUnint(int company_id)
         {
 
             List<dropdown> res = new List<dropdown>();

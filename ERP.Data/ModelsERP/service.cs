@@ -36,5 +36,6 @@ namespace ERP.Data.ModelsERP
         [StringLength(200)]
         public string se_note { get; set; }
         public int? company_id { get; set; }
+        public int? se_unit { get; set; }
     }
 }

@@ -22,5 +22,6 @@ namespace ERP.Data.ModelsERP
         public int? os_reminder { get; set; }
 
         public int? os_discount { get; set; }
+        public int? os_quantity { get; set; }
     }
 }

@@ -511,7 +511,6 @@ namespace ERP.Repository.Repositories
                                join od in _dbContext.services on ex.service_id equals od.se_id
                                where ex.customer_order_id == id
                                group od by od.se_id into g
-                               
                                select new
                                {
                                     g.Key
@@ -532,8 +531,10 @@ namespace ERP.Repository.Repositories
                 }
                 var x = _dbContext.service_category.Find(s.service_category_id);
                 if (x != null) serviceview.service_category_name = x.sc_name;
-
-
+                var serviceunit = _dbContext.service_unit.Find(s.se_unit);
+                if (serviceunit != null) serviceview.se_unit_name = serviceunit.suni_name;
+                var order_service = _dbContext.order_service.Where(t => t.service_id == se.Key).FirstOrDefault();
+                if (order_service != null) serviceview.os_quantity = order_service.os_quantity;
                 lts_add_se.Add(serviceview);
             }
             add.list_service = lts_add_se;
@@ -672,16 +673,6 @@ namespace ERP.Repository.Repositories
             foreach (var i in results)
             {
                 servicercustomerorderviewmodel add = new servicercustomerorderviewmodel();
-                //service time
-                //add = _mapper.Map<servicercustomerorderviewmodel>(_dbContext.service_time.Where(x => x.customer_order_id == i.cuo_id).FirstOrDefault());
-                //for (int j = 1; j < EnumRepeatType.st_repeat_type.Length + 1; j++)
-                //{
-                //    if (j == add.st_repeat_type)
-                //    {
-                //        add.st_repeat_type_name = EnumRepeatType.st_repeat_type[j - 1];
-                //    }
-                //}
-                //customer order 
                 add.cuo_address = i.cuo.cuo_address;
                 add.cuo_code = i.cuo.cuo_code;
                 add.cuo_date = i.cuo.cuo_date;
@@ -689,159 +680,9 @@ namespace ERP.Repository.Repositories
                 add.cuo_color_show = i.cuo.cuo_color_show;
                 add.cuo_discount = i.cuo.cuo_discount;
                 
-                //Thong tin khach hang 
-
-                //Lay ra thong tin khach hang 
-                //#region customer
-                //customer cu = _dbContext.customers.Where(x => x.cu_id == i.cu.cu_id).FirstOrDefault();
-                //var customerview = _mapper.Map<customerviewmodel>(cu);
-                //var sources = _dbContext.sources.Find(cu.source_id);
-                //var customergroup = _dbContext.customer_group.Find(cu.customer_group_id);
-                //var curator = _dbContext.staffs.Find(cu.cu_curator_id);
-                //var staff_cu = _dbContext.staffs.Find(cu.staff_id);
-                //if (curator != null) customerview.cu_curator_name = curator.sta_fullname;
-                //if (staff_cu != null) customerview.staff_name = staff_cu.sta_fullname;
-                //if (sources != null) customerview.source_name = sources.src_name;
-                //if (customergroup != null) customerview.customer_group_name = customergroup.cg_name;
-
-                //for (int j = 1; j < EnumCustomer.cu_type.Length + 1; j++)
-                //{
-                //    if (j == cu.cu_type)
-                //    {
-                //        customerview.cu_type_name = EnumCustomer.cu_type[j - 1];
-                //    }
-                //}
-                //for (int j = 1; j < EnumCustomer.cu_flag_order.Length + 1; j++)
-                //{
-                //    if (j == cu.cu_flag_order)
-                //    {
-                //        customerview.cu_flag_order_name = EnumCustomer.cu_flag_order[j - 1];
-                //    }
-                //}
-                //for (int j = 1; j < EnumCustomer.cu_flag_used.Length + 1; j++)
-                //{
-                //    if (j == cu.cu_flag_used)
-                //    {
-                //        customerview.cu_flag_used_name = EnumCustomer.cu_flag_used[j - 1];
-                //    }
-                //}
-                //for (int j = 1; j < EnumCustomer.cu_status.Length + 1; j++)
-                //{
-                //    if (j == cu.cu_status)
-                //    {
-                //        customerview.cu_status_name = EnumCustomer.cu_status[j - 1];
-                //    }
-                //}
-                //ship_address exists_address = _dbContext.ship_address.Where(x => x.customer_id == cu.cu_id && x.sha_flag_center == 1).FirstOrDefault();
-
-                //customerview.sha_ward_now = exists_address.sha_ward;
-                //customerview.sha_province_now = exists_address.sha_province;
-                //customerview.sha_district_now = exists_address.sha_district;
-                //customerview.sha_geocoding_now = exists_address.sha_geocoding;
-                //customerview.sha_detail_now = exists_address.sha_detail;
-                //customerview.sha_note_now = exists_address.sha_note;
-                // lay ra dia chi khach hang 
-                //var list_address = _dbContext.ship_address.Where(s => s.customer_id == cu.cu_id && s.sha_flag_center == 0).ToList();
-                //List<shipaddressviewmodel> lst_add = new List<shipaddressviewmodel>();
-                //foreach (ship_address s in list_address)
-                //{
-                //    shipaddressviewmodel add_sp = _mapper.Map<shipaddressviewmodel>(s);
-                //    add_sp.ward_id = _dbContext.ward.Where(t => t.Name.Contains(s.sha_ward)).FirstOrDefault().Id;
-                //    add_sp.district_id = _dbContext.district.Where(t => t.Name.Contains(s.sha_district)).FirstOrDefault().Id;
-                //    add_sp.province_id = _dbContext.province.Where(t => t.Name.Contains(s.sha_province)).FirstOrDefault().Id;
-                //    lst_add.Add(add_sp);
-                //}
-                //customerview.list_ship_address = lst_add;
-                // lay ra dia chi khach hang 
-                //var list_phone = _dbContext.customer_phones.Where(s => s.customer_id == cu.cu_id).ToList();
-                //List<customer_phoneviewmodel> lst_cp_add = new List<customer_phoneviewmodel>();
-                //foreach (customer_phone s in list_phone)
-                //{
-                //    customer_phoneviewmodel add_cp = _mapper.Map<customer_phoneviewmodel>(s);
-                //    for (int j = 1; j < EnumCustomerPhone.cp_type.Length + 1; j++)
-                //    {
-                //        if (j == s.cp_type)
-                //        {
-                //            add_cp.cp_type_name = EnumCustomerPhone.cp_type[j - 1];
-                //        }
-                //    }
-
-                //    lst_cp_add.Add(add_cp);
-                //}
-                //customerview.list_customer_phone = lst_cp_add;
-
-
-                //lay ra lich su cham soc cua khach hang
-                //var list_tran_history = _dbContext.transactions.Where(s => s.customer_id == cu.cu_id).ToList();
-                //List<customertransactionviewmodel> lst_tra_his = new List<customertransactionviewmodel>();
-                //foreach (transaction s in list_tran_history)
-                //{
-                //    customertransactionviewmodel add_t = _mapper.Map<customertransactionviewmodel>(s);
-                //    add_t.staff_name = _dbContext.staffs.Where(t => t.sta_id == s.staff_id).FirstOrDefault().sta_fullname;
-                //    lst_tra_his.Add(add_t);
-                //}
-
-                //customerview.list_transaction = lst_tra_his;
-                //add.customer = customerview;
-                //#endregion
                 add.cu_fullname =  i.cu.cu_fullname;
                 var mobile = _dbContext.customer_phones.Where(x => x.customer_id == i.cuo.customer_id && x.cp_type == 1).FirstOrDefault();
                 if (mobile != null) add.cu_mobile = mobile.cp_phone_number;
-                ////thong tin danh sách service
-                //#region list_service
-                //var lts_service = (from ex in _dbContext.order_service
-                //               join od in _dbContext.services on ex.service_id equals od.se_id
-                //               where ex.customer_order_id == i.cuo_id
-                //               select new
-                //               {
-                //                  od.se_id
-                //               }).ToList();
-                //List<serviceviewmodel> lts_add_se = new List<serviceviewmodel>();
-                //foreach (var se in lts_service)
-                //{
-                //    service s = _dbContext.services.Find(se.se_id);
-                //    serviceviewmodel serviceview = _mapper.Map<serviceviewmodel>(s);
-
-
-                //    for (int j = 1; j < EnumService.se_type.Length + 1; j++)
-                //    {
-                //        if (j == s.se_type)
-                //        {
-                //            serviceview.se_type_name = EnumService.se_type[j - 1];
-                //        }
-                //    }
-                //    var x = _dbContext.service_category.Find(s.service_category_id);
-                //    if (x != null) serviceview.service_category_name = x.sc_name;
-
-
-                //    lts_add_se.Add(serviceview);
-                //}
-                //add.list_service = lts_add_se;
-                //#endregion
-                //Thong tin list executor
-                //#region lts _ executor
-
-                //List<executorviewmodel> lts_add_exe = new List<executorviewmodel>();
-                //List<executor> lts_exe = _dbContext.executors.Where(x => x.customer_order_id == i.cuo_id).ToList();
-                //foreach(executor e in lts_exe)
-                //{
-                //    executorviewmodel add_ex = new executorviewmodel();
-                //    add_ex = _mapper.Map<executorviewmodel>(e);
-                //    var staff_name = _dbContext.staffs.Find(e.staff_id);
-                //    if (staff_name != null) add_ex.staff_name = staff_name.sta_fullname;
-                //    for (int j = 1; j < EnumExecutor.exe_status.Length + 1; j++)
-                //    {
-                //        if (j == e.exe_status)
-                //        {
-                //            add_ex.exe_status_name = EnumExecutor.exe_status[j - 1];
-                //        }
-                //    }
-                //    if (add_ex.exe_flag_overtime == true) add_ex.exe_flag_overtime_name = "Có";
-                //    if (add_ex.exe_flag_overtime == false) add_ex.exe_flag_overtime_name = "Không";
-                //    lts_add_exe.Add(add_ex);
-                //}
-                //add.list_executor = lts_add_exe;
-                //#endregion
                 res.Add(add);
 
             }

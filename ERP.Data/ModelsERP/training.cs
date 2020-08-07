@@ -7,9 +7,8 @@ namespace ERP.Data.ModelsERP
     using System.Data.Entity.Spatial;
 
     [Table("training")]
-    public partial class training 
+    public partial class training
     {
-
         [Key]
         public int tn_id { get; set; }
 
@@ -27,5 +26,8 @@ namespace ERP.Data.ModelsERP
 
         public string tn_purpose { get; set; }
 
+        public DateTime? tn_create_date { get; set; }
+
+        public string tn_create_staff_name { get; set; }
     }
 }

@@ -15,8 +15,6 @@ namespace ERP.API.Models
         public int? dev_number { get; set; }
 
         public string dev_note { get; set; }
-
-        public double? dev_salary { get; set; }
         public string dev_code { get; set; }
     }
 }

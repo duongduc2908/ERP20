@@ -23,9 +23,9 @@ namespace ERP.Service.Services
         {
             return this._repository.CreatePagedResults(pageNumber, pageSize);
         } 
-        public PagedResults<training> GetAllSearch(int pageNumber, int pageSize, string search_name)
+        public PagedResults<training> GetAllSearch(int pageNumber, int pageSize, string search_name, DateTime? start_date, DateTime? end_date)
         {
-            return this._repository.GetAllSearch(pageNumber, pageSize,search_name);
+            return this._repository.GetAllSearch(pageNumber, pageSize,search_name,start_date,end_date);
         } 
         public List<dropdown> GetAllName()
         {

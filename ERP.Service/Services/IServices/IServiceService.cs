@@ -19,6 +19,7 @@ namespace ERP.Service.Services.IServices
         List<dropdown> GetAllDropdown(int comapny_id);
         PagedResults<serviceinforviewmodel> GetAllPageInforService(int pageNumber, int pageSize,string search_name, int comapny_id);
         List<dropdown> GetType(int comapny_id);
+        List<dropdown> GetUnit(int comapny_id);
         
     }
 }
