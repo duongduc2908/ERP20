@@ -50,6 +50,7 @@ namespace ERP.Repository.Repositories
         {
             transactionviewmodel transactionview = new transactionviewmodel();
             var tran = _dbContext.transactions.Where(x => x.tra_id == tra_id).FirstOrDefault();
+            var list_se_type = _dbContext.service_type.ToList();
             if (tran != null)
             {
                 transactionview = _mapper.Map<transactionviewmodel>(tran);
@@ -87,101 +88,6 @@ namespace ERP.Repository.Repositories
                 if(staff_name != null) transactionview.staff_name = staff_name.sta_fullname;
                 var cus_name = _dbContext.customers.Where(s => s.cu_id == tran.customer_id).FirstOrDefault();
                 if(cus_name != null) transactionview.customer_name = cus_name.cu_fullname;
-
-
-                //Lay ra thong tin khach hang 
-                //#region customer
-                //customer cu = _dbContext.customers.Where(x => x.cu_id == tran.customer_id).FirstOrDefault();
-                //var customerview = _mapper.Map<customerviewmodel>(cu);
-                //var sources = _dbContext.sources.Find(cu.source_id);
-                //var customergroup = _dbContext.customer_group.Find(cu.customer_group_id);
-                //var curator = _dbContext.staffs.Find(cu.cu_curator_id);
-                //var staff_cu = _dbContext.staffs.Find(cu.staff_id);
-                //if (curator != null) customerview.cu_curator_name = curator.sta_fullname;
-                //if (staff_cu != null) customerview.staff_name = staff_cu.sta_fullname;
-                //if (sources != null) customerview.source_name = sources.src_name;
-                //if (customergroup != null) customerview.customer_group_name = customergroup.cg_name;
-
-                //for (int j = 1; j < EnumCustomer.cu_type.Length + 1; j++)
-                //{
-                //    if (j == cu.cu_type)
-                //    {
-                //        customerview.cu_type_name = EnumCustomer.cu_type[j - 1];
-                //    }
-                //}
-                //for (int j = 1; j < EnumCustomer.cu_flag_order.Length + 1; j++)
-                //{
-                //    if (j == cu.cu_flag_order)
-                //    {
-                //        customerview.cu_flag_order_name = EnumCustomer.cu_flag_order[j - 1];
-                //    }
-                //}
-                //for (int j = 1; j < EnumCustomer.cu_flag_used.Length + 1; j++)
-                //{
-                //    if (j == cu.cu_flag_used)
-                //    {
-                //        customerview.cu_flag_used_name = EnumCustomer.cu_flag_used[j - 1];
-                //    }
-                //}
-                //for (int j = 1; j < EnumCustomer.cu_status.Length + 1; j++)
-                //{
-                //    if (j == cu.cu_status)
-                //    {
-                //        customerview.cu_status_name = EnumCustomer.cu_status[j - 1];
-                //    }
-                //}
-                //ship_address exists_address = _dbContext.ship_address.Where(x => x.customer_id == cu.cu_id && x.sha_flag_center == 1).FirstOrDefault();
-
-                //customerview.sha_ward_now = exists_address.sha_ward;
-                //customerview.sha_province_now = exists_address.sha_province;
-                //customerview.sha_district_now = exists_address.sha_district;
-                //customerview.sha_geocoding_now = exists_address.sha_geocoding;
-                //customerview.sha_detail_now = exists_address.sha_detail;
-                //customerview.sha_note_now = exists_address.sha_note;
-                //// lay ra dia chi khach hang 
-                //var list_address = _dbContext.ship_address.Where(s => s.customer_id == cu.cu_id && s.sha_flag_center == 0).ToList();
-                //List<shipaddressviewmodel> lst_add = new List<shipaddressviewmodel>();
-                //foreach (ship_address s in list_address)
-                //{
-                //    shipaddressviewmodel add_sp = _mapper.Map<shipaddressviewmodel>(s);
-                //    add_sp.ward_id = _dbContext.ward.Where(t => t.Name.Contains(s.sha_ward)).FirstOrDefault().Id;
-                //    add_sp.district_id = _dbContext.district.Where(t => t.Name.Contains(s.sha_district)).FirstOrDefault().Id;
-                //    add_sp.province_id = _dbContext.province.Where(t => t.Name.Contains(s.sha_province)).FirstOrDefault().Id;
-                //    lst_add.Add(add_sp);
-                //}
-                //customerview.list_ship_address = lst_add;
-                //// lay ra dia chi khach hang 
-                //var list_phone = _dbContext.customer_phones.Where(s => s.customer_id == cu.cu_id).ToList();
-                //List<customer_phoneviewmodel> lst_cp_add = new List<customer_phoneviewmodel>();
-                //foreach (customer_phone s in list_phone)
-                //{
-                //    customer_phoneviewmodel add_cp = _mapper.Map<customer_phoneviewmodel>(s);
-                //    for (int j = 1; j < EnumCustomerPhone.cp_type.Length + 1; j++)
-                //    {
-                //        if (j == s.cp_type)
-                //        {
-                //            add_cp.cp_type_name = EnumCustomerPhone.cp_type[j - 1];
-                //        }
-                //    }
-
-                //    lst_cp_add.Add(add_cp);
-                //}
-                //customerview.list_customer_phone = lst_cp_add;
-
-
-                ////lay ra lich su cham soc cua khach hang
-                //var list_tran_history = _dbContext.transactions.Where(s => s.customer_id == cu.cu_id).ToList();
-                //List<customertransactionviewmodel> lst_tra_his = new List<customertransactionviewmodel>();
-                //foreach (transaction s in list_tran_history)
-                //{
-                //    customertransactionviewmodel add_t = _mapper.Map<customertransactionviewmodel>(s);
-                //    add_t.staff_name = _dbContext.staffs.Where(t => t.sta_id == s.staff_id).FirstOrDefault().sta_fullname;
-                //    lst_tra_his.Add(add_t);
-                //}
-
-                //customerview.list_transaction = lst_tra_his;
-                //transactionview.customer = customerview;
-                //#endregion
             }
             //Lay ra  khang hang 
             transactioncustomerviewmodel res = new transactioncustomerviewmodel();
@@ -209,6 +115,7 @@ namespace ERP.Repository.Repositories
                     customerview.cu_type_name = EnumCustomer.cu_type[j - 1];
                 }
             }
+
             //lay ra lich su dich vu cua khach hang
             #region cusotmer order service
             List<transactionorderserviceviewmodel> list_add_order_service = new List<transactionorderserviceviewmodel>();
@@ -229,11 +136,11 @@ namespace ERP.Repository.Repositories
                     if (se != null)
                     {
                         transactionorderserviceviewmodel add = _mapper.Map<transactionorderserviceviewmodel>(se);
-                        for (int j = 1; j < EnumService.se_type.Length + 1; j++)
+                        foreach (service_type j in list_se_type)
                         {
-                            if (j == add.se_type)
+                            if (add.se_type == j.styp_id)
                             {
-                                add.se_type_name = EnumService.se_type[j - 1];
+                                add.se_type_name = j.styp_name;
                             }
                         }
                         var x = _dbContext.service_category.Find(add.service_category_id);
@@ -429,13 +336,8 @@ namespace ERP.Repository.Repositories
                 transactionview.customer_phone = i.cp_phone_number;
                 transactionview.customer_name = i.cu_fullname;
                 //Bat theo Enums
-                for (int j = 1; j < EnumTransaction.tra_type.Length + 1; j++)
-                {
-                    if (j == i.tra.tra_type)
-                    {
-                        transactionview.tra_type_name = EnumTransaction.tra_type[j - 1];
-                    }
-                }
+                var tra_type= _dbContext.transaction_deal_type.Where(x => x.trand_id == i.tra.tra_type).FirstOrDefault();
+                if (tra_type != null) transactionview.tra_type_name = tra_type.trand_name;
                 var tra_priority = _dbContext.transaction_priority.Where(x => x.tpro_id == i.tra.tra_priority).FirstOrDefault();
                 if (tra_priority != null) transactionview.tra_priority_name = tra_priority.tpro_name;
                 

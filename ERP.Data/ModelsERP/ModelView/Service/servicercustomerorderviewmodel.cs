@@ -27,6 +27,7 @@ namespace ERP.Data.ModelsERP.ModelView.Service
         //Thong in order 
         public string cuo_color_show { get; set; }
         public int? cuo_discount { get; set; }
+        public int cuo_total_price { get; set; }
         //service_time
         public int st_id { get; set; }
         public TimeSpan st_start_time { get; set; }

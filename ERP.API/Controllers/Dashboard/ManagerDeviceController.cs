@@ -321,11 +321,11 @@ namespace ERP.API.Controllers.Dashboard
             device x = new device();
             if (create && device_id==null)
             {
-                 x = _deviceservice.GetAllIncluing(t => t.dev_name.ToLower().Contains(name.ToLower())).FirstOrDefault();
+                 x = _deviceservice.GetAllIncluing(t => t.dev_name.ToLower().Equals(name.ToLower())).FirstOrDefault();
             }
             else
             {
-                x = _deviceservice.GetAllIncluing(t => t.dev_name.ToLower().Contains(name.ToLower()) && t.dev_id !=device_id).FirstOrDefault();
+                x = _deviceservice.GetAllIncluing(t => t.dev_name.ToLower().Equals(name.ToLower()) && t.dev_id !=device_id).FirstOrDefault();
             }
             if (x != null)
                 return true;

@@ -1,9 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="0902d905-d05a-40fc-a66c-ffabd18c8063" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERP.API/.dockerignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERP.API/.original" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERP.API/Controllers/Dashboard/BaseController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ERP.API/Controllers/Dashboard/BaseController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERP.API/Controllers/Dashboard/ManagerCustomerOrderController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ERP.API/Controllers/Dashboard/ManagerCustomerOrderController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERP.API/Controllers/Dashboard/ManagerDeviceController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ERP.API/Controllers/Dashboard/ManagerDeviceController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERP.API/Controllers/Dashboard/ManagerStaffController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ERP.API/Controllers/Dashboard/ManagerStaffController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERP.API/Dockerfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERP.API/Dockerfile.original" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/ERP.API/ERP.API.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/ERP.API/ERP.API.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ERP.API/Web.config" beforeDir="false" afterPath="$PROJECT_DIR$/ERP.API/Web.config" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERP.API/Models/CustomerOrderServiceViewModelCreate.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ERP.API/Models/CustomerOrderServiceViewModelCreate.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERP.API/Models/CustomerOrderServiceViewModelUpdate.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ERP.API/Models/CustomerOrderServiceViewModelUpdate.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERP.API/Models/TransactionCreateViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ERP.API/Models/TransactionCreateViewModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERP.API/Models/TransactionViewModelCreate.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ERP.API/Models/TransactionViewModelCreate.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERP.API/Models/TransactionViewModelUpdate.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ERP.API/Models/TransactionViewModelUpdate.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERP.Common/Constants/CheckNumber.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ERP.Common/Constants/CheckNumber.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERP.Data/DbContext/ERPDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ERP.Data/DbContext/ERPDbContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERP.Data/ERP.Data.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/ERP.Data/ERP.Data.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERP.Data/ModelsERP/ModelView/Customer/customeraddressviewmodel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ERP.Data/ModelsERP/ModelView/Customer/customeraddressviewmodel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERP.Data/ModelsERP/ModelView/Customer/customertransactionviewmodel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ERP.Data/ModelsERP/ModelView/Customer/customertransactionviewmodel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERP.Data/ModelsERP/ModelView/Customer/customerviewmodel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ERP.Data/ModelsERP/ModelView/Customer/customerviewmodel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERP.Data/ModelsERP/ModelView/CustomerOrder/servicejson.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ERP.Data/ModelsERP/ModelView/CustomerOrder/servicejson.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERP.Data/ModelsERP/ModelView/ExportDB/customerviewexport.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ERP.Data/ModelsERP/ModelView/ExportDB/customerviewexport.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERP.Data/ModelsERP/ModelView/OrderService/order_service_view.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ERP.Data/ModelsERP/ModelView/OrderService/order_service_view.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERP.Data/ModelsERP/ModelView/Service/servicercustomerorderviewmodel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ERP.Data/ModelsERP/ModelView/Service/servicercustomerorderviewmodel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERP.Data/ModelsERP/ModelView/Service/serviceviewmodel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ERP.Data/ModelsERP/ModelView/Service/serviceviewmodel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERP.Data/ModelsERP/ModelView/Transaction/transactionorderserviceviewmodel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ERP.Data/ModelsERP/ModelView/Transaction/transactionorderserviceviewmodel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERP.Data/ModelsERP/ModelView/Transaction/transactionviewmodel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ERP.Data/ModelsERP/ModelView/Transaction/transactionviewmodel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERP.Data/ModelsERP/order_service.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ERP.Data/ModelsERP/order_service.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERP.Data/ModelsERP/ship_address.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ERP.Data/ModelsERP/ship_address.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERP.Data/ModelsERP/social.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ERP.Data/ModelsERP/social.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERP.Repository/ERP.Repository.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/ERP.Repository/ERP.Repository.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERP.Repository/Repositories/CustomerOrderRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ERP.Repository/Repositories/CustomerOrderRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERP.Repository/Repositories/CustomerRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ERP.Repository/Repositories/CustomerRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERP.Repository/Repositories/IRepositories/ICustomerOrderRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ERP.Repository/Repositories/IRepositories/ICustomerOrderRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERP.Repository/Repositories/IRepositories/IStaffRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ERP.Repository/Repositories/IRepositories/IStaffRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERP.Repository/Repositories/StaffRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ERP.Repository/Repositories/StaffRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERP.Repository/Repositories/TransactionRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ERP.Repository/Repositories/TransactionRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERP.Service/ERP.Service.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/ERP.Service/ERP.Service.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERP.Service/Services/CustomerOrderService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ERP.Service/Services/CustomerOrderService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERP.Service/Services/IServices/ICustomerOrderService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ERP.Service/Services/IServices/ICustomerOrderService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERP.Service/Services/IServices/IStaffService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ERP.Service/Services/IServices/IStaffService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERP.Service/Services/StaffService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ERP.Service/Services/StaffService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/department_200218170748.xlsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.dcproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.override.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,7 +101,23 @@
     </task>
     <servers />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
   <component name="WindowStateProjectService">
+    <state x="727" y="327" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1599214365643">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state x="727" y="327" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1050@0.0.1920.1050" timestamp="1599214365643" />
     <state x="740" y="280" key="FileChooserDialogImpl" timestamp="1594904273240">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>

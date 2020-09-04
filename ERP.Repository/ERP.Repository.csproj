@@ -543,6 +543,7 @@
     <Compile Include="Repositories\IRepositories\ISourceRepository.cs" />
     <Compile Include="Repositories\IRepositories\IStaffBrankRepository.cs" />
     <Compile Include="Repositories\IRepositories\IStaffRepository.cs" />
+    <Compile Include="Repositories\IRepositories\IStaffTypeRepository.cs" />
     <Compile Include="Repositories\IRepositories\IStaffWorkTimeRepository.cs" />
     <Compile Include="Repositories\IRepositories\ISupplierRepository.cs" />
     <Compile Include="Repositories\IRepositories\ISupplierTypeRepository.cs" />
@@ -572,6 +573,7 @@
     <Compile Include="Repositories\SourceRepository.cs" />
     <Compile Include="Repositories\StaffBrankRepository.cs" />
     <Compile Include="Repositories\StaffRepository.cs" />
+    <Compile Include="Repositories\StaffTypeRepository.cs" />
     <Compile Include="Repositories\StaffWorkTimeRepository.cs" />
     <Compile Include="Repositories\SupplierRepository.cs" />
     <Compile Include="Repositories\SupplierTypeRepository.cs" />

@@ -19,7 +19,7 @@ namespace ERP.Repository.Repositories.IRepositories
         PagedResults<customerorderviewmodel> CreatePagedResults(int pageNumber, int pageSize);
         customerordermodelview GetAllOrderById(int id);
         servicercustomerorderviewmodel GetAllOrderServiceById(int id);
-        List<order_service_view> GetServiceByDay(int id, DateTime start_date, DateTime to_date);
+        List<order_service_view> GetServiceByDay(string role,int id, DateTime start_date, DateTime to_date);
         PagedResults<customerorderviewmodel> GetAllSearch(int pageNumber, int pageSize, int? payment_type_id,int? cuo_status, DateTime? start_date, DateTime? end_date, string name, int company_id);
         PagedResults<servicercustomerorderviewmodel> GetAllSearchCustomerOrderService(int pageNumber, int pageSize, DateTime? start_date, DateTime? end_date, string search_name, int company_id);
         PagedResults<customerorderproductview> ExportCustomerOrderProduct(int pageNumber, int pageSize, int? payment_type_id, DateTime? start_date, DateTime? end_date, string name, int company_id);

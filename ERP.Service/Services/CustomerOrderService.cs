@@ -34,9 +34,9 @@ namespace ERP.Service.Services
         {
             return this._repository.GetAllOrderServiceById(id);
         }
-        public List<order_service_view> GetServiceByDay(int id, DateTime start_date, DateTime to_date)
+        public List<order_service_view> GetServiceByDay(string role ,int id, DateTime start_date, DateTime to_date)
         {
-            return this._repository.GetServiceByDay(id, start_date, to_date);
+            return this._repository.GetServiceByDay(role,id, start_date, to_date);
         }
        
         public PagedResults<customerorderviewmodel> GetAllSearch(int pageNumber, int pageSize, int? payment_type_id,int? cuo_status, DateTime? start_date, DateTime? end_date, string name,int company_id)

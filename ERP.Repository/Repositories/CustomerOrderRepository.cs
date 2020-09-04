@@ -516,17 +516,18 @@ namespace ERP.Repository.Repositories
                                     g.Key
                                }).ToList();
             List<serviceviewmodel> lts_add_se = new List<serviceviewmodel>();
+            var list_service_type = _dbContext.service_type.ToList();
             foreach (var se in lts_service)
             {
                 service s = _dbContext.services.Find(se.Key);
                 serviceviewmodel serviceview = _mapper.Map<serviceviewmodel>(s);
 
 
-                for (int j = 1; j < EnumService.se_type.Length + 1; j++)
+                foreach(service_type st in list_service_type)
                 {
-                    if (j == s.se_type)
+                    if (st.styp_id == s.se_type)
                     {
-                        serviceview.se_type_name = EnumService.se_type[j - 1];
+                        serviceview.se_type_name = st.styp_name;
                     }
                 }
                 var x = _dbContext.service_category.Find(s.service_category_id);
@@ -654,10 +655,21 @@ namespace ERP.Repository.Repositories
                               {
                                   cuo,cu
                               }).ToList();
-         
-            if(search_name != null)
+
+            if (search_name != null)
             {
-                lts_cuo_cu = lts_cuo_cu.Where(x => (x.cu.cu_fullname.ToLower().Contains(search_name) || x.cuo.cuo_code.ToLower().Contains(search_name))).ToList();
+                if (CheckNumber.IsNumber(search_name))
+                {
+                    lts_cuo_cu = (from cuo in _dbContext.customer_order
+                                      join cu in _dbContext.customers on cuo.customer_id equals cu.cu_id
+                                      join cu_p in _dbContext.customer_phones on cuo.customer_id equals cu_p.customer_id
+                                      where cuo.cuo_code.Contains("ORS") && cuo.company_id == company_id && cu_p.cp_phone_number.Contains(search_name)
+                                      select new
+                                      {
+                                          cuo,cu
+                                      }).ToList();
+                }
+                else lts_cuo_cu = lts_cuo_cu.Where(x => (x.cu.cu_fullname.ToLower().Contains(search_name) || x.cuo.cuo_code.ToLower().Contains(search_name))).ToList();
             }
             if (start_date != null)
             {
@@ -974,45 +986,111 @@ namespace ERP.Repository.Repositories
             };
         }
 
-        public List<order_service_view> GetServiceByDay(int id, DateTime start_date, DateTime to_date)
+        public List<order_service_view> GetServiceByDay(string role ,int id, DateTime start_date, DateTime to_date)
         {
             List<order_service_view> res = new List<order_service_view>();
-            var test = _dbContext.executors.Where(ex => ex.staff_id == id && ex.work_time >= start_date.Date && ex.work_time <= to_date.Date).ToList();
-            var lts_cg = (from ex in _dbContext.executors
-                          join od in _dbContext.order_service on ex.customer_order_id equals od.customer_order_id
-                          join sv in _dbContext.services on od.service_id equals sv.se_id
-                          where ex.staff_id == id && ex.work_time >= start_date.Date && ex.work_time <= to_date.Date
-                          orderby ex.work_time 
-                          select new
-                          {
-                              ex.work_time,ex.start_time, ex.end_time, sv.se_name
-                          }).ToList();
-            for(int i =0; i<lts_cg.Count;i++)
+            if (role.Contains("Admin"))
             {
-                orderservice_day oday = new orderservice_day();
-                order_service_view ov = new order_service_view();
-                oday.start_time = lts_cg[i].start_time;
-                oday.end_time = lts_cg[i].end_time;
-                oday.service_name = lts_cg[i].se_name;
-                ov.list_service.Add(oday);
-                for (int j = i+1;j<lts_cg.Count; j++)
+                var lts_cg = (from ex in _dbContext.executors
+                              join od in _dbContext.order_service on ex.customer_order_id equals od.customer_order_id
+                              join sv in _dbContext.services on od.service_id equals sv.se_id
+                              join st in _dbContext.staffs on ex.staff_id equals st.sta_id
+                              join cuo in _dbContext.customer_order on od.customer_order_id equals cuo.cuo_id
+                              where ex.work_time >= start_date.Date && ex.work_time <= to_date.Date
+                              orderby ex.work_time
+                              select new
+                              {
+                                  ex.work_time,
+                                  ex.start_time,
+                                  ex.end_time,
+                                  sv.se_name,
+                                  st.sta_fullname,
+                                  cuo.customer_id
+                              }).ToList();
+                for (int i = 0; i < lts_cg.Count; i++)
                 {
-                    
-                    if (lts_cg[i].work_time == lts_cg[j].work_time)
+                    orderservice_day oday = new orderservice_day();
+                    order_service_view ov = new order_service_view();
+                    oday.start_time = lts_cg[i].start_time;
+                    oday.end_time = lts_cg[i].end_time;
+                    oday.service_name = lts_cg[i].se_name;
+                    ov.list_service.Add(oday);
+                    for (int j = i + 1; j < lts_cg.Count; j++)
                     {
-                        orderservice_day oday2 = new orderservice_day();
-                        oday2.start_time = lts_cg[j].start_time;
-                        oday2.end_time = lts_cg[j].end_time;
-                        oday2.service_name = lts_cg[j].se_name;
-                        ov.list_service.Add(oday2);
-                        i = j;
-                        break;
 
+                        if (lts_cg[i].work_time == lts_cg[j].work_time)
+                        {
+                            orderservice_day oday2 = new orderservice_day();
+                            oday2.start_time = lts_cg[j].start_time;
+                            oday2.end_time = lts_cg[j].end_time;
+                            oday2.service_name = lts_cg[j].se_name;
+                            ov.list_service.Add(oday2);
+                            i = j;
+                            break;
+
+                        }
                     }
+                    ov.work_time = lts_cg[i].work_time;
+                    ov.staff_name = lts_cg[i].sta_fullname;
+                    int cu_id = lts_cg[i].customer_id.Value;
+                    var cu = _dbContext.customers.FirstOrDefault(x => x.cu_id == cu_id);
+                    var phone = _dbContext.customer_phones.FirstOrDefault(x => x.customer_id == cu_id && x.cp_type == 1);
+                    ov.customer_name = cu.cu_fullname;
+                    ov.cu_phone_number = phone.cp_phone_number;
+                    res.Add(ov);
                 }
-                ov.work_time = lts_cg[i].work_time;
-                res.Add(ov);
             }
+            else {
+                var lts_cg = (from ex in _dbContext.executors
+                              join od in _dbContext.order_service on ex.customer_order_id equals od.customer_order_id
+                              join sv in _dbContext.services on od.service_id equals sv.se_id
+                              join st in _dbContext.staffs on ex.staff_id equals st.sta_id
+                              join cuo in _dbContext.customer_order on od.customer_order_id equals cuo.cuo_id
+                              where ex.staff_id == id && ex.work_time >= start_date.Date && ex.work_time <= to_date.Date
+                              orderby ex.work_time
+                              select new
+                              {
+                                  ex.work_time,
+                                  ex.start_time,
+                                  ex.end_time,
+                                  sv.se_name,
+                                  st.sta_fullname,
+                                  cuo.customer_id
+                              }).ToList();
+                for (int i = 0; i < lts_cg.Count; i++)
+                {
+                    orderservice_day oday = new orderservice_day();
+                    order_service_view ov = new order_service_view();
+                    oday.start_time = lts_cg[i].start_time;
+                    oday.end_time = lts_cg[i].end_time;
+                    oday.service_name = lts_cg[i].se_name;
+                    ov.list_service.Add(oday);
+                    for (int j = i + 1; j < lts_cg.Count; j++)
+                    {
+
+                        if (lts_cg[i].work_time == lts_cg[j].work_time)
+                        {
+                            orderservice_day oday2 = new orderservice_day();
+                            oday2.start_time = lts_cg[j].start_time;
+                            oday2.end_time = lts_cg[j].end_time;
+                            oday2.service_name = lts_cg[j].se_name;
+                            ov.list_service.Add(oday2);
+                            i = j;
+                            break;
+
+                        }
+                    }
+                    ov.work_time = lts_cg[i].work_time;
+                    ov.staff_name = lts_cg[i].sta_fullname;
+                    int cu_id = lts_cg[i].customer_id.Value;
+                    var cu = _dbContext.customers.FirstOrDefault(x => x.cu_id == cu_id);
+                    var phone = _dbContext.customer_phones.FirstOrDefault(x => x.customer_id == cu_id && x.cp_type == 1);
+                    ov.customer_name = cu.cu_fullname;
+                    ov.cu_phone_number = phone.cp_phone_number;
+                    res.Add(ov);
+                }
+            }
+           
             return res;
         }
     }

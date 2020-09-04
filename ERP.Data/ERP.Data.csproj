@@ -256,6 +256,7 @@
     <Compile Include="ModelsERP\source.cs" />
     <Compile Include="ModelsERP\staff.cs" />
     <Compile Include="ModelsERP\staff_brank.cs" />
+    <Compile Include="ModelsERP\staff_type.cs" />
     <Compile Include="ModelsERP\staff_work_time.cs" />
     <Compile Include="ModelsERP\supplier.cs" />
     <Compile Include="ModelsERP\supplier_type.cs" />

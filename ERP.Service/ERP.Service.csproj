@@ -141,6 +141,7 @@
     <Compile Include="Services\IServices\ISourceService.cs" />
     <Compile Include="Services\IServices\IStaffBrankService.cs" />
     <Compile Include="Services\IServices\IStaffService.cs" />
+    <Compile Include="Services\IServices\IStaffTypeService.cs" />
     <Compile Include="Services\IServices\IStaffWorkTimeService.cs" />
     <Compile Include="Services\IServices\ISupplierService.cs" />
     <Compile Include="Services\IServices\ISupplierTypeService.cs" />
@@ -170,6 +171,7 @@
     <Compile Include="Services\SourceService.cs" />
     <Compile Include="Services\StaffBrankService.cs" />
     <Compile Include="Services\StaffService.cs" />
+    <Compile Include="Services\StaffTypeService.cs" />
     <Compile Include="Services\StaffWorkTimeService.cs" />
     <Compile Include="Services\SupplierService.cs" />
     <Compile Include="Services\SupplierTypeService.cs" />

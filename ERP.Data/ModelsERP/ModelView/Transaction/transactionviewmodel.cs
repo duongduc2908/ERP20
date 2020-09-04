@@ -19,7 +19,7 @@ namespace ERP.Data.ModelsERP.ModelView.Transaction
 
         public int tra_rate { get; set; }
         public string tra_rate_name { get; set; }
-        public byte? tra_type { get; set; }
+        public int tra_type { get; set; }
         public string tra_type_name { get; set; }
 
         public DateTime? tra_datetime { get; set; }
@@ -27,7 +27,7 @@ namespace ERP.Data.ModelsERP.ModelView.Transaction
         [StringLength(50)]
         public string tra_result { get; set; }
 
-        public byte? tra_priority { get; set; }
+        public int tra_priority { get; set; }
         public string tra_priority_name { get; set; }
 
         public int? staff_id { get; set; }

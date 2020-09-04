@@ -18,6 +18,7 @@ namespace ERP.API.Models
         public string cuo_infor_time { get; set; }
         public string cuo_color_show {get;set;}
         public int cuo_discount { get; set; }
+        public int cuo_total_price { get; set; }
 
         //Thông tin khách hàng và thông tin địa chỉ 
         public CustomerUpdateViewModelJson customer { get; set; }

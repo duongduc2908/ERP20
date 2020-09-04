@@ -15,6 +15,8 @@ namespace ERP.Data.ModelsERP.ModelView.OrderService
         [Column(TypeName = "date")]
         public DateTime work_time { get; set; }
         public string staff_name { get; set; }
+        public string customer_name { get; set; }
+        public string cu_phone_number { get; set; }
         public List<orderservice_day> list_service { get; set; }
     }
 }

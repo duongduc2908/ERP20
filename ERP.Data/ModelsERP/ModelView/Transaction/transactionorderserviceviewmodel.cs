@@ -14,7 +14,7 @@ namespace ERP.Data.ModelsERP.ModelView.Transaction
         [StringLength(10)]
         public string se_code { get; set; }
 
-        public byte? se_type { get; set; }
+        public int se_type { get; set; }
         public string se_type_name { get; set; }
 
         [StringLength(100)]

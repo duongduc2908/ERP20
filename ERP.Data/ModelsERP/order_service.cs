@@ -16,6 +16,7 @@ namespace ERP.Data.ModelsERP
         public int? service_id { get; set; }
 
         public int? customer_order_id { get; set; }
+        public int? se_number { get; set; }
 
         public byte? os_show_as { get; set; }
 

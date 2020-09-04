@@ -90,6 +90,7 @@ namespace ERP.Data.DbContext
         public virtual DbSet<device_staff> device_staff { get; set; }
         public virtual DbSet<device_unit> device_unit { get; set; }
         public virtual DbSet<service_unit> service_unit { get; set; }
+        public virtual DbSet<staff_type> staff_type { get; set; }
 
     }
 }

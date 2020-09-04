@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ERP.Common.Constants;
 using ERP.Common.Constants.Enums;
 using ERP.Common.GenericRepository;
 using ERP.Common.Models;
@@ -170,13 +171,26 @@ namespace ERP.Repository.Repositories
         public PagedResults<customerviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? source_id, int? cu_type, int? customer_group_id, DateTime? start_date, DateTime? end_date, string name,int company_id)
         {
             if (name != null) name = name.Trim().ToLower();
-            List<customer> list;
+            List<customer> list = new List<customer>();
             List<customerviewmodel> res = new List<customerviewmodel>();
             var skipAmount = pageSize * pageNumber;
             if (name == null)
             {
                 list = _dbContext.customers.Where(x => x.company_id == company_id).ToList();
             }
+            else if (CheckNumber.IsNumber(name))
+            {
+                
+                var customer_id_phone = _dbContext.customer_phones.Where(t => t.cp_phone_number.Contains(name)).ToList();
+                if(customer_id_phone!=null&&customer_id_phone.Count>0)
+                {
+                    foreach(customer_phone cu_p in customer_id_phone)
+                    {
+                        list.Add(_dbContext.customers.Where(x =>x.company_id == company_id && x.cu_id ==cu_p.customer_id).FirstOrDefault());
+                    }
+                    
+                }
+            } 
             else list = _dbContext.customers.Where(x => (x.cu_fullname.ToLower().Contains(name) || x.cu_code.ToLower().Contains(name))&& x.company_id == company_id).ToList();
             if (source_id != null)
             {
@@ -202,7 +216,8 @@ namespace ERP.Repository.Repositories
             var total = list.Count();
 
             var results = list.OrderByDescending(t => t.cu_id).Skip(skipAmount).Take(pageSize);
-            foreach(customer i in results)
+            var list_se_type = _dbContext.service_type.Where(x => x.company_id == company_id).ToList();
+            foreach (customer i in results)
             {
                 var customerview = _mapper.Map<customerviewmodel>(i);
                 var sources = _dbContext.sources.Find(i.source_id);
@@ -265,7 +280,7 @@ namespace ERP.Repository.Repositories
                     lst_add.Add(add);
                 }
                 customerview.list_ship_address = lst_add;
-                // lay ra dia chi khach hang 
+                // lay ra so dien thoai khach hang 
                 var list_phone = _dbContext.customer_phones.Where(s => s.customer_id == i.cu_id ).ToList();
                 List<customer_phoneviewmodel> lst_cp_add = new List<customer_phoneviewmodel>();
                 foreach (customer_phone s in list_phone)
@@ -282,7 +297,7 @@ namespace ERP.Repository.Repositories
                     lst_cp_add.Add(add);
                 }
                 customerview.list_customer_phone = lst_cp_add;
-
+                customerview.cu_phone_number = lst_cp_add[0].cp_phone_number;
                 //lay ra lich su mua cua khach hang
                 #region cusotmer order service
                 var list_cuo_service_history = _dbContext.customer_order.Where(s => s.customer_id == i.cu_id && s.cuo_code.Contains("ORS")).ToList();
@@ -307,12 +322,11 @@ namespace ERP.Repository.Repositories
                         service ss = _dbContext.services.Find(se.Key);
                         serviceviewmodel serviceview = _mapper.Map<serviceviewmodel>(ss);
 
-
-                        for (int j = 1; j < EnumService.se_type.Length + 1; j++)
+                        foreach(service_type j in list_se_type)
                         {
-                            if (j == ss.se_type)
+                            if(ss.se_type == j.styp_id)
                             {
-                                serviceview.se_type_name = EnumService.se_type[j - 1];
+                                serviceview.se_type_name = j.styp_name;
                             }
                         }
                         var x = _dbContext.service_category.Find(ss.service_category_id);
@@ -915,7 +929,7 @@ namespace ERP.Repository.Repositories
                 if (address != null) customerview.cu_address = String.Concat(address.sha_province, "-", address.sha_district, "-", address.sha_ward, "-", address.sha_detail);
 
                 //so dien thoai 
-                var phone = _dbContext.customer_phones.Where(x => x.cp_type == 1).FirstOrDefault();
+                var phone = _dbContext.customer_phones.Where(x => x.cp_type == 1&&x.customer_id == i.cu_id).FirstOrDefault();
                 if (phone != null) customerview.cu_mobile = phone.cp_phone_number;
 
                 res.Add(customerview);

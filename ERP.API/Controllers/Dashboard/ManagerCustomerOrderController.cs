@@ -783,13 +783,6 @@ namespace ERP.API.Controllers.Dashboard
                         response.Error = "source_id";
                         return Ok(response);
                     }
-                    if (c.customer.cu_birthday == null)
-                    {
-                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                        response.Message = "Ngày sinh không được để trống";
-                        response.Error = "source_id";
-                        return Ok(response);
-                    }
                     if (c.customer.cu_flag_used == null)
                     {
                         response.Code = HttpCode.INTERNAL_SERVER_ERROR;
@@ -1111,7 +1104,7 @@ namespace ERP.API.Controllers.Dashboard
                 customer_order_service.company_id = BaseController.get_company_id_current();
                 customer_order_service.cuo_infor_time =c.cuo_infor_time;
                 customer_order_service.cuo_address = c.cuo_address;
-
+                customer_order_service.cuo_total_price = c.cuo_total_price;
                 // mapping view model to entity
                 var op_temp = _customer_orderservice.GetLast();
                 if (op_temp == null) customer_order_service.cuo_code = "ORS00000";
@@ -1161,6 +1154,7 @@ namespace ERP.API.Controllers.Dashboard
                         create_order_service.customer_order_id = op_last.cuo_id;
                         create_order_service.service_id = Convert.ToInt32(se.se_id);
                         create_order_service.os_quantity = Convert.ToInt32(se.os_quantity);
+                        create_order_service.se_number = Convert.ToInt32(se.se_number);
                         _orderserviceservice.Create(create_order_service);
                     }
                     else
@@ -1185,6 +1179,7 @@ namespace ERP.API.Controllers.Dashboard
                         create_order_service.customer_order_id = op_last.cuo_id;
                         create_order_service.service_id = se_last.se_id;
                         create_order_service.os_quantity = Convert.ToInt32(se.os_quantity);
+                        create_order_service.se_number = Convert.ToInt32(se.se_number);
                         _orderserviceservice.Create(create_order_service);
                     }
 
@@ -1275,13 +1270,6 @@ namespace ERP.API.Controllers.Dashboard
                     {
                         response.Code = HttpCode.INTERNAL_SERVER_ERROR;
                         response.Message = "Nguồn khách hàng không được để trống";
-                        response.Error = "source_id";
-                        return Ok(response);
-                    }
-                    if (c.customer.cu_birthday == null)
-                    {
-                        response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                        response.Message = "Ngày sinh không được để trống";
                         response.Error = "source_id";
                         return Ok(response);
                     }
@@ -1601,6 +1589,7 @@ namespace ERP.API.Controllers.Dashboard
                 customer_order_service.cuo_color_show = c.cuo_color_show;
                 customer_order_service.cuo_infor_time = c.cuo_infor_time;
                 customer_order_service.cuo_address = c.cuo_address;
+                customer_order_service.cuo_total_price = c.cuo_total_price;
                 customer_order_service.company_id = BaseController.get_company_id_current();
                 // save new customer_order
                 _customer_orderservice.Update(customer_order_service, customer_order_service.cuo_id);
@@ -1665,6 +1654,7 @@ namespace ERP.API.Controllers.Dashboard
                             create_trs.customer_order_id = c.cuo_id;
                             create_trs.service_id = _id;
                             create_trs.os_quantity = tr_f.os_quantity;
+                            create_trs.se_number = tr_f.se_number;
                             _orderserviceservice.Create(create_trs);
                         }
 
@@ -1692,6 +1682,7 @@ namespace ERP.API.Controllers.Dashboard
                         create_trs.customer_order_id = c.cuo_id;
                         create_trs.service_id = tr_last.se_id;
                         create_trs.os_quantity = tr_f.os_quantity;
+                        create_trs.se_number = tr_f.se_number;
                         _serviceservice.Create(tr_last);
                     }
                 }
@@ -2335,9 +2326,10 @@ namespace ERP.API.Controllers.Dashboard
             try
             {
                 int staff_id = BaseController.get_id_current();
+                string role = BaseController.get_infor_current(role: true);
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _customer_orderservice.GetServiceByDay(staff_id, start_date, to_date);
+                response.Data = _customer_orderservice.GetServiceByDay(role,staff_id, start_date, to_date);
             }
             catch (Exception ex)
             {

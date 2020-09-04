@@ -108,7 +108,7 @@ namespace ERP.Repository.Repositories
                 TotalNumberOfRecords = total
             };
         }
-        public PagedResults<staffviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? status, DateTime? start_date, DateTime? end_date, string name,int? sta_working_status,int company_id)
+        public PagedResults<staffviewmodel> GetAllPageSearch(int pageNumber, int pageSize, int? status, DateTime? start_date, DateTime? end_date, string name,int? sta_working_status,int company_id, int? position_id)
         {
             
             if(name != null)
@@ -140,6 +140,11 @@ namespace ERP.Repository.Repositories
             if(sta_working_status != null)
             {
                 list_res = list_res.Where(t => t.sta_working_status == sta_working_status).ToList();
+
+            }
+            if (position_id != null)
+            {
+                list_res = list_res.Where(t => t.position_id == position_id).ToList();
 
             }
             var total = list_res.Count();
@@ -186,7 +191,7 @@ namespace ERP.Repository.Repositories
                 }
                 for (int j = 1; j < EnumsStaff.sta_working_status_name.Length + 1; j++)
                 {
-                    if (j == staffview.sta_type_contact)
+                    if (j == staffview.sta_working_status)
                     {
                         staffview.sta_working_status_name = EnumsStaff.sta_working_status_name[j - 1];
                     }
@@ -460,7 +465,7 @@ namespace ERP.Repository.Repositories
             }
             for (int j = 1; j < EnumsStaff.sta_working_status_name.Length + 1; j++)
             {
-                if (j == staffview.sta_type_contact)
+                if (j == staffview.sta_working_status)
                 {
                     staffview.sta_working_status_name = EnumsStaff.sta_working_status_name[j - 1];
                 }
@@ -723,7 +728,6 @@ namespace ERP.Repository.Repositories
             List<staff> list_res;
             List<staff> list;
             List<staffview> res = new List<staffview>();
-            var skipAmount = pageSize * pageNumber;
             if (status == null)
             {
                 list_res = _dbContext.staffs.Where(x=>x.company_id == companyid).ToList();
@@ -748,11 +752,12 @@ namespace ERP.Repository.Repositories
 
             }
             var total = list_res.Count();
-            list = list_res.OrderByDescending(t => t.sta_id).Skip(skipAmount).Take(pageSize).ToList();
+            list = list_res.OrderByDescending(t => t.sta_id).ToList();
 
 
 
             var results = list.ToList();
+            var lst_staff_type = _dbContext.staff_type.ToList();
             foreach (staff i in results)
             {
                 staffview staffview = _mapper.Map<staffview>(i);
@@ -791,15 +796,18 @@ namespace ERP.Repository.Repositories
 
 
                 //Lấy ra địa chỉ thường chú 
-               var address_permanent = _dbContext.undertaken_location.Where(x => x.staff_id == staffview.sta_id && x.unl_flag_center == 1).FirstOrDefault();
+                var address_permanent = _dbContext.undertaken_location.Where(x => x.staff_id == staffview.sta_id && x.unl_flag_center == 1).FirstOrDefault();
                 if (address_permanent != null) staffview.sta_address_permanent = String.Concat(address_permanent.unl_province, "-", address_permanent.unl_district, "-", address_permanent.unl_ward, "-", address_permanent.unl_detail);
                 
 
                 //Lấy ra address hiện tại 
                 var address_now = _dbContext.undertaken_location.Where(x => x.staff_id == staffview.sta_id && x.unl_flag_center == 2).FirstOrDefault();
+
                 if (address_now != null) staffview.sta_address_now = String.Concat(address_now.unl_province, "-", address_now.unl_district, "-", address_now.unl_ward, "-", address_now.unl_detail);
-                if (i.sta_type_contact == 0) staffview.sta_type_contact_name = "Fulltime";
-                if (i.sta_type_contact == 1) staffview.sta_type_contact_name = "Partime";
+                foreach (staff_type stt in lst_staff_type)
+                {
+                    if (i.sta_type_contact == stt.sttp_id) staffview.sta_type_contact_name = stt.sttp_name;
+                }
                 res.Add(staffview);
             }
 

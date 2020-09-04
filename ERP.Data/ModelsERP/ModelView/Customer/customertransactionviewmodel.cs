@@ -18,15 +18,15 @@ namespace ERP.Data.ModelsERP.ModelView.Customer
 
         public int tra_rate { get; set; }
 
-        public byte? tra_type { get; set; }
-        public byte? tra_type_name { get; set; }
+        public int tra_type { get; set; }
+        public string tra_type_name { get; set; }
 
         public DateTime? tra_datetime { get; set; }
 
         [StringLength(50)]
         public string tra_result { get; set; }
 
-        public byte? tra_priority { get; set; }
+        public int tra_priority { get; set; }
 
         public int? staff_id { get; set; }
         public string staff_name { get; set; }

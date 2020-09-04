@@ -16,6 +16,7 @@ namespace ERP.Data.ModelsERP.ModelView.CustomerOrder
 
         public int? se_type { get; set; }
         public int? se_unit { get; set; }
+        public int? se_number { get; set; }
 
         [StringLength(100)]
         public string se_name { get; set; }

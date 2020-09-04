@@ -49,6 +49,7 @@ namespace ERP.API.Controllers.Dashboard
         private readonly IBonusStaffService _bonusstaffService;
         private readonly IBankBranchService _bankbranchService;
         private readonly IAttachmentsService _attachmentService;
+        private readonly IStaffTypeService _stafftypeService;
 
        
 
@@ -59,7 +60,7 @@ namespace ERP.API.Controllers.Dashboard
         private static List<string> list_username;
         private static List<string> list_file_name;
         public ManagerstaffsController() { }
-        public ManagerstaffsController(IAttachmentsService attachmentService ,IBankBranchService bankbranchService,IBonusStaffService bonusstaffService ,IRelativesStaffService relativesstaffService,IStaffBrankService staffbankService,ITrainingService trainingService, IStaffWorkTimeService staffworktimeService, ITrainingStaffService trainingStaffService, ICustomerService customerservice, IStaffService staffservice, IMapper mapper, IDepartmentService departmentService, IGroupRoleService groupRoleService, IPositionService positionService, IUndertakenLocationService undertakenlocationService, ISocialService socialService, IDeviceStaffService deviceStaffService)
+        public ManagerstaffsController(IAttachmentsService attachmentService ,IBankBranchService bankbranchService,IBonusStaffService bonusstaffService ,IRelativesStaffService relativesstaffService,IStaffBrankService staffbankService,ITrainingService trainingService, IStaffWorkTimeService staffworktimeService, ITrainingStaffService trainingStaffService, ICustomerService customerservice, IStaffService staffservice, IMapper mapper, IDepartmentService departmentService, IGroupRoleService groupRoleService, IPositionService positionService, IUndertakenLocationService undertakenlocationService, ISocialService socialService, IDeviceStaffService deviceStaffService, IStaffTypeService stafftypeService)
         {
             this._staffservice = staffservice;
             this._mapper = mapper;
@@ -78,6 +79,7 @@ namespace ERP.API.Controllers.Dashboard
             this._bankbranchService = bankbranchService;
             this._attachmentService = attachmentService;
             this._deviceStaffService = deviceStaffService;
+            this._stafftypeService = stafftypeService;
         }
 
         #region methods
@@ -129,7 +131,7 @@ namespace ERP.API.Controllers.Dashboard
         }
 
         [Route("api/staff/search")]
-        public IHttpActionResult GetStaffSearch(int pageSize, int pageNumber, int? status, DateTime? start_date, DateTime? end_date, string name, int? sta_working_status)
+        public IHttpActionResult GetStaffSearch(int pageSize, int pageNumber, int? status, DateTime? start_date, DateTime? end_date, string name, int? sta_working_status, int? position_id)
         {
             ResponseDataDTO<PagedResults<staffviewmodel>> response = new ResponseDataDTO<PagedResults<staffviewmodel>>();
             try
@@ -137,7 +139,7 @@ namespace ERP.API.Controllers.Dashboard
                 int company_id = BaseController.get_company_id_current();
                 response.Code = HttpCode.OK;
                 response.Message = MessageResponse.SUCCESS;
-                response.Data = _staffservice.GetAllPageSearch(pageNumber, pageSize, status, start_date, end_date, name, sta_working_status, company_id);
+                response.Data = _staffservice.GetAllPageSearch(pageNumber, pageSize, status, start_date, end_date, name, sta_working_status, company_id, position_id);
             }
             catch (Exception ex)
             {
@@ -289,6 +291,9 @@ namespace ERP.API.Controllers.Dashboard
 
                 #endregion
 
+                // get loai nhan su
+                var staff_type = _stafftypeService.Find(staff.sta_type_contact);
+
                 //Kiểm tra các trường rằng buộc
                 if (check_code(staff.sta_code.Trim()))
                 {
@@ -306,7 +311,7 @@ namespace ERP.API.Controllers.Dashboard
 
                     return Ok(response);
                 }
-                if (staff.sta_type_contact == 0)
+                if (staff_type.sttp_name.Contains("Fulltime"))
                 {
                     if (staff.sta_email == null || staff.sta_email.Trim() == "")
                     {
@@ -330,7 +335,7 @@ namespace ERP.API.Controllers.Dashboard
                         return Ok(response);
                     }
                 }
-                if (staff.sta_type_contact == 1)
+                else
                 {
                     if (staff.sta_email != null)
                     {
@@ -438,13 +443,14 @@ namespace ERP.API.Controllers.Dashboard
                 //Lấy ra bản ghi cuối cùng tạo mã code 
                 
                 string sta_pass = "";
-                if (staff.sta_type_contact == 0)
-                {
-                    sta_pass = staff_create.sta_code;
-                }
-                if (staff.sta_type_contact == 1)
+                
+                if (staff_type.sttp_name.Contains("Fulltime"))
                 {
                     sta_pass = Utilis.MakeRandomPassword(8);
+                }
+                else
+                {
+                    sta_pass = staff_create.sta_code;
                 }
                 staff_create.comment = staff.comment;
                 staff_create.achieved = staff.achieved;
@@ -618,6 +624,10 @@ namespace ERP.API.Controllers.Dashboard
 
                 var staff = update_staff;
                 staff existstaff = _staffservice.Find(staff.sta_id);
+
+                // get staff type 
+                var staff_type = _stafftypeService.Find(staff.sta_type_contact);
+
                 #region["Check null"]
                 if (staff.sta_code == null || staff.sta_code.Trim() == "")
                 {
@@ -696,7 +706,7 @@ namespace ERP.API.Controllers.Dashboard
                     response.Error = "sta_code";
                     return Ok(response);
                 }
-                if (staff.sta_type_contact == 0)
+                if (staff_type.sttp_name.Contains("Fulltime"))
                 {
 
                     if (staff.sta_email == null || staff.sta_email.Trim() == "")
@@ -721,7 +731,7 @@ namespace ERP.API.Controllers.Dashboard
                         return Ok(response);
                     }
                 }
-                if (staff.sta_type_contact == 1)
+                else
                 {
                     if (staff.sta_email != null)
                     {
@@ -1540,8 +1550,8 @@ namespace ERP.API.Controllers.Dashboard
                     }
                 }
                 var list = new List<staffview>();
-                fileName = "D:/DeployERP" + fileName;
-                // fileName = "D:/ERP20/ERP.API" + fileName;
+                // fileName = "D:/DeployERP" + fileName;
+                fileName = "D:/ERP20/ERP.API" + fileName;
                 var dataset = ExcelImport.ImportExcelXLS(fileName, true);
                 DataTable table = (DataTable)dataset.Tables[0];
                 if (table != null && table.Rows.Count > 0)
@@ -1558,52 +1568,85 @@ namespace ERP.API.Controllers.Dashboard
                     foreach(staffview i in list)
                     {
                         #region["Check tồn tại"]
-                        var us = _staffservice.GetAllIncluing(t => t.sta_username.Equals(i.sta_username)).FirstOrDefault();
-                        if (us != null)
+                        if (i.sta_username != "" && i.sta_username != null)
                         {
-                            exitsData = "Đã có username '" + i.sta_username + "' tồn tại trong cơ sở dữ liệu!";
-                            response.Code = HttpCode.NOT_FOUND;
-                            response.Message = exitsData;
-                            response.Error = "sta_username";
-                            return Ok(response);
-                        }
-                        var code = _staffservice.GetAllIncluing(t => t.sta_code.Equals(i.sta_code)).FirstOrDefault();
-                        if (code != null)
-                        {
-                            exitsData = "Đã có ma '" + i.sta_code + "' tồn tại trong cơ sở dữ liệu!";
-                            response.Code = HttpCode.NOT_FOUND;
-                            response.Message = exitsData;
-                            response.Error = "sta_code";
-                            return Ok(response);
-                        }
-                        if (i.sta_tax_code != null)
-                        {
-                            if (check_tax_code(i.sta_tax_code))
+                            if (i.sta_username.Trim() != "")
                             {
-                                response.Code = HttpCode.NOT_FOUND;
-                                response.Message = "Đã có mã số thuế người dùng '" + i.sta_tax_code + " ' trong hệ thống.";
-                                response.Error = "sta_tax_code";
-                                return Ok(response);
+                                var us = _staffservice.GetAllIncluing(t => t.sta_username.Equals(i.sta_username)).FirstOrDefault();
+                                if (us != null)
+                                {
+                                    exitsData = "Đã có username '" + i.sta_username + "' tồn tại trong cơ sở dữ liệu!";
+                                    response.Code = HttpCode.NOT_FOUND;
+                                    response.Message = exitsData;
+                                    response.Error = "sta_username";
+                                    return Ok(response);
+                                }
                             }
                         }
-                        var dt = _staffservice.GetAllIncluing(y => y.sta_mobile.Equals(i.sta_mobile)).FirstOrDefault();
-                        if (dt != null)
+                        
+                        if (i.sta_code != "" && i.sta_code != null)
                         {
-                            exitsData = "Đã có số điện thoại '" + i.sta_mobile + "' tồn tại trong cơ sở dữ liệu!";
-                            response.Code = HttpCode.NOT_FOUND;
-                            response.Message = exitsData;
-                            response.Error = "sta_mobile";
-                            return Ok(response);
+                            if (i.sta_code.Trim() != "")
+                            {
+                                var code = _staffservice.GetAllIncluing(t => t.sta_code.Equals(i.sta_code)).FirstOrDefault();
+                                if (code != null)
+                                {
+                                    exitsData = "Đã có ma '" + i.sta_code + "' tồn tại trong cơ sở dữ liệu!";
+                                    response.Code = HttpCode.NOT_FOUND;
+                                    response.Message = exitsData;
+                                    response.Error = "sta_code";
+                                    return Ok(response);
+                                }
+                            }
                         }
-                        var cmt = _staffservice.GetAllIncluing(y => y.sta_identity_card.Equals(i.sta_identity_card)).FirstOrDefault();
-                        if (cmt != null)
+                        
+                        if (i.sta_tax_code != "" && i.sta_tax_code != null)
                         {
-                            exitsData = "Đã có cmt '" + i.sta_identity_card + "' tồn tại trong cơ sở dữ liệu!";
-                            response.Code = HttpCode.NOT_FOUND;
-                            response.Message = exitsData;
-                            response.Error = "sta_identity_card";
-                            return Ok(response);
+                            if (i.sta_tax_code.Trim() != "")
+                            {
+                                if (check_tax_code(i.sta_tax_code))
+                                {
+                                    response.Code = HttpCode.NOT_FOUND;
+                                    response.Message = "Đã có mã số thuế người dùng '" + i.sta_tax_code + " ' trong hệ thống.";
+                                    response.Error = "sta_tax_code";
+                                    return Ok(response);
+                                }
+                            }
                         }
+                       
+                        if (i.sta_mobile != "" && i.sta_mobile != null)
+                        {
+                            if (i.sta_mobile.Trim() != "")
+                            {
+                                var dt = _staffservice.GetAllIncluing(y => y.sta_mobile.Equals(i.sta_mobile)).FirstOrDefault();
+                                if (dt != null)
+                                {
+                                    exitsData = "Đã có số điện thoại '" + i.sta_mobile + "' tồn tại trong cơ sở dữ liệu!";
+                                    response.Code = HttpCode.NOT_FOUND;
+                                    response.Message = exitsData;
+                                    response.Error = "sta_mobile";
+                                    return Ok(response);
+                                }
+                            }
+                        }
+                         
+                        if (i.sta_identity_card != "" && i.sta_identity_card != null)
+                        {
+                            if (i.sta_identity_card.Trim() != "")
+                            {
+
+                                var cmt = _staffservice.GetAllIncluing(y => y.sta_identity_card.Equals(i.sta_identity_card)).FirstOrDefault();
+                                if (cmt != null)
+                                {
+                                    exitsData = "Đã có cmt '" + i.sta_identity_card + "' tồn tại trong cơ sở dữ liệu!";
+                                    response.Code = HttpCode.NOT_FOUND;
+                                    response.Message = exitsData;
+                                    response.Error = "sta_identity_card";
+                                    return Ok(response);
+                                }
+                            }
+                        }    
+                        
                         #endregion
                     }
                     foreach (staffview i in list)
@@ -1628,7 +1671,7 @@ namespace ERP.API.Controllers.Dashboard
                         staff_create.position_id = 3;
                         staff_create.department_id = 3;
                         staff_create.sta_working_status = 1;
-                        staff_create.sta_type_contact = 1;
+                        staff_create.sta_type_contact = 3;
                         
                         var x = _staffservice.GetLast();
                         staff_create.sta_code = i.sta_code;
@@ -1636,6 +1679,10 @@ namespace ERP.API.Controllers.Dashboard
                         staff_create.sta_created_date = DateTime.Now;
                         staff_create.company_id = BaseController.get_company_id_current();
                         staff_create.sta_login = true;
+                        if(staff_create.sta_identity_card!=null)
+                        {
+                            staff_create.sta_identity_card = staff_create.sta_identity_card.Trim();
+                        }
                         if (staff_create.sta_username == null)
                         {
                             if (x == null) staff_create.sta_username = "user00000";
@@ -1747,7 +1794,7 @@ namespace ERP.API.Controllers.Dashboard
             catch (Exception ex)
             {
                 response.Code = HttpCode.INTERNAL_SERVER_ERROR;
-                response.Message = ex.Message; ;
+                response.Message = ex.Message;
                 response.Data = null;
                 Console.WriteLine(ex.ToString());
 

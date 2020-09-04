@@ -20,7 +20,7 @@ namespace ERP.Data.ModelsERP.ModelView.ExportDB
         public string cu_thumbnail { get; set; }
 
 
-        public byte? cu_type { get; set; }
+        public int? cu_type { get; set; }
 
         [StringLength(250)]
         public string cu_note { get; set; }

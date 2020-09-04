@@ -20,6 +20,7 @@ namespace ERP.Data.ModelsERP.ModelView
 
         [StringLength(40)]
         public string cu_email { get; set; }
+        public string cu_phone_number { get; set; }
 
         [StringLength(45)]
         public string cu_fullname { get; set; }

@@ -177,16 +177,25 @@ namespace ERP.API.Controllers.Dashboard
         }
         public static string get_infor_current(bool email = false, bool role = false , bool fullname = false)
         {
-            if(email == true)
+            if (email == true)
             {
                 return ClaimsPrincipal.Current.Identities.First().Claims.ToList()[2].Value.ToString();
             }
-            if (role == true)
-            {
-                return ClaimsPrincipal.Current.Identities.First().Claims.ToList()[0].Value.ToString();
+            else {
+                if (role == true)
+                {
+                    return ClaimsPrincipal.Current.Identities.First().Claims.ToList()[0].Value.ToString();
+                }
+                else
+                {
+                    if (fullname = true)
+                    {
+                        return ClaimsPrincipal.Current.Identities.First().Claims.ToList()[1].Value.ToString();
+                    }
+                    else return "";
+                }
+                
             }
-            else return ClaimsPrincipal.Current.Identities.First().Claims.ToList()[1].Value.ToString();
-
         }
     }
 }

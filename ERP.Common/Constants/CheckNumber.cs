@@ -12,6 +12,14 @@ namespace ERP.Common.Constants
         {
             return Regex.Match(number, @"^[\d\s()+-]{7,11}$").Success;
         }
-        
+        public static bool IsNumber(string pValue)
+        {
+            foreach (Char c in pValue)
+            {
+                if (!Char.IsDigit(c))
+                    return false;
+            }
+            return true;
+        }
     }
 }

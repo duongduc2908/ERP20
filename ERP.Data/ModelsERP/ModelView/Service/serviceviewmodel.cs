@@ -19,6 +19,7 @@ namespace ERP.Data.ModelsERP.ModelView.Service
         public string se_type_name { get; set; }
         public int? se_unit { get; set; }
         public string se_unit_name { get; set; }
+        public int? se_number { get; set; }
         [StringLength(100)]
         public string se_name { get; set; }
 
